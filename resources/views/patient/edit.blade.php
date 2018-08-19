@@ -21,12 +21,13 @@
                 <div class="card">
                     <div class="card-block">
                         <div class="card-title-block">
-                            <h3 class="title"> Información Básica </h3>
+                            <h3 class="title"> Información del Usuario </h3>
                         </div>
                         @include('patient.fields')
                     </div>
                 </div>
             </div>
+            {{--
             <div class="col-md-6">
                 <div class="card">
                     <div class="card-block">
@@ -38,8 +39,10 @@
                     </div>
                 </div>
             </div>
+            --}}
             {!! Form::hidden('id', $patient->id) !!}
-            <div class="col-md-12">
+            <div class="col-md-6"></div>
+            <div class="col-md-6">
                 <div class="text-center">
                     {!! Form::submit('Actualizar', ['class' => 'btn btn-oval btn-warning']) !!}
                 </div>

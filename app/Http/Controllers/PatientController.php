@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Eps;
 use App\Http\Requests\StorePatientRequest;
 use App\Http\Requests\UpdatePatientRequest;
 use App\Patient;
@@ -12,7 +13,7 @@ class PatientController extends Controller
 {
     public function __construct()
     {
-        $this->middleware(['auth', 'admin'], ['except' => 'getDayRange']);
+        $this->middleware(['auth', 'both'], ['except' => 'getDayRange']);
     }
 
     /**
@@ -34,7 +35,12 @@ class PatientController extends Controller
      */
     public function create()
     {
-        return view('patient.create');
+        $epss = Eps::all()->pluck('name', 'id');
+
+        if (session()->has('authorization-create')) {
+            session()->forget('authorization-create');
+        }
+        return view('patient.create', compact('epss'));
     }
 
     /**
@@ -48,6 +54,13 @@ class PatientController extends Controller
         Patient::storeRecord($request);
 
         Session::flash('message', 'Usuario guardado exitosamente');
+
+        if (session()->has('authorization-create')) {
+            session()->forget('authorization-create');
+
+            return redirect()->route('authorization.create');
+        }
+
         return redirect()->route('patient.index');
     }
 
@@ -70,11 +83,14 @@ class PatientController extends Controller
      */
     public function edit($id)
     {
+        $epss = Eps::all()->pluck('name', 'id');
         $patient = Patient::find($id);
-        $address = $patient->address;
-        $phone = $patient->phone;
+        return view('patient.edit', compact('patient', 'epss'));
 
-        return view('patient.edit', compact('patient', 'address', 'phone'));
+//        $address = $patient->address;
+//        $phone = $patient->phone;
+//
+//        return view('patient.edit', compact('patient', 'address', 'phone'));
     }
 
     /**
@@ -101,21 +117,24 @@ class PatientController extends Controller
      */
     public function destroy($id)
     {
-        $patient = Patient::find($id);
+        if (auth()->user()->hasRole('admin')) {
+            $patient = Patient::find($id);
 
-        $patient->delete();
+            $patient->delete();
 
-        Session::flash('message', 'Usuario borrado exitosamente');
-        return redirect()->route('patient.index');
+            Session::flash('message', 'Usuario borrado exitosamente');
+            return redirect()->route('patient.index');
+        }
+        Session::flash('message_danger', 'No tienes permiso para borrar usuarios. Este movimiento ha sido notificado');
+        return redirect()->route('authorization.index');
     }
 
-    public function getDayRange($yearMonth)
+    public function createAuthorization()
     {
-        $year = explode("-", $yearMonth)[0];
-        $month = sprintf("%02d", explode("-", $yearMonth)[1]);
+        session([ 'authorization-create' => '1']);
 
-        $finalDay = \Carbon\Carbon::parse($year."-".$month."-01")->endOfMonth()->format("d");
+        $epss = Eps::all()->pluck('name', 'id');
 
-        return view('partials._birth_day', compact('finalDay'));
+        return view('patient.create', compact('epss'));
     }
 }

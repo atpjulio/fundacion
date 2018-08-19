@@ -26,7 +26,7 @@
                         <div class="card-title-block">
                             <h3 class="title"> Autorizaciones registradas en el sistema </h3>
                         </div>
-                        <div class="col-xs-12">
+                        <div class="col-12">
                             <div class="table-responsive">
                                 <table class="table table-striped table-bordered table-condensed table-hover" id="myTable">
                                     <thead>
@@ -34,22 +34,31 @@
                                     <th>EPS</th>
                                     <th>Desde</th>
                                     <th>Hasta</th>
+                                    <th>Fecha de creación</th>
                                     <th>Opciones</th>
                                     </thead>
                                     <tbody>
                                     @foreach($authorizations as $authorization)
                                         <tr>
                                             <td>{!! $authorization->code !!}</td>
-                                            <td>{!! $authorization->eps->eps_name !!}</td>
-                                            <td>{!! $authorization->date_from !!}</td>
-                                            <td>{!! $authorization->date_to !!}</td>
+                                            <td>{!! $authorization->eps->alias ? $authorization->eps->alias : $authorization->eps->name !!}</td>
+                                            <td>{!! \Carbon\Carbon::parse($authorization->date_from)->format("d/m/Y") !!}</td>
+                                            <td>{!! \Carbon\Carbon::parse($authorization->date_to)->format("d/m/Y") !!}</td>
+                                            <td>{!! \Carbon\Carbon::parse($authorization->created_at)->format("d/m/Y") !!}</td>
                                             <td>
-                                                <a href="{{ route('$authorization.edit', $authorization->id) }}" class="btn btn-pill-left btn-info btn-sm">
+                                                @role('admin')
+                                                <a href="{{ route('authorization.edit', $authorization->id) }}" class="btn btn-pill-left btn-info btn-sm">
                                                     Editar
                                                 </a>
                                                 <a href="" data-toggle="modal" data-target="#confirm-modal-{{ $authorization->id }}" class="btn btn-pill-right btn-danger btn-sm">
                                                     Borrar
                                                 </a>
+                                                @endrole
+                                                @role('user')
+                                                <a href="{{ route('authorization.edit', $authorization->id) }}" class="btn btn-oval btn-info btn-sm">
+                                                    Editar
+                                                </a>
+                                                @endrole
                                             </td>
                                         </tr>
                                         @include('authorization.delete_modal')

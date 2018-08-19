@@ -20,6 +20,8 @@ class CreateEpsTable extends Migration
             $table->string('nit', 20);
             $table->decimal('daily_price', 10, 2);
             $table->string('alias', 20)->nullable();
+            $table->string('contract', 20)->nullable();
+            $table->string('policy', 50)->nullable();
             $table->softDeletes();
             $table->timestamps();
 

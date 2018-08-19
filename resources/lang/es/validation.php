@@ -98,9 +98,6 @@ return [
         'attribute-name' => [
             'rule-name' => 'custom-message',
         ],
-        'rate' => [
-            'numeric' => 'La tasa de cambio debe ser un valor numérico',
-        ],
         'selection' => [
             'required' => 'Debes seleccionar el formato de tu archivo',
         ],
@@ -130,6 +127,11 @@ return [
         'items.*' => [
             'required' => 'Por favor llene los campos vacíos en las características del plan'
         ],
+        'eps_service_id' => [
+            'min' => 'Debes seleccionar un servicio válido o crear uno nuevo',
+            'numeric' => 'Debes seleccionar un servicio válido o crear uno nuevo',
+            'required' => 'Debes seleccionar un servicio válido o crear uno nuevo',
+        ],
     ],
     /*
     |--------------------------------------------------------------------------
@@ -157,5 +159,8 @@ return [
         'birth_month' => 'mes de nacimiento',
         'birth_year' => 'año de nacimiento',
         'phone2' => 'teléfono secundario',
+        'date_from' => 'fecha de inicio',
+        'date_to' => 'fecha de finalización',
+        'eps_service_id' => 'servicio de EPS',
     ],
 ];

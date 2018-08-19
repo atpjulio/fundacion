@@ -1,20 +1,46 @@
 <div class="form-group  @if($errors->has('code')) has-error @endif">
     {!! Form::label('code', 'Código', ['class' => 'control-label']) !!}
-    {!! Form::text('code', old('code', isset($eps) ? $eps->code : ''), ['class' => 'form-control underlined', 'placeholder' => 'Código de la autorización']) !!}
+    {!! Form::text('code', old('code', isset($code) ? $code : ''), ['class' => 'form-control underlined', 'placeholder' => 'Código de la autorización', isset($show) ? 'readonly' : '']) !!}
 </div>
-<div class="form-group  @if($errors->has('name')) has-error @endif">
-    {!! Form::label('name', 'Nombre', ['class' => 'control-label']) !!}
-    {!! Form::text('name', old('name', isset($eps) ? $eps->name : ''), ['class' => 'form-control underlined', 'placeholder' => 'Nombre de la EPS']) !!}
-</div>
-<div class="form-group  @if($errors->has('nit')) has-error @endif">
-    {!! Form::label('nit', 'NIT', ['class' => 'control-label']) !!}
-    {!! Form::text('nit', old('nit', isset($eps) ? $eps->nit : ''), ['class' => 'form-control underlined', 'placeholder' => 'NIT']) !!}
-</div>
-<div class="form-group  @if($errors->has('daily_price')) has-error @endif">
-    {!! Form::label('daily_price', 'Tarifa diaria', ['class' => 'control-label']) !!}
-    {!! Form::number('daily_price', old('daily_price', isset($eps) ? $eps->daily_price : ''), ['class' => 'form-control underlined', 'placeholder' => 'Tarifa diaria', 'min' => '0']) !!}
-</div>
-<div class="form-group  @if($errors->has('alias')) has-error @endif">
-    {!! Form::label('alias', 'Nombre corto', ['class' => 'control-label']) !!}
-    {!! Form::text('alias', old('alias', isset($eps) ? $eps->alias : ''), ['class' => 'form-control underlined', 'placeholder' => 'Nombre corto para usarlo en el sistema']) !!}
-</div>
+@if (isset($show))
+    <div class="form-group  @if($errors->has('eps_name')) has-error @endif">
+        {!! Form::label('eps_name', 'Nombre de EPS', ['class' => 'control-label']) !!}
+        {!! Form::text('eps_name', old('eps_name', isset($eps) ? $eps->name : ''), ['class' => 'form-control underlined', 'placeholder' => 'Nombre de EPS', 'readonly']) !!}
+        {!! Form::hidden('eps_id', $eps->id) !!}
+    </div>
+@else
+    <div class="form-group  @if($errors->has('eps_id')) has-error @endif">
+        {!! Form::label('eps_id', 'Seleccione EPS', ['class' => 'control-label']) !!}
+        {!! Form::select('eps_id', $epss, old('eps_id', isset($authorization) ? $authorization->eps_id : ''), ['class' => 'form-control', 'id' => 'epsSelect']) !!}
+    </div>
+@endif
+
+@if (isset($show))
+    <div class="form-group  @if($errors->has('service_name')) has-error @endif">
+        {!! Form::label('service_name', 'Servicio autorizado', ['class' => 'control-label']) !!}
+        {!! Form::text('service_name', old('service_name', isset($service) ? $service->name : ''), ['class' => 'form-control underlined', 'placeholder' => 'Servicio de EPS', 'readonly']) !!}
+        {!! Form::hidden('eps_service_id', $service->id) !!}
+    </div>
+@else
+    <div class="form-group  @if($errors->has('eps_service_id')) has-error @endif">
+        {!! Form::label('eps_service_id', 'Seleccione Servicio de EPS', ['class' => 'control-label']) !!}
+        <div class="row">
+            @php
+                $services = \App\EpsService::getServices(old('eps_id') ?: $initialEpsId)->pluck('name', 'id');
+                if (count($services) < 1) {
+                    $services = [
+                        "0" => 'Sin servicios registrados'
+                    ];
+                }
+            @endphp
+            <div class="col-md-9">
+                <div id="dynamic-services">
+                    {!! Form::select('eps_service_id', $services, old('eps_service_id', isset($authorization) ? $authorization->eps_service_id : ''), ['class' => 'form-control', 'style' => $errors->has("eps_service_id") ? 'border: 1px solid red !important' : '']) !!}
+                </div>
+            </div>
+            <div class="col-md-3 text-right">
+                <a href="/eps-services/{{ $initialEpsId }}/create-from-authorization" class="btn btn-oval btn-success" id="serviceLink">Nuevo</a>
+            </div>
+        </div>
+    </div>
+@endif

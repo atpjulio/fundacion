@@ -22,6 +22,8 @@ class CreateAuthorizationsTable extends Migration
             $table->date('date_from');
             $table->date('date_to');
             $table->decimal('total', 10, 2)->nullable();
+            $table->boolean('companion')->default(0);
+            $table->string('companion_dni', 100)->nullable();
             $table->text('guardianship')->nullable();
             $table->text('guardianship_file')->nullable();
             $table->text('notes')->nullable();

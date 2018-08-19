@@ -22,23 +22,7 @@
                         <i class="fa fa-home"></i> Inicio
                     </a>
                 </li>
-                @role('admin')
-                <li class="@if(Request::is('eps*')) open active @endif">
-                    <a href="">
-                        <i class="fa fa-hospital-o"></i> EPS
-                        <i class="fa arrow"></i>
-                    </a>
-                    <ul class="sidebar-nav">
-                        <li class="@if(Request::is('eps')) active @endif" >
-                            <a href="{{ route('eps.index') }}">
-                                <i class="fas fa-list"></i>&nbsp;
-                                Listado
-                            </a>
-                        </li>
-                    </ul>
-                </li>
-                @endrole
-                @role('admin')
+                @role('admin|user')
                 <li class="@if(Request::is('authorization*')) open active @endif">
                     <a href="">
                         <i class="far fa-clipboard"></i> Autorizaciones
@@ -54,7 +38,7 @@
                     </ul>
                 </li>
                 @endrole
-                @role('admin')
+                @role('admin|user')
                 <li class="@if(Request::is('patient*')) open active @endif">
                     <a href="">
                         <i class="fa fa-wheelchair"></i> Usuarios
@@ -79,6 +63,22 @@
                     <ul class="sidebar-nav">
                         <li class="@if(Request::is('invoice')) active @endif" >
                             <a href="{{ route('invoice.index') }}">
+                                <i class="fas fa-list"></i>&nbsp;
+                                Listado
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+                @endrole
+                @role('admin')
+                <li class="@if(Request::is('eps*')) open active @endif">
+                    <a href="">
+                        <i class="fa fa-hospital-o"></i> EPS
+                        <i class="fa arrow"></i>
+                    </a>
+                    <ul class="sidebar-nav">
+                        <li class="@if(Request::is('eps')) active @endif" >
+                            <a href="{{ route('eps.index') }}">
                                 <i class="fas fa-list"></i>&nbsp;
                                 Listado
                             </a>

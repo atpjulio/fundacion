@@ -15,14 +15,18 @@ class CreatePatientsTable extends Migration
     {
         Schema::create('patients', function (Blueprint $table) {
             $table->increments('id');
+            $table->unsignedInteger('eps_id');
             $table->string('dni_type', 20)->nullable();
             $table->string('dni', 20)->nullable();
             $table->string('first_name', 50);
             $table->string('last_name', 50);
             $table->string('email')->nullable();
             $table->string('birth_date', 10);
-            $table->boolean('sisben_level')->default(1);
-            $table->string('sisben_number', 50)->nullable();
+            $table->boolean('gender')->default(0);
+            $table->boolean('type')->default(2);
+            $table->string('state', 2)->nullable();
+            $table->string('city', 3)->nullable();
+            $table->string('zone', 1)->nullable();
             $table->text('notes')->nullable();
             $table->softDeletes();
             $table->timestamps();

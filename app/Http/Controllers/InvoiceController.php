@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Eps;
+use App\Invoice;
 use Illuminate\Http\Request;
 
 class InvoiceController extends Controller
@@ -13,7 +15,9 @@ class InvoiceController extends Controller
      */
     public function index()
     {
-        //
+        $invoices = Invoice::all();
+
+        return view('invoice.index', compact('invoices'));
     }
 
     /**
@@ -23,7 +27,14 @@ class InvoiceController extends Controller
      */
     public function create()
     {
-        //
+        return view('invoice.create');
+//        $epss = Eps::all();
+//        $initialEpsId = $epss->toArray()[0]['id'];
+//        $services = EpsService::getServices($initialEpsId)->pluck('name', 'id');
+//        $epss = $epss->pluck('name', 'id');
+//        $patients = Patient::all();
+//
+//        return view('invoice.create', compact('epss', 'services', 'patients', 'initialEpsId'));
     }
 
     /**
@@ -56,7 +67,7 @@ class InvoiceController extends Controller
      */
     public function edit($id)
     {
-        //
+        return view('invoice.edit');
     }
 
     /**

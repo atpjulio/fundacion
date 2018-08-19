@@ -7,13 +7,13 @@
 @section('content')
     <div class="title-block">
         <div class="float-left">
-            <h3 class="title"> Administrar Productos </h3>
-            <p class="title-description"> Aquí puedes ver el listado de todos los productos y crear, actualizar o eliminar cualquier producto </p>
+            <h3 class="title"> Administrar Compañías </h3>
+            <p class="title-description"> Aquí puedes ver el listado de todos las compañías y crear, actualizar o eliminar cualquiera de ellas </p>
         </div>
         <div class="float-right animated fadeInRight">
-            <a href="{{ route('products.create') }}" class="btn btn-pill-left btn-primary btn-lg">
+            <a href="{{ route('company.create') }}" class="btn btn-pill-left btn-primary btn-lg">
                 <i class="fa fa-plus"></i>
-                Nuevo Producto
+                Nueva Compañía
             </a>
         </div>
     </div>
@@ -24,67 +24,34 @@
                 <div class="card">
                     <div class="card-block">
                         <div class="card-title-block">
-                            <h3 class="title"> Productos registrados en el sistema </h3>
+                            <h3 class="title"> Compañías registradas en el sistema </h3>
                         </div>
-                        <div class="col-xs-12">
+                        <div class="col-12">
                             <div class="table-responsive">
                                 <table class="table table-striped table-bordered table-condensed table-hover" id="myTable">
                                     <thead>
-                                    <th style="width: 60px;">Imagen</th>
-                                    <th class="">Nombre</th>
-                                    <th style="width: 60px;">Disponibles</th>
-                                    <th style="width: 60px;">Vendidos</th>
-                                    <th style="width: 15%;">Opciones</th>
+                                    <th>Nombre</th>
+                                    <th>NIT</th>
+                                    <th>Resolución de Fact.</th>
+                                    <th>Opciones</th>
                                     </thead>
                                     <tbody>
-                                    <tr>
-                                        <td>
-                                            <img src="{{ asset('img/products/default.jpg') }}" alt="" class="rounded" width="50">
-                                        </td>
-                                        <td>Producto número 1</td>
-                                        <td>14</td>
-                                        <td>2</td>
-                                        <td>
-                                            <a href="#" class="btn btn-pill-left btn-info btn-sm">
-                                                Editar
-                                            </a>
-                                            <a href="#" class="btn btn-pill-right btn-danger btn-sm">
-                                                Borrar
-                                            </a>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <img src="{{ asset('img/products/test1.jpg') }}" alt="" class="rounded" width="50">
-                                        </td>
-                                        <td>Bolso</td>
-                                        <td>7</td>
-                                        <td>9</td>
-                                        <td>
-                                            <a href="#" class="btn btn-pill-left btn-info btn-sm">
-                                                Editar
-                                            </a>
-                                            <a href="#" class="btn btn-pill-right btn-danger btn-sm">
-                                                Borrar
-                                            </a>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <img src="{{ asset('img/products/test2.jpg') }}" alt="" class="rounded" width="50">
-                                        </td>
-                                        <td>Bolso</td>
-                                        <td>7</td>
-                                        <td>9</td>
-                                        <td>
-                                            <a href="#" class="btn btn-pill-left btn-info btn-sm">
-                                                Editar
-                                            </a>
-                                            <a href="#" class="btn btn-pill-right btn-danger btn-sm">
-                                                Borrar
-                                            </a>
-                                        </td>
-                                    </tr>
+                                    @foreach($companies as $company)
+                                        <tr>
+                                            <td>{!! $company->name !!}</td>
+                                            <td>{!! $company->nit !!}</td>
+                                            <td>{!! $company->billing_resolution !!}</td>
+                                            <td>
+                                                <a href="{{ route('company.edit', $company->id) }}" class="btn btn-pill-left btn-info btn-sm">
+                                                    Editar
+                                                </a>
+                                                <a href="" data-toggle="modal" data-target="#confirm-modal-{{ $company->id }}" class="btn btn-pill-right btn-danger btn-sm">
+                                                    Borrar
+                                                </a>
+                                            </td>
+                                            @include('company.delete_modal')
+                                        </tr>
+                                    @endforeach
                                     </tbody>
                                 </table>
                             </div>

@@ -25,6 +25,7 @@ class StoreEpsServiceRequest extends FormRequest
     public function rules()
     {
         return [
+            'eps_id' => 'required',
             'code' => 'required|unique:eps_services',
             'name' => 'required'
         ];

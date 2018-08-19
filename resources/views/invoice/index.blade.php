@@ -7,13 +7,13 @@
 @section('content')
     <div class="title-block">
         <div class="float-left">
-            <h3 class="title"> Administrar Productos </h3>
-            <p class="title-description"> Aquí puedes ver el listado de todos los productos y crear, actualizar o eliminar cualquier producto </p>
+            <h3 class="title"> Administrar Facturas </h3>
+            <p class="title-description"> Aquí puedes ver el listado de todos las facturas y crear, actualizar o eliminar cualquiera de ellas </p>
         </div>
         <div class="float-right animated fadeInRight">
-            <a href="{{ route('products.create') }}" class="btn btn-pill-left btn-primary btn-lg">
+            <a href="{{ route('invoice.create') }}" class="btn btn-pill-left btn-primary btn-lg">
                 <i class="fa fa-plus"></i>
-                Nuevo Producto
+                Nueva Factura
             </a>
         </div>
     </div>
@@ -24,67 +24,38 @@
                 <div class="card">
                     <div class="card-block">
                         <div class="card-title-block">
-                            <h3 class="title"> Productos registrados en el sistema </h3>
+                            <h3 class="title"> Facturas registradas en el sistema </h3>
                         </div>
-                        <div class="col-xs-12">
+                        <div class="col-12">
                             <div class="table-responsive">
                                 <table class="table table-striped table-bordered table-condensed table-hover" id="myTable">
                                     <thead>
-                                    <th style="width: 60px;">Imagen</th>
-                                    <th class="">Nombre</th>
-                                    <th style="width: 60px;">Disponibles</th>
-                                    <th style="width: 60px;">Vendidos</th>
-                                    <th style="width: 15%;">Opciones</th>
+                                    <th>Número</th>
+                                    <th>EPS</th>
+                                    <th>Usuario</th>
+                                    <th>Estado</th>
+                                    <th>Monto</th>
+                                    <th>Opciones</th>
                                     </thead>
                                     <tbody>
-                                    <tr>
-                                        <td>
-                                            <img src="{{ asset('img/products/default.jpg') }}" alt="" class="rounded" width="50">
-                                        </td>
-                                        <td>Producto número 1</td>
-                                        <td>14</td>
-                                        <td>2</td>
-                                        <td>
-                                            <a href="#" class="btn btn-pill-left btn-info btn-sm">
-                                                Editar
-                                            </a>
-                                            <a href="#" class="btn btn-pill-right btn-danger btn-sm">
-                                                Borrar
-                                            </a>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <img src="{{ asset('img/products/test1.jpg') }}" alt="" class="rounded" width="50">
-                                        </td>
-                                        <td>Bolso</td>
-                                        <td>7</td>
-                                        <td>9</td>
-                                        <td>
-                                            <a href="#" class="btn btn-pill-left btn-info btn-sm">
-                                                Editar
-                                            </a>
-                                            <a href="#" class="btn btn-pill-right btn-danger btn-sm">
-                                                Borrar
-                                            </a>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <img src="{{ asset('img/products/test2.jpg') }}" alt="" class="rounded" width="50">
-                                        </td>
-                                        <td>Bolso</td>
-                                        <td>7</td>
-                                        <td>9</td>
-                                        <td>
-                                            <a href="#" class="btn btn-pill-left btn-info btn-sm">
-                                                Editar
-                                            </a>
-                                            <a href="#" class="btn btn-pill-right btn-danger btn-sm">
-                                                Borrar
-                                            </a>
-                                        </td>
-                                    </tr>
+                                        @foreach($invoices as $invoice)
+                                        <tr>
+                                            <td>{!! $invoice->number !!}</td>
+                                            <td>{!! $invoice->eps->alias ?: $invoice->eps->name !!}</td>
+                                            <td>{!! $invoice->patient->full_name !!}</td>
+                                            <td>{!! $invoice->status !!}</td>
+                                            <td>{!! number_format($invoice->total, ",", ".", 2) !!}</td>
+                                            <td>
+                                                <a href="{{ route('invoice.edit', $invoice->id) }}" class="btn btn-pill-left btn-info btn-sm">
+                                                    Editar
+                                                </a>
+                                                <a href="" data-toggle="modal" data-target="#confirm-modal-{{ $invoice->id }}" class="btn btn-pill-right btn-danger btn-sm">
+                                                    Borrar
+                                                </a>
+                                            </td>
+                                            @include('invoice.delete_modal')
+                                        </tr>
+                                        @endforeach
                                     </tbody>
                                 </table>
                             </div>

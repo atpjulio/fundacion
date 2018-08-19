@@ -17,14 +17,14 @@ class UsersTableSeeder extends Seeder
             [
                 'first_name' => 'Ingrid',
                 'last_name' => 'Jiménez',
-                'email' => 'admin@fundacion.com',
+                'email' => 'ingrid@fundacion.com',
                 'password' => bcrypt('123456'),
                 'user_type' => config('constants.userRoles.admin'),
             ],
             [
                 'first_name' => 'Usuario',
                 'last_name' => 'Número 1',
-                'email' => 'usuario1@fundacion.com',
+                'email' => 'admin@fundacion.com',
                 'password' => bcrypt('123456'),
                 'user_type' => config('constants.userRoles.user'),
             ],

@@ -120,6 +120,18 @@ class EpsController extends Controller
 
     public function servicesCreate($id)
     {
+        if (session()->has('authorization-create')) {
+            session()->forget('authorization-create');
+        }
+        $eps = Eps::find($id);
+
+        return view('eps.services.create', compact('eps'));
+    }
+
+    public function servicesCreateAuthorization($id)
+    {
+        session([ 'authorization-create' => '1']);
+
         $eps = Eps::find($id);
 
         return view('eps.services.create', compact('eps'));
@@ -130,6 +142,13 @@ class EpsController extends Controller
         EpsService::storeRecord($request);
 
         Session::flash('message', 'Servicio guardado exitosamente');
+
+        if (session()->has('authorization-create')) {
+            session()->forget('authorization-create');
+
+            return redirect()->route('authorization.create');
+        }
+
         return redirect()->route('eps.services.index', ['id' => $request->get('eps_id') ]);
     }
 
@@ -157,5 +176,9 @@ class EpsController extends Controller
 
         Session::flash('message', 'Servicio borrado exitosamente');
         return redirect()->route('eps.services.index', ['id' => $request->get('eps_id') ]);
+    }
+
+    public function servicesAuthorizationStore(StoreEpsServiceRequest $request) {
+
     }
 }

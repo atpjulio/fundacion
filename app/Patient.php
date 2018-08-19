@@ -7,14 +7,18 @@ use Illuminate\Database\Eloquent\Model;
 class Patient extends Model
 {
     protected $fillable = [
+        'eps_id',
         'dni_type',
         'dni',
         'first_name',
         'last_name',
         'email',
         'birth_date',
-        'sisben_level',
-        'sisben_number',
+        'gender',
+        'type',
+        'state',
+        'city',
+        'zone',
         'notes',
     ];
 
@@ -49,6 +53,11 @@ class Patient extends Model
             ->where('model_type', config('constants.modelType.patient'));
     }
 
+    public function eps()
+    {
+        return $this->hasOne(Eps::class, 'id', 'eps_id');
+    }
+
     /**
      * Methods
      */
@@ -59,13 +68,20 @@ class Patient extends Model
             sprintf("%02d",$request->get('birth_day'));
 
         $patient = $this->create([
+            'eps_id' => $request->get('eps_id'),
             'dni_type' => $request->get('dni_type'),
             'dni' => strtoupper($request->get('dni')),
             'first_name' => ucwords(strtolower($request->get('first_name'))),
             'last_name' => ucwords(strtolower($request->get('last_name'))),
             'birth_date' => $birthDate,
+            'gender' => $request->get('gender'),
+            'type' => $request->get('type'),
+            'state' => $request->get('state'),
+            'city' => $request->get('city'),
+            'zone' => $request->get('zone'),
         ]);
 
+        /*
         $address = new Address();
 
         $address->model_type = config('constants.modelType.patient');
@@ -85,7 +101,7 @@ class Patient extends Model
         $phone->phone2 = $request->get('phone2');
 
         $phone->save();
-
+        */
         return $patient;
     }
 
@@ -99,13 +115,19 @@ class Patient extends Model
                 sprintf("%02d",$request->get('birth_day'));
 
             $patient->update([
+                'eps_id' => $request->get('eps_id'),
                 'dni_type' => $request->get('dni_type'),
                 'dni' => strtoupper($request->get('dni')),
                 'first_name' => ucwords(strtolower($request->get('first_name'))),
                 'last_name' => ucwords(strtolower($request->get('last_name'))),
                 'birth_date' => $birthDate,
+                'gender' => $request->get('gender'),
+                'type' => $request->get('type'),
+                'state' => $request->get('state'),
+                'city' => $request->get('city'),
+                'zone' => $request->get('zone'),
             ]);
-
+            /*
             $patient->address->update([
                 'address' => ucwords(strtolower($request->get('address'))),
                 'address2' => ucwords(strtolower($request->get('address2'))),
@@ -117,6 +139,7 @@ class Patient extends Model
                 'phone' => $request->get('phone'),
                 'phone2' => $request->get('phone2'),
             ]);
+            */
         }
 
         return $patient;

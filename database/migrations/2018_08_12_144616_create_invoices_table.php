@@ -20,6 +20,7 @@ class CreateInvoicesTable extends Migration
             $table->unsignedInteger('eps_id');
             $table->unsignedInteger('patient_id');
             $table->unsignedDecimal('total', 15,2);
+            $table->boolean('status')->default(0);
             $table->text('notes')->nullable();
             $table->softDeletes();
             $table->timestamps();
@@ -29,6 +30,7 @@ class CreateInvoicesTable extends Migration
             $table->index('eps_id', 'idx_eps_id');
             $table->index('patient_id', 'idx_patient_id');
             $table->index('total', 'idx_total');
+            $table->index('status', 'idx_status');
         });
     }
 

@@ -8,6 +8,7 @@ $myConstants = [
     'stylesVersion' => '1.000',
     'productImages' => '/img/products/',
     'usersImages' => '/img/users/',
+    'citiesFilename' => 'codigos_dane.xls',
     'systemUser' => [
         'id' => 1,
         'email' => 'atpjulio@gmail.com',
@@ -32,6 +33,24 @@ $myConstants = [
         1 => 'user',
         9 => 'admin',
     ],
+    'noYes' => [
+        0 => 'No',
+        1 => 'Si',
+    ],
+    'gender' => [
+        0 => 'Femenino',
+        1 => 'Masculino',
+    ],
+    'patientTypeString' => [
+        1 => 'Contributivo',
+        2 => 'Subsidiado',
+        3 => 'Vinculado',
+        4 => 'Particular',
+        5 => 'Otro',
+        6 => 'Desplazado Contributivo',
+        7 => 'Desplazado Subsidiado',
+        8 => 'Desplazado No Asegurado',
+    ],
     'userRolesFrontEnd' => [
         1 => 'Usuario',
         9 => 'Administrador',
@@ -48,6 +67,16 @@ $myConstants = [
             'info' => 4,
         ],
     ],
+    'invoices' => [
+        'status' => [
+            'pending' => 0,
+            'paid' => 1,
+        ],
+        'statusString' => [
+            0 => 'Pendiente',
+            1 => 'Pagada',
+        ],
+    ],
     'status' => [
         'active' => 1,
         'inactive' => 9,
@@ -57,6 +86,11 @@ $myConstants = [
         "CC" => "Cédula de Ciudadanía",
         "TI" => "Tarjeta de Identidad",
         "CE" => "Cédula de Extranjería",
+        "PA" => "Pasaporte",
+        "RC" => "Registro Civil",
+        "AS" => "Adulto Sin Identificación",
+        "MS" => "Menor Sin Identificación",
+        "NU" => "Número Unico de Identificación",
     ],
     'companyInfo' => [
         'name' => 'Fundacion',

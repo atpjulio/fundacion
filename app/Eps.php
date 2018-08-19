@@ -15,6 +15,8 @@ class Eps extends Model
         'nit',
         'daily_price',
         'alias',
+        'contract',
+        'policy',
     ];
 
     /**
@@ -50,6 +52,8 @@ class Eps extends Model
             'nit' => $request->get('nit'),
             'daily_price' => $request->get('daily_price'),
             'alias' => ucwords(strtolower($request->get('alias'))),
+            'contract' => $request->get('contract'),
+            'policy' => $request->get('policy'),
         ]);
 
         $address = new Address();
@@ -85,6 +89,8 @@ class Eps extends Model
                 'nit' => $request->get('nit'),
                 'daily_price' => $request->get('daily_price'),
                 'alias' => ucwords(strtolower($request->get('alias'))),
+                'contract' => $request->get('contract'),
+                'policy' => $request->get('policy'),
             ]);
 
             $eps->address->update([

@@ -47,3 +47,13 @@
     </section>
     {!! Form::close() !!}
 @endsection
+
+@push('scripts')
+    <script language="javascript" type="text/javascript">
+        $(document).ready(function() {
+            $('#state').on('change', function (e) {
+                fillCities($('#state').val());
+            });
+        });
+    </script>
+@endpush

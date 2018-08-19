@@ -24,6 +24,7 @@ class StorePatientRequest extends FormRequest
     public function rules()
     {
         return [
+            'eps_id' => 'required',
             'dni_type' => 'required',
             'dni' => 'required|unique:patients',
             'first_name' => 'required|min:3',
@@ -31,10 +32,12 @@ class StorePatientRequest extends FormRequest
             'birth_day' => 'required',
             'birth_month' => 'required',
             'birth_year' => 'required',
-            'address' => 'required|min:3',
-            'city' => 'required|min:3',
-            'state' => 'required',
-            'phone' => 'required|min:7',
+            'gender' => 'required',
+            'type' => 'required',
+//            'address' => 'required|min:3',
+//            'city' => 'required|min:3',
+//            'state' => 'required',
+//            'phone' => 'required|min:7',
         ];
     }
 }

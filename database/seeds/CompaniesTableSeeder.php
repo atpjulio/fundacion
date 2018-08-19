@@ -30,7 +30,7 @@ class CompaniesTableSeeder extends Seeder
             'model_id' => 7,
             'model_type' => config('constants.modelType.company'),
             'address' => 'Cl 60 No 46-76 Brr Boston',
-            'city' => 'Barranquilla',
+            'city' => '001',
             'state' => '08',
         ];
         Address::create($address);

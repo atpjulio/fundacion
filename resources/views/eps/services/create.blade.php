@@ -9,7 +9,7 @@
             <p class="title-description"> Añadiendo un nuevo servicio al sistema </p>
         </div>
         <div class="float-right animated fadeInRight">
-            <a href="{{ route('eps.services.index', $eps->id) }}" class="btn btn-pill-left btn-secondary btn-lg">
+            <a href="{{ URL::previous() }}" class="btn btn-pill-left btn-secondary btn-lg">
                 <i class="fas fa-list"></i>
                 Regresar
             </a>

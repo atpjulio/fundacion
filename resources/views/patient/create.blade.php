@@ -7,7 +7,7 @@
             <p class="title-description"> Añadiendo un nuevo usuario al sistema </p>
         </div>
         <div class="float-right animated fadeInRight">
-            <a href="{{ route('patient.index') }}" class="btn btn-pill-left btn-secondary btn-lg">
+            <a href="{{ URL::previous() }}" class="btn btn-pill-left btn-secondary btn-lg">
                 <i class="fas fa-list"></i>
                 Regresar
             </a>
@@ -21,12 +21,13 @@
                 <div class="card">
                     <div class="card-block">
                         <div class="card-title-block">
-                            <h3 class="title"> Información Básica </h3>
+                            <h3 class="title"> Información del Usuario </h3>
                         </div>
                         @include('patient.fields')
                     </div>
                 </div>
             </div>
+            {{--
             <div class="col-md-6">
                 <div class="card">
                     <div class="card-block">
@@ -38,7 +39,9 @@
                     </div>
                 </div>
             </div>
-            <div class="col-md-12">
+            --}}
+            <div class="col-md-6"></div>
+            <div class="col-md-6">
                 <div class="text-center">
                     {!! Form::submit('Guardar', ['class' => 'btn btn-oval btn-primary']) !!}
                 </div>
