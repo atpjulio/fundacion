@@ -17,10 +17,10 @@ class Authorization extends Model
         'date_from',
         'date_to',
         'total',
-        'guardianship',
-        'guardianship_file',
         'companion',
         'companion_dni',
+        'guardianship',
+        'guardianship_file',
         'notes',
     ];
 
@@ -58,6 +58,10 @@ class Authorization extends Model
         $authorization->date_from = $request->get('date_from');
         $authorization->date_to = $request->get('date_to');
         $authorization->notes = $request->get('notes');
+        $authorization->companion = ($request->get('companion') == "Si");
+        if ($authorization->companion) {
+            $authorization->companion_dni = join(",", $request->get('companionDni'));
+        }
 
         $authorization->save();
 
@@ -76,10 +80,17 @@ class Authorization extends Model
             $authorization->date_from = $request->get('date_from');
             $authorization->date_to = $request->get('date_to');
             $authorization->notes = $request->get('notes');
+            $authorization->companion = $request->get('companion');
+            $authorization->companion_dni = $authorization->companion ? join(",", $request->get('companionDni')) : null;
 
             $authorization->save();
         }
 
         return $authorization;
+    }
+
+    protected function findByCode($code)
+    {
+        return $this->where('code', $code)->first();
     }
 }

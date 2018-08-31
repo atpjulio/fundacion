@@ -1,3 +1,10 @@
+.custom-file-input:lang(es) ~ .custom-file-label:after {
+  content: "Examinar" !important; }
 
+/*
+select .has-error {
+  // border: 1px solid red !important;
+}
+ */
 
 /*# sourceMappingURL=styles.css.map */

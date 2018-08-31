@@ -31,20 +31,18 @@
                                 <table class="table table-striped table-bordered table-condensed table-hover" id="myTable">
                                     <thead>
                                     <th>Número</th>
-                                    <th>EPS</th>
-                                    <th>Usuario</th>
-                                    <th>Estado</th>
+                                    <th>Autorización</th>
                                     <th>Monto</th>
+                                    <th>Fecha</th>
                                     <th>Opciones</th>
                                     </thead>
                                     <tbody>
                                         @foreach($invoices as $invoice)
                                         <tr>
                                             <td>{!! $invoice->number !!}</td>
-                                            <td>{!! $invoice->eps->alias ?: $invoice->eps->name !!}</td>
-                                            <td>{!! $invoice->patient->full_name !!}</td>
-                                            <td>{!! $invoice->status !!}</td>
-                                            <td>{!! number_format($invoice->total, ",", ".", 2) !!}</td>
+                                            <td>{!! $invoice->authorization_code !!}</td>
+                                            <td>$ {!! number_format($invoice->total, 2, ",", ".") !!}</td>
+                                            <td>{!! \Carbon\Carbon::parse($invoice->created_at)->format("d/m/Y") !!}</td>
                                             <td>
                                                 <a href="{{ route('invoice.edit', $invoice->id) }}" class="btn btn-pill-left btn-info btn-sm">
                                                     Editar

@@ -28,6 +28,12 @@ Route::middleware(['auth', 'admin'])->group(function () {
     Route::delete('eps-services/{id}/destroy', 'EpsController@servicesDestroy')->name('eps.services.destroy');
 
     Route::resource('invoice', 'InvoiceController');
+
+    Route::get('accounting/eps', 'AccountingController@eps')->name('accounting.eps');
+    Route::get('accounting/accounts-receivable', 'AccountingController@accountsReceivable')->name('accounting.accounts.receivable');
+    Route::get('accounting/rips', 'AccountingController@rips')->name('accounting.rips');
+
+    Route::resource('accounting-note', 'AccountingNoteController');
 });
 
 Route::middleware(['auth', 'both'])->group(function () {
@@ -37,12 +43,15 @@ Route::middleware(['auth', 'both'])->group(function () {
 
     Route::resource('patient', 'PatientController');
     Route::get('patient-create-from-authorization', 'PatientController@createAuthorization')->name('patient.create.authorization');
+    Route::get('patient-import', 'PatientController@import')->name('patient.import');
+    Route::post('patient-import-process', 'PatientController@importProcess')->name('patient.import.process');
 });
 
 Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
 
+Route::get('/get-eps-patients/{id}', 'AjaxController@getEpsPatients');
 Route::get('/get-day-range/{date}', 'AjaxController@getDayRange');
 Route::get('/get-services/{id}', 'AjaxController@getServices');
 Route::get('/get-cities/{id}', 'AjaxController@getCities');

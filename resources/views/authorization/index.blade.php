@@ -41,7 +41,7 @@
                                     @foreach($authorizations as $authorization)
                                         <tr>
                                             <td>{!! $authorization->code !!}</td>
-                                            <td>{!! $authorization->eps->alias ? $authorization->eps->alias : $authorization->eps->name !!}</td>
+                                            <td>{!! $authorization->eps->code !!} - {!! $authorization->eps->alias ? $authorization->eps->alias : $authorization->eps->name !!}</td>
                                             <td>{!! \Carbon\Carbon::parse($authorization->date_from)->format("d/m/Y") !!}</td>
                                             <td>{!! \Carbon\Carbon::parse($authorization->date_to)->format("d/m/Y") !!}</td>
                                             <td>{!! \Carbon\Carbon::parse($authorization->created_at)->format("d/m/Y") !!}</td>

@@ -4,11 +4,14 @@
         <div class="sidebar-header">
             <div class="brand">
                 <div class="logo">
+                    <img src="{{ asset('img/logo.png') }}" height="60" style="margin-top: -36px;">
+                    <!--
                     <span class="l l1"></span>
                     <span class="l l2"></span>
                     <span class="l l3"></span>
                     <span class="l l4"></span>
                     <span class="l l5"></span>
+                    -->
                 </div>
                 {!! config('constants.companyInfo.name') !!}
             </div>
@@ -81,6 +84,34 @@
                             <a href="{{ route('eps.index') }}">
                                 <i class="fas fa-list"></i>&nbsp;
                                 Listado
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+                @endrole
+                @role('admin')
+                <li class="@if(Request::is('accounting*')) open active @endif">
+                    <a href="">
+                        <i class="fas fa-calculator"></i> Contabilidad
+                        <i class="fa arrow"></i>
+                    </a>
+                    <ul class="sidebar-nav">
+                        <li class="@if(Request::is('accounting-note*')) active @endif" >
+                            <a href="{{ route('accounting-note.index') }}">
+                                <i class="far fa-sticky-note"></i>
+                                Nota de Contabilidad
+                            </a>
+                        </li>
+                        <li class="@if(Request::is('accounting/eps*')) active @endif" >
+                            <a href="{{ route('accounting.eps') }}">
+                                <i class="fa fa-hospital-o"></i>&nbsp;
+                                Por EPS
+                            </a>
+                        </li>
+                        <li class="@if(Request::is('accounting/rips*')) active @endif" >
+                            <a href="{{ route('accounting.rips') }}">
+                                <i class="fa fa-cogs"></i>&nbsp;
+                                RIPs
                             </a>
                         </li>
                     </ul>

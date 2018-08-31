@@ -16,7 +16,7 @@
     <link rel="stylesheet" href="{{ asset('css/fontawesome.min.css') }}">
     <link rel="stylesheet" href="{{ asset('css/regular.min.css') }}">
     <link rel="stylesheet" href="{{ asset('css/solid.min.css') }}">
-
+    <link rel="icon" href="{{ asset('favicon.png') }}">
     <!-- Theme initialization -->
     <script>
         var themeSettings =  (localStorage.getItem('themeSettings')) ? JSON.parse(localStorage.getItem('themeSettings')) : {};
@@ -38,11 +38,14 @@
             <header class="auth-header">
                 <h1 class="auth-title">
                     <div class="logo">
+                        <img src="{{ asset('img/logo.png') }}" height="60" >
+                        <!--
                         <span class="l l1"></span>
                         <span class="l l2"></span>
                         <span class="l l3"></span>
                         <span class="l l4"></span>
                         <span class="l l5"></span>
+                        -->
                     </div> {!! config('constants.companyInfo.longName') !!} </h1>
             </header>
             @yield('content')

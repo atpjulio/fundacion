@@ -8,7 +8,9 @@ $myConstants = [
     'stylesVersion' => '1.000',
     'productImages' => '/img/products/',
     'usersImages' => '/img/users/',
+    'importFiles' => storage_path().'/app/',
     'citiesFilename' => 'codigos_dane.xls',
+    'pucsFilename' => 'puc_comerciantes.xls',
     'systemUser' => [
         'id' => 1,
         'email' => 'atpjulio@gmail.com',
@@ -75,6 +77,20 @@ $myConstants = [
         'statusString' => [
             0 => 'Pendiente',
             1 => 'Pagada',
+        ],
+        'action' => [
+            'create' => 0,
+            'edit' => 1,
+            'delete' => 2,
+            'payment' => 3,
+            'fullPayment' => 4,
+        ],
+        'actionString' => [
+            0 => 'Creación',
+            1 => 'Edición',
+            2 => 'Eliminación',
+            3 => 'Abono',
+            4 => 'Pago Completo',
         ],
     ],
     'status' => [

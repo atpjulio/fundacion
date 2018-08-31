@@ -2,11 +2,22 @@
 
 namespace App\Services;
 
+use App\Patient;
 use Illuminate\Validation\Validator;
 
 class CustomValidationRules extends Validator
 {
-/*
+    public function validateCompanionDniNumber($attribute, $value, $parameters,$messages) {
+        // dd($attribute, $value, $parameters,$messages);
+
+        foreach ($parameters as $val) {
+            $res = Patient::checkIfExists($val);
+            if (!$res) {
+                return false;
+            }
+        }
+        return true;
+    }
     public function validateCheckExcelExtension($attribute, $value, $parameters,$messages) {
         //dd($attribute, $value->getClientOriginalExtension(), $parameters,$messages);
         $extension = strtolower($value->getClientOriginalExtension());
@@ -16,7 +27,7 @@ class CustomValidationRules extends Validator
         }
         return false;
     }
-
+/*
     public function validateCustomerPhone($attribute, $value, $parameters,$messages)
     {
         return !Customer::checkPhoneExists($value);

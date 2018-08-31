@@ -23,13 +23,27 @@ class UpdateAuthorizationRequest extends FormRequest
      */
     public function rules()
     {
-        return [
+        $rules = [
             'code' => 'required|unique:authorizations,id,'.$this->request->get('id'),
             'eps_id' => 'required',
-            'eps_service_id' => 'required',
+            'eps_service_id' => 'required|numeric|min:1',
             'patient_id' => 'required',
             'date_from' => 'required',
             'date_to' => 'required',
         ];
+
+        if ($this->request->get('companion')) {
+            $rules['companionDni.*'] = 'required|companionDniNumber:'.join(",", $this->request->get('companionDni'));
+        }
+
+        return $rules;
     }
+
+    public function messages()
+    {
+        return [
+            'companion_dni_number' => 'Número de documento del acompañante no se encuentra registrado o está vacío',
+        ];
+    }
+
 }

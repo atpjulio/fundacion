@@ -162,5 +162,8 @@ return [
         'date_from' => 'fecha de inicio',
         'date_to' => 'fecha de finalización',
         'eps_service_id' => 'servicio de EPS',
+        'companionDni.*' => 'documento de acompañante',
+        'number' => 'número',
+        'authorization_code' => 'código de autorización',
     ],
 ];

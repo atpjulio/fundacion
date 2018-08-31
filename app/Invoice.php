@@ -12,11 +12,13 @@ class Invoice extends Model
     protected $fillable = [
         'number',
         'company_id',
+        'authorization_code',
         'eps_id',
-        'patient_id',
+//        'patient_id',
         'total',
         'status',
         'notes',
+        'created_at',
     ];
 
     /**
@@ -29,14 +31,14 @@ class Invoice extends Model
     /**
      * Relations
      */
+    public function authorization()
+    {
+        return $this->hasOne(Authorization::class, 'code', 'authorization_code');
+    }
+
     public function eps()
     {
         return $this->hasOne(Eps::class, 'id', 'eps_id');
-    }
-
-    public function patient()
-    {
-        return $this->hasOne(Patient::class, 'id', 'patient_id');
     }
 
     /**
@@ -44,38 +46,105 @@ class Invoice extends Model
      */
     protected function storeRecord($request)
     {
-        $authorization = new Invoice();
+        $invoice = new Invoice();
 
-        $authorization->eps_id = $request->get('eps_id');
-        $authorization->eps_service_id = $request->get('eps_service_id');
-        $authorization->patient_id = $request->get('patient_id');
-        $authorization->code = $request->get('code');
-        $authorization->date_from = $request->get('date_from');
-        $authorization->date_to = $request->get('date_to');
-        $authorization->notes = $request->get('notes');
+        $invoice->number = $request->get('number');
+        $invoice->company_id = $request->get('company_id');
+        $invoice->authorization_code = $request->get('authorization_code');
+        $invoice->total = $request->get('total');
+        $invoice->notes = $request->get('notes');
+        $invoice->created_at = $request->get('created_at');
+        $invoice->eps_id = 0;
 
-        $authorization->save();
+        $authorization = Authorization::findByCode($request->get('authorization_code'));
+        if ($authorization) {
+            $invoice->eps_id = $authorization->eps_id;
+        }
 
-        return $authorization;
+        $invoice->save();
+
+        InvoiceLog::storeRecord($request, config('constants.invoices.action.create'));
+
+        $notes = "Factura para autorización ".$invoice->authorization_code." de la EPS: ".$invoice->eps->code
+            ." - ".$invoice->eps->alias;
+
+        $pucs = [
+            [
+                'code' => '414010'.$invoice->eps_id,
+                'type' => 1,
+                'description' => 'Campamento y otros tipos de hospedaje para EPS '.$invoice->eps->code .' - '.$invoice->eps->alias,
+                'amount' => $invoice->total,
+            ],
+            [
+                'code' => '130505'.$invoice->eps_id,
+                'type' => 0,
+                'description' => 'Campamento y otros tipos de hospedaje para EPS '.$invoice->eps->code .' - '.$invoice->eps->alias,
+                'amount' => $invoice->total,
+            ],
+        ];
+
+        AccountingNote::storeRecord($invoice, $pucs, $notes);
+
+        return $invoice;
     }
 
     protected function updateRecord($request)
     {
-        $authorization = $this->find($request->get('id'));
+        $invoice = $this->find($request->get('id'));
 
-        if ($authorization) {
-            $authorization->eps_id = $request->get('eps_id');
-            $authorization->eps_service_id = $request->get('eps_service_id');
-            $authorization->patient_id = $request->get('patient_id');
-            $authorization->code = $request->get('code');
-            $authorization->date_from = $request->get('date_from');
-            $authorization->date_to = $request->get('date_to');
-            $authorization->notes = $request->get('notes');
+        if ($invoice) {
+            $invoice->number = $request->get('number');
+            $invoice->company_id = $request->get('company_id');
+            $invoice->authorization_code = $request->get('authorization_code');
+            $invoice->total = $request->get('total');
+            $invoice->notes = $request->get('notes');
+            $invoice->created_at = $request->get('created_at');
+            $invoice->eps_id = 0;
 
-            $authorization->save();
+            $authorization = Authorization::findByCode($request->get('authorization_code'));
+            if ($authorization) {
+                $invoice->eps_id = $authorization->eps_id;
+            }
+
+            $invoice->save();
+            InvoiceLog::processUpdate($invoice, config('constants.invoices.action.edit'));
+
+            $notes = "Factura para autorización ".$invoice->authorization_code." de la EPS: ".$invoice->eps->code
+                ." - ".$invoice->eps->alias;
+
+            $pucs = [
+                [
+                    'code' => '414010'.$invoice->eps_id,
+                    'type' => 1,
+                    'description' => 'Campamento y otros tipos de hospedaje para EPS '.$invoice->eps->code .' - '.$invoice->eps->alias,
+                    'amount' => $invoice->total,
+                ],
+                [
+                    'code' => '130505'.$invoice->eps_id,
+                    'type' => 0,
+                    'description' => 'Campamento y otros tipos de hospedaje para EPS '.$invoice->eps->code .' - '.$invoice->eps->alias,
+                    'amount' => $invoice->total,
+                ],
+            ];
+
+            AccountingNote::updateRecord($invoice, $pucs, $notes);
+
         }
 
-        return $authorization;
+        return $invoice;
     }
 
+    protected function getUnpaidInvoices($epsId)
+    {
+        return $this->where('eps_id', $epsId)
+            ->where('status', 0)
+            ->get();
+    }
+
+    protected function getPaidInvoices($epsId)
+    {
+        return $this->where('eps_id', $epsId)
+            ->where('status', '<>', 0)
+            ->get();
+    }
 }

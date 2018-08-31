@@ -144,4 +144,55 @@ class Patient extends Model
 
         return $patient;
     }
+
+    protected function checkIfExists($dni, $dniType = null)
+    {
+        if ($dniType) {
+            return $this->where("dni", trim($dni))
+                ->where("dni_type", trim(strtoupper($dniType)))
+                ->first();
+        }
+
+        return $this->where("dni", $dni)
+            ->first();
+    }
+
+    protected function storeRecordFromExcel($line)
+    {
+        $dni = intval($line->numero_de_identifiacion_del_usuario_en_el_sistema).'';
+        $dniType = $line->tipo_de_identificacion_del_usuario;
+        $epsCode = $line->codigo_entidad_administradora;
+        $patient = null;
+
+        $eps = Eps::checkIfExists($epsCode);
+
+        if (!$this->checkIfExists($dni, $dniType) and $eps) {
+            $firstName = $line->primer_nombre_del_usuario.' '.$line->segundo_nombre_del_usuario;
+            $lastName = $line->primer_apellido_del_usuario.' '.$line->segundo_apellido_del_usuario;
+            $birthDate = \Carbon\Carbon::createFromDate(date("Y") - intval($line->edad), date("m"), date("d"))
+                ->format("Y-m-d");
+
+            $patient = $this->create([
+                'eps_id' => $eps->id,
+                'dni_type' => strtoupper($dniType),
+                'dni' => strtoupper($dni),
+                'first_name' => ucwords(strtolower($firstName)),
+                'last_name' => ucwords(strtolower($lastName)),
+                'birth_date' => $birthDate,
+                'gender' => ($line->sexo == 'F') ? 0 : 1,
+                'type' => intval($line->tipo_de_usuario),
+                'state' => intval($line->codigo_del_departamento_de_residencia_habitual).'',
+                'city' => intval($line->codigo_de_municipios_de_residencia_habitual).'',
+                'zone' => $line->zona_de_residencia_habitual,
+            ]);
+
+        }
+        return $patient;
+    }
+
+    protected function getPatientsForEps($epsId)
+    {
+        return $this->where('eps_id', $epsId)
+            ->get();
+    }
 }

@@ -118,6 +118,24 @@
                 },
                 "oSearch": {"sSearch": "{{ $authorization->patient->dni }}"}
             });
+            $('#companion').on('change', function (e) {
+                if ($('#companion').val() == 1) {
+                    $('#companionsDiv').css('display', 'block');
+                    $('#companionsDiv').addClass('animated fadeIn');
+                } else {
+                    $('#companionsDiv').css('display', 'none');
+                }
+            });
+            $('#epsSelect').on('change', function (e) {
+                $('#serviceLink').attr("href", "/eps-services/" + $('#epsSelect').val() + "/create-from-authorization");
+                fillServices($('#epsSelect').val());
+            });
+            $(".addRow").click(function(){
+                $("#companionsTable").append('<tr><td><input type="text" id="companionDni" name="companionDni[]" value="" class="form-control" placeholder="Número de Documento"/></td><td><a href="javascript:void(0);" class="removeRow btn btn-oval btn-danger">Quitar</a></td><tr>');
+            });
+            $("#companionsTable").on('click','.removeRow',function(){
+                $(this).parent().parent().remove();
+            });
         } );
         function sendInfo(id) {
             $('#patient_id').val(id);

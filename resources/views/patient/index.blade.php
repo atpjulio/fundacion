@@ -16,6 +16,12 @@
                 Nuevo Usuario
             </a>
         </div>
+        <div class="float-right animated fadeInRight">
+            <a href="{{ route('patient.import') }}" class="btn btn-pill-left btn-secondary btn-lg">
+                <i class="fas fa-file-import"></i>
+                Importar Usuarios
+            </a>
+        </div>
     </div>
 
     <section class="section">
@@ -33,7 +39,7 @@
                                     <th>Tipo Doc.</th>
                                     <th>Documento</th>
                                     <th>Nombre Completo</th>
-                                    <th>Fecha Nac.</th>
+                                    {{--<th>Fecha Nac.</th>--}}
                                     <th>Edad</th>
                                     <th>Opciones</th>
                                     </thead>
@@ -43,7 +49,7 @@
                                             <td>{!! $patient->dni_type !!}</td>
                                             <td>{!! $patient->dni !!}</td>
                                             <td>{!! $patient->full_name !!}</td>
-                                            <td>{!! \Carbon\Carbon::parse($patient->birth_date)->format("d/m/Y") !!}</td>
+                                            {{--<td>{!! \Carbon\Carbon::parse($patient->birth_date)->format("d/m/Y") !!}</td>--}}
                                             <td>{!! $patient->age !!}</td>
                                             <td>
                                                 @role('admin')

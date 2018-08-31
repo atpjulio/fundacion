@@ -107,4 +107,11 @@ class Eps extends Model
 
         return $eps;
     }
+
+    protected function checkIfExists($code)
+    {
+        return $this->where("code", strtoupper($code))
+            ->first();
+    }
+
 }

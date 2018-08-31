@@ -11,6 +11,7 @@
 
     <link rel="apple-touch-icon" href="apple-touch-icon.png">
     <!-- Place favicon.ico in the root directory -->
+    <link rel="icon" href="{{ asset('favicon.png') }}">
 
     <link rel="stylesheet" href="{{ asset('modular-admin/css/vendor.css') }}">
     <link rel="stylesheet" href="{{ asset('css/fontawesome.css') }}">

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\City;
 use App\EpsService;
+use App\Patient;
 use Illuminate\Http\Request;
 
 class AjaxController extends Controller
@@ -34,5 +35,12 @@ class AjaxController extends Controller
         $cities = City::getCitiesByStateId($stateCode);
 
         return view('partials._cities', compact('cities'));
+    }
+
+
+    public function getEpsPatients($id)
+    {
+        $patients = Patient::getPatientsForEps($id);
+        return view('partials._eps_patients', compact('patients'));
     }
 }

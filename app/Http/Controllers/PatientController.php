@@ -5,9 +5,12 @@ namespace App\Http\Controllers;
 use App\Eps;
 use App\Http\Requests\StorePatientRequest;
 use App\Http\Requests\UpdatePatientRequest;
+use App\Http\Requests\UploadExcelRequest;
 use App\Patient;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Storage;
+use Maatwebsite\Excel\Facades\Excel;
 
 class PatientController extends Controller
 {
@@ -136,5 +139,38 @@ class PatientController extends Controller
         $epss = Eps::all()->pluck('name', 'id');
 
         return view('patient.create', compact('epss'));
+    }
+
+    public function import()
+    {
+        return view('patient.import');
+    }
+
+    public function importProcess(UploadExcelRequest $request)
+    {
+        $file = $request->file('excel_file');
+        $fileName = time().'_'.$file->getClientOriginalName();
+
+        $file->move(config('constants.importFiles'), $fileName);
+
+        Excel::load(config('constants.importFiles').$fileName, function($reader) use ($request) {
+            $counter = 0;
+            $data = $reader->get() instanceof RowCollection ? $reader->get() : $reader->get()->first();
+            foreach ($data as $line) {
+                $result = Patient::storeRecordFromExcel($line);
+                if ($result) {
+                    $counter++;
+                }
+            }
+            if ($counter > 0) {
+                Session::flash("message", "Se guardaron $counter usuarios exitosamente!");
+            } else {
+                Session::flash("message_warning", "No se guardó ningún usuario. Es posible que ya estén guardados en el sistema");
+            }
+        });
+        Storage::delete($fileName);
+
+        return redirect()->route('patient.import');
+
     }
 }

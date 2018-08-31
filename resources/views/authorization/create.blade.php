@@ -49,7 +49,7 @@
                                 <a href="{{ route('patient.create.authorization') }}" class="btn btn-oval btn-info float-right">Nuevo Usuario</a>
                             </h3>
                         </div>
-                        <div class="col-12">
+                        <div class="col-12" id="dynamic-patients">
                             <div class="table-responsive">
                                 <table class="table table-striped table-bordered table-condensed table-hover" id="myTable">
                                     <thead>
@@ -127,6 +127,7 @@
             $('#epsSelect').on('change', function (e) {
                 $('#serviceLink').attr("href", "/eps-services/" + $('#epsSelect').val() + "/create-from-authorization");
                 fillServices($('#epsSelect').val());
+                fillPatients($('#epsSelect').val());
             });
             $(".addRow").click(function(){
                 $("#companionsTable").append('<tr><td><input type="text" id="companionDni" name="companionDni[]" value="" class="form-control" placeholder="Número de Documento"/></td><td><a href="javascript:void(0);" class="removeRow btn btn-oval btn-danger">Quitar</a></td><tr>');

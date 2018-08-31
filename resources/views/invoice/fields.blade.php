@@ -1,15 +1,20 @@
-<div class="form-group">
-    {!! Form::label('picture', 'Imagen', ['class' => 'control-label']) !!}
-    {!! Form::file('picture', ['class' => 'form-control underlined', 'placeholder' => 'Imagen del producto']) !!}
-</div><div class="form-group">
-    {!! Form::label('name', 'Nombre', ['class' => 'control-label']) !!}
-    {!! Form::text('name', '', ['class' => 'form-control underlined', 'placeholder' => 'Nombre del producto']) !!}
+
+@if (isset($invoice))
+    <div class="form-group @if($errors->has('number')) has-error @endif">
+        {!! Form::label('number', 'Número de factura', ['class' => 'control-label']) !!}
+        {!! Form::number('number', $invoice->number, ['class' => 'form-control underlined', 'placeholder' => 'Número de factura', 'min' => 1, $lastNumber > 0 ? 'readonly' : '']) !!}
+    </div>
+@else
+    <div class="form-group @if($errors->has('number')) has-error @endif">
+        {!! Form::label('number', 'Número de factura', ['class' => 'control-label']) !!}
+        {!! Form::number('number', ($lastNumber > 0) ? ($lastNumber + 1) : 1, ['class' => 'form-control underlined', 'placeholder' => 'Número de factura', 'min' => 1, $lastNumber > 0 ? 'readonly' : '']) !!}
+    </div>
+@endif
+<div class="form-group  @if($errors->has('created_at')) has-error @endif">
+    {!! Form::label('created_at', 'Fecha de la factura', ['class' => 'control-label']) !!}
+    {!! Form::date('created_at', old('created_at', isset($invoice) ? $invoice->created_at : \Carbon\Carbon::now()), ['class' => 'form-control underlined', 'placeholder' => 'dd/mm/aaaa', isset($show) ? 'readonly' : '']) !!}
 </div>
-<div class="form-group">
-    {!! Form::label('quantity', 'Cantidad', ['class' => 'control-label']) !!}
-    {!! Form::number('quantity', '', ['class' => 'form-control underlined', 'placeholder' => 'Cantidad inicial disponible', 'min' => '0']) !!}
-</div>
-<div class="form-group">
-    {!! Form::label('description', 'Descripción', ['class' => 'control-label']) !!}
-    {!! Form::textarea('description', '', ['class' => 'form-control underlined', 'placeholder' => 'Descripción del producto', 'rows' => '3']) !!}
+<div class="form-group @if($errors->has('company_id')) has-error @endif">
+    {!! Form::label('company_id', 'Compañía a la que pertenece la factura', ['class' => 'control-label']) !!}
+    {!! Form::select('company_id', $companies, old('company_id', isset($invoice) ? $invoice->company_id : ''), ['class' => 'form-control'   ]) !!}
 </div>

@@ -43,7 +43,7 @@ class AuthorizationController extends Controller
         $initialEpsId = $epss->toArray()[0]['id'];
         $services = EpsService::getServices($initialEpsId)->pluck('name', 'id');
         $epss = $epss->pluck('name', 'id');
-        $patients = Patient::all();
+        $patients = Patient::getPatientsForEps($initialEpsId);// Patient::all();
 
         return view('authorization.create', compact('epss', 'services', 'patients', 'initialEpsId'));
     }
@@ -54,7 +54,7 @@ class AuthorizationController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(ConfirmAuthorizationRequest $request)
+    public function store(Request $request)
     {
         Authorization::storeRecord($request);
 
