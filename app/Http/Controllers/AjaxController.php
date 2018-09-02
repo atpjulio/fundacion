@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\City;
 use App\EpsService;
+use App\Invoice;
 use App\Patient;
 use Illuminate\Http\Request;
 
@@ -42,5 +43,16 @@ class AjaxController extends Controller
     {
         $patients = Patient::getPatientsForEps($id);
         return view('partials._eps_patients', compact('patients'));
+    }
+
+    public function getInvoicesAmount($data) 
+    {
+        $epsId = explode("_", $data)[0];
+        $initialDate = explode("_", $data)[1];
+        $finalDate = explode("_", $data)[2];
+
+        $invoicesAmount = count(Invoice::getInvoicesByEpsId($epsId, $initialDate, $finalDate));
+        return view('accounting.rip.fields2', compact('invoicesAmount'));
+
     }
 }

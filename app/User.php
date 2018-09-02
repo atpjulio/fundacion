@@ -35,4 +35,37 @@ class User extends Authenticatable
     {
         return $this->first_name.' '.$this->last_name;
     }
+
+    /**
+     * Methods
+     */
+    protected function profileUpdate($request, $id)
+    {
+        $user = $this->find($id);
+
+        if ($user) {
+            $arrayName = explode(" ", $request->get('full_name'));
+
+            if (count($arrayName) > 3) {
+                $user->first_name = $arrayName[0].' '.$arrayName[1];
+                $user->last_name = $arrayName[2].' '.$arrayName[3];
+            } elseif (count($arrayName) > 2) {
+                $user->first_name = $arrayName[0];
+                $user->last_name = $arrayName[1].' '.$arrayName[2];
+            } elseif (count($arrayName) > 1) {
+                $user->first_name = $arrayName[0];
+                $user->last_name = $arrayName[1];                
+            } else {
+                $user->first_name = $arrayName[0];
+            }
+
+            if ($request->get('password')) {
+                $user->password = bcrypt($request->get('password'));
+            }
+
+            $user->save();
+        }
+
+        return $user;
+    }
 }

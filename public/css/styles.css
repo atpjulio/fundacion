@@ -1,6 +1,10 @@
 .custom-file-input:lang(es) ~ .custom-file-label:after {
   content: "Examinar" !important; }
 
+td.has-error input {
+    border-color: red;
+}
+
 /*
 select .has-error {
   // border: 1px solid red !important;

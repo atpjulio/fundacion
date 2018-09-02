@@ -124,13 +124,35 @@
             $('#total_days').on('change', function (e) {
                 $('#total').val($('#selected_price').val() * $('#total_days').val());
             });
+            $('#pucs').on('change', function (e) {
+                $('#puc_code').val($('#pucs').val());
+                var fullDescription = $("#pucs").children("option").filter(":selected").text().split('-');
+                var description = '';
+                var counter = 0;
+                
+                fullDescription.forEach(function(element) {
+                    if (counter > 0) {
+                        description += element.trim();
+                    }
+                    counter++;
+                    //console.log(element);
+                });
+                // console.log(fullDescription);
+                // console.log(description);
+
+                $('#puc_description').val(description);                
+            });
             $(".addRow").click(function(){
                 $("#pucsTable").append('<tr>' +
-                    '<td><input type="text" id="notePucs" name="notePucs[]" value="" class="form-control" placeholder="Código PUC"/></td>' +
-                    '<td><input type="text" name="puc_description" placeholder="Cuentas" class="form-control"></td>' +
-                    '<td><input type="text" name="puc_debit" placeholder="Débitos" class="form-control"></td>' +
-                    '<td><input type="text" name="puc_credit" placeholder="Créditos" class="form-control"></td>' +
+                    '<td><input type="text" id="notePucs" name="notePucs[]" value="' + $('#puc_code').val() + '" class="form-control" placeholder="Código PUC"/></td>' + 
+                    '<td><input type="text" name="pucDescription[]" value="' + $('#puc_description').val()+ '" placeholder="Descripción" class="form-control"></td>' +
+                    '<td><input type="text" name="pucDebit[]" value="' + $('#puc_debit').val() + '" placeholder="Débitos" class="form-control"></td>' +
+                    '<td><input type="text" name="pucCredit[]" value="' + $('#puc_credit').val() + '"placeholder="Créditos" class="form-control"></td>' +
                     '<td><a href="javascript:void(0);" class="removeRow btn btn-oval btn-danger">Quitar</a></td><tr>');
+                $('#puc_code').val('');
+                $('#puc_description').val('');
+                $('#puc_debit').val('');
+                $('#puc_credit').val('');
             });
             $("#pucsTable").on('click','.removeRow',function(){
                 $(this).parent().parent().remove();

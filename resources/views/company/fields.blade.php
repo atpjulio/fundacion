@@ -1,15 +1,16 @@
-<div class="form-group">
-    {!! Form::label('picture', 'Imagen', ['class' => 'control-label']) !!}
-    {!! Form::file('picture', ['class' => 'form-control underlined', 'placeholder' => 'Imagen del producto']) !!}
-</div><div class="form-group">
-    {!! Form::label('name', 'Nombre', ['class' => 'control-label']) !!}
-    {!! Form::text('name', '', ['class' => 'form-control underlined', 'placeholder' => 'Nombre del producto']) !!}
+<div class="form-group @if($errors->has('nit')) has-error @endif">
+    {!! Form::label('nit', 'NIT', ['class' => 'control-label']) !!}
+    {!! Form::text('nit', old('nit', isset($company) ? $company->nit : ''), ['class' => 'form-control underlined', 'placeholder' => 'NIT de la compañía']) !!}
 </div>
-<div class="form-group">
-    {!! Form::label('quantity', 'Cantidad', ['class' => 'control-label']) !!}
-    {!! Form::number('quantity', '', ['class' => 'form-control underlined', 'placeholder' => 'Cantidad inicial disponible', 'min' => '0']) !!}
+<div class="form-group @if($errors->has('name')) has-error @endif">
+    {!! Form::label('name', 'Nombre completo', ['class' => 'control-label']) !!}
+    {!! Form::text('name', old('name', isset($company) ? $company->name : ''), ['class' => 'form-control underlined', 'placeholder' => 'Nombre completo de la compañía']) !!}
 </div>
-<div class="form-group">
-    {!! Form::label('description', 'Descripción', ['class' => 'control-label']) !!}
-    {!! Form::textarea('description', '', ['class' => 'form-control underlined', 'placeholder' => 'Descripción del producto', 'rows' => '3']) !!}
+<div class="form-group @if($errors->has('alias')) has-error @endif">
+    {!! Form::label('alias', 'Nombre corto o alias', ['class' => 'control-label']) !!}
+    {!! Form::text('alias', old('alias', isset($company) ? $company->alias : ''), ['class' => 'form-control underlined', 'placeholder' => 'Nombre corto de la compañía']) !!}
+</div>
+<div class="form-group @if($errors->has('billing_resolution')) has-error @endif">
+    {!! Form::label('billing_resolution', 'Resolución de factura', ['class' => 'control-label']) !!}
+    {!! Form::text('billing_resolution', old('billing_resolution', isset($company) ? $company->billing_resolution : ''), ['class' => 'form-control underlined', 'placeholder' => 'Resolución de factura']) !!}
 </div>

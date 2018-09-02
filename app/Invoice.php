@@ -16,6 +16,7 @@ class Invoice extends Model
         'eps_id',
 //        'patient_id',
         'total',
+        'payment',
         'status',
         'notes',
         'created_at',
@@ -39,6 +40,11 @@ class Invoice extends Model
     public function eps()
     {
         return $this->hasOne(Eps::class, 'id', 'eps_id');
+    }
+
+    public function company()
+    {
+        return $this->hasOne(Company::class, 'id', 'company_id');
     }
 
     /**
@@ -70,13 +76,13 @@ class Invoice extends Model
 
         $pucs = [
             [
-                'code' => '414010'.$invoice->eps_id,
+                'code' => '414010'.sprintf("%02d", $invoice->eps_id),
                 'type' => 1,
                 'description' => 'Campamento y otros tipos de hospedaje para EPS '.$invoice->eps->code .' - '.$invoice->eps->alias,
                 'amount' => $invoice->total,
             ],
             [
-                'code' => '130505'.$invoice->eps_id,
+                'code' => '130505'.sprintf("%02d", $invoice->eps_id),
                 'type' => 0,
                 'description' => 'Campamento y otros tipos de hospedaje para EPS '.$invoice->eps->code .' - '.$invoice->eps->alias,
                 'amount' => $invoice->total,
@@ -114,13 +120,13 @@ class Invoice extends Model
 
             $pucs = [
                 [
-                    'code' => '414010'.$invoice->eps_id,
+                    'code' => '414010'.sprintf("%02d", $invoice->eps_id),
                     'type' => 1,
                     'description' => 'Campamento y otros tipos de hospedaje para EPS '.$invoice->eps->code .' - '.$invoice->eps->alias,
                     'amount' => $invoice->total,
                 ],
                 [
-                    'code' => '130505'.$invoice->eps_id,
+                    'code' => '130505'.sprintf("%02d", $invoice->eps_id),
                     'type' => 0,
                     'description' => 'Campamento y otros tipos de hospedaje para EPS '.$invoice->eps->code .' - '.$invoice->eps->alias,
                     'amount' => $invoice->total,
@@ -147,4 +153,17 @@ class Invoice extends Model
             ->where('status', '<>', 0)
             ->get();
     }
+
+    protected function getInvoicesByEpsId($epsId, $initialDate = null, $finalDate = null)
+    {
+        if ($initialDate and $finalDate) {
+            return $this->where('eps_id', $epsId)
+                ->whereBetween('created_at', [$initialDate, $finalDate])
+                ->get();            
+        }
+
+        return $this->where('eps_id', $epsId)
+            ->get();
+    }
+
 }

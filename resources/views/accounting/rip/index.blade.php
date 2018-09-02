@@ -7,68 +7,64 @@
 @section('content')
     <div class="title-block">
         <div class="float-left">
-            <h3 class="title"> Contabilidad por EPS </h3>
-            <p class="title-description"> Diversas opciones de manejo de contabilidad por EPS </p>
+            <h3 class="title"> Registros Individuales de Prestación de Servicios de Salud </h3>
+            <p class="title-description"> Aquí puedes ver el listado de todas los RIPS generados en el sistema </p>
         </div>
-        {{--
         <div class="float-right animated fadeInRight">
-            <a href="{{ URL::previous() }}" class="btn btn-pill-left btn-secondary btn-lg">
-                <i class="fas fa-list"></i>
-                Regresar
+            <a href="{{ route('rip.create') }}" class="btn btn-pill-left btn-primary btn-lg">
+                <i class="fa fa-plus"></i>
+                Nuevo RIPS
             </a>
         </div>
-        --}}
     </div>
+
     <section class="section">
         <div class="row">
             <div class="col-md-12">
                 <div class="card">
                     <div class="card-block">
                         <div class="card-title-block">
-                            <h3 class="title"> Facturas por EPS </h3>
+                            <h3 class="title"> RIPS registrados en el sistema </h3>
                         </div>
                         <div class="col-12">
                             <div class="table-responsive">
                                 <table class="table table-striped table-bordered table-condensed table-hover" id="myTable">
                                     <thead>
                                     <th>EPS</th>
-                                    <th>Pendientes</th>
-                                    <th>Pagadas</th>
-                                    <th>Total Pendiente</th>
-                                    <!--<th>Fecha de creación</th>-->
+                                    <th>Fecha inicial</th>
+                                    <th>Fecha final</th>
+                                    <th>Fecha de remisión</th>
+                                    <th>Archivo</th>
                                     <th>Opciones</th>
                                     </thead>
                                     <tbody>
-                                    @if (count($rows['eps_id']) > 0)
-                                    @foreach($rows['eps_id'] as $key => $row)
+                                    @foreach($rips as $rip)
                                         <tr>
-                                            <td>{!! $rows['eps_name'][$key] !!}</td>
-                                            <td>{!! $rows['pending'][$key] !!}</td>
-                                            <td>{!! $rows['paid'][$key] !!}</td>
-                                            <td>$ {!! number_format($rows['pending_amount'][$key], 2, ",", ".") !!}</td>
-                                            {{--<td>{!! \Carbon\Carbon::parse($authorization->created_at)->format("d/m/Y") !!}</td>--}}
+                                            <td>{!! $rip->eps->alias ?: $rip->eps->name !!}</td>
+                                            <td>{!! \Carbon\Carbon::parse($rip->initial_date)->format("d/m/Y") !!}</td>
+                                            <td>{!! \Carbon\Carbon::parse($rip->final_date)->format("d/m/Y") !!}</td>
+                                            <td>{!! \Carbon\Carbon::parse($rip->created_at)->format("d/m/Y") !!}</td>
                                             <td>
-                                                Opciones
-                                                {{--
-                                                @role('admin')
-                                                <a href="{{ route('authorization.edit', $authorization->id) }}" class="btn btn-pill-left btn-info btn-sm">
+                                                <a href="{{ route('rip.download', $rip->id) }}">
+                                                    {!! substr($rip->url, 12) !!}
+                                                </a>
+                                            </td>
+                                            <td>
+                                                <a href="{{ route('rip.edit', $rip->id) }}" class="btn btn-pill-left btn-info btn-sm">
                                                     Editar
                                                 </a>
-                                                <a href="" data-toggle="modal" data-target="#confirm-modal-{{ $authorization->id }}" class="btn btn-pill-right btn-danger btn-sm">
+                                                {{--  
+                                                <a href="{{ route('rip.download', $rip->id) }}" class="btn btn-secondary btn-sm">
+                                                    Descargar
+                                                </a>
+                                                --}}
+                                                <a href="" data-toggle="modal" data-target="#confirm-modal-{{ $rip->id }}" class="btn btn-pill-right btn-danger btn-sm">
                                                     Borrar
                                                 </a>
-                                                @endrole
-                                                @role('user')
-                                                <a href="{{ route('authorization.edit', $authorization->id) }}" class="btn btn-oval btn-info btn-sm">
-                                                    Editar
-                                                </a>
-                                                @endrole
-                                                --}}
                                             </td>
+                                            @include('accounting.rip.delete_modal')
                                         </tr>
-                                        {{--@include('authorization.delete_modal')--}}
                                     @endforeach
-                                    @endif
                                     </tbody>
                                 </table>
                             </div>

@@ -42,3 +42,10 @@ function fillPatients(id)
 
     });
 }
+
+function fillInvoicesByEpsAndDate(id)
+{
+    $.get("/get-invoices-amount/" + id, function (data, status) {
+        $('#dynamic-invoice-amount').html(data);
+    });
+}

@@ -42,12 +42,18 @@
                                             <td>{!! $company->nit !!}</td>
                                             <td>{!! $company->billing_resolution !!}</td>
                                             <td>
-                                                <a href="{{ route('company.edit', $company->id) }}" class="btn btn-pill-left btn-info btn-sm">
-                                                    Editar
-                                                </a>
-                                                <a href="" data-toggle="modal" data-target="#confirm-modal-{{ $company->id }}" class="btn btn-pill-right btn-danger btn-sm">
-                                                    Borrar
-                                                </a>
+                                                @if ($company->id == 1)
+                                                    <a href="{{ route('company.edit', $company->id) }}" class="btn btn-oval btn-info btn-sm">
+                                                        Editar
+                                                    </a>
+                                                @else
+                                                    <a href="{{ route('company.edit', $company->id) }}" class="btn btn-pill-left btn-info btn-sm">
+                                                        Editar
+                                                    </a>
+                                                    <a href="" data-toggle="modal" data-target="#confirm-modal-{{ $company->id }}" class="btn btn-pill-right btn-danger btn-sm">
+                                                        Borrar
+                                                    </a>
+                                                @endif
                                             </td>
                                             @include('company.delete_modal')
                                         </tr>

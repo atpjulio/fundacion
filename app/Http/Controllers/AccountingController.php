@@ -26,7 +26,7 @@ class AccountingController extends Controller
             $pending = Invoice::getUnpaidInvoices($eps->id);
             if ($pending) {
                 array_push($rows['pending'], count($pending));
-                array_push($rows['pending_amount'], $pending->sum('total'));
+                array_push($rows['pending_amount'], $pending->sum('total') - $pending->sum('payment'));
             } else {
                 array_push($rows['pending'], 0);
                 array_push($rows['pending_amount'], 0);
@@ -44,7 +44,7 @@ class AccountingController extends Controller
 
         // dd($rows);
 
-        return view('accounting.eps', compact('rows'));
+        return view('accounting.eps.home', compact('rows'));
     }
 
     public function accountsReceivable()
@@ -52,8 +52,10 @@ class AccountingController extends Controller
         return view('accounting.accounts-receivable');
     }
 
-    public function rips()
+    public function epsDetail($id)
     {
-        return view('accounting.rips');
+        $invoices = Invoice::where('eps_id', $id)
+            ->get();
+        return view('accounting.eps.index', compact('invoices'));
     }
 }

@@ -20,7 +20,8 @@ class CreateInvoicesTable extends Migration
             $table->text('authorization_code');
             $table->unsignedInteger('eps_id');
 //            $table->unsignedInteger('patient_id');
-            $table->unsignedDecimal('total', 15,2);
+            $table->unsignedDecimal('total', 15, 2);
+            $table->unsignedDecimal('payment', 15, 2)->default('0.00');
             $table->boolean('status')->default(0);
             $table->text('notes')->nullable();
             $table->softDeletes();

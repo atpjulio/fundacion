@@ -47,6 +47,9 @@
                                                 <a href="{{ route('invoice.edit', $invoice->id) }}" class="btn btn-pill-left btn-info btn-sm">
                                                     Editar
                                                 </a>
+                                                <a href="{{ route('invoice.pdf', $invoice->id) }}" class="btn btn-secondary btn-sm" target="_blank">
+                                                    Ver factura
+                                                </a>
                                                 <a href="" data-toggle="modal" data-target="#confirm-modal-{{ $invoice->id }}" class="btn btn-pill-right btn-danger btn-sm">
                                                     Borrar
                                                 </a>

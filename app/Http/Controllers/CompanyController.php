@@ -3,7 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Company;
+use App\Http\Requests\StoreCompanyRequest;
+use App\Http\Requests\UpdateCompanyRequest;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Session;
 
 class CompanyController extends Controller
 {
@@ -35,9 +38,12 @@ class CompanyController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(StoreCompanyRequest $request)
     {
-        //
+        Company::storeRecord($request);
+
+        $request->session()->flash('message', 'Compañía guardada exitosamente');
+        return redirect()->route('company.index');
     }
 
     /**
@@ -59,7 +65,9 @@ class CompanyController extends Controller
      */
     public function edit($id)
     {
-        return view('company.edit');
+        $company = Company::find($id);
+
+        return view('company.edit', compact('company'));
     }
 
     /**
@@ -69,9 +77,12 @@ class CompanyController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(UpdateCompanyRequest $request, $id)
     {
-        //
+        Company::updateRecord($request);
+
+        $request->session()->flash('message', 'Compañía actualizada exitosamente');
+        return redirect()->route('company.index');
     }
 
     /**
@@ -82,6 +93,11 @@ class CompanyController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $company = Company::find($id);
+
+        $company->delete();
+
+        Session::flash('message', 'Compañía borrada exitosamente');
+        return redirect()->route('company.index');
     }
 }

@@ -122,4 +122,39 @@ class InvoiceController extends Controller
         Session::flash('message_danger', 'No tienes permiso para borrar facturas. Este movimiento ha sido notificado');
         return redirect()->route('invoice.index');
     }
+
+    public function pdf($id) 
+    {
+        /*
+        $mpdf = new \Mpdf\Mpdf(['tempDir' => storage_path('app')]);
+
+        $mpdf->SetHTMLHeader('<div style="text-align: right; font-weight: bold; font-size: 30px;">INVOICE</div>');
+        $mpdf->SetHTMLFooter('<table width="100%"><tr><td width="33%">{DATE Y-m-j}</td><td width="33%" align="center">{PAGENO}/{nbpg}</td><td width="33%" style="text-align: right;">'.env('APP_URL').'</td></tr></table>');
+
+        $view = \View::make('invoice.pdf');
+        $mpdf->WriteHTML($view);
+        $mpdf->Output('Factura '.date("Y-m-d"), 'I');
+        */
+        $invoice = Invoice::find($id);
+        $html = \View::make('invoice.pdf', compact('invoice'));
+        $mpdf = new \Mpdf\Mpdf([
+            'margin_left' => 20,
+            'margin_right' => 15,
+            'margin_top' => 48,
+            'margin_bottom' => 25,
+            'margin_header' => 10,
+            'margin_footer' => 10
+        ]);
+        $mpdf->SetProtection(array('print'));
+        $mpdf->SetTitle($invoice->company->name." - Factura ".$invoice->number);
+        $mpdf->SetAuthor("Acme Trading Co.");
+        // $mpdf->SetWatermarkText("Paid");
+        // $mpdf->showWatermarkText = true;
+        // $mpdf->watermark_font = 'DejaVuSansCondensed';
+        // $mpdf->watermarkTextAlpha = 0.1;
+        $mpdf->SetDisplayMode('fullpage');
+        $mpdf->WriteHTML($html);
+        $mpdf->Output('Factura No '.$invoice->number.'.pdf', 'I');
+
+    }
 }

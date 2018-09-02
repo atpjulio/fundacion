@@ -90,7 +90,7 @@
                 </li>
                 @endrole
                 @role('admin')
-                <li class="@if(Request::is('accounting*')) open active @endif">
+                <li class="@if(Request::is('accounting*') or Request::is('rip*') or Request::is('receipt*')) open active @endif">
                     <a href="">
                         <i class="fas fa-calculator"></i> Contabilidad
                         <i class="fa arrow"></i>
@@ -98,7 +98,7 @@
                     <ul class="sidebar-nav">
                         <li class="@if(Request::is('accounting-note*')) active @endif" >
                             <a href="{{ route('accounting-note.index') }}">
-                                <i class="far fa-sticky-note"></i>
+                                <i class="far fa-sticky-note"></i>&nbsp;
                                 Nota de Contabilidad
                             </a>
                         </li>
@@ -108,10 +108,16 @@
                                 Por EPS
                             </a>
                         </li>
-                        <li class="@if(Request::is('accounting/rips*')) active @endif" >
-                            <a href="{{ route('accounting.rips') }}">
+                        <li class="@if(Request::is('rip*')) active @endif" >
+                            <a href="{{ route('rip.index') }}">
                                 <i class="fa fa-cogs"></i>&nbsp;
-                                RIPs
+                                RIPS
+                            </a>
+                        </li>
+                        <li class="@if(Request::is('receipt*')) active @endif" >
+                            <a href="{{ route('receipt.index') }}">
+                                <i class="fas fa-file-invoice"></i>&nbsp;
+                                Recibos
                             </a>
                         </li>
                     </ul>
@@ -120,14 +126,14 @@
                 @role('admin')
                 <li class="@if(Request::is('company*')) open active @endif">
                     <a href="">
-                        <i class="far fa-building"></i> Fundación
+                        <i class="far fa-building"></i> Compañías
                         <i class="fa arrow"></i>
                     </a>
                     <ul class="sidebar-nav">
                         <li class="@if(Request::is('company')) active @endif" >
                             <a href="{{ route('company.index') }}">
                                 <i class="fas fa-list"></i>&nbsp;
-                                Mi información
+                                Listado
                             </a>
                         </li>
                     </ul>

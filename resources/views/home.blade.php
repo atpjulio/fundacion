@@ -80,6 +80,25 @@
                 </div>
             </div>
             @endrole
+            @role('admin')
+            <div class="col-xl-4">
+                <div class="card card-primary">
+                    <div class="card-header">
+                        <div class="header-block">
+                            <p class="title"> Compañías </p>
+                        </div>
+                    </div>
+                    <div class="card-block">
+                        <p>Verás un listado de las Compañías registradas en el sistema, aquí puedes añadir, modificar o eliminar las Compañías del sistema que estarán disponibles para las facturas, autorizaciones, etc.</p>
+                    </div>
+                    <div class="card-footer">
+                        <a href="{{ route('company.index') }}">
+                            Ir a Compañías
+                        </a>
+                    </div>
+                </div>
+            </div>
+            @endrole
         </div>
     </section>
 @endsection

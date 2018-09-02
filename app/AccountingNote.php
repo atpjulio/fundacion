@@ -32,16 +32,12 @@ class AccountingNote extends Model
 
     public function pucs()
     {
-        return $this->hasMany(AccountingNotePuc::class, 'id');
+        return $this->hasMany(AccountingNotePuc::class, 'accounting_note_id');
     }
 
     /**
      * Dynamic attributes
      */
-//    public function getMovementsAttributes()
-//    {
-//
-//    }
 
     /**
      * Methods

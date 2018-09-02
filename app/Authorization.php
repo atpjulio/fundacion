@@ -39,6 +39,11 @@ class Authorization extends Model
         return $this->hasOne(Eps::class, 'id', 'eps_id');
     }
 
+    public function service()
+    {
+        return $this->hasOne(EpsService::class, 'id', 'eps_service_id');
+    }
+
     public function patient()
     {
         return $this->hasOne(Patient::class, 'id', 'patient_id');
