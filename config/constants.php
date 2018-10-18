@@ -41,9 +41,17 @@ $myConstants = [
         0 => 'No',
         1 => 'Si',
     ],
+    'residenceZone' => [
+        'U' => 'Urbana',
+        'R' => 'Rural'
+    ],
     'gender' => [
         0 => 'Femenino',
         1 => 'Masculino',
+    ],
+    'genderShort' => [
+        0 => 'F',
+        1 => 'M',
     ],
     'patientTypeString' => [
         1 => 'Contributivo',
@@ -110,6 +118,12 @@ $myConstants = [
         "MS" => "Menor Sin Identificación",
         "NU" => "Número Unico de Identificación",
     ],
+    'companiesDocumentTypes' => [
+        "NI" => "NIT",
+        "CC" => "Cédula de Ciudadanía",
+        "CE" => "Cédula de Extranjería",
+        "PA" => "Pasaporte",
+    ],
     'companyInfo' => [
         'name' => 'Fundacion',
         'email' => 'admin@fundacion.com',
@@ -132,6 +146,16 @@ $myConstants = [
         10 => 'Octubre',
         11 => 'Noviembre',
         12 => 'Diciembre',
+    ],
+    'banks' => [
+        1 => 'Bancolombia',
+        2 => 'Bancoomeva',
+        3 => 'AV Villas',
+        4 => 'Otro',
+    ],
+    'paymentType' => [
+        1 => 'Efectivo',
+        2 => 'Transferencia',
     ],
 ];
 

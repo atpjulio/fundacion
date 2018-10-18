@@ -19,6 +19,7 @@ class Authorization extends Model
         'total',
         'companion',
         'companion_dni',
+        'companion_eps_service_id',
         'guardianship',
         'guardianship_file',
         'notes',
@@ -50,6 +51,22 @@ class Authorization extends Model
     }
 
     /**
+     * Attributes
+     */
+    public function getDaysAttribute()
+    {
+        return \Carbon\Carbon::parse($this->date_to)->diffInDays(\Carbon\Carbon::parse($this->date_from));        
+    }
+
+    public function getPersonsAttribute()
+    {
+        if ($this->companion_dni) {
+            return count(explode(",", $this->companion_dni)) + 1;
+        }
+        return 1;
+    }
+
+    /**
      * Methods
      */
     protected function storeRecord($request)
@@ -66,6 +83,7 @@ class Authorization extends Model
         $authorization->companion = ($request->get('companion') == "Si");
         if ($authorization->companion) {
             $authorization->companion_dni = join(",", $request->get('companionDni'));
+            $authorization->companion_eps_service_id = join(",", $request->get('companionServiceId'));
         }
 
         $authorization->save();
@@ -87,8 +105,16 @@ class Authorization extends Model
             $authorization->notes = $request->get('notes');
             $authorization->companion = $request->get('companion');
             $authorization->companion_dni = $authorization->companion ? join(",", $request->get('companionDni')) : null;
+            $authorization->companion_eps_service_id = $authorization->companion ? join(",", $request->get('companionServiceId')) : null;
 
             $authorization->save();
+
+            $invoice = Invoice::getInvoiceByAuthorizationCode($authorization->code);
+            if ($invoice) {
+                $invoice->update([
+                    'total' => $authorization->eps->daily_price * $authorization->days
+                ]);
+            }
         }
 
         return $authorization;

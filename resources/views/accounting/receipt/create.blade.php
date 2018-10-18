@@ -7,7 +7,7 @@
 @section('content')
     <div class="title-block">
         <div class="float-left">
-            <h3 class="title"> Nueva Recibo de Pago </h3>
+            <h3 class="title"> Nuevo Recibo de Pago </h3>
             <p class="title-description"> Añadiendo nuevo recibo de pago al sistema </p>
         </div>
         <div class="float-right animated fadeInRight">
@@ -30,7 +30,7 @@
                             <div class="table-responsive">
                                 <table class="table table-striped table-bordered table-condensed table-hover" id="myTable">
                                     <thead>
-                                    <th>Número</th>
+                                    <th># Factura</th>
                                     <th>Autorización</th>
                                     <th>Monto</th>
                                     <th>Pagado</th>                                    
@@ -40,7 +40,7 @@
                                     <tbody>
                                     @foreach($invoices as $invoice)
                                         <tr>
-                                            <td>{!! $invoice->number !!}</td>
+                                            <td>{!! sprintf("%05d", $invoice->number) !!}</td>
                                             <td>{!! $invoice->authorization_code !!}</td>
                                             <td>$ {!! number_format($invoice->total, 2, ",", ".") !!}</td>
                                             <td>$ {!! number_format($invoice->payment, 2, ",", ".") !!}</td>

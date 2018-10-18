@@ -16,7 +16,8 @@ class CreateCompaniesTable extends Migration
         Schema::create('companies', function (Blueprint $table) {
             $table->increments('id');
             $table->string('name');
-            $table->string('nit', 20);
+            $table->string('doc_type', 2)->default('NI');
+            $table->string('doc', 20);
             $table->string('billing_resolution', 50);
             $table->date('billing_date');
             $table->unsignedInteger('billing_start');

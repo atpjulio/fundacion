@@ -4,7 +4,7 @@
 </div>
 <div class="form-group @if($errors->has('total_days')) has-error @endif">
     {!! Form::label('total_days', 'Total de días', ['class' => 'control-label']) !!}
-    {!! Form::number('total_days', old('total_days', isset($invoice) ? \Carbon\Carbon::parse($invoice->authorization->date_to)->diffInDays(\Carbon\Carbon::parse($invoice->authorization->date_from)) : ''), ['class' => 'form-control underlined', 'placeholder' => 'Total de días', 'min' => '0', 'id' => 'total_days']) !!}
+    {!! Form::number('total_days', old('total_days', isset($invoice) ? $invoice->days : ''), ['class' => 'form-control underlined', 'placeholder' => 'Total de días', 'min' => '0', 'id' => 'total_days']) !!}
 </div>
 <div class="form-group @if($errors->has('total')) has-error @endif">
     {!! Form::label('total', 'Monto', ['class' => 'control-label']) !!}

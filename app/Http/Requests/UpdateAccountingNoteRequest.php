@@ -24,8 +24,8 @@ class UpdateAccountingNoteRequest extends FormRequest
     public function rules()
     {
         return [
-            'invoice_number' => 'required',
-            'amount' => 'required',
+            // 'invoice_number' => 'required',
+            // 'amount' => 'required',
             'created_at' => 'required',
             'notePucs.*' => 'required',
             'notePucs' => 'required',

@@ -32,46 +32,44 @@
                         <div class="card-title-block">
                             <h3 class="title"> Usuarios registrados en el sistema </h3>
                         </div>
-                        <div class="col-12">
-                            <div class="table-responsive">
-                                <table class="table table-striped table-bordered table-condensed table-hover" id="myTable">
-                                    <thead>
-                                    <th>Tipo Doc.</th>
-                                    <th>Documento</th>
-                                    <th>Nombre Completo</th>
-                                    {{--<th>Fecha Nac.</th>--}}
-                                    <th>Edad</th>
-                                    <th>Opciones</th>
-                                    </thead>
-                                    <tbody>
-                                    @foreach($patients as $patient)
-                                        <tr>
-                                            <td>{!! $patient->dni_type !!}</td>
-                                            <td>{!! $patient->dni !!}</td>
-                                            <td>{!! $patient->full_name !!}</td>
-                                            {{--<td>{!! \Carbon\Carbon::parse($patient->birth_date)->format("d/m/Y") !!}</td>--}}
-                                            <td>{!! $patient->age !!}</td>
-                                            <td>
-                                                @role('admin')
-                                                <a href="{{ route('patient.edit', $patient->id) }}" class="btn btn-pill-left btn-info btn-sm">
-                                                    Editar
-                                                </a>
-                                                <a href="" data-toggle="modal" data-target="#confirm-modal-{{ $patient->id }}" class="btn btn-pill-right btn-danger btn-sm">
-                                                    Borrar
-                                                </a>
-                                                @endrole
-                                                @role('user')
-                                                <a href="{{ route('patient.edit', $patient->id) }}" class="btn btn-oval btn-info btn-sm">
-                                                    Editar
-                                                </a>
-                                                @endrole
-                                            </td>
-                                        </tr>
-                                        @include('patient.delete_modal')
-                                    @endforeach
-                                    </tbody>
-                                </table>
-                            </div>
+                        <div class="table-responsive">
+                            <table class="table table-striped table-bordered table-condensed table-hover" id="myTable">
+                                <thead>
+                                <th>Tipo Doc.</th>
+                                <th>Documento</th>
+                                <th>Nombre Completo</th>
+                                {{--<th>Fecha Nac.</th>--}}
+                                <th>Edad</th>
+                                <th>Opciones</th>
+                                </thead>
+                                <tbody>
+                                @foreach($patients as $patient)
+                                    <tr>
+                                        <td>{!! $patient->dni_type !!}</td>
+                                        <td>{!! $patient->dni !!}</td>
+                                        <td>{!! $patient->full_name !!}</td>
+                                        {{--<td>{!! \Carbon\Carbon::parse($patient->birth_date)->format("d/m/Y") !!}</td>--}}
+                                        <td>{!! $patient->age !!}</td>
+                                        <td>
+                                            @role('admin')
+                                            <a href="{{ route('patient.edit', $patient->id) }}" class="btn btn-pill-left btn-info btn-sm">
+                                                Editar
+                                            </a>
+                                            <a href="" data-toggle="modal" data-target="#confirm-modal-{{ $patient->id }}" class="btn btn-pill-right btn-danger btn-sm">
+                                                Borrar
+                                            </a>
+                                            @endrole
+                                            @role('user')
+                                            <a href="{{ route('patient.edit', $patient->id) }}" class="btn btn-oval btn-info btn-sm">
+                                                Editar
+                                            </a>
+                                            @endrole
+                                        </td>
+                                    </tr>
+                                    @include('patient.delete_modal')
+                                @endforeach
+                                </tbody>
+                            </table>
                         </div>
                     </div>
                 </div>
@@ -83,24 +81,5 @@
 @push('scripts')
     <script src="{{ asset('js/jquery.dataTables.min.js') }}"></script>
     <script src="{{ asset('js/dataTables.bootstrap.min.js') }}"></script>
-    <script>
-        $(document).ready(function() {
-            $('#myTable').DataTable({
-                "language": {
-                    "lengthMenu": "Mostrando _MENU_ registros por página",
-                    "zeroRecords": "No se encontró ningún resultado",
-                    "info": "Mostrando página _PAGE_ de _PAGES_",
-                    "infoEmpty": "No hay información disponible",
-                    "infoFiltered": "(filtrando de un total de _MAX_ registros)",
-                    "search":         "Buscar:",
-                    "paginate": {
-                        "first":      "Primera",
-                        "last":       "Última",
-                        "next":       "Siguiente",
-                        "previous":   "Anterior"
-                    }
-                }
-            });
-        } );
-    </script>
+    <script src="{{ asset('js/general/table.js') }}"></script>
 @endpush

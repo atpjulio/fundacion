@@ -65,7 +65,7 @@
                                             <td>{!! $authorization->patient->full_name !!}</td>
                                             <td>{!! \Carbon\Carbon::parse($authorization->date_from)->format("d/m/Y") !!}</td>
                                             <td>{!! \Carbon\Carbon::parse($authorization->date_to)->format("d/m/Y") !!}</td>
-                                            <td>{!! \Carbon\Carbon::parse($authorization->date_to)->diffInDays(\Carbon\Carbon::parse($authorization->date_from)) !!}</td>
+                                            <td>{!! $authorization->days !!}</td>
                                             <td>{!! Form::button('Seleccionar', ['class' => 'btn btn-oval btn-success', 'id' => 'button'.$key ]) !!}</td>
                                         </tr>
                                     @endforeach

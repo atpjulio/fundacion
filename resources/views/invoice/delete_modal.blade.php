@@ -11,7 +11,7 @@
             <div class="modal-body">
                 <p>Confirma que deseas borrar la factura: </p>
                 <div class="text-center">
-                    {!! $invoice->number !!}
+                    {!! $invoice->format_number !!}
                 </div>
             </div>
 

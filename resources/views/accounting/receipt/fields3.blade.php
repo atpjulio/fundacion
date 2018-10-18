@@ -61,51 +61,62 @@
                 </tr>
                 </thead>
                 <tbody>
-                @if(isset($note))
-                    @foreach($note->pucs as $notePuc)
+                @if(isset($receipt) and count($receipt->pucs) > 0 and empty(old('notePucs')))
+                    @foreach($receipt->pucs as $receiptPuc)
                         <tr>
-                            <td class="@if($errors->first('notePucs.*')) has-error @endif">
-                                <input type="text" id="notePucs" name="notePucs[]" value="{{ $notePuc->code }}" class="form-control" placeholder="Código PUC" />
+                            <td class="@if($errors->first('receiptPucs.*')) has-error @endif">
+                                <input type="text" id="notePucs" name="notePucs[]" value="{{ $receiptPuc->code }}" class="form-control" placeholder="Código PUC" />
                             </td>
                             <td class="@if($errors->first('pucDescription.*')) has-error @endif">
-                                <input type="text" name="pucDescription[]" placeholder="Descripción" class="form-control" value="{{ $notePuc->description }}">
+                                <input type="text" name="pucDescription[]" placeholder="Descripción" class="form-control" value="{{ $receiptPuc->description }}">
                             </td>
                             <td>
-                                <input type="text" name="pucDebit[]" placeholder="Débitos" class="form-control" value="{{ $notePuc->type ? 0 : $notePuc->amount }}">
+                                <input type="text" name="pucDebit[]" placeholder="Débitos" class="form-control" value="{{ $receiptPuc->type ? 0 : $receiptPuc->amount }}">
                             </td>
                             <td>
-                                <input type="text" name="pucCredit[]" placeholder="Créditos" class="form-control" value="{{ $notePuc->type ? $notePuc->amount : 0 }}">
+                                <input type="text" name="pucCredit[]" placeholder="Créditos" class="form-control" value="{{ $receiptPuc->type ? $receiptPuc->amount : 0 }}">
                             </td>
                             <td>
                                 <a href="javascript:void(0);" class="removeRow btn btn-oval btn-danger">Quitar</a>
                             </td>
                         </tr>
                     @endforeach
-                @else
-                    @if (!empty(old('notePucs')))
-                        @foreach(old('notePucs') as $k => $val)
-                            <tr>
-                                <td class="@if($errors->first('notePucs.*')) has-error @endif">
-                                    <input type="text" id="notePucs" name="notePucs[]" value="{{ $val }}" class="form-control" placeholder="Código PUC" />
-                                </td>
-                                <td class="@if($errors->first('pucDescription.*')) has-error @endif">
-                                    <input type="text" name="pucDescription[]" placeholder="Descripción" class="form-control" value="{{ old('pucDescription')[$k] }}">
-                                </td>
-                                <td>
-                                    <input type="text" name="pucDebit[]" placeholder="Débitos" class="form-control" value="{{ old('pucDebit')[$k] }}">
-                                </td>
-                                <td>
-                                    <input type="text" name="pucCredit[]" placeholder="Créditos" class="form-control" value="{{ old('pucCredit')[$k] }}">
-                                </td>
-                                <td>
-                                    <a href="javascript:void(0);" class="removeRow btn btn-oval btn-danger">Quitar</a>
-                                </td>
-                            </tr>
-                        @endforeach
-                    @endif
+                @endif
+                @if (!empty(old('notePucs')))
+                    @foreach(old('notePucs') as $k => $val)
+                        <tr>
+                            <td class="@if($errors->first('notePucs.*')) has-error @endif">
+                                <input type="text" id="notePucs" name="notePucs[]" value="{{ $val }}" class="form-control" placeholder="Código PUC" />
+                            </td>
+                            <td class="@if($errors->first('pucDescription.*')) has-error @endif">
+                                <input type="text" name="pucDescription[]" placeholder="Descripción" class="form-control" value="{{ old('pucDescription')[$k] }}">
+                            </td>
+                            <td>
+                                <input type="text" name="pucDebit[]" placeholder="Débitos" class="form-control" value="{{ old('pucDebit')[$k] }}">
+                            </td>
+                            <td>
+                                <input type="text" name="pucCredit[]" placeholder="Créditos" class="form-control" value="{{ old('pucCredit')[$k] }}">
+                            </td>
+                            <td>
+                                <a href="javascript:void(0);" class="removeRow btn btn-oval btn-danger">Quitar</a>
+                            </td>
+                        </tr>
+                    @endforeach
                 @endif
                 </tbody>
             </table>
         </div>
     </div>
+    {{-- 
+    <div class="row justify-content-end">
+        <div class="col-md-5 col-10">
+            <div class="alert alert-danger" style="background-color: #ffffff !important; color: #dd4b39 !important;" id="pucsAlert">
+                Débitos: 5.000 | 
+                Cŕeditos: 5.500
+                <br>
+                Los débitos deben ser iguales a los créditos
+            </div>
+        </div>            
+    </div>
+     --}}
 </div>

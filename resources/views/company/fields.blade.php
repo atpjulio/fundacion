@@ -1,6 +1,10 @@
-<div class="form-group @if($errors->has('nit')) has-error @endif">
-    {!! Form::label('nit', 'NIT', ['class' => 'control-label']) !!}
-    {!! Form::text('nit', old('nit', isset($company) ? $company->nit : ''), ['class' => 'form-control underlined', 'placeholder' => 'NIT de la compañía']) !!}
+<div class="form-group @if($errors->has('doc_type')) has-error @endif">
+    {!! Form::label('doc_type', 'Tipo de documento', ['class' => 'control-label']) !!}
+    {!! Form::select('doc_type', config('constants.companiesDocumentTypes'), old('doc_type', isset($company) ? $company->doc_type : ''), ['class' => 'form-control']) !!}
+</div>
+<div class="form-group @if($errors->has('doc')) has-error @endif">
+    {!! Form::label('doc', 'Número de documento', ['class' => 'control-label']) !!}
+    {!! Form::text('doc', old('doc', isset($company) ? $company->doc : ''), ['class' => 'form-control underlined', 'placeholder' => 'Número de documento de la compañía']) !!}
 </div>
 <div class="form-group @if($errors->has('name')) has-error @endif">
     {!! Form::label('name', 'Nombre completo', ['class' => 'control-label']) !!}

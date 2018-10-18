@@ -1,12 +1,147 @@
-<div class="form-group @if($errors->has('invoice_number')) has-error @endif">
-    {!! Form::label('invoice_number', 'Número de factura seleccionada', ['class' => 'control-label']) !!}
-    {!! Form::text('invoice_number', old('invoice_number', isset($note) ? $note->invoice->number : ''), ['class' => 'form-control underlined', 'readonly', 'id' => 'invoice_number']) !!}
+<div class="col-md-6" id="beginning">
+    <div class="card">
+        <div class="card-block">
+			{{-- 
+			<div class="form-group @if($errors->has('invoice_number')) has-error @endif">
+			    {!! Form::label('invoice_number', 'Número de factura seleccionada', ['class' => 'control-label']) !!}
+			    {!! Form::text('invoice_number', old('invoice_number', isset($note) ? $note->invoice->number : ''), ['class' => 'form-control underlined', 'readonly', 'id' => 'invoice_number']) !!}
+			</div>
+			<div class="form-group @if($errors->has('amount')) has-error @endif">
+			    {!! Form::label('amount', 'Monto de la nota', ['class' => 'control-label']) !!}
+			    {!! Form::number('amount', old('amount', isset($note) ? $note->amount : 0), ['class' => 'form-control underlined', 'placeholder' => 'Monto de la nota', 'min' => '0']) !!}
+			</div>
+			 --}}
+			<div class="form-group  @if($errors->has('created_at')) has-error @endif">
+			    {!! Form::label('created_at', 'Fecha de la nota', ['class' => 'control-label']) !!}
+			    {!! Form::date('created_at', old('created_at', isset($note) ? $note->created_at : \Carbon\Carbon::now()), ['class' => 'form-control underlined', 'placeholder' => 'dd/mm/aaaa', isset($show) ? 'readonly' : '']) !!}
+			</div>
+			<br>
+        </div>
+    </div>
 </div>
-<div class="form-group @if($errors->has('amount')) has-error @endif">
-    {!! Form::label('amount', 'Monto de la nota', ['class' => 'control-label']) !!}
-    {!! Form::number('amount', old('amount', isset($note) ? $note->amount : 0), ['class' => 'form-control underlined', 'placeholder' => 'Monto de la nota', 'min' => '0']) !!}
+<div class="col-md-6">
+    <div class="card">
+        <div class="card-block">
+			<div class="form-group @if($errors->has('notes')) has-error @endif">
+			    {!! Form::label('notes', 'Detalles (opcional)', ['class' => 'control-label']) !!}
+			    {!! Form::textarea('notes', old('notes', isset($note) ? $note->notes : ''), ['class' => 'form-control underlined', 'placeholder' => 'Detalles', 'rows' => 2]) !!}
+			</div>
+        </div>
+    </div>
 </div>
-<div class="form-group  @if($errors->has('created_at')) has-error @endif">
-    {!! Form::label('created_at', 'Fecha de la nota', ['class' => 'control-label']) !!}
-    {!! Form::date('created_at', old('created_at', isset($note) ? $note->created_at : \Carbon\Carbon::now()), ['class' => 'form-control underlined', 'placeholder' => 'dd/mm/aaaa', isset($show) ? 'readonly' : '']) !!}
+<div class="col-md-12">
+    <div class="card">
+        <div class="card-block">
+			<div class="form-group">
+			    {!! Form::label('pucs', 'Listado de códigos PUC', ['class' => 'control-label']) !!}
+			    <select name="pucs" class="form-control" id="pucs">
+			        <option>Seleccione el código PUC</option>
+			        @foreach($pucs as $puc)
+			            <option value="{{ $puc->code }}">{!! $puc->code.' - '.$puc->description !!}</option>
+			        @endforeach
+			    </select>
+			</div>
+
+			<div class="form-group @if($errors->first('notePucs.*')) has-error @endif">
+			    <div class="row">
+			        <div class="col-12">
+			            <table class="table table-hover table-bordered">
+			                <thead>
+			                <tr>
+			                    <th style="width: 135px !important;">Código</th>
+			                    <th style="">Descripción</th>
+			                    <th style="width: 150px !important;">Débitos</th>
+			                    <th style="width: 150px !important;">Créditos</th>
+			                    <th style="width: 85px !important;">Acción</th>
+			                </tr>
+			                </thead>
+			                <tbody>
+			                    <tr>
+			                        <td>
+			                            <input type="text" id="puc_code" name="puc_code" class="form-control" placeholder="Código PUC" />
+			                        </td>
+			                        <td>
+			                            <input type="text" id="puc_description" name="puc_description" placeholder="Descripción" class="form-control">
+			                        </td>
+			                        <td>
+			                            <input type="text" id="puc_debit" name="puc_debit" placeholder="Débitos" class="form-control">
+			                        </td>
+			                        <td>
+			                            <input type="text" id="puc_credit" name="puc_credit" placeholder="Créditos" class="form-control">
+			                        </td>
+			                        <td>
+			                            <a href="javascript:void(0);" class="addRow btn btn-oval btn-info">Añadir</a>
+			                        </td>
+			                    </tr>
+			                </tbody>
+			            </table>
+			        </div>
+			    </div>
+			</div>
+
+
+			<div class="form-group @if($errors->first('notePucs.*')) has-error @endif">
+			    {!! Form::label('notePucs', 'Códigos PUC de la nota interna', ['class' => 'control-label']) !!}
+			    <div class="row">
+			        <div class="col-12">
+			            <table class="table table-hover table-bordered" id="pucsTable">
+			                <thead>
+			                <tr>
+			                    <th style="width: 135px !important;">Código</th>
+			                    <th style="">Descripción</th>
+			                    <th style="width: 150px !important;">Débitos</th>
+			                    <th style="width: 150px !important;">Créditos</th>
+			                    <th style="width: 85px !important;">Acción</th>
+			                </tr>
+			                </thead>
+			                <tbody>
+			                @if(isset($note) and count($note->pucs) > 0 and empty(old('notePucs')))
+			                    @foreach($note->pucs as $notePuc)
+			                        <tr>
+			                            <td>
+			                                <input type="text" id="notePucs" name="notePucs[]" value="{{ $notePuc->code }}" class="form-control" placeholder="Código PUC" />
+			                            </td>
+			                            <td>
+			                                <input type="text" name="pucDescription[]" placeholder="Descripción" class="form-control" value="{{ $notePuc->description }}">
+			                            </td>
+			                            <td>
+			                                <input type="text" name="pucDebit[]" placeholder="Débitos" class="form-control" value="{{ $notePuc->type ? 0 : $notePuc->amount }}">
+			                            </td>
+			                            <td>
+			                                <input type="text" name="pucCredit[]" placeholder="Créditos" class="form-control" value="{{ $notePuc->type ? $notePuc->amount : 0 }}">
+			                            </td>
+			                            <td>
+			                                <a href="javascript:void(0);" class="removeRow btn btn-oval btn-danger">Quitar</a>
+			                            </td>
+			                        </tr>
+			                    @endforeach
+			                @endif
+			                @if (!empty(old('notePucs')))
+			                    @foreach(old('notePucs') as $k => $val)
+			                        <tr>
+			                            <td class="@if($errors->first('notePucs.*')) has-error @endif">
+			                                <input type="text" id="notePucs" name="notePucs[]" value="{{ $val }}" class="form-control" placeholder="Código PUC" />
+			                            </td>
+			                            <td class="@if($errors->first('pucDescription.*')) has-error @endif">
+			                                <input type="text" name="pucDescription[]" placeholder="Descripción" class="form-control" value="{{ old('pucDescription')[$k] }}">
+			                            </td>
+			                            <td>
+			                                <input type="text" name="pucDebit[]" placeholder="Débitos" class="form-control" value="{{ old('pucDebit')[$k] }}">
+			                            </td>
+			                            <td>
+			                                <input type="text" name="pucCredit[]" placeholder="Créditos" class="form-control" value="{{ old('pucCredit')[$k] }}">
+			                            </td>
+			                            <td>
+			                                <a href="javascript:void(0);" class="removeRow btn btn-oval btn-danger">Quitar</a>
+			                            </td>
+			                        </tr>
+			                    @endforeach
+			                @endif
+			                </tbody>
+			            </table>
+			        </div>
+			    </div>
+			</div>
+        </div>
+    </div>
 </div>

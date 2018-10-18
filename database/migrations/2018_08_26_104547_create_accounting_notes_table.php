@@ -15,7 +15,7 @@ class CreateAccountingNotesTable extends Migration
     {
         Schema::create('accounting_notes', function (Blueprint $table) {
             $table->increments('id');
-            $table->unsignedInteger('invoice_id');
+            $table->unsignedInteger('invoice_id')->default(0);
             $table->unsignedDecimal('amount', 15,2);
             // $table->text('pucs')->nullable();
             $table->text('notes')->nullable();

@@ -2,6 +2,8 @@
 
 use App\Patient;
 use Illuminate\Database\Seeder;
+use Maatwebsite\Excel\Collections\RowCollection;
+use Maatwebsite\Excel\Facades\Excel;
 
 class PatientsTableSeeder extends Seeder
 {
@@ -68,6 +70,22 @@ class PatientsTableSeeder extends Seeder
         foreach ($initialPatients as $patient) {
             Patient::create($patient);
         }
+
+        Excel::load(public_path('/files/initial_patients.xls'), function($reader) {
+            $counter = 0;
+            $data = $reader->get() instanceof RowCollection ? $reader->get() : $reader->get()->first();
+            foreach ($data as $line) {
+                $result = Patient::storeRecordFromExcel($line);
+                if ($result) {
+                    $counter++;
+                }
+            }
+            if ($counter > 0) {
+                echo "Se guardaron $counter usuarios exitosamente!\n";
+            } else {
+                echo "No se guardó ningún usuario. Es posible que ya estén guardados en el sistema\n";
+            }
+        });
 
     }
 }

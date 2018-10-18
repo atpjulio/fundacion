@@ -60,12 +60,12 @@ class ReceiptPuc extends Model
 
             foreach ($pucs as $puc) {
                 $this->create([
-                    'receipt_id' => $accountingNote->id,
+                    'receipt_id' => $receipt->id,
                     'code' => $puc['code'],
                     'type' => $puc['type'],
                     'description' => $puc['description'],
                     'amount' => $puc['amount'],
-                    'created_at' => $accountingNote->created_at,
+                    'created_at' => $receipt->created_at,
                 ]);
             }
         }

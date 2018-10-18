@@ -50,15 +50,15 @@
                                                 </a>
                                             </td>
                                             <td>
+                                                {{--  
                                                 <a href="{{ route('rip.edit', $rip->id) }}" class="btn btn-pill-left btn-info btn-sm">
                                                     Editar
                                                 </a>
-                                                {{--  
                                                 <a href="{{ route('rip.download', $rip->id) }}" class="btn btn-secondary btn-sm">
                                                     Descargar
                                                 </a>
                                                 --}}
-                                                <a href="" data-toggle="modal" data-target="#confirm-modal-{{ $rip->id }}" class="btn btn-pill-right btn-danger btn-sm">
+                                                <a href="" data-toggle="modal" data-target="#confirm-modal-{{ $rip->id }}" class="btn btn-oval btn-danger btn-sm">
                                                     Borrar
                                                 </a>
                                             </td>
@@ -77,26 +77,7 @@
 @endsection
 
 @push('scripts')
-    <script src="{{asset('js/jquery.dataTables.min.js')}}"></script>
-    <script src="{{asset('js/dataTables.bootstrap.min.js')}}"></script>
-    <script>
-        $(document).ready(function() {
-            $('#myTable').DataTable({
-                "language": {
-                    "lengthMenu": "Mostrando _MENU_ registros por página",
-                    "zeroRecords": "No se encontró ningún resultado",
-                    "info": "Mostrando página _PAGE_ de _PAGES_",
-                    "infoEmpty": "No hay información disponible",
-                    "infoFiltered": "(filtrando de un total de _MAX_ registros)",
-                    "search":         "Buscar:",
-                    "paginate": {
-                        "first":      "Primera",
-                        "last":       "Última",
-                        "next":       "Siguiente",
-                        "previous":   "Anterior"
-                    }
-                }
-            });
-        } );
-    </script>
+    <script src="{{ asset('js/jquery.dataTables.min.js') }}"></script>
+    <script src="{{ asset('js/dataTables.bootstrap.min.js') }}"></script>
+    <script src="{{ asset('js/general/table.js') }}"></script>
 @endpush

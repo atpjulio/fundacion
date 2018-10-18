@@ -64,11 +64,13 @@ class ReceiptController extends Controller
         }
 
         if ($amount != $amountDebit) {
-            Session::flash('message_danger', 'No coinciden los montos de débito y cŕedito');
+            Session::flash('message_danger', 'Débitos: '.number_format($amountDebit, 2, ",", ".")
+                .' | Cŕeditos: '.number_format($amount, 2, ",", ".")
+                .'<br>No coinciden los montos de débito y cŕedito');
             return redirect()->back()->withInput();
         }
 
-        $invoice = Invoice::find($request->get('invoice_number'));
+        $invoice = Invoice::getInvoiceByNumber($request->get('invoice_number'));
 
         Receipt::storeRecord($invoice, $pucs, $request->get('notes'), $amount);
 
@@ -130,7 +132,9 @@ class ReceiptController extends Controller
         }
 
         if ($amount != $amountDebit) {
-            Session::flash('message_danger', 'No coinciden los montos de débito y cŕedito');
+            Session::flash('message_danger', 'Débitos: '.number_format($amountDebit, 2, ",", ".")
+                .' | Cŕeditos: '.number_format($amount, 2, ",", ".")
+                .'<br>No coinciden los montos de débito y cŕedito');
             return redirect()->back()->withInput();
         }
 
@@ -164,5 +168,40 @@ class ReceiptController extends Controller
         }
         Session::flash('message_danger', 'No tienes permiso para borrar recibos. Este movimiento ha sido notificado');
         return redirect()->route('receipt.index');
+    }
+
+    public function pdf($id) 
+    {
+        /*
+        $mpdf = new \Mpdf\Mpdf(['tempDir' => storage_path('app')]);
+
+        $mpdf->SetHTMLHeader('<div style="text-align: right; font-weight: bold; font-size: 30px;">INVOICE</div>');
+        $mpdf->SetHTMLFooter('<table width="100%"><tr><td width="33%">{DATE Y-m-j}</td><td width="33%" align="center">{PAGENO}/{nbpg}</td><td width="33%" style="text-align: right;">'.env('APP_URL').'</td></tr></table>');
+
+        $view = \View::make('invoice.pdf');
+        $mpdf->WriteHTML($view);
+        $mpdf->Output('Factura '.date("Y-m-d"), 'I');
+        */
+        $receipt = Receipt::find($id);
+        $html = \View::make('accounting.receipt.pdf', compact('receipt'));
+        $mpdf = new \Mpdf\Mpdf([
+            'margin_left' => 20,
+            'margin_right' => 15,
+            'margin_top' => 48,
+            'margin_bottom' => 25,
+            'margin_header' => 10,
+            'margin_footer' => 10
+        ]);
+        $mpdf->SetProtection(array('print'));
+        $mpdf->SetTitle($receipt->invoice->company->name." - Recibo ".$receipt->number);
+        $mpdf->SetAuthor($receipt->invoice->company->name);
+        // $mpdf->SetWatermarkText("Recibo");
+        // $mpdf->showWatermarkText = true;
+        // $mpdf->watermark_font = 'DejaVuSansCondensed';
+        // $mpdf->watermarkTextAlpha = 0.1;
+        $mpdf->SetDisplayMode('fullpage');
+        $mpdf->WriteHTML($html);
+        $mpdf->Output('Recibo No '.sprintf("%05d", $receipt->id).'.pdf', 'I');
+
     }
 }

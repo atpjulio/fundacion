@@ -26,41 +26,39 @@
                         <div class="card-title-block">
                             <h3 class="title"> Compañías registradas en el sistema </h3>
                         </div>
-                        <div class="col-12">
-                            <div class="table-responsive">
-                                <table class="table table-striped table-bordered table-condensed table-hover" id="myTable">
-                                    <thead>
-                                    <th>Nombre</th>
-                                    <th>NIT</th>
-                                    <th>Resolución de Fact.</th>
-                                    <th>Opciones</th>
-                                    </thead>
-                                    <tbody>
-                                    @foreach($companies as $company)
-                                        <tr>
-                                            <td>{!! $company->name !!}</td>
-                                            <td>{!! $company->nit !!}</td>
-                                            <td>{!! $company->billing_resolution !!}</td>
-                                            <td>
-                                                @if ($company->id == 1)
-                                                    <a href="{{ route('company.edit', $company->id) }}" class="btn btn-oval btn-info btn-sm">
-                                                        Editar
-                                                    </a>
-                                                @else
-                                                    <a href="{{ route('company.edit', $company->id) }}" class="btn btn-pill-left btn-info btn-sm">
-                                                        Editar
-                                                    </a>
-                                                    <a href="" data-toggle="modal" data-target="#confirm-modal-{{ $company->id }}" class="btn btn-pill-right btn-danger btn-sm">
-                                                        Borrar
-                                                    </a>
-                                                @endif
-                                            </td>
-                                            @include('company.delete_modal')
-                                        </tr>
-                                    @endforeach
-                                    </tbody>
-                                </table>
-                            </div>
+                        <div class="table-responsive">
+                            <table class="table table-striped table-bordered table-condensed table-hover" id="myTable">
+                                <thead>
+                                <th>Nombre</th>
+                                <th>Documento</th>
+                                <th>Resolución de Fact.</th>
+                                <th>Opciones</th>
+                                </thead>
+                                <tbody>
+                                @foreach($companies as $company)
+                                    <tr>
+                                        <td>{!! $company->name !!}</td>
+                                        <td>{!! $company->doc !!}</td>
+                                        <td>{!! $company->billing_resolution !!}</td>
+                                        <td>
+                                            @if ($company->id == 1)
+                                                <a href="{{ route('company.edit', $company->id) }}" class="btn btn-oval btn-info btn-sm">
+                                                    Editar
+                                                </a>
+                                            @else
+                                                <a href="{{ route('company.edit', $company->id) }}" class="btn btn-pill-left btn-info btn-sm">
+                                                    Editar
+                                                </a>
+                                                <a href="" data-toggle="modal" data-target="#confirm-modal-{{ $company->id }}" class="btn btn-pill-right btn-danger btn-sm">
+                                                    Borrar
+                                                </a>
+                                            @endif
+                                        </td>
+                                        @include('company.delete_modal')
+                                    </tr>
+                                @endforeach
+                                </tbody>
+                            </table>
                         </div>
                     </div>
                 </div>
@@ -70,26 +68,7 @@
 @endsection
 
 @push('scripts')
-    <script src="{{asset('js/jquery.dataTables.min.js')}}"></script>
-    <script src="{{asset('js/dataTables.bootstrap.min.js')}}"></script>
-    <script>
-        $(document).ready(function() {
-            $('#myTable').DataTable({
-                "language": {
-                    "lengthMenu": "Mostrando _MENU_ registros por página",
-                    "zeroRecords": "No se encontró ningún resultado",
-                    "info": "Mostrando página _PAGE_ de _PAGES_",
-                    "infoEmpty": "No hay información disponible",
-                    "infoFiltered": "(filtrando de un total de _MAX_ registros)",
-                    "search":         "Buscar:",
-                    "paginate": {
-                        "first":      "Primera",
-                        "last":       "Última",
-                        "next":       "Siguiente",
-                        "previous":   "Anterior"
-                    }
-                }
-            });
-        } );
-    </script>
+    <script src="{{ asset('js/jquery.dataTables.min.js') }}"></script>
+    <script src="{{ asset('js/dataTables.bootstrap.min.js') }}"></script>
+    <script src="{{ asset('js/general/table.js') }}"></script>
 @endpush

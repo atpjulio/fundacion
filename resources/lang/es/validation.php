@@ -152,7 +152,7 @@ return [
         'excel_file' => 'archivo de excel',
         'name' => 'nombre de la campaña',
         'message' => 'mensaje',
-        'plan_id' => 'plan',
+        'doc' => 'documento',
         'plan_type' => 'tipo de plan',
         'price' => 'monto',
         'birth_day' => 'dia de nacimiento',

@@ -30,9 +30,7 @@
             <div class="col-md-6">
                 <div class="card">
                     <div class="card-block">
-                        <div id="dynamic-invoice-amount">                            
-                            @include('accounting.rip.fields2')
-                        </div>
+                        @include('accounting.rip.fields2')
                     </div>
                 </div>
             </div>

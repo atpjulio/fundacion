@@ -12,6 +12,28 @@ function fillServices(id)
     });
 }
 
+function fillCompanionServices(id)
+{
+    $.get("/get-companion-services/" + id, function (data, status) {
+        $('#dynamic-companion-services').html(data);
+        $('#companion_eps_service_id').on('change', function(e) {
+            console.log($(this).val());
+            if ($(this).val() > 0) {             
+                $('#companion_service').val($(this).children('option').filter(":selected").text());
+                $('#companion_service_id').val($(this).val());
+                $('#alertTable').css('display', 'none');
+                $('#tableMessage').html('');              
+
+            } else {
+                $('#companion_service').val('');
+                $('#companion_service_id').val('');
+                $('#tableMessage').html('Por favor seleccione un servicio válido');              
+                $('#alertTable').css('display', 'block');
+            }
+        });        
+    });
+}
+
 function fillCities(id)
 {
     $.get("/get-cities/" + id, function (data, status) {
@@ -49,3 +71,11 @@ function fillInvoicesByEpsAndDate(id)
         $('#dynamic-invoice-amount').html(data);
     });
 }
+
+function showModal(url) {
+    $.get('/' + url, function( data ) {
+        // console.log(data);
+        $("#show-modal-body").html(data);
+        $('#show-modal').modal('show');
+    });
+};

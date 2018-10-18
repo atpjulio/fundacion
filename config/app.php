@@ -161,7 +161,7 @@ return [
         App\Providers\RouteServiceProvider::class,
         Collective\Html\HtmlServiceProvider::class,
         Spatie\Permission\PermissionServiceProvider::class,
-
+        'Chumper\Zipper\ZipperServiceProvider'
     ],
 
     /*
@@ -213,7 +213,7 @@ return [
         'Form' => Collective\Html\FormFacade::class,
         'Html' => Collective\Html\HtmlFacade::class,
         'Excel' => Maatwebsite\Excel\Facades\Excel::class,
-
+        'Zipper' => 'Chumper\Zipper\Zipper'
     ],
 
 ];

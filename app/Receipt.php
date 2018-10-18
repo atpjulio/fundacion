@@ -32,18 +32,8 @@ class Receipt extends Model
 
     public function pucs()
     {
-        return $this->hasMany(ReceiptPuc::class, 'accounting_note_id');
+        return $this->hasMany(ReceiptPuc::class, 'receipt_id');
     }
-
-    /*
-	protected $fillable = [
-        'invoice_id',
-        'amount',
-        'puc',
-        'notes',
-        'created_at'
-	];
-    */    
 
     /**
      * Dynamic attributes
@@ -101,63 +91,4 @@ class Receipt extends Model
         return $receipt;
     }
 
-    /**
-     * Methods
-     */
-    /*
-    protected function storeRecord($request) 
-    {
-        $invoice = Invoice::find($request->get('invoice_number'));
-        if ($invoice) {
-            $receipt = new Receipt();
-
-            $receipt->invoice_id = $request->get('invoice_number');
-            $receipt->puc_code = $request->get('puc_code');
-            $receipt->puc_description = $request->get('puc_description');
-            $receipt->amount = floatval($request->get('amount'));
-            $receipt->notes = $request->get('notes');
-            $receipt->created_at = $request->get('created_at');
-
-            $receipt->save();            
-
-            $invoice->payment += $receipt->amount;
-            if ($invoice->payment >= $invoice->total) {
-                $invoice->payment = $invoice->total;
-                $invoice->status = config('constants.invoices.status.paid');
-            }
-            $invoice->save();
-        }
-
-        return $receipt;
-    }
-
-    protected function updateRecord($request, $id) 
-    {
-        $invoice = Invoice::find($request->get('invoice_number'));
-        $receipt = $this->find($id);
-        if ($invoice) {
-            $oldAmount = $receipt->amount;
-
-            $receipt->invoice_id = $request->get('invoice_number');
-            $receipt->puc_code = $request->get('puc_code');
-            $receipt->puc_description = $request->get('puc_description');
-            $receipt->amount = floatval($request->get('amount'));
-            $receipt->notes = $request->get('notes');
-            $receipt->created_at = $request->get('created_at');
-
-            $receipt->save();            
-
-            $invoice->payment -= $oldAmount;
-            $invoice->payment += $receipt->amount;
-            $invoice->status = config('constants.invoices.status.pending');
-            if ($invoice->payment >= $invoice->total) {
-                $invoice->payment = $invoice->total;
-                $invoice->status = config('constants.invoices.status.paid');
-            } 
-            $invoice->save();
-        }
-
-        return $receipt;
-    }
-    */
 }

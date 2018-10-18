@@ -48,7 +48,11 @@
                 <span style="font-weight: bold; font-size: 14pt;">
                     {{ $invoice->company->name }}
                 </span>
-                <br><strong>NIT:</strong> {{ $invoice->company->nit }}
+                <br>
+                <strong>
+                {{ config('constants.companiesDocumentTypes')[$invoice->company->doc_type] }}:
+                </strong> 
+                {{ $invoice->company->doc }}
                 <br><strong>Dirección:</strong> Carrera 60 No. 46 - 76
                 <br><strong>Tel:</strong> 3126214231 - 3157098010
                 <br>
@@ -57,7 +61,7 @@
                 <span style="font-weight: bold; font-size: 14pt;">
                     No. Factura
                     <br>
-                    {{ sprintf("%05d", $invoice->number) }}
+                    {{ $invoice->format_number }}
                 </span>
                 <br>
                 Resolución de Facturación No.
@@ -124,21 +128,36 @@ mpdf-->
         </thead>
         <tbody>
         <!-- ITEMS HERE -->
-        <tr>
-            <td align="center">{{ $invoice->authorization->service->code }}</td>
-            <td>{{ $invoice->authorization->service->name }}</td>
-            <td>{{ $invoice->authorization->code }}</td>
-            <td align="center">{!! \Carbon\Carbon::parse($invoice->authorization->date_to)->diffInDays(\Carbon\Carbon::parse($invoice->authorization->date_from)) !!}</td>
-            <td class="cost">$ {{ number_format($invoice->eps->daily_price, 0, ",", ".") }}</td>
-            <td class="cost">$ {!! number_format($invoice->total, 0, ",", ".") !!}</td>
-        </tr>
+        @php
+            $total = 0;
+            $services = $invoice->authorization->eps_service_id;
+            $companionService = $invoice->authorization->companion_eps_service_id;
+
+            if ($companionService) {
+                $services .= ",".$companionService;
+            }            
+        @endphp
+        @foreach(explode(",", $services) as $serviceId)    
+            @php
+                $service = \App\EpsService::find($serviceId);
+                $total += $invoice->total;
+            @endphp
+            <tr>
+                <td align="center">{{ $service->code }}</td>
+                <td>{{ $service->name }}</td>
+                <td>{{ $invoice->authorization->code }}</td>
+                <td align="center">{!! $invoice->days !!}</td>
+                <td class="cost">$ {{ number_format($invoice->eps->daily_price, 0, ",", ".") }}</td>
+                <td class="cost">$ {!! number_format($invoice->total, 0, ",", ".") !!}</td>
+            </tr>
+        @endforeach
         <!-- END ITEMS HERE -->
         <tr style="border-bottom-width: 0;">
             <td class="blanktotal" colspan="4"></td>
             <td class="totals"><b>TOTAL:</b></td>
             <td class="totals cost">
                 <b>
-                $ {!! number_format($invoice->total, 0, ",", ".") !!}
+                $ {!! number_format($total, 0, ",", ".") !!}
                 </b>
             </td>
         </tr>

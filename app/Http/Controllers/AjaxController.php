@@ -31,6 +31,19 @@ class AjaxController extends Controller
         return view('partials._services', compact('services'));
     }
 
+    public function getCompanionServices($id)
+    {
+        $companionServices = EpsService::getServices($id)->pluck('name', 'id');
+        if (count($companionServices) < 1) {
+/*
+            $companionServices = [
+                "0" => 'Sin servicios registrados'
+            ];
+*/            
+        }
+        return view('partials._companion_services', compact('companionServices'));
+    }
+
     public function getCities($stateCode)
     {
         $cities = City::getCitiesByStateId($stateCode);
@@ -52,7 +65,7 @@ class AjaxController extends Controller
         $finalDate = explode("_", $data)[2];
 
         $invoicesAmount = count(Invoice::getInvoicesByEpsId($epsId, $initialDate, $finalDate));
-        return view('accounting.rip.fields2', compact('invoicesAmount'));
+        return view('partials._invoice_amount', compact('invoicesAmount'));
 
     }
 }

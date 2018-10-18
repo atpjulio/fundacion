@@ -55,9 +55,9 @@ class InvoiceController extends Controller
      */
     public function store(StoreInvoiceRequest $request)
     {
-        Invoice::storeRecord($request);
+        $invoice = Invoice::storeRecord($request);
 
-        Session::flash('message', 'Factura '.$request->get('number').' guardada exitosamente');
+        Session::flash('message', 'Factura '.$invoice->format_number.' guardada exitosamente');
         return redirect()->route('invoice.index');
     }
 
@@ -136,6 +136,8 @@ class InvoiceController extends Controller
         $mpdf->Output('Factura '.date("Y-m-d"), 'I');
         */
         $invoice = Invoice::find($id);
+
+        //dd($invoice->authorization->service);
         $html = \View::make('invoice.pdf', compact('invoice'));
         $mpdf = new \Mpdf\Mpdf([
             'margin_left' => 20,
@@ -146,15 +148,65 @@ class InvoiceController extends Controller
             'margin_footer' => 10
         ]);
         $mpdf->SetProtection(array('print'));
-        $mpdf->SetTitle($invoice->company->name." - Factura ".$invoice->number);
-        $mpdf->SetAuthor("Acme Trading Co.");
+        $mpdf->SetTitle($invoice->company->name." - Factura ".sprintf("%05d", $invoice->number));
+        $mpdf->SetAuthor($invoice->company->name);
         // $mpdf->SetWatermarkText("Paid");
         // $mpdf->showWatermarkText = true;
         // $mpdf->watermark_font = 'DejaVuSansCondensed';
         // $mpdf->watermarkTextAlpha = 0.1;
         $mpdf->SetDisplayMode('fullpage');
         $mpdf->WriteHTML($html);
-        $mpdf->Output('Factura No '.$invoice->number.'.pdf', 'I');
+        $mpdf->Output('Factura No '.sprintf("%05d", $invoice->number).'.pdf', 'I');
 
     }
+
+    public function relation()
+    {
+        $epss = Eps::all();
+        $invoicesAmount = count(Invoice::getInvoicesByEpsId($epss->toArray()[0]['id'], date("Y-m-d"), date("Y-m-d")));
+        $epss = $epss->pluck('name', 'id');
+        $companies = Company::all()->pluck('name', 'id');
+
+        return view('invoice.relation', compact('epss', 'companies', 'invoicesAmount'));
+    }
+
+    public function relationPDF(Request $request) 
+    {
+        $epsId = $request->get('eps_id');
+        $initialDate = $request->get('initial_date');
+        $finalDate = $request->get('final_date');
+        $companyId = $request->get('company_id');
+
+        $invoices = Invoice::getInvoicesByEpsId($epsId, $initialDate, $finalDate);
+
+        if (count($invoices) == 0) {
+            Session::flash('message_danger', 'No hay facturas disponibles para el rango de fecha seleccionado');
+            return redirect()->back();
+        }
+
+        $company = Company::find($companyId);
+        $eps = Eps::find($epsId);
+
+        $html = \View::make('invoice.pdf_relation', compact('invoices', 'company', 'eps', 'initialDate', 'finalDate'));
+        $mpdf = new \Mpdf\Mpdf([
+            'margin_left' => 20,
+            'margin_right' => 15,
+            'margin_top' => 48,
+            'margin_bottom' => 25,
+            'margin_header' => 10,
+            'margin_footer' => 10
+        ]);
+        $mpdf->SetProtection(array('print'));
+        $mpdf->SetTitle($company->name." - Relación de Facturas ".$eps->alias);
+        $mpdf->SetAuthor($company->name);
+        // $mpdf->SetWatermarkText("Paid");
+        // $mpdf->showWatermarkText = true;
+        // $mpdf->watermark_font = 'DejaVuSansCondensed';
+        // $mpdf->watermarkTextAlpha = 0.1;
+        $mpdf->SetDisplayMode('fullpage');
+        $mpdf->WriteHTML($html);
+        $mpdf->Output("Relación de Facturas ".$eps->alias.'.pdf', 'I');
+
+    }
+
 }

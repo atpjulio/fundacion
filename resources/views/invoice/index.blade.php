@@ -26,40 +26,38 @@
                         <div class="card-title-block">
                             <h3 class="title"> Facturas registradas en el sistema </h3>
                         </div>
-                        <div class="col-12">
-                            <div class="table-responsive">
-                                <table class="table table-striped table-bordered table-condensed table-hover" id="myTable">
-                                    <thead>
-                                    <th>Número</th>
-                                    <th>Autorización</th>
-                                    <th>Monto</th>
-                                    <th>Fecha</th>
-                                    <th>Opciones</th>
-                                    </thead>
-                                    <tbody>
-                                        @foreach($invoices as $invoice)
-                                        <tr>
-                                            <td>{!! $invoice->number !!}</td>
-                                            <td>{!! $invoice->authorization_code !!}</td>
-                                            <td>$ {!! number_format($invoice->total, 2, ",", ".") !!}</td>
-                                            <td>{!! \Carbon\Carbon::parse($invoice->created_at)->format("d/m/Y") !!}</td>
-                                            <td>
-                                                <a href="{{ route('invoice.edit', $invoice->id) }}" class="btn btn-pill-left btn-info btn-sm">
-                                                    Editar
-                                                </a>
-                                                <a href="{{ route('invoice.pdf', $invoice->id) }}" class="btn btn-secondary btn-sm" target="_blank">
-                                                    Ver factura
-                                                </a>
-                                                <a href="" data-toggle="modal" data-target="#confirm-modal-{{ $invoice->id }}" class="btn btn-pill-right btn-danger btn-sm">
-                                                    Borrar
-                                                </a>
-                                            </td>
-                                            @include('invoice.delete_modal')
-                                        </tr>
-                                        @endforeach
-                                    </tbody>
-                                </table>
-                            </div>
+                        <div class="table-responsive">
+                            <table class="table table-striped table-bordered table-condensed table-hover" id="myTable">
+                                <thead>
+                                <th># Factura</th>
+                                <th>Autorización</th>
+                                <th>Monto</th>
+                                <th>Días</th>
+                                <th>Opciones</th>
+                                </thead>
+                                <tbody>
+                                    @foreach($invoices as $invoice)
+                                    <tr>
+                                        <td>{!! sprintf("%05d", $invoice->number) !!}</td>
+                                        <td>{!! $invoice->authorization_code !!}</td>
+                                        <td>$ {!! number_format($invoice->total, 2, ",", ".") !!}</td>
+                                        <td>{!! $invoice->days !!}</td>
+                                        <td>
+                                            <a href="{{ route('invoice.edit', $invoice->id) }}" class="btn btn-pill-left btn-info btn-sm">
+                                                Editar
+                                            </a>
+                                            <a href="{{ route('invoice.pdf', $invoice->id) }}" class="btn btn-secondary btn-sm" target="_blank">
+                                                Ver factura
+                                            </a>
+                                            <a href="" data-toggle="modal" data-target="#confirm-modal-{{ $invoice->id }}" class="btn btn-pill-right btn-danger btn-sm">
+                                                Borrar
+                                            </a>
+                                        </td>
+                                        @include('invoice.delete_modal')
+                                    </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
                         </div>
                     </div>
                 </div>
@@ -69,26 +67,7 @@
 @endsection
 
 @push('scripts')
-    <script src="{{asset('js/jquery.dataTables.min.js')}}"></script>
-    <script src="{{asset('js/dataTables.bootstrap.min.js')}}"></script>
-    <script>
-        $(document).ready(function() {
-            $('#myTable').DataTable({
-                "language": {
-                    "lengthMenu": "Mostrando _MENU_ registros por página",
-                    "zeroRecords": "No se encontró ningún resultado",
-                    "info": "Mostrando página _PAGE_ de _PAGES_",
-                    "infoEmpty": "No hay información disponible",
-                    "infoFiltered": "(filtrando de un total de _MAX_ registros)",
-                    "search":         "Buscar:",
-                    "paginate": {
-                        "first":      "Primera",
-                        "last":       "Última",
-                        "next":       "Siguiente",
-                        "previous":   "Anterior"
-                    }
-                }
-            });
-        } );
-    </script>
+    <script src="{{ asset('js/jquery.dataTables.min.js') }}"></script>
+    <script src="{{ asset('js/dataTables.bootstrap.min.js') }}"></script>
+    <script src="{{ asset('js/general/table.js') }}"></script>
 @endpush

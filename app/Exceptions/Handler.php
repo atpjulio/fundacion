@@ -4,6 +4,7 @@ namespace App\Exceptions;
 
 use Exception;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Illuminate\Support\Facades\Session;
 
 class Handler extends ExceptionHandler
 {
@@ -47,8 +48,15 @@ class Handler extends ExceptionHandler
     public function render($request, Exception $exception)
     {
         $class = get_class($exception);
-        if ($class == 'Illuminate\Auth\AuthenticationException'){
+        if ($class == 'Illuminate\Auth\AuthenticationException') {
             return redirect()->to("/");
+        }
+
+        if ($class == 'Symfony\Component\HttpKernel\Exception\NotFoundHttpException') {
+            if (auth()->check()) {
+                return redirect()->to("/home");                
+            }
+            return redirect()->to("/")->withError('Página inválida - 404');
         }
         return parent::render($request, $exception);
     }

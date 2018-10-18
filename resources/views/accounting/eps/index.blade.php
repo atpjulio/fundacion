@@ -26,29 +26,27 @@
                         <div class="card-title-block">
                             <h3 class="title"> Facturas registradas en el sistema para {!! $invoices[0]->eps->alias ?: $invoice[0]->eps->name !!}</h3>
                         </div>
-                        <div class="col-12">
-                            <div class="table-responsive">
-                                <table class="table table-striped table-bordered table-condensed table-hover" id="myTable">
-                                    <thead>
-                                    <th>Número</th>
-                                    <th>Autorización</th>
-                                    <th>Monto</th>
-                                    <th>Pagado</th>
-                                    <th>Pendiente</th>
-                                    </thead>
-                                    <tbody>
-                                        @foreach($invoices as $invoice)
-                                        <tr>
-                                            <td>{!! $invoice->number !!}</td>
-                                            <td>{!! $invoice->authorization_code !!}</td>
-                                            <td>$ {!! number_format($invoice->total, 2, ",", ".") !!}</td>
-                                            <td>$ {!! number_format($invoice->payment, 2, ",", ".") !!}</td>
-                                            <td>$ {!! number_format($invoice->total - $invoice->payment, 2, ",", ".") !!}</td>
-                                        </tr>
-                                        @endforeach
-                                    </tbody>
-                                </table>
-                            </div>
+                        <div class="table-responsive">
+                            <table class="table table-striped table-bordered table-condensed table-hover" id="myTable">
+                                <thead>
+                                <th># Factura</th>
+                                <th>Autorización</th>
+                                <th>Monto</th>
+                                <th>Pagado</th>
+                                <th>Pendiente</th>
+                                </thead>
+                                <tbody>
+                                    @foreach($invoices as $invoice)
+                                    <tr>
+                                        <td>{!! sprintf("%05d", $invoice->number) !!}</td>
+                                        <td>{!! $invoice->authorization_code !!}</td>
+                                        <td>$ {!! number_format($invoice->total, 2, ",", ".") !!}</td>
+                                        <td>$ {!! number_format($invoice->payment, 2, ",", ".") !!}</td>
+                                        <td>$ {!! number_format($invoice->total - $invoice->payment, 2, ",", ".") !!}</td>
+                                    </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
                         </div>
                     </div>
                 </div>
@@ -58,26 +56,7 @@
 @endsection
 
 @push('scripts')
-    <script src="{{asset('js/jquery.dataTables.min.js')}}"></script>
-    <script src="{{asset('js/dataTables.bootstrap.min.js')}}"></script>
-    <script>
-        $(document).ready(function() {
-            $('#myTable').DataTable({
-                "language": {
-                    "lengthMenu": "Mostrando _MENU_ registros por página",
-                    "zeroRecords": "No se encontró ningún resultado",
-                    "info": "Mostrando página _PAGE_ de _PAGES_",
-                    "infoEmpty": "No hay información disponible",
-                    "infoFiltered": "(filtrando de un total de _MAX_ registros)",
-                    "search":         "Buscar:",
-                    "paginate": {
-                        "first":      "Primera",
-                        "last":       "Última",
-                        "next":       "Siguiente",
-                        "previous":   "Anterior"
-                    }
-                }
-            });
-        } );
-    </script>
+    <script src="{{ asset('js/jquery.dataTables.min.js') }}"></script>
+    <script src="{{ asset('js/dataTables.bootstrap.min.js') }}"></script>
+    <script src="{{ asset('js/general/table.js') }}"></script>
 @endpush

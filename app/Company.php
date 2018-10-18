@@ -11,7 +11,8 @@ class Company extends Model
 
     protected $fillable = [
         'name',
-        'nit',
+        'doc_type',
+        'doc',
         'billing_resolution',
         'billing_date',
         'billing_start',
@@ -51,7 +52,7 @@ class Company extends Model
         $company = new Company();
 
         $company->name = $request->get('name');
-        $company->nit = $request->get('nit');
+        $company->nit = $request->get('doc');
         $company->billing_resolution = $request->get('billing_resolution');
         $company->billing_date = $request->get('billing_date');
         $company->billing_start = $request->get('billing_start');
@@ -79,7 +80,7 @@ class Company extends Model
 
         if ($company) {
             $company->name = $request->get('name');
-            $company->nit = $request->get('nit');
+            $company->nit = $request->get('doc');
             $company->billing_resolution = $request->get('billing_resolution');
             $company->billing_date = $request->get('billing_date');
             $company->billing_start = $request->get('billing_start');

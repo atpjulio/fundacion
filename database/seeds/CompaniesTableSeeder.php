@@ -17,7 +17,8 @@ class CompaniesTableSeeder extends Seeder
         // Crear la compañía
         $company = [
             'name' => 'Fundación Multiactiva Casa Hogar el Milagro',
-            'nit' => '900254478-1',
+            'doc_type' => 'NI',
+            'doc' => '900254478-1',
             'billing_resolution' => '13028009806159',
             'billing_date' => '2018-05-29',
             'billing_start' => 7000,
@@ -27,7 +28,7 @@ class CompaniesTableSeeder extends Seeder
         Company::create($company);
         // Crear la dirección
         $address = [
-            'model_id' => 7,
+            'model_id' => 1,
             'model_type' => config('constants.modelType.company'),
             'address' => 'Cl 60 No 46-76 Brr Boston',
             'city' => '001',
@@ -36,7 +37,7 @@ class CompaniesTableSeeder extends Seeder
         Address::create($address);
         // Crear el teléfono
         $phone = [
-            'model_id' => 7,
+            'model_id' => 1,
             'model_type' => config('constants.modelType.company'),
             'phone' => '3126214231',
         ];

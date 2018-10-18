@@ -56,6 +56,17 @@ class AuthorizationController extends Controller
      */
     public function store(Request $request)
     {
+        foreach ($request->get('companionDni') as $key => $value) {
+            if (strlen($request->get('companionServiceId')[$key]) == 0) {            
+                Session::flash('message_danger', 'Valor inválido para el servicio del acompañante');
+                return redirect()->back()->withInput();
+            }
+            if (strlen($value) == 0) {
+                Session::flash('message_danger', 'Valor inválido para el documento del acompañante');
+                return redirect()->back()->withInput();
+            }
+        }
+
         Authorization::storeRecord($request);
 
         Session::flash('message', 'Autorización '.$request->get('code').' guardada exitosamente');
@@ -82,14 +93,14 @@ class AuthorizationController extends Controller
     public function edit($id)
     {
         $epss = Eps::all();
-        $services = EpsService::getServices($epss->toArray()[0]['id'])->pluck('name', 'id');
-        $initialEpsId = $epss->toArray()[0]['id'];
+        $services = EpsService::getServices($epss->toArray()[$id]['id'])->pluck('name', 'id');
         $epss = $epss->pluck('name', 'id');
         $patients = Patient::all();
         $authorization = Authorization::find($id);
         $code = $authorization->code;
         $dateFrom = $authorization->date_from;
         $dateTo = $authorization->date_to;
+        $initialEpsId = $authorization->eps_id;
 
         return view('authorization.edit', compact('epss', 'services', 'patients', 'authorization', 'code', 'dateFrom', 'dateTo', 'initialEpsId'));
     }

@@ -11,9 +11,7 @@
 |
 */
 
-Route::get('/', function () {
-    return view('auth.login');
-});
+Route::view('/', 'auth.login');
 
 Route::middleware(['auth', 'admin'])->group(function () {
     Route::resource('company', 'CompanyController');
@@ -29,18 +27,29 @@ Route::middleware(['auth', 'admin'])->group(function () {
 
     Route::resource('invoice', 'InvoiceController');
     Route::get('invoice/pdf/{id}', 'InvoiceController@pdf')->name('invoice.pdf');
+    Route::get('invoice-relation', 'InvoiceController@relation')->name('invoice.relation');
+    Route::get('invoice-relation-pdf', 'InvoiceController@relationPDF')->name('invoice.relation.pdf');
 
     Route::get('accounting/eps', 'AccountingController@eps')->name('accounting.eps');
     Route::get('accounting/eps/{id}', 'AccountingController@epsDetail')->name('accounting.eps.detail');
     Route::get('accounting/accounts-receivable', 'AccountingController@accountsReceivable')->name('accounting.accounts.receivable');
-    // Route::get('accounting/rips', 'AccountingController@rips')->name('accounting.rips');
 
     Route::resource('accounting-note', 'AccountingNoteController');
+    Route::get('accounting-note-delete/{id}', 'AccountingNoteController@delete')->name('accounting.note.delete');
+
+    Route::resource('egress', 'EgressController');
+    Route::get('egress/pdf/{id}', 'EgressController@pdf')->name('egress.pdf');
+    Route::get('egress-delete/{id}', 'EgressController@delete')->name('egress.delete');
 
     Route::resource('rip', 'RipController');
     Route::get('rip/download/{id}', 'RipController@download')->name('rip.download');
 
+    Route::get('test', 'RipController@test');
+
     Route::resource('receipt', 'ReceiptController');
+    Route::get('receipt/pdf/{id}', 'ReceiptController@pdf')->name('receipt.pdf');
+    Route::view('receipt-import', 'accounting.receipt.import')->name('receipt.import');
+    Route::post('receipt-import-process', 'ReceiptController@importProcess')->name('receipt.import.process');
 });
 
 Route::middleware(['auth', 'both'])->group(function () {
@@ -61,6 +70,7 @@ Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
 
+Route::get('/get-companion-services/{id}', 'AjaxController@getCompanionServices');
 Route::get('/get-invoices-amount/{data}', 'AjaxController@getInvoicesAmount');
 Route::get('/get-eps-patients/{id}', 'AjaxController@getEpsPatients');
 Route::get('/get-day-range/{date}', 'AjaxController@getDayRange');

@@ -30,7 +30,7 @@
                             <div class="table-responsive">
                                 <table class="table table-striped table-bordered table-condensed table-hover" id="myTable">
                                     <thead>
-                                    <th>Número</th>
+                                    <th># Factura</th>
                                     <th>Autorización</th>
                                     <th>Monto</th>
                                     <th>Pagado</th>
@@ -40,7 +40,7 @@
                                     <tbody>
                                     @foreach($invoices as $invoice)
                                         <tr>
-                                            <td>{!! $invoice->number !!}</td>
+                                            <td>{!! sprintf("%05d", $invoice->number) !!}</td>
                                             <td>{!! $invoice->authorization_code !!}</td>
                                             <td>$ {!! number_format($invoice->total, 2, ",", ".") !!}</td>
                                             <td>$ {!! number_format($invoice->payment, 2, ",", ".") !!}</td>
@@ -109,7 +109,7 @@
                         "last":       "Última",
                         "next":       "Siguiente",
                         "previous":   "Anterior"
-                    }
+                    },
                     "oSearch": {"sSearch": "{{ $receipt->invoice->number }}"}                    
                 }
             });

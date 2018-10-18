@@ -11,7 +11,7 @@
             <div class="modal-body">
                 <p>Confirma que deseas borrar el RIPS para : </p>
                 <div class="text-center">
-                    {!! $rip->created_at !!}
+                    {!! \Carbon\Carbon::parse($rip->created_at)->format("d/m/Y") !!}
                 </div>
             </div>
 

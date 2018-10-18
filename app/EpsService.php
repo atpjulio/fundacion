@@ -34,6 +34,7 @@ class EpsService extends Model
     protected function getServices($id)
     {
         return $this->where('eps_id', $id)
+            ->orderBy('code')
             ->get();
     }
 
@@ -42,7 +43,7 @@ class EpsService extends Model
         return $this->create([
             'eps_id' => $request->get('eps_id'),
             'code' => strtoupper($request->get('code')),
-            'name' => ucfirst(strtolower($request->get('name'))),
+            'name' => ucfirst(mb_strtolower($request->get('name'))),
             'notes' => $request->get('notes'),
         ]);
     }
@@ -55,7 +56,7 @@ class EpsService extends Model
             $service->update([
                 'eps_id' => $request->get('eps_id'),
                 'code' => strtoupper($request->get('code')),
-                'name' => ucfirst(strtolower($request->get('name'))),
+                'name' => ucfirst(mb_strtolower($request->get('name'))),
                 'notes' => $request->get('notes'),
             ]);
         }

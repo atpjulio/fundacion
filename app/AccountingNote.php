@@ -42,11 +42,11 @@ class AccountingNote extends Model
     /**
      * Methods
      */
-    protected function storeRecord($invoice, $pucs, $notes = null)
+    protected function storeRecord($invoice, $pucs, $notes = null, $amount)
     {
         $accountingNote = $this->create([
             'invoice_id' => $invoice->id,
-            'amount' => $invoice->total,
+            'amount' => $amount,
             'created_at' => $invoice->created_at,
             'notes' => $notes,
         ]);
@@ -54,15 +54,19 @@ class AccountingNote extends Model
         AccountingNotePuc::storeRecord($accountingNote, $pucs);
     }
 
-    protected function updateRecord($invoice, $pucs, $notes = null)
+    protected function updateRecord($invoice, $pucs, $notes = null, $amount, $id = null)
     {
-        $accountingNote = $this->where('invoice_id', $invoice->id)
-            ->first();
+        if (!$id) {
+            $accountingNote = $this->where('invoice_id', $invoice->id)
+                ->first();            
+        } else {
+            $accountingNote = $this->findOrFail($id);
+        }
 
         if ($accountingNote) {
             $accountingNote->update([
                 'invoice_id' => $invoice->id,
-                'amount' => $invoice->total,
+                'amount' => $amount,
                 'created_at' => $invoice->created_at,
                 'notes' => $notes,
             ]);

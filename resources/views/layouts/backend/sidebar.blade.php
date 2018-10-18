@@ -32,6 +32,12 @@
                         <i class="fa arrow"></i>
                     </a>
                     <ul class="sidebar-nav">
+                        <li class="@if(Request::is('authorization/create')) active @endif" >
+                            <a href="{{ route('authorization.create') }}">
+                                <i class="fa fa-plus"></i>&nbsp;
+                                Nueva Autorización
+                            </a>
+                        </li>
                         <li class="@if(Request::is('authorization')) active @endif" >
                             <a href="{{ route('authorization.index') }}">
                                 <i class="fas fa-list"></i>&nbsp;
@@ -48,10 +54,16 @@
                         <i class="fa arrow"></i>
                     </a>
                     <ul class="sidebar-nav">
+                        <li class="@if(Request::is('patient/create')) active @endif" >
+                            <a href="{{ route('patient.create') }}">
+                                <i class="fa fa-plus"></i>&nbsp;
+                                Nuevo Usuario
+                            </a>
+                        </li>
                         <li class="@if(Request::is('patient')) active @endif" >
                             <a href="{{ route('patient.index') }}">
                                 <i class="fas fa-list"></i>&nbsp;
-                                Listado
+                                Listado de Usuarios
                             </a>
                         </li>
                     </ul>
@@ -64,10 +76,22 @@
                         <i class="fa arrow"></i>
                     </a>
                     <ul class="sidebar-nav">
+                        <li class="@if(Request::is('invoice/create')) active @endif" >
+                            <a href="{{ route('invoice.create') }}">
+                                <i class="fa fa-plus"></i>&nbsp;
+                                Nueva Factura
+                            </a>
+                        </li>
                         <li class="@if(Request::is('invoice')) active @endif" >
                             <a href="{{ route('invoice.index') }}">
                                 <i class="fas fa-list"></i>&nbsp;
-                                Listado
+                                Listado de Facturas
+                            </a>
+                        </li>
+                        <li class="@if(Request::is('invoice-relation')) active @endif" >
+                            <a href="{{ route('invoice.relation') }}">
+                                <i class="fas fa-crop-alt"></i>&nbsp;
+                                Relación de Facturas
                             </a>
                         </li>
                     </ul>
@@ -80,10 +104,16 @@
                         <i class="fa arrow"></i>
                     </a>
                     <ul class="sidebar-nav">
+                        <li class="@if(Request::is('eps/create')) active @endif" >
+                            <a href="{{ route('eps.create') }}">
+                                <i class="fa fa-plus"></i>&nbsp;
+                                Añadir EPS
+                            </a>
+                        </li>
                         <li class="@if(Request::is('eps')) active @endif" >
                             <a href="{{ route('eps.index') }}">
                                 <i class="fas fa-list"></i>&nbsp;
-                                Listado
+                                Listado de EPS
                             </a>
                         </li>
                     </ul>
@@ -96,28 +126,34 @@
                         <i class="fa arrow"></i>
                     </a>
                     <ul class="sidebar-nav">
-                        <li class="@if(Request::is('accounting-note*')) active @endif" >
-                            <a href="{{ route('accounting-note.index') }}">
-                                <i class="far fa-sticky-note"></i>&nbsp;
-                                Nota de Contabilidad
+                        <li class="@if(Request::is('egress*')) active @endif" >
+                            <a href="{{ route('egress.index') }}">
+                                <i class="fas fa-file-export"></i>&nbsp;
+                                Comprobante de Egreso
                             </a>
                         </li>
                         <li class="@if(Request::is('accounting/eps*')) active @endif" >
                             <a href="{{ route('accounting.eps') }}">
                                 <i class="fa fa-hospital-o"></i>&nbsp;
-                                Por EPS
+                                Contabilidad EPS
                             </a>
                         </li>
-                        <li class="@if(Request::is('rip*')) active @endif" >
-                            <a href="{{ route('rip.index') }}">
-                                <i class="fa fa-cogs"></i>&nbsp;
-                                RIPS
+                        <li class="@if(Request::is('accounting-note*')) active @endif" >
+                            <a href="{{ route('accounting-note.index') }}">
+                                <i class="far fa-sticky-note"></i>&nbsp;
+                                Nota Interna
                             </a>
                         </li>
                         <li class="@if(Request::is('receipt*')) active @endif" >
                             <a href="{{ route('receipt.index') }}">
                                 <i class="fas fa-file-invoice"></i>&nbsp;
                                 Recibos
+                            </a>
+                        </li>
+                        <li class="@if(Request::is('rip*')) active @endif" >
+                            <a href="{{ route('rip.index') }}">
+                                <i class="far fa-file-archive"></i>&nbsp;
+                                RIPS
                             </a>
                         </li>
                     </ul>
@@ -130,10 +166,16 @@
                         <i class="fa arrow"></i>
                     </a>
                     <ul class="sidebar-nav">
+                        <li class="@if(Request::is('company/create')) active @endif" >
+                            <a href="{{ route('company.create') }}">
+                                <i class="fa fa-plus"></i>&nbsp;
+                                Nueva Compañía
+                            </a>
+                        </li>                        
                         <li class="@if(Request::is('company')) active @endif" >
                             <a href="{{ route('company.index') }}">
                                 <i class="fas fa-list"></i>&nbsp;
-                                Listado
+                                Listado de Compañías
                             </a>
                         </li>
                     </ul>

@@ -32,11 +32,11 @@
     @stack('styles')
 </head>
 <body>
-<div class="auth">
+<div class="auth" style="background-image: url('/img/fundacionBg1.jpg'); background-repeat: no-repeat; background-size: cover;">
     <div class="auth-container">
         <div class="card">
             <header class="auth-header">
-                <h1 class="auth-title">
+                <h1 class="auth-title" style="color: #333 !important;">
                     <div class="logo">
                         <img src="{{ asset('img/logo.png') }}" height="60" >
                         <!--

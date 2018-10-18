@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\AccountingNote;
 use App\Http\Requests\StoreAccountingNoteRequest;
+use App\Http\Requests\UpdateAccountingNoteRequest;
 use App\Invoice;
 use App\Puc;
 use Illuminate\Http\Request;
@@ -45,6 +46,8 @@ class AccountingNoteController extends Controller
     public function store(StoreAccountingNoteRequest $request)
     {
         $pucs = [];
+        $amount = 0.00;
+        $amountDebit = 0.00;
 
         foreach ($request->get('notePucs') as $key => $value) {
             array_push($pucs, [
@@ -53,11 +56,26 @@ class AccountingNoteController extends Controller
                 'type' => $request->get('pucCredit')[$key] > 0 ? 1 : 0,
                 'amount' => $request->get('pucCredit')[$key] > 0 ? floatval($request->get('pucCredit')[$key]) : floatval($request->get('pucDebit')[$key]) 
             ]);
+            if ($request->get('pucCredit')[$key] > 0) {
+                $amount += floatval($request->get('pucCredit')[$key]);
+            } else {
+                $amountDebit += floatval($request->get('pucDebit')[$key]);
+            }
         }
 
-        $invoice = Invoice::find($request->get('invoice_number'));
+        if ($amount != $amountDebit) {
+            Session::flash('message_danger', 'Débitos: '.number_format($amountDebit, 2, ",", ".")
+                .' | Cŕeditos: '.number_format($amount, 2, ",", ".")
+                .'<br>No coinciden los montos de débito y cŕedito');
+            return redirect()->back()->withInput();
+        }
 
-        AccountingNote::storeRecord($invoice, $pucs, $request->get('notes'));
+        //$invoice = Invoice::getInvoiceByNumber($request->get('invoice_number'));
+        $invoice = new Invoice();
+        $invoice->id = 0;
+        $invoice->created_at = $request->get('created_at');
+
+        AccountingNote::storeRecord($invoice, $pucs, $request->get('notes'), $amount);
 
         $request->session()->flash('message', 'Nota de contabilidad guardada exitosamente');
         return redirect()->route('accounting-note.index');
@@ -96,9 +114,11 @@ class AccountingNoteController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(UpdateAccountingNoteRequest $request, $id)
     {
         $pucs = [];
+        $amount = 0.00;
+        $amountDebit = 0.00;
 
         foreach ($request->get('notePucs') as $key => $value) {
             array_push($pucs, [
@@ -107,11 +127,26 @@ class AccountingNoteController extends Controller
                 'type' => $request->get('pucCredit')[$key] > 0 ? 1 : 0,
                 'amount' => $request->get('pucCredit')[$key] > 0 ? floatval($request->get('pucCredit')[$key]) : floatval($request->get('pucDebit')[$key]) 
             ]);
+            if ($request->get('pucCredit')[$key] > 0) {
+                $amount += floatval($request->get('pucCredit')[$key]);
+            } else {
+                $amountDebit += floatval($request->get('pucDebit')[$key]);
+            }
         }
 
-        $invoice = Invoice::find($request->get('invoice_number'));
+        if ($amount != $amountDebit) {
+            Session::flash('message_danger', 'Débitos: '.number_format($amountDebit, 2, ",", ".")
+                .' | Cŕeditos: '.number_format($amount, 2, ",", ".")
+                .'<br>No coinciden los montos de débito y cŕedito');
+            return redirect()->back()->withInput();
+        }
 
-        AccountingNote::updateRecord($invoice, $pucs, $request->get('notes'));
+        // $invoice = Invoice::getInvoiceByNumber($request->get('invoice_number'));
+        $invoice = new Invoice();
+        $invoice->id = 0;
+        $invoice->created_at = $request->get('created_at');
+
+        AccountingNote::updateRecord($invoice, $pucs, $request->get('notes'), $amount, $id);
 
         $request->session()->flash('message', 'Nota de contabilidad actualizada exitosamente');
         return redirect()->route('accounting-note.index');
@@ -136,4 +171,12 @@ class AccountingNoteController extends Controller
         Session::flash('message_danger', 'No tienes permiso para borrar notas de contabilidad. Este movimiento ha sido notificado');
         return redirect()->route('accounting-note.index');
     }
+
+    public function delete($id)
+    {
+        $note = AccountingNote::findOrFail($id);
+
+        return view('accounting.note.delete_modal', compact('note'));
+    }
+
 }

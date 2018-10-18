@@ -48,6 +48,19 @@ class Invoice extends Model
     }
 
     /**
+     * Attributes
+     */
+    public function getDaysAttribute()
+    {
+        return \Carbon\Carbon::parse($this->authorization->date_to)->diffInDays(\Carbon\Carbon::parse($this->authorization->date_from));        
+    }
+
+    public function getFormatNumberAttribute()
+    {
+        return sprintf("%05d", $this->number);        
+    }
+
+    /**
      * Methods
      */
     protected function storeRecord($request)
@@ -65,6 +78,7 @@ class Invoice extends Model
         $authorization = Authorization::findByCode($request->get('authorization_code'));
         if ($authorization) {
             $invoice->eps_id = $authorization->eps_id;
+            // $invoice->total *=  $authorization->persons;
         }
 
         $invoice->save();
@@ -89,7 +103,7 @@ class Invoice extends Model
             ],
         ];
 
-        AccountingNote::storeRecord($invoice, $pucs, $notes);
+        AccountingNote::storeRecord($invoice, $pucs, $notes, $invoice->total);
 
         return $invoice;
     }
@@ -110,6 +124,7 @@ class Invoice extends Model
             $authorization = Authorization::findByCode($request->get('authorization_code'));
             if ($authorization) {
                 $invoice->eps_id = $authorization->eps_id;
+                // $invoice->total *=  $authorization->persons;
             }
 
             $invoice->save();
@@ -133,7 +148,7 @@ class Invoice extends Model
                 ],
             ];
 
-            AccountingNote::updateRecord($invoice, $pucs, $notes);
+            AccountingNote::updateRecord($invoice, $pucs, $notes, $invoice->total);
 
         }
 
@@ -166,4 +181,15 @@ class Invoice extends Model
             ->get();
     }
 
+    protected function getInvoiceByNumber($number) 
+    {
+        return $this->where('number', $number)
+            ->first();
+    }
+
+    protected function getInvoiceByAuthorizationCode($code) 
+    {
+        return $this->where('authorization_code', $code)
+            ->first();
+    }
 }

@@ -37,6 +37,13 @@
                     </div>
                 </div>
             </div>
+            <div class="col-md-12" id="companionsDiv">
+                <div class="card">
+                    <div class="card-block">
+                        @include('authorization.fields3')
+                    </div>
+                </div>
+            </div>            
             <div class="col-12">
                 <div class="card">
                     <div class="card-block">

@@ -7,38 +7,19 @@
 @section('content')
     <div class="title-block">
         <div class="float-left">
-            <h3 id="beginning" class="title"> Nueva Factura </h3>
+            <h3 class="title"> Nueva Factura </h3>
             <p class="title-description"> Añadiendo nueva factura al sistema </p>
         </div>
         <div class="float-right animated fadeInRight">
             <a href="{{ route('invoice.index') }}" class="btn btn-pill-left btn-secondary btn-lg">
                 <i class="fas fa-list"></i>
-                Regresar
+                Listado
             </a>
         </div>
     </div>
     {!! Form::open(['route' => 'invoice.store', 'method' => 'POST']) !!}
     <section class="section">
         <div class="row">
-            <div class="col-md-6">
-                <div class="card">
-                    <div class="card-block">
-                        @include('invoice.fields')
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-6">
-                <div class="card">
-                    <div class="card-block">
-                        @include('invoice.fields2')
-                    </div>
-                </div>
-            </div>
-            <div class="col-12">
-                <div class="text-right">
-                    {!! Form::submit('Guardar la factura', ['class' => 'btn btn-oval btn-primary']) !!}
-                </div>
-            </div>
             <div class="col-12">
                 <div class="card">
                     <div class="card-block">
@@ -65,7 +46,7 @@
                                             <td>{!! $authorization->patient->full_name !!}</td>
                                             <td>{!! \Carbon\Carbon::parse($authorization->date_from)->format("d/m/Y") !!}</td>
                                             <td>{!! \Carbon\Carbon::parse($authorization->date_to)->format("d/m/Y") !!}</td>
-                                            <td>{!! \Carbon\Carbon::parse($authorization->date_to)->diffInDays(\Carbon\Carbon::parse($authorization->date_from)) !!}</td>
+                                            <td>{!! $authorization->days !!}</td>
                                             <td>
                                                 {!! Form::button('Seleccionar', ['class' => 'btn btn-oval btn-success', 'id' => 'button'.$key ]) !!}
                                                 {!! Form::hidden('daily_price', $authorization->eps->daily_price, ['id' => 'daily_price']) !!}
@@ -79,6 +60,25 @@
                     </div>
                 </div>
             </div>
+            <div id="beginning" class="col-md-6">
+                <div class="card">
+                    <div class="card-block">
+                        @include('invoice.fields')
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-block">
+                        @include('invoice.fields2')
+                    </div>
+                </div>
+            </div>
+            <div class="col-12">
+                <div class="text-right">
+                    {!! Form::submit('Guardar la factura', ['class' => 'btn btn-oval btn-primary']) !!}
+                </div>
+            </div>            
         </div>
     </section>
     {!! Form::hidden('selected_price', 0, ['id' => 'selected_price']) !!}

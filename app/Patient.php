@@ -71,8 +71,8 @@ class Patient extends Model
             'eps_id' => $request->get('eps_id'),
             'dni_type' => $request->get('dni_type'),
             'dni' => strtoupper($request->get('dni')),
-            'first_name' => ucwords(strtolower($request->get('first_name'))),
-            'last_name' => ucwords(strtolower($request->get('last_name'))),
+            'first_name' => ucwords(mb_strtolower($request->get('first_name'))),
+            'last_name' => ucwords(mb_strtolower($request->get('last_name'))),
             'birth_date' => $birthDate,
             'gender' => $request->get('gender'),
             'type' => $request->get('type'),
@@ -81,27 +81,6 @@ class Patient extends Model
             'zone' => $request->get('zone'),
         ]);
 
-        /*
-        $address = new Address();
-
-        $address->model_type = config('constants.modelType.patient');
-        $address->model_id = $patient->id;
-        $address->address = ucwords(strtolower($request->get('address')));
-        $address->address2 = ucwords(strtolower($request->get('address2')));
-        $address->city = ucwords(strtolower($request->get('city')));
-        $address->state = $request->get('state');
-
-        $address->save();
-
-        $phone = new Phone();
-
-        $phone->model_type = config('constants.modelType.patient');
-        $phone->model_id = $patient->id;
-        $phone->phone = $request->get('phone');
-        $phone->phone2 = $request->get('phone2');
-
-        $phone->save();
-        */
         return $patient;
     }
 
@@ -118,8 +97,8 @@ class Patient extends Model
                 'eps_id' => $request->get('eps_id'),
                 'dni_type' => $request->get('dni_type'),
                 'dni' => strtoupper($request->get('dni')),
-                'first_name' => ucwords(strtolower($request->get('first_name'))),
-                'last_name' => ucwords(strtolower($request->get('last_name'))),
+                'first_name' => ucwords(mb_strtolower($request->get('first_name'))),
+                'last_name' => ucwords(mb_strtolower($request->get('last_name'))),
                 'birth_date' => $birthDate,
                 'gender' => $request->get('gender'),
                 'type' => $request->get('type'),
@@ -127,19 +106,6 @@ class Patient extends Model
                 'city' => $request->get('city'),
                 'zone' => $request->get('zone'),
             ]);
-            /*
-            $patient->address->update([
-                'address' => ucwords(strtolower($request->get('address'))),
-                'address2' => ucwords(strtolower($request->get('address2'))),
-                'city' => ucwords(strtolower($request->get('city'))),
-                'state' => $request->get('state'),
-            ]);
-
-            $patient->phone->update([
-                'phone' => $request->get('phone'),
-                'phone2' => $request->get('phone2'),
-            ]);
-            */
         }
 
         return $patient;
@@ -149,7 +115,7 @@ class Patient extends Model
     {
         if ($dniType) {
             return $this->where("dni", trim($dni))
-                ->where("dni_type", trim(strtoupper($dniType)))
+                ->where("dni_type", trim(mb_strtoupper($dniType)))
                 ->first();
         }
 
@@ -176,8 +142,8 @@ class Patient extends Model
                 'eps_id' => $eps->id,
                 'dni_type' => strtoupper($dniType),
                 'dni' => strtoupper($dni),
-                'first_name' => ucwords(strtolower($firstName)),
-                'last_name' => ucwords(strtolower($lastName)),
+                'first_name' => ucwords(mb_strtolower($firstName)),
+                'last_name' => ucwords(mb_strtolower($lastName)),
                 'birth_date' => $birthDate,
                 'gender' => ($line->sexo == 'F') ? 0 : 1,
                 'type' => intval($line->tipo_de_usuario),

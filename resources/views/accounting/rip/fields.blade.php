@@ -16,15 +16,17 @@
     </div>
 @endif
 
-<div class="form-group  @if($errors->has('initial_date')) has-error @endif">
-    {!! Form::label('initial_date', 'Fecha inicial', ['class' => 'control-label']) !!}
-    {!! Form::date('initial_date', old('initial_date', isset($rip) ? $rip->initial_date : \Carbon\Carbon::now()), ['class' => 'form-control underlined', 'id' => 'initial_date', 'placeholder' => 'dd/mm/aaaa', isset($show) ? 'readonly' : '']) !!}
-</div>
-<div class="form-group  @if($errors->has('final_date')) has-error @endif">
-    {!! Form::label('final_date', 'Fecha final', ['class' => 'control-label']) !!}
-    {!! Form::date('final_date', old('final_date', isset($rip) ? $rip->final_date : \Carbon\Carbon::now()), ['class' => 'form-control underlined', 'id' => 'final_date', 'placeholder' => 'dd/mm/aaaa', isset($show) ? 'readonly' : '']) !!}
-</div>
-<div class="form-group  @if($errors->has('created_at')) has-error @endif">
-    {!! Form::label('created_at', 'Fecha de remisión', ['class' => 'control-label']) !!}
-    {!! Form::date('created_at', old('created_at', isset($rip) ? $rip->created_at : \Carbon\Carbon::now()), ['class' => 'form-control underlined', 'placeholder' => 'dd/mm/aaaa', isset($show) ? 'readonly' : '']) !!}
+<div class="row">
+    <div class="col-6">
+        <div class="form-group  @if($errors->has('initial_date')) has-error @endif">
+            {!! Form::label('initial_date', 'Fecha inicial', ['class' => 'control-label']) !!}
+            {!! Form::date('initial_date', old('initial_date', isset($rip) ? $rip->initial_date : \Carbon\Carbon::now()), ['class' => 'form-control underlined', 'id' => 'initial_date', 'placeholder' => 'dd/mm/aaaa', isset($show) ? 'readonly' : '']) !!}
+        </div>
+    </div>
+    <div class="col-6">
+        <div class="form-group  @if($errors->has('final_date')) has-error @endif">
+            {!! Form::label('final_date', 'Fecha final', ['class' => 'control-label']) !!}
+            {!! Form::date('final_date', old('final_date', isset($rip) ? $rip->final_date : \Carbon\Carbon::now()), ['class' => 'form-control underlined', 'id' => 'final_date', 'placeholder' => 'dd/mm/aaaa', isset($show) ? 'readonly' : '']) !!}
+        </div>
+    </div>
 </div>

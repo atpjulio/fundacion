@@ -20,28 +20,18 @@
             <div class="col-md-6">
                 <div class="card">
                     <div class="card-block">
-                        <div class="card-title-block">
-                            <h3 class="title"> Información del Usuario </h3>
-                        </div>
                         @include('patient.fields')
                     </div>
                 </div>
             </div>
-            {{--
             <div class="col-md-6">
                 <div class="card">
                     <div class="card-block">
-                        <div class="card-title-block">
-                            <h3 class="title"> Dirección </h3>
-                        </div>
-                        @include('partials.addresses')
-                        @include('partials.phones')
+                        @include('patient.fields2')
                     </div>
                 </div>
             </div>
-            --}}
-            <div class="col-md-6"></div>
-            <div class="col-md-6">
+            <div class="col-md-12">
                 <div class="text-center">
                     {!! Form::submit('Guardar', ['class' => 'btn btn-oval btn-primary']) !!}
                 </div>
@@ -60,6 +50,10 @@
             $('#birth_month').on('change', function (e) {
                 fillDays($('#birth_year').val() + "-" + $('#birth_month').val());
             });
+            $('#state').on('change', function (e) {
+                fillCities($('#state').val());
+            });
+
         });
     </script>
 @endpush

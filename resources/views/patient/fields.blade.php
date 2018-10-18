@@ -35,11 +35,3 @@
     </div>
 </div>
 <br>
-<div class="form-group @if($errors->has('gender')) has-error @endif">
-    {!! Form::label('gender', 'Sexo', ['class' => 'control-label']) !!}
-    {!! Form::select('gender', config('constants.gender'), old('gender', isset($patient) ? $patient->gender : ''), ['class' => 'form-control underlined', isset($show) ? 'readonly' : '']) !!}
-</div>
-<div class="form-group @if($errors->has('type')) has-error @endif">
-    {!! Form::label('type', 'Tipo de usuario', ['class' => 'control-label']) !!}
-    {!! Form::select('type', config('constants.patientTypeString'), old('type', isset($patient) ? $patient->type : 2), ['class' => 'form-control underlined', isset($show) ? 'readonly' : '']) !!}
-</div>
