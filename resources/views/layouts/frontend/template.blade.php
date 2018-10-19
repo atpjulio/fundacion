@@ -36,16 +36,12 @@
     <div class="auth-container">
         <div class="card">
             <header class="auth-header">
+                <h1 class="d-block d-sm-none">
+                    <img src="{{ asset('img/logo.png') }}" height="110" >
+                </h1>
                 <h1 class="auth-title" style="color: #333 !important;">
                     <div class="logo">
-                        <img src="{{ asset('img/logo.png') }}" height="60" >
-                        <!--
-                        <span class="l l1"></span>
-                        <span class="l l2"></span>
-                        <span class="l l3"></span>
-                        <span class="l l4"></span>
-                        <span class="l l5"></span>
-                        -->
+                        <img src="{{ asset('img/logo.png') }}" height="60" class="d-none d-sm-block">
                     </div> {!! config('constants.companyInfo.longName') !!} </h1>
             </header>
             @yield('content')
