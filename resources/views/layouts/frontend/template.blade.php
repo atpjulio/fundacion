@@ -40,9 +40,11 @@
                     <img src="{{ asset('img/logo.png') }}" height="110" >
                 </h1>
                 <h1 class="auth-title" style="color: #333 !important;">
-                    <div class="logo">
-                        <img src="{{ asset('img/logo.png') }}" height="60" class="d-none d-sm-block">
-                    </div> {!! config('constants.companyInfo.longName') !!} </h1>
+                    <div class="logo d-none d-sm-block">
+                        <img src="{{ asset('img/logo.png') }}" height="60">
+                    </div> 
+                    {!! config('constants.companyInfo.longName') !!} 
+                </h1>
             </header>
             @yield('content')
         </div>
