@@ -36,13 +36,10 @@
     <div class="auth-container">
         <div class="card">
             <header class="auth-header">
-                <h1 class="d-block d-sm-none">
-                    <img src="{{ asset('img/logo.png') }}" height="110" >
+                <h1>
+                    <img src="{{ asset('img/logo.png') }}" height="110" style="margin-top: 3%; margin-bottom: -23px;">
                 </h1>
                 <h1 class="auth-title" style="color: #333 !important;">
-                    <div class="logo d-none d-sm-block">
-                        <img src="{{ asset('img/logo.png') }}" height="60">
-                    </div> 
                     {!! config('constants.companyInfo.longName') !!} 
                 </h1>
             </header>
