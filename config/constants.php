@@ -125,7 +125,7 @@ $myConstants = [
         "PA" => "Pasaporte",
     ],
     'companyInfo' => [
-        'name' => 'Fundacion',
+        'name' => 'C. H. El Milagro',
         'email' => 'admin@fundacion.com',
         'urlName' => 'fundacion',
         'longName' => 'Fundación Multiactiva Casa Hogar el Milagro',
