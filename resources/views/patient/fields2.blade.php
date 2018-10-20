@@ -8,7 +8,7 @@
 </div>
 <div class="form-group  @if($errors->has('state')) has-error @endif">
     {!! Form::label('state', 'Departamento', ['class' => 'control-label']) !!}
-    {!! Form::select('state', \App\State::getStates(), old('state', isset($patient) ? $patient->state : ''), ['class' => 'form-control', 'id' => 'state']) !!}
+    {!! Form::select('state', \App\State::getStates(), old('state', isset($patient) ? $patient->state : '08'), ['class' => 'form-control', 'id' => 'state']) !!}
 </div>
 <div class="form-group  @if($errors->has('city')) has-error @endif">
     {!! Form::label('city', 'Municipio', ['class' => 'control-label']) !!}
