@@ -19,7 +19,7 @@ class DatabaseSeeder extends Seeder
         $this->call(EpsServicesTableSeeder::class);
         $this->call(CompaniesTableSeeder::class);
         $this->call(PatientsTableSeeder::class);
-        $this->call(AuthorizationsTableSeeder::class);
+        // $this->call(AuthorizationsTableSeeder::class);
         $this->call(PucsTableSeeder::class);
     }
 }
