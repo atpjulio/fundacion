@@ -15,7 +15,7 @@ class EpsController extends Controller
 {
     public function __construct()
     {
-        $this->middleware(['auth', 'admin'], ['except' => '']);
+        $this->middleware(['auth', 'both'], ['except' => '']);
     }
 
     /**
