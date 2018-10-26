@@ -21,33 +21,6 @@
     {!! Form::open(['route' => 'authorization.confirm', 'method' => 'POST', 'id' => 'myForm']) !!}
     <section class="section">
         <div class="row">
-            <div class="col-md-6">
-                <div class="card">
-                    <div class="card-block">
-                        <div class="card-title-block">
-                            <h3 class="title"> Información de la Autorización </h3>
-                        </div>
-                        @include('authorization.fields')
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-6">
-                <div class="card">
-                    <div class="card-block">
-                        <div class="card-title-block">
-                            <h3 class="title"> Fecha de validez </h3>
-                        </div>
-                        @include('authorization.fields2')
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-12" id="companionsDiv" @if (old('companion')) style="display: block;" @else style="display: none;" @endif>
-                <div class="card">
-                    <div class="card-block">
-                        @include('authorization.fields3')
-                    </div>
-                </div>
-            </div>
             <div class="col-12">
                 <div class="card">
                     <div class="card-block">
@@ -86,6 +59,33 @@
                                 </table>
                             </div>
                         </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-block">
+                        <div class="card-title-block">
+                            <h3 class="title"> Información de la Autorización </h3>
+                        </div>
+                        @include('authorization.fields')
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-block">
+                        <div class="card-title-block">
+                            <h3 class="title"> Fecha de validez </h3>
+                        </div>
+                        @include('authorization.fields2')
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-12" id="companionsDiv" @if (old('companion')) style="display: block;" @else style="display: none;" @endif>
+                <div class="card">
+                    <div class="card-block">
+                        @include('authorization.fields3')
                     </div>
                 </div>
             </div>
