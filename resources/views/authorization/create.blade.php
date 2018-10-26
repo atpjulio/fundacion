@@ -54,7 +54,7 @@
                                                     Seleccionar
                                                 </button>
                                                 --}}
-                                                <a href="#info" class="btn btn-oval btn-primary btn-sm">Seleccionar</a>
+                                                <a href="#authFields" class="btn btn-oval btn-primary btn-sm">Seleccionar</a>
                                             </td>
                                         </tr>
                                     @endforeach
@@ -69,7 +69,7 @@
                 <div class="card">
                     <div class="card-block">
                         <div class="card-title-block">
-                            <h3 class="title" id="info"> Información de la Autorización </h3>
+                            <h3 class="title" id="authFields"> Información de la Autorización </h3>
                         </div>
                         @include('authorization.fields')
                     </div>
