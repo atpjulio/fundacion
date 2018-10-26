@@ -98,7 +98,7 @@
                 </li>
                 @endrole
                 @role('admin')
-                <li class="@if(Request::is('eps*')) open active @endif">
+                <li class="@if(Request::is('eps*') or Request::is('rip*')) open active @endif">
                     <a href="">
                         <i class="fa fa-hospital-o"></i> EPS
                         <i class="fa arrow"></i>
@@ -116,11 +116,17 @@
                                 Listado de EPS
                             </a>
                         </li>
+                        <li class="@if(Request::is('rip*')) active @endif" >
+                            <a href="{{ route('rip.index') }}">
+                                <i class="far fa-file-archive"></i>&nbsp;
+                                RIPS
+                            </a>
+                        </li>
                     </ul>
                 </li>
                 @endrole
                 @role('admin')
-                <li class="@if(Request::is('accounting*') or Request::is('rip*') or Request::is('receipt*')) open active @endif">
+                <li class="@if(Request::is('accounting*') or Request::is('egress*') or Request::is('receipt*')) open active @endif">
                     <a href="">
                         <i class="fas fa-calculator"></i> Contabilidad
                         <i class="fa arrow"></i>
@@ -148,12 +154,6 @@
                             <a href="{{ route('receipt.index') }}">
                                 <i class="fas fa-file-invoice"></i>&nbsp;
                                 Recibos
-                            </a>
-                        </li>
-                        <li class="@if(Request::is('rip*')) active @endif" >
-                            <a href="{{ route('rip.index') }}">
-                                <i class="far fa-file-archive"></i>&nbsp;
-                                RIPS
                             </a>
                         </li>
                     </ul>

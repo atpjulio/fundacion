@@ -29,6 +29,13 @@ class UsersTableSeeder extends Seeder
                 'user_type' => config('constants.userRoles.admin'),
             ],
             [
+                'first_name' => 'Ivette',
+                'last_name' => 'Devivo',
+                'email' => 'ivettedevivo@hotmail.com',
+                'password' => bcrypt('123456'),
+                'user_type' => config('constants.userRoles.admin'),
+            ],
+            [
                 'first_name' => 'Administrador',
                 'last_name' => 'Barranquilla',
                 'email' => 'elmilagrobq1@gmail.com',

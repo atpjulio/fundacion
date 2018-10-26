@@ -27,7 +27,7 @@
         </div>
     </div>
 @else
-
+@if (!isset($show))
 <div class="form-group">
     {!! Form::label('companion_services', 'Seleccione el servicio que aplica al acompañante', ['class' => 'control-label']) !!}
     <div class="row">
@@ -46,6 +46,7 @@
         </div>
     </div>
 </div>
+@endif
 <div class="form-group">
     <div class="table-responsive">
         <table class="table table-hover table-bordered">

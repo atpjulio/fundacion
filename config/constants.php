@@ -31,10 +31,12 @@ $myConstants = [
     ],
     'userRoles' => [
         'user' => 1,
+        'accountant' => 2,
         'admin' => 9,
     ],
     'userRolesString' => [
         1 => 'user',
+        2 => 'accountant',
         9 => 'admin',
     ],
     'noYes' => [
@@ -125,7 +127,7 @@ $myConstants = [
         "PA" => "Pasaporte",
     ],
     'companyInfo' => [
-        'name' => 'C. H. El Milagro',
+        'name' => 'Fundación',
         'email' => 'admin@fundacion.com',
         'urlName' => 'fundacion',
         'longName' => 'Fundación Multiactiva Casa Hogar el Milagro',
