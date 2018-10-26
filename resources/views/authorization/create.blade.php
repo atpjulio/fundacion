@@ -49,9 +49,12 @@
                                             <td>{!! \Carbon\Carbon::parse($patient->birth_date)->format("d/m/Y") !!}</td>
                                             <td>{!! $patient->age !!}</td>
                                             <td>
+                                                {{--  
                                                 <button type="button" class="btn btn-oval btn-primary btn-sm" onclick="sendInfo({{ $patient->id }})">
                                                     Seleccionar
                                                 </button>
+                                                --}}
+                                                <a href="#info" class="btn btn-oval btn-primary btn-sm">Seleccionar</a>
                                             </td>
                                         </tr>
                                     @endforeach
@@ -66,7 +69,7 @@
                 <div class="card">
                     <div class="card-block">
                         <div class="card-title-block">
-                            <h3 class="title"> Información de la Autorización </h3>
+                            <h3 class="title" id="info"> Información de la Autorización </h3>
                         </div>
                         @include('authorization.fields')
                     </div>
@@ -89,13 +92,11 @@
                     </div>
                 </div>
             </div>
-            {{--
             <div class="col-md-12">
                 <div class="text-center">
                     {!! Form::submit('Guardar', ['class' => 'btn btn-oval btn-primary']) !!}
                 </div>
             </div>
-            --}}
         </div>
     </section>
     {!! Form::hidden('patient_id', null, ['id' => 'patient_id']) !!}
