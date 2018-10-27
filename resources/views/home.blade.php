@@ -80,6 +80,25 @@
                 </div>
             </div>
             @endrole
+            @role('admin|accountant')
+            <div class="col-xl-4">
+                <div class="card card-primary">
+                    <div class="card-header">
+                        <div class="header-block">
+                            <p class="title"> Contabilidad </p>
+                        </div>
+                    </div>
+                    <div class="card-block">
+                        <p>Hay diversas opciones en esta sección. Desde las facturas pendientes para cada EPS, así como opciones de notas internas, recibos de caja, comprobantes de egreso entre otras</p>
+                    </div>
+                    <div class="card-footer">
+                        <a href="{{ route('accounting.eps') }}">
+                            Ir a Contabilidad
+                        </a>
+                    </div>
+                </div>
+            </div>
+            @endrole
             @role('admin')
             <div class="col-xl-4">
                 <div class="card card-primary">
