@@ -8,12 +8,27 @@
 </div>
 <div class="form-group  @if($errors->has('state')) has-error @endif">
     {!! Form::label('state', 'Departamento', ['class' => 'control-label']) !!}
-    {!! Form::select('state', \App\State::getStates(), old('state', isset($patient) ? $patient->state : '08'), ['class' => 'form-control', 'id' => 'state']) !!}
+    <select name="state" id="state" class="form-control">
+        @foreach(\App\State::getStates() as $code => $name)
+            <option value="{{ $code }}" 
+                @if(isset($patient) && $patient->state == $code) selected 
+                @elseif($code == '08') selected @endif
+                >
+                {!! $code.' - '.$name !!}
+            </option>
+        @endforeach
+    </select>
 </div>
 <div class="form-group  @if($errors->has('city')) has-error @endif">
     {!! Form::label('city', 'Municipio', ['class' => 'control-label']) !!}
     <div id="dynamic-cities">
-        {!! Form::select('city', \App\City::getCitiesByStateId(isset($patient) ? $patient->state : '08'), old('city', isset($patient) ? $patient->city : ''), ['class' => 'form-control']) !!}
+        <select name="city" id="city" class="form-control">
+            @foreach(\App\City::getCitiesByStateId((isset($patient) and $patient->state) ? $patient->state : '08') as $code => $name)
+            <option value="{{ $code }}" @if(isset($patient) and $patient->state == $code) selected @endif>
+                {!! $code.' - '.$name !!}
+            </option>
+            @endforeach    
+        </select>
     </div>
 </div>
 <div class="form-group  @if($errors->has('zone')) has-error @endif">
