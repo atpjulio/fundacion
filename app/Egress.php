@@ -55,7 +55,6 @@ class Egress extends Model
         return config('constants.paymentType')[$this->payment_type];
     }
 
-
     /**
      * Methods
      */

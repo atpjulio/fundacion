@@ -31,7 +31,7 @@ class EgressController extends Controller
      */
     public function create()
     {
-        $pucs = Puc::all();
+        $pucs = Puc::orderBy('code')->get();
         $companies = Company::all()->pluck('name', 'id');        
 
         return view('accounting.egress.create', compact('pucs', 'companies'));
@@ -61,6 +61,8 @@ class EgressController extends Controller
             } else {
                 $amountDebit += floatval($request->get('pucDebit')[$key]);
             }
+
+            Puc::updatePuc($value, $request->get('pucDescription')[$key]);
         }
 
         if ($amount != $amountDebit) {
@@ -95,7 +97,7 @@ class EgressController extends Controller
      */
     public function edit($id)
     {
-        $pucs = Puc::all();
+        $pucs = Puc::orderBy('code')->get();
         $egress = Egress::find($id);
         $companies = Company::all()->pluck('name', 'id');
 
@@ -127,6 +129,7 @@ class EgressController extends Controller
             } else {
                 $amountDebit += floatval($request->get('pucDebit')[$key]);
             }
+            Puc::updatePuc($value, $request->get('pucDescription')[$key]);        
         }
 
         if ($amount != $amountDebit) {

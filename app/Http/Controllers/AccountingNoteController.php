@@ -32,7 +32,7 @@ class AccountingNoteController extends Controller
     public function create()
     {
         $invoices = Invoice::all();
-        $pucs = Puc::all();
+        $pucs = Puc::orderBy('code')->get();
 
         return view('accounting.note.create', compact('invoices', 'pucs'));
     }
@@ -61,6 +61,7 @@ class AccountingNoteController extends Controller
             } else {
                 $amountDebit += floatval($request->get('pucDebit')[$key]);
             }
+            Puc::updatePuc($value, $request->get('pucDescription')[$key]);
         }
 
         if ($amount != $amountDebit) {
@@ -101,7 +102,7 @@ class AccountingNoteController extends Controller
     public function edit($id)
     {
         $invoices = Invoice::all();
-        $pucs = Puc::all();
+        $pucs = Puc::orderBy('code')->get();
         $note = AccountingNote::find($id);
 
         return view('accounting.note.edit', compact('invoices', 'pucs', 'note'));
@@ -132,6 +133,7 @@ class AccountingNoteController extends Controller
             } else {
                 $amountDebit += floatval($request->get('pucDebit')[$key]);
             }
+            Puc::updatePuc($value, $request->get('pucDescription')[$key]);            
         }
 
         if ($amount != $amountDebit) {

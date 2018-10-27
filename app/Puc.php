@@ -33,4 +33,25 @@ class Puc extends Model
             ->first();
     }
 
+    protected function updatePuc($code, $description) 
+    {
+        $puc = $this->where('code')->first();
+
+        if (!$puc) {
+            $puc = new Puc();
+
+            $puc->code = $code;
+            $puc->description = $description;
+
+            $puc->save();
+
+            return;
+        } 
+
+        if (strcmp($puc->description, $description) !== 0) {
+            $puc->update([
+                'description' => $description
+            ]);
+        }
+    }
 }
