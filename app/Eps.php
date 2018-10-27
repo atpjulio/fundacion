@@ -41,6 +41,12 @@ class Eps extends Model
             ->where('model_type', config('constants.modelType.eps'));
     }
     
+
+    public function getTotalPatientsAttribute() 
+    {
+        return count(Patient::getPatientsForEps($this->id));
+    }
+
     /**
      * Methods
      */

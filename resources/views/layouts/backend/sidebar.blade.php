@@ -60,6 +60,12 @@
                                 Nuevo Usuario
                             </a>
                         </li>
+                        <li class="@if(Request::is('patient-import')) active @endif" >
+                            <a href="{{ route('patient.import') }}">
+                                <i class="fas fa-file-import"></i>&nbsp;
+                                Importar Usuarios
+                            </a>
+                        </li>
                         <li class="@if(Request::is('patient')) active @endif" >
                             <a href="{{ route('patient.index') }}">
                                 <i class="fas fa-list"></i>&nbsp;

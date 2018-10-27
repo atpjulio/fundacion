@@ -32,6 +32,7 @@
                                 <th>Código</th>
                                 <th>Nombre</th>
                                 <th>Tarifa diaria</th>
+                                <th>Usuarios</th>
                                 <th>Opciones</th>
                                 </thead>
                                 <tbody>
@@ -40,6 +41,7 @@
                                         <td>{!! $eps->code !!}</td>
                                         <td>{!! $eps->alias ? $eps->alias : $eps->name !!}</td>
                                         <td>$ {!! number_format($eps->daily_price, 2, ',', '.') !!}</td>
+                                        <td>{!! $eps->total_patients !!}</td>
                                         <td>
                                             <a href="{{ route('eps.edit', $eps->id) }}" class="btn btn-pill-left btn-info btn-sm">
                                                 Editar
