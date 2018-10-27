@@ -155,7 +155,8 @@ class PatientController extends Controller
 
         Excel::load(config('constants.importFiles').$fileName, function($reader) use ($request) {
             $counter = 0;
-            $data = $reader->get() instanceof RowCollection ? $reader->get() : $reader->get()->first();
+            //$data = $reader->get() instanceof RowCollection ? $reader->get() : $reader->get()->first();
+            $data = $reader->get();
             foreach ($data as $line) {
                 $result = Patient::storeRecordFromExcel($line);
                 if ($result) {
