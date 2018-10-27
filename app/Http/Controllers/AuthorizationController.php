@@ -46,7 +46,8 @@ class AuthorizationController extends Controller
         $initialEpsId = $epss->toArray()[0]['id'];
         $services = EpsService::getServices($initialEpsId)->pluck('name', 'id');
         $epss = $epss->pluck('name', 'id');
-        $patients = Patient::getPatientsForEps($initialEpsId);// Patient::all();
+        //$patients = Patient::getPatientsForEps($initialEpsId);// Patient::all();
+        $patients = Patient::all();
 
         return view('authorization.create', compact('epss', 'services', 'patients', 'initialEpsId'));
     }

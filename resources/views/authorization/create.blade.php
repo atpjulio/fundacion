@@ -49,7 +49,7 @@
                                             <td>{!! \Carbon\Carbon::parse($patient->birth_date)->format("d/m/Y") !!}</td>
                                             <td>{!! $patient->age !!}</td>
                                             <td>
-                                                <button type="button" class="btn btn-oval btn-primary btn-sm" onclick="sendInfo({{ $patient->id }})">
+                                                <button type="button" class="btn btn-oval btn-primary btn-sm" onclick="sendInfo({{ $patient->id }}, {{ $patient->eps_id }})">
                                                     Seleccionar
                                                 </button>
                                                 {{--  
@@ -184,7 +184,7 @@
             });
 
         } );
-        function sendInfo(id) {
+        function sendInfo(id, eps_id) {
             $('#patient_id').val(id);
             // $('#myForm').submit();
             $('#restOfFields').css('display', 'block');            
@@ -192,9 +192,12 @@
             $('html, body').animate({
                     scrollTop: $('#authFields').offset().top
                 }, 300, function(){
-                    // Add hash (#) to URL when done scrolling (default click behavior)
                     window.location.href = '#authFields';
                 });
+            $('#epsSelect').val(eps_id);
+            fillServices($('#epsSelect').val());
+            fillPatients($('#epsSelect').val());
+            fillCompanionServices($('#epsSelect').val());
         }
     </script>
 @endpush
