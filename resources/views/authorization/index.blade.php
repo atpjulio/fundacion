@@ -49,7 +49,7 @@
                                             <a href="{{ route('authorization.edit', $authorization->id) }}" class="btn btn-pill-left btn-info btn-sm">
                                                 Editar
                                             </a>
-                                            <a href="{{ route('authorization.edit', $authorization->id) }}" class="btn btn-secondary btn-sm">
+                                            <a href="{{ route('authorization.excel', $authorization->id) }}" class="btn btn-secondary btn-sm">
                                                 Planilla
                                             </a>
                                             <a href="" data-toggle="modal" data-target="#confirm-modal-{{ $authorization->id }}" class="btn btn-pill-right btn-danger btn-sm">
@@ -57,10 +57,10 @@
                                             </a>
                                             @endrole
                                             @role('user')
-                                            <a href="{{ route('authorization.edit', $authorization->id) }}" class="btn btn-oval btn-info btn-sm">
+                                            <a href="{{ route('authorization.edit', $authorization->id) }}" class="btn btn-pill-left btn-info btn-sm">
                                                 Editar
                                             </a>
-                                            <a href="{{ route('authorization.edit', $authorization->id) }}" class="btn btn-pill-right btn-secondary btn-sm">
+                                            <a href="{{ route('authorization.excel', $authorization->id) }}" class="btn btn-pill-right btn-secondary btn-sm">
                                                 Planilla
                                             </a>
                                             @endrole

@@ -3,13 +3,16 @@
 namespace App\Http\Controllers;
 
 use App\Authorization;
+use App\City;
 use App\Eps;
 use App\EpsService;
 use App\Http\Requests\ConfirmAuthorizationRequest;
 use App\Http\Requests\UpdateAuthorizationRequest;
 use App\Patient;
+use App\State;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
+use Maatwebsite\Excel\Facades\Excel;
 
 class AuthorizationController extends Controller
 {
@@ -161,5 +164,55 @@ class AuthorizationController extends Controller
     public function createBack(Request $request)
     {
         dd("under construction");
+    }
+
+    public function excel($id) 
+    {
+        $authorization = Authorization::find($id);
+
+        if (!$authorization) {
+            Session::flash('message_danger', 'No se pudo crear planilla. Por favor intenta nuevamente');
+            return redirect()->route('authorization.index');
+        }
+
+        Excel::load('public/files/hospedaje.xls', function($excel) use ($authorization) {
+            $excel->sheet('FORMATO', function($sheet) use ($authorization) {                    
+                $sheet->cell('B10', function($cell) use ($authorization) {
+                    $cell->setValue($authorization->patient->full_name);
+                });
+                $sheet->cell('F10', function($cell) use ($authorization) {
+                    $cell->setValue($authorization->patient->dni);
+                });
+                $sheet->cell('I10', function($cell) use ($authorization) {
+                    $cell->setValue(\Carbon\Carbon::parse($authorization->date_from)->format("d"));
+                });
+                $sheet->cell('J10', function($cell) use ($authorization) {
+                    $cell->setValue(\Carbon\Carbon::parse($authorization->date_from)->format("m"));
+                });
+                $sheet->cell('K10', function($cell) use ($authorization) {
+                    $cell->setValue(\Carbon\Carbon::parse($authorization->date_from)->format("Y"));
+                });
+                $sheet->cell('I11', function($cell) use ($authorization) {
+                    $cell->setValue(\Carbon\Carbon::parse($authorization->date_to)->format("d"));
+                });
+                $sheet->cell('J11', function($cell) use ($authorization) {
+                    $cell->setValue(\Carbon\Carbon::parse($authorization->date_to)->format("m"));
+                });
+                $sheet->cell('K11', function($cell) use ($authorization) {
+                    $cell->setValue(\Carbon\Carbon::parse($authorization->date_to)->format("Y"));
+                });
+                $sheet->cell('B14', function($cell) use ($authorization) {
+                    $cell->setValue(City::getCityByCode($authorization->patient->city));
+                });
+                $sheet->cell('B15', function($cell) use ($authorization) {
+                    $cell->setValue(State::getStateByCode($authorization->patient->state));
+                });
+                $sheet->cell('B17', function($cell) use ($authorization) {
+                    $cell->setValue($authorization->eps->alias);
+                });
+            });
+        })->setFilename('Autorización_'.$authorization->eps->alias.'_'.$authorization->code)
+        ->export('xls');
+
     }
 }

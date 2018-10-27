@@ -64,4 +64,13 @@ class State extends Model
     {
         return $this->states;
     }
+
+    protected function getStateByCode($code) 
+    {
+        $result = $this->where('code', $code)
+            ->first();
+
+        return $result ? $result->name : "";
+    }
+
 }

@@ -50,4 +50,12 @@ class City extends Model
             ->get()
             ->pluck('name', 'code');
     }
+
+    protected function getCityByCode($code) 
+    {
+        $result = $this->where('code', $code)
+            ->first();
+
+        return $result ? $result->name : "";
+    }
 }

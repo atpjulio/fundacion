@@ -65,6 +65,8 @@ Route::middleware(['auth', 'both'])->group(function () {
 
     Route::get('user/profile/{id}', 'UserController@profile')->name('user.profile');
     Route::put('user/profile/{id}', 'UserController@profileUpdate')->name('user.profile.update');
+
+    Route::get('authorization/excel/{id}', 'AuthorizationController@excel')->name('authorization.excel');
 });
 
 Auth::routes();
