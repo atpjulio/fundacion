@@ -30,38 +30,7 @@
                             </h3>
                         </div>
                         <div class="col-12" id="dynamic-patients">
-                            <div class="table-responsive">
-                                <table class="table table-striped table-bordered table-condensed table-hover" id="myTable">
-                                    <thead>
-                                    <th>Tipo Doc.</th>
-                                    <th>Documento</th>
-                                    <th>Nombre Completo</th>
-                                    <th>Fecha Nac.</th>
-                                    <th>Edad</th>
-                                    <th>Opciones</th>
-                                    </thead>
-                                    <tbody>
-                                    @foreach($patients as $patient)
-                                        <tr>
-                                            <td>{!! $patient->dni_type !!}</td>
-                                            <td>{!! $patient->dni !!}</td>
-                                            <td>{!! $patient->full_name !!}</td>
-                                            <td>{!! \Carbon\Carbon::parse($patient->birth_date)->format("d/m/Y") !!}</td>
-                                            <td>{!! $patient->age !!}</td>
-                                            <td>
-                                                <button type="button" class="btn btn-oval btn-primary btn-sm" onclick="sendInfo({{ $patient->id }}, {{ $patient->eps_id }})">
-                                                    Seleccionar
-                                                </button>
-                                                {{--  
-
-                                                <a href="#authFields" class="btn btn-oval btn-primary btn-sm">Seleccionar</a>
-                                                --}}
-                                            </td>
-                                        </tr>
-                                    @endforeach
-                                    </tbody>
-                                </table>
-                            </div>
+                            @include('partials._eps_patients')
                         </div>
                     </div>
                 </div>
@@ -194,8 +163,6 @@
                 }, 300, function(){
                     window.location.href = '#authFields';
                 });
-            console.log('Paciente:' + id);
-            console.log('EPS:' + eps_id);
             $('#epsSelect').val(eps_id);
             fillServices($('#epsSelect').val());
             fillPatients($('#epsSelect').val());

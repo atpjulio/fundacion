@@ -17,7 +17,7 @@
                 <td>{!! \Carbon\Carbon::parse($patient->birth_date)->format("d/m/Y") !!}</td>
                 <td>{!! $patient->age !!}</td>
                 <td>
-                    <button type="button" class="btn btn-oval btn-primary btn-sm" onclick="sendInfo({{ $patient->id }})">
+                    <button type="button" class="btn btn-oval btn-primary btn-sm" onclick="sendInfo({{ $patient->id }}, {{ $patient->eps_id }})">
                         Seleccionar
                     </button>
                 </td>
