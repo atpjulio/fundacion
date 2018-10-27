@@ -103,7 +103,7 @@ class Authorization extends Model
             $authorization->date_from = $request->get('date_from');
             $authorization->date_to = \Carbon\Carbon::parse($request->get('date_from'))->addDays($request->get('total_days'))->format("Y-m-d");
             $authorization->notes = $request->get('notes');
-            $authorization->companion = $request->get('companion');
+            $authorization->companion = ($request->get('companion') == "Si");
             $authorization->companion_dni = $authorization->companion ? join(",", $request->get('companionDni')) : null;
             $authorization->companion_eps_service_id = $authorization->companion ? join(",", $request->get('companionServiceId')) : null;
 

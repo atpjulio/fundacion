@@ -14,6 +14,6 @@
 @else
     <div class="form-group  @if($errors->has('companion')) has-error @endif">
         {!! Form::label('companion', '¿Viene con acompañante?', ['class' => 'control-label']) !!}
-        {!! Form::select('companion', config('constants.noYes'), old('companion', isset($authorization) ? $authorization->companion : ''), ['class' => 'form-control', isset($show) ? 'disabled' : '', 'id' => 'companion']) !!}
+        {!! Form::select('companion', config('constants.noYes'), old('companion', isset($authorization) ? $authorization->companion : ''), ['class' => 'form-control', isset($show) ? 'disabled' : 'disabled', 'id' => 'companion']) !!}
     </div>
 @endif
