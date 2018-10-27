@@ -194,6 +194,7 @@
                 }, 300, function(){
                     window.location.href = '#authFields';
                 });
+            console.log('EPS:' + eps_id);
             $('#epsSelect').val(eps_id);
             fillServices($('#epsSelect').val());
             fillPatients($('#epsSelect').val());
