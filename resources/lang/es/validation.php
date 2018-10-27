@@ -98,8 +98,8 @@ return [
         'attribute-name' => [
             'rule-name' => 'custom-message',
         ],
-        'selection' => [
-            'required' => 'Debes seleccionar el formato de tu archivo',
+        'dni' => [
+            'unique' => 'El número de documento ya existe en el sistema',
         ],
         'excel_file' => [
             'required' => 'Por favor selecciona un archivo de excel para continuar',
