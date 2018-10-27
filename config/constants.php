@@ -5,7 +5,7 @@ $myConstants = [
         'testing' => 'atpjulio@gmail.com',
         'admin' => 'arielcanario@hotmail.com'
     ],
-    'stylesVersion' => '1.003',
+    'stylesVersion' => '1.004',
     'productImages' => '/img/products/',
     'usersImages' => '/img/users/',
     'companiesImages' => '/img/companies/',
