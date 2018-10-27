@@ -78,7 +78,7 @@ class Authorization extends Model
         $authorization->patient_id = $request->get('patient_id');
         $authorization->code = $request->get('code');
         $authorization->date_from = $request->get('date_from');
-        $authorization->date_to = $request->get('date_to');
+        $authorization->date_to = \Carbon\Carbon::parse($request->get('date_from'))->addDays($request->get('total_days'))->format("Y-m-d");
         $authorization->notes = $request->get('notes');
         $authorization->companion = ($request->get('companion') == "Si");
         if ($authorization->companion) {
@@ -101,7 +101,7 @@ class Authorization extends Model
             $authorization->patient_id = $request->get('patient_id');
             $authorization->code = $request->get('code');
             $authorization->date_from = $request->get('date_from');
-            $authorization->date_to = $request->get('date_to');
+            $authorization->date_to = \Carbon\Carbon::parse($request->get('date_from'))->addDays($request->get('total_days'))->format("Y-m-d");
             $authorization->notes = $request->get('notes');
             $authorization->companion = $request->get('companion');
             $authorization->companion_dni = $authorization->companion ? join(",", $request->get('companionDni')) : null;

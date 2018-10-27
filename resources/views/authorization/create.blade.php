@@ -18,7 +18,7 @@
         </div>
     </div>
 
-    {!! Form::open(['route' => 'authorization.confirm', 'method' => 'POST', 'id' => 'myForm']) !!}
+    {!! Form::open(['route' => 'authorization.store', 'method' => 'POST', 'id' => 'myForm']) !!}
     <section class="section">
         <div class="row">
             <div class="col-12">
@@ -49,12 +49,13 @@
                                             <td>{!! \Carbon\Carbon::parse($patient->birth_date)->format("d/m/Y") !!}</td>
                                             <td>{!! $patient->age !!}</td>
                                             <td>
-                                                {{--  
                                                 <button type="button" class="btn btn-oval btn-primary btn-sm" onclick="sendInfo({{ $patient->id }})">
                                                     Seleccionar
                                                 </button>
-                                                --}}
+                                                {{--  
+
                                                 <a href="#authFields" class="btn btn-oval btn-primary btn-sm">Seleccionar</a>
+                                                --}}
                                             </td>
                                         </tr>
                                     @endforeach
@@ -65,37 +66,41 @@
                     </div>
                 </div>
             </div>
-            <div class="col-md-6">
-                <div class="card">
-                    <div class="card-block">
-                        <div class="card-title-block">
-                            <h3 class="title" id="authFields"> Información de la Autorización </h3>
+        </div>
+        <div id="restOfFields" style="display: none;">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="card-block">
+                            <div class="card-title-block">
+                                <h3 class="title" id="authFields"> Información de la Autorización </h3>
+                            </div>
+                            @include('authorization.fields')
                         </div>
-                        @include('authorization.fields')
                     </div>
                 </div>
-            </div>
-            <div class="col-md-6">
-                <div class="card">
-                    <div class="card-block">
-                        <div class="card-title-block">
-                            <h3 class="title"> Fecha de validez </h3>
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="card-block">
+                            <div class="card-title-block">
+                                <h3 class="title"> Fecha de validez </h3>
+                            </div>
+                            @include('authorization.fields2')
                         </div>
-                        @include('authorization.fields2')
                     </div>
                 </div>
-            </div>
-            <div class="col-md-12" id="companionsDiv" @if (old('companion')) style="display: block;" @else style="display: none;" @endif>
-                <div class="card">
-                    <div class="card-block">
-                        @include('authorization.fields3')
+                <div class="col-md-12" id="companionsDiv" @if (old('companion')) style="display: block;" @else style="display: none;" @endif>
+                    <div class="card">
+                        <div class="card-block">
+                            @include('authorization.fields3')
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div class="col-md-12">
-                <div class="text-center">
-                    {!! Form::submit('Guardar', ['class' => 'btn btn-oval btn-primary']) !!}
-                </div>
+                <div class="col-md-12">
+                    <div class="text-center">
+                        {!! Form::submit('Guardar', ['class' => 'btn btn-oval btn-primary']) !!}
+                    </div>
+                </div>                
             </div>
         </div>
     </section>
@@ -181,7 +186,15 @@
         } );
         function sendInfo(id) {
             $('#patient_id').val(id);
-            $('#myForm').submit();
+            // $('#myForm').submit();
+            $('#restOfFields').css('display', 'block');            
+            $('#restOfFields').addClass('animated fadeIn');
+            $('html, body').animate({
+                    scrollTop: $('#authFields').offset().top
+                }, 300, function(){
+                    // Add hash (#) to URL when done scrolling (default click behavior)
+                    window.location.href = '#authFields';
+                });
         }
     </script>
 @endpush

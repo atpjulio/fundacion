@@ -22,7 +22,7 @@ class AjaxController extends Controller
 
     public function getServices($id)
     {
-        $services = EpsService::getServices($id)->pluck('name', 'id');
+        $services = EpsService::getServices($id);
         if (count($services) < 1) {
             $services = [
                 "0" => 'Sin servicios registrados'

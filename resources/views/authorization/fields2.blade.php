@@ -2,9 +2,9 @@
     {!! Form::label('date_from', 'Fecha de inicio', ['class' => 'control-label']) !!}
     {!! Form::date('date_from', old('date_from', isset($dateFrom) ? $dateFrom : ''), ['class' => 'form-control underlined', 'placeholder' => 'dd/mm/aaaa', isset($show) ? 'readonly' : '']) !!}
 </div>
-<div class="form-group  @if($errors->has('date_to')) has-error @endif">
-    {!! Form::label('date_to', 'Fecha de finalización', ['class' => 'control-label']) !!}
-    {!! Form::date('date_to', old('date_to', isset($dateTo) ? $dateTo : ''), ['class' => 'form-control underlined', 'placeholder' => 'dd/mm/aaaa', isset($show) ? 'readonly' : '']) !!}
+<div class="form-group  @if($errors->has('total_days')) has-error @endif">
+    {!! Form::label('total_days', 'Total de días', ['class' => 'control-label']) !!}
+    {!! Form::number('total_days', old('total_days', isset($authorization) ? $authorization->days : 1), ['class' => 'form-control underlined', 'placeholder' => '0', isset($show) ? 'readonly' : '', 'min' => 1]) !!}
 </div>
 @if (isset($show))
     <div class="form-group  @if($errors->has('companion')) has-error @endif">

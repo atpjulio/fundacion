@@ -29,10 +29,10 @@ class UpdateAuthorizationRequest extends FormRequest
             'eps_service_id' => 'required|numeric|min:1',
             'patient_id' => 'required',
             'date_from' => 'required',
-            'date_to' => 'required',
+            // 'date_to' => 'required',
         ];
 
-        if ($this->request->get('companion')) {
+        if ($this->request->get('companion') and $this->request->get('companionDni')) {
             $rules['companionDni.*'] = 'required|companionDniNumber:'.join(",", $this->request->get('companionDni'));
         }
 

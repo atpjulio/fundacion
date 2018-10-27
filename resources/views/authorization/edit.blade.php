@@ -22,39 +22,11 @@
     {!! Form::hidden('id', $authorization->id) !!}
     <section class="section">
         <div class="row">
-            <div class="col-md-6">
-                <div class="card">
-                    <div class="card-block">
-                        <div class="card-title-block">
-                            <h3 class="title"> Información de la Autorización </h3>
-                        </div>
-                        @include('authorization.fields')
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-6">
-                <div class="card">
-                    <div class="card-block">
-                        <div class="card-title-block">
-                            <h3 class="title"> Fecha de validez </h3>
-                        </div>
-                        @include('authorization.fields2')
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-12" id="companionsDiv" @if ((isset($authorization) and $authorization->companion) or old('companion')) style="display: block;" @else style="display: none;" @endif>
-                <div class="card">
-                    <div class="card-block">
-                        @include('authorization.fields3')
-                    </div>
-                </div>
-            </div>
             <div class="col-12">
                 <div class="card">
                     <div class="card-block">
                         <div class="card-title-block">
                             <h3 class="title"> Usuario al que pertenece esta autorización
-                                {!! Form::button('Nuevo Usuario', ['class' => 'btn btn-oval btn-info float-right']) !!}
                             </h3>
                         </div>
                         <div class="col-12">
@@ -90,16 +62,41 @@
                     </div>
                 </div>
             </div>
-            {{--
-            <div class="col-md-12">
-                <div class="text-center">
-                    {!! Form::submit('Guardar', ['class' => 'btn btn-oval btn-primary']) !!}
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-block">
+                        <div class="card-title-block">
+                            <h3 class="title"> Información de la Autorización </h3>
+                        </div>
+                        @include('authorization.fields')
+                    </div>
                 </div>
             </div>
-            --}}
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-block">
+                        <div class="card-title-block">
+                            <h3 class="title"> Fecha de validez </h3>
+                        </div>
+                        @include('authorization.fields2')
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-12" id="companionsDiv" @if ((isset($authorization) and $authorization->companion) or old('companion')) style="display: block;" @else style="display: none;" @endif>
+                <div class="card">
+                    <div class="card-block">
+                        @include('authorization.fields3')
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-12">
+                <div class="text-center">
+                    {!! Form::submit('Actualizar', ['class' => 'btn btn-oval btn-warning']) !!}
+                </div>
+            </div>
         </div>
     </section>
-    {!! Form::hidden('patient_id', null, ['id' => 'patient_id']) !!}
+    {!! Form::hidden('patient_id', $authorization->patient->id, ['id' => 'patient_id']) !!}
     {!! Form::close() !!}
 @endsection
 

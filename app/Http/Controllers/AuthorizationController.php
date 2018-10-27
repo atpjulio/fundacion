@@ -54,17 +54,21 @@ class AuthorizationController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+
+    public function store(ConfirmAuthorizationRequest $request)
     {
-        foreach ($request->get('companionDni') as $key => $value) {
-            if (strlen($request->get('companionServiceId')[$key]) == 0) {            
-                Session::flash('message_danger', 'Valor inválido para el servicio del acompañante');
-                return redirect()->back()->withInput();
-            }
-            if (strlen($value) == 0) {
-                Session::flash('message_danger', 'Valor inválido para el documento del acompañante');
-                return redirect()->back()->withInput();
-            }
+
+        if ($request->get('companionDni') and count($request->get('companionDni')) > 0) {
+            foreach ($request->get('companionDni') as $key => $value) {
+                if (strlen($request->get('companionServiceId')[$key]) == 0) {            
+                    Session::flash('message_danger', 'Valor inválido para el servicio del acompañante');
+                    return redirect()->back()->withInput();
+                }
+                if (strlen($value) == 0) {
+                    Session::flash('message_danger', 'Valor inválido para el documento del acompañante');
+                    return redirect()->back()->withInput();
+                }
+            }            
         }
 
         Authorization::storeRecord($request);

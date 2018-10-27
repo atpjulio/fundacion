@@ -26,7 +26,7 @@
         {!! Form::label('eps_service_id', 'Seleccione Servicio de EPS', ['class' => 'control-label']) !!}
         <div class="row">
             @php
-                $services = \App\EpsService::getServices(old('eps_id') ?: $initialEpsId)->pluck('name', 'id');
+                $services = \App\EpsService::getServices(old('eps_id') ?: $initialEpsId);
                 if (count($services) < 1) {
                     $services = [
                         "0" => 'Sin servicios registrados'
@@ -35,12 +35,14 @@
             @endphp
             <div class="col-md-9">
                 <div id="dynamic-services">
-                    {!! Form::select('eps_service_id', $services, old('eps_service_id', isset($authorization) ? $authorization->eps_service_id : ''), ['class' => 'form-control', 'style' => $errors->has("eps_service_id") ? 'border: 1px solid red !important' : '']) !!}
+                    @include('partials._services')
                 </div>
             </div>
+            @if (!isset($authorization))
             <div class="col-md-3 text-right">
                 <a href="/eps-services/{{ $initialEpsId }}/create-from-authorization" class="btn btn-oval btn-success" id="serviceLink">Nuevo</a>
             </div>
+            @endif
         </div>
     </div>
 @endif
