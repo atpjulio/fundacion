@@ -90,15 +90,15 @@ class Invoice extends Model
 
         $pucs = [
             [
-                'code' => '414010'.sprintf("%02d", $invoice->eps_id),
+                'code' => '270528'.sprintf("%02d", $invoice->eps_id),
                 'type' => 1,
-                'description' => 'Campamento y otros tipos de hospedaje para EPS '.$invoice->eps->code .' - '.$invoice->eps->alias,
+                'description' => 'Ingresos devengados por facturar otros para '.$invoice->eps->code .' - '.$invoice->eps->alias,
                 'amount' => $invoice->total,
             ],
             [
                 'code' => '130505'.sprintf("%02d", $invoice->eps_id),
                 'type' => 0,
-                'description' => 'Campamento y otros tipos de hospedaje para EPS '.$invoice->eps->code .' - '.$invoice->eps->alias,
+                'description' => 'Cuentas por pagar para EPS '.$invoice->eps->code .' - '.$invoice->eps->alias,
                 'amount' => $invoice->total,
             ],
         ];

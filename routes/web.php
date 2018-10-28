@@ -42,6 +42,7 @@ Route::middleware(['auth', 'admin'])->group(function () {
     Route::get('test', 'RipController@test');
 
     Route::resource('receipt', 'ReceiptController');
+    Route::get('receipt/generals', 'ReceiptController@generals')->name('receipt.generals');
     Route::get('receipt/pdf/{id}', 'ReceiptController@pdf')->name('receipt.pdf');
     Route::view('receipt-import', 'accounting.receipt.import')->name('receipt.import');
     Route::post('receipt-import-process', 'ReceiptController@importProcess')->name('receipt.import.process');
@@ -79,3 +80,4 @@ Route::get('/get-eps-patients/{id}', 'AjaxController@getEpsPatients');
 Route::get('/get-day-range/{date}', 'AjaxController@getDayRange');
 Route::get('/get-services/{id}', 'AjaxController@getServices');
 Route::get('/get-cities/{id}', 'AjaxController@getCities');
+Route::get('/get-entity/{id}', 'AjaxController@getEntity');

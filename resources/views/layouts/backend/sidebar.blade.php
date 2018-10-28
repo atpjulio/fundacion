@@ -5,13 +5,6 @@
             <div class="brand">
                 <div class="logo">
                     <img src="{{ asset('img/logo.png') }}" height="60" style="margin-top: -36px;">
-                    <!--
-                    <span class="l l1"></span>
-                    <span class="l l2"></span>
-                    <span class="l l3"></span>
-                    <span class="l l4"></span>
-                    <span class="l l5"></span>
-                    -->
                 </div>
                 {!! config('constants.companyInfo.name') !!}
             </div>
@@ -144,12 +137,14 @@
                                 Comprobante de Egreso
                             </a>
                         </li>
+                        {{--  
                         <li class="@if(Request::is('accounting/eps*')) active @endif" >
                             <a href="{{ route('accounting.eps') }}">
                                 <i class="fa fa-hospital-o"></i>&nbsp;
                                 Contabilidad EPS
                             </a>
                         </li>
+                        --}}
                         <li class="@if(Request::is('accounting-note*')) active @endif" >
                             <a href="{{ route('accounting-note.index') }}">
                                 <i class="far fa-sticky-note"></i>&nbsp;
@@ -159,7 +154,7 @@
                         <li class="@if(Request::is('receipt*')) active @endif" >
                             <a href="{{ route('receipt.index') }}">
                                 <i class="fas fa-file-invoice"></i>&nbsp;
-                                Recibos
+                                Recibos de Pago
                             </a>
                         </li>
                     </ul>

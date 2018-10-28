@@ -30,18 +30,18 @@
                             <div class="table-responsive">
                                 <table class="table table-striped table-bordered table-condensed table-hover" id="myTable">
                                     <thead>
-                                    <th># Factura</th>
+                                    <th># Recibo</th>
+                                    <th>Recibido de</th>
                                     <th>Monto del recibo</th>
-                                    <th>Restante en factura</th>
                                     <th>Fecha</th>
                                     <th>Opciones</th>
                                     </thead>
                                     <tbody>
                                     @foreach($receipts as $receipt)
                                         <tr>
-                                            <td>{!! sprintf("%05d", $receipt->invoice->number) !!}</td>
+                                            <td>{!! sprintf("%05d", $receipt->id) !!}</td>
+                                            <td>{!! $receipt->entity->name !!}</td>
                                             <td>$ {!! number_format($receipt->amount, 2, ",", ".") !!}</td>
-                                            <td>$ {!! number_format($receipt->invoice->total - $receipt->amount, 2, ",", ".") !!}</td>
                                             <td>{!! \Carbon\Carbon::parse($receipt->created_at)->format("d/m/Y") !!}</td>
                                             <td>
                                                 <a href="{{ route('receipt.edit', $receipt->id) }}" class="btn btn-pill-left btn-info btn-sm">

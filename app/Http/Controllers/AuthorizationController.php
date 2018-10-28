@@ -203,7 +203,7 @@ class AuthorizationController extends Controller
                     $cell->setValue(\Carbon\Carbon::parse($authorization->date_to)->format("Y"));
                 });
                 $sheet->cell('B14', function($cell) use ($authorization) {
-                    $cell->setValue(City::getCityByCode($authorization->patient->city));
+                    $cell->setValue(City::getCityByCodeAndState($authorization->patient->state, $authorization->patient->city));
                 });
                 $sheet->cell('B15', function($cell) use ($authorization) {
                     $cell->setValue(State::getStateByCode($authorization->patient->state));

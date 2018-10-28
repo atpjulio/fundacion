@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\City;
+use App\Entity;
 use App\EpsService;
 use App\Invoice;
 use App\Patient;
@@ -51,6 +52,12 @@ class AjaxController extends Controller
         return view('partials._cities', compact('cities'));
     }
 
+    public function getEntity($id)
+    {
+        $entity = Entity::find($id);
+
+        return view('partials._entity_fields', compact('entity'));
+    }
 
     public function getEpsPatients($id)
     {

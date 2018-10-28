@@ -78,4 +78,11 @@ function showModal(url) {
         $("#show-modal-body").html(data);
         $('#show-modal').modal('show');
     });
-};
+}
+
+function fillEntityFields(id)
+{
+    $.get("/get-entity/" + id, function (data, status) {
+        $('#dynamic-entity-fields').html(data);
+    });
+}

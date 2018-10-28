@@ -10,9 +10,9 @@ class Receipt extends Model
 	use SoftDeletes;
 
     protected $fillable = [
-        'invoice_id',
+        'entity_id',        
         'amount',
-        'notes',
+        'concept',
         'created_at',
     ];
     /**
@@ -23,8 +23,13 @@ class Receipt extends Model
     protected $dates = ['deleted_at'];
 
     /**
-     * Relations
+     * Relationships
      */
+    public function entity()
+    {
+        return $this->hasOne(Entity::class, 'id', 'entity_id');
+    }
+
     public function invoice()
     {
         return $this->hasOne(Invoice::class, 'id', 'invoice_id');
@@ -42,48 +47,29 @@ class Receipt extends Model
     /**
      * Methods
      */
-    protected function storeRecord($invoice, $pucs, $notes = null, $amount)
+    protected function storeRecord($request, $pucs, $amount)
     {
         $receipt = $this->create([
-            'invoice_id' => $invoice->id,
+            'entity_id' => $request->get('entity_id'),
+            'concept' => $request->get('concept'),
             'amount' => $amount,
-            'created_at' => $invoice->created_at,
-            'notes' => $notes,
+            'created_at' => $request->get('created_at'),
         ]);
-
-        $invoice->payment += $receipt->amount;
-        if ($invoice->payment >= $invoice->total) {
-            $invoice->payment = $invoice->total;
-            $invoice->status = config('constants.invoices.status.paid');
-        }
-        $invoice->save();
 
         ReceiptPuc::storeRecord($receipt, $pucs);
     }
 
-    protected function updateRecord($invoice, $pucs, $notes = null, $amount)
+    protected function updateRecord($request, $pucs, $amount, $id)
     {
-        $receipt = $this->where('invoice_id', $invoice->id)
-            ->first();
+        $receipt = $this->find($id);
 
         if ($receipt) {
-            $oldAmount = $receipt->amount;
-
             $receipt->update([
-                'invoice_id' => $invoice->id,
+                'entity_id' => $request->get('entity_id'),
+                'concept' => $request->get('concept'),
                 'amount' => $amount,
-                'created_at' => $invoice->created_at,
-                'notes' => $notes,
+                'created_at' => $request->get('created_at'),
             ]);
-
-            $invoice->payment -= $oldAmount;
-            $invoice->payment += $receipt->amount;
-            $invoice->status = config('constants.invoices.status.pending');
-            if ($invoice->payment >= $invoice->total) {
-                $invoice->payment = $invoice->total;
-                $invoice->status = config('constants.invoices.status.paid');
-            } 
-            $invoice->save();
 
             ReceiptPuc::updateRecord($receipt, $pucs);
         }

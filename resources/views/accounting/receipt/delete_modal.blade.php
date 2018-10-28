@@ -9,14 +9,11 @@
             </div>
             {!! Form::open(['route' => ['receipt.destroy', $receipt->id], 'method' => 'DELETE']) !!}
             <div class="modal-body">
-                <p>Confirma que deseas borrar el recibo para la factura: </p>
+                <p>Confirma que deseas borrar el recibo: </p>
                 <div class="text-center">
-                    Número {!! $receipt->invoice->number !!}
+                    Número {!! $receipt->id !!}
                 </div>
             </div>
-
-            {!! Form::hidden('id', $receipt->id) !!}
-
             <div class="modal-footer">
                 <button type="submit" class="btn btn-primary">Si</button>
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>

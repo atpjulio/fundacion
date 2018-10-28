@@ -46,15 +46,15 @@
             </td>
             <td width="40%" >
                 <span style="font-weight: bold; font-size: 14pt;">
-                    {{ $receipt->invoice->company->name }}
+                    {{ $receipt->entity->name }}
                 </span>
                 <br>
                 <strong>
-                {{ config('constants.companiesDocumentTypes')[$receipt->invoice->company->doc_type] }}:
+                NIT/CC:
                 </strong> 
-                {{ $receipt->invoice->company->doc }}
-                <br><strong>Dirección:</strong> Carrera 60 No. 46 - 76
-                <br><strong>Tel:</strong> 3126214231 - 3157098010
+                {{ $receipt->entity->doc }}
+                <br><strong>Dirección:</strong> {{ $receipt->entity->address }}
+                <br><strong>Tel:</strong> {{ $receipt->entity->phone }}
                 <br>
             </td>
             <td width="45%" style="text-align: right;">
@@ -89,7 +89,7 @@ mpdf-->
                     RECIBIDO DE:
                 </span>
                 <br><br>
-                {{ $receipt->invoice->eps->name }}
+                {{ $receipt->entity->name }}
             </td>
             <td width="1%"></td>
             <td width="30%" style="border: 0.1mm solid #888888; ">
@@ -105,11 +105,7 @@ mpdf-->
                     POR CONCEPTO DE:
                 </span>
                 <br><br>
-                Recibo correspondiente a la Factura No. {{ sprintf("%05d", $receipt->invoice->number) }}
-                @if($receipt->notes)
-                    <br>
-                    {{ $receipt->notes }}
-                @endif
+                {{ $receipt->concept }}
             </td>
         </tr>
     </table>

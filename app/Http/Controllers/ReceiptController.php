@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Entity;
 use App\Http\Requests\StoreReceiptRequest;
 use App\Http\Requests\UpdateReceiptRequest;
 use App\Invoice;
@@ -33,8 +34,9 @@ class ReceiptController extends Controller
     {
         $invoices = Invoice::all();
         $pucs = Puc::orderBy('code')->get();
+        $entities = Entity::all();
 
-        return view('accounting.receipt.create', compact('invoices', 'pucs'));
+        return view('accounting.receipt.create', compact('invoices', 'entities', 'pucs'));
     }
 
     /**
@@ -71,9 +73,24 @@ class ReceiptController extends Controller
             return redirect()->back()->withInput();
         }
 
-        $invoice = Invoice::getInvoiceByNumber($request->get('invoice_number'));
+        if (intval($request->get('entity_id')) == 0) {
+            $result = Entity::checkIfExists($request->get('doc'));
 
-        Receipt::storeRecord($invoice, $pucs, $request->get('notes'), $amount);
+            if ($result) {
+                Session::flash('message_danger', 'Ya ese documento de entidad se encuentra registrado en el sistema');
+                return redirect()->back()->withInput();
+            }
+
+            $newEntity = Entity::storeRecord($request);
+            $request->request->add([
+                'entity_id' => $newEntity ? $newEntity->id : 0
+            ]); 
+        } else {
+            Entity::updateRecord($request);
+        }
+//        $invoice = Invoice::getInvoiceByNumber($request->get('invoice_number'));
+
+        Receipt::storeRecord($request, $pucs, $amount);
 
         Session::flash('message', 'Recibo creado exitosamente');
         return redirect()->route('receipt.index');
@@ -101,8 +118,10 @@ class ReceiptController extends Controller
         $invoices = Invoice::all();
         $pucs = Puc::orderBy('code')->get();
         $receipt = Receipt::find($id);
+        $entity = Entity::find($receipt->entity_id);
+        $entities = Entity::all();
 
-        return view('accounting.receipt.edit', compact('invoices', 'pucs', 'receipt'));
+        return view('accounting.receipt.edit', compact('invoices', 'pucs', 'receipt', 'entities', 'entity'));
     }
 
     /**
@@ -140,9 +159,26 @@ class ReceiptController extends Controller
             return redirect()->back()->withInput();
         }
 
-        $invoice = Invoice::find($request->get('invoice_number'));
 
-        Receipt::updateRecord($invoice, $pucs, $request->get('notes'), $amount);
+        if ($request->get('entity_id') == "0") {
+            $result = Entity::checkIfExists($request->get('doc'));
+
+            if ($result) {
+                Session::flash('message_danger', 'Ya ese documento de entidad se encuentra registrado en el sistema');
+                return redirect()->back()->withInput();
+            }
+
+            $newEntity = Entity::storeRecord($request);
+            $request->request->add([
+                'entity_id' => $newEntity ? $newEntity->id : 0
+            ]); 
+        } else {
+            Entity::updateRecord($request);
+        }
+
+        // $invoice = Invoice::find($request->get('invoice_number'));
+
+        Receipt::updateRecord($request, $pucs, $amount, $id);
 
         $request->session()->flash('message', 'Recibo actualizado exitosamente');
         return redirect()->route('receipt.index');
@@ -159,9 +195,9 @@ class ReceiptController extends Controller
         if (auth()->user()->hasRole('admin')) {
             $receipt = Receipt::find($id);
 
-            $invoice = Invoice::find($receipt->invoice_id);
-            $invoice->payment -= $receipt->amount;
-            $invoice->save();
+            // $invoice = Invoice::find($receipt->invoice_id);
+            // $invoice->payment -= $receipt->amount;
+            // $invoice->save();
 
             $receipt->delete();
 
@@ -174,16 +210,6 @@ class ReceiptController extends Controller
 
     public function pdf($id) 
     {
-        /*
-        $mpdf = new \Mpdf\Mpdf(['tempDir' => storage_path('app')]);
-
-        $mpdf->SetHTMLHeader('<div style="text-align: right; font-weight: bold; font-size: 30px;">INVOICE</div>');
-        $mpdf->SetHTMLFooter('<table width="100%"><tr><td width="33%">{DATE Y-m-j}</td><td width="33%" align="center">{PAGENO}/{nbpg}</td><td width="33%" style="text-align: right;">'.env('APP_URL').'</td></tr></table>');
-
-        $view = \View::make('invoice.pdf');
-        $mpdf->WriteHTML($view);
-        $mpdf->Output('Factura '.date("Y-m-d"), 'I');
-        */
         $receipt = Receipt::find($id);
         $html = \View::make('accounting.receipt.pdf', compact('receipt'));
         $mpdf = new \Mpdf\Mpdf([
@@ -195,15 +221,18 @@ class ReceiptController extends Controller
             'margin_footer' => 10
         ]);
         $mpdf->SetProtection(array('print'));
-        $mpdf->SetTitle($receipt->invoice->company->name." - Recibo ".$receipt->number);
-        $mpdf->SetAuthor($receipt->invoice->company->name);
-        // $mpdf->SetWatermarkText("Recibo");
-        // $mpdf->showWatermarkText = true;
-        // $mpdf->watermark_font = 'DejaVuSansCondensed';
-        // $mpdf->watermarkTextAlpha = 0.1;
+        $mpdf->SetTitle($receipt->entity->name." - Recibo ".sprintf("%05d", $receipt->id));
+        $mpdf->SetAuthor(auth()->user()->full_name);
         $mpdf->SetDisplayMode('fullpage');
         $mpdf->WriteHTML($html);
         $mpdf->Output('Recibo No '.sprintf("%05d", $receipt->id).'.pdf', 'I');
-
     }
+
+    public function generals()
+    {
+        $receipts = Receipt::all();
+
+        return view('accounting.receipt.index', compact('receipts'));
+    }
+
 }
