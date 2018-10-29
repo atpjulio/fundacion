@@ -132,7 +132,7 @@ mpdf-->
         @endforeach
         <!-- END ITEMS HERE -->
         <tr style="border-bottom-width: 0;">
-            <td class="blanktotal" colspan="4"></td>
+            <td class="blanktotal" colspan="3"></td>
             <td class="totals"><b>TOTAL:</b></td>
             <td class="totals cost">
                 <b>
