@@ -46,15 +46,15 @@
             </td>
             <td width="40%" >
                 <span style="font-weight: bold; font-size: 14pt;">
-                    {{ $receipt->entity->name }}
+                    Fundación Multiactiva Casa Hogar el Milagro
                 </span>
                 <br>
                 <strong>
-                NIT/CC:
+                NIT:
                 </strong> 
-                {{ $receipt->entity->doc }}
-                <br><strong>Dirección:</strong> {{ $receipt->entity->address }}
-                <br><strong>Tel:</strong> {{ $receipt->entity->phone }}
+                900254478-1
+                <br><strong>Dirección:</strong> Cl 60 No 46-76 Brr Boston
+                <br><strong>Tel:</strong> 3126214231
                 <br>
             </td>
             <td width="45%" style="text-align: right;">
