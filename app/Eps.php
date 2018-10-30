@@ -62,6 +62,8 @@ class Eps extends Model
             'policy' => $request->get('policy'),
         ]);
 
+        Entity::storeRecord($request);
+
         $address = new Address();
 
         $address->model_type = config('constants.modelType.eps');
