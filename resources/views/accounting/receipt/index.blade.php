@@ -32,9 +32,9 @@
                                     <thead>
                                     <th># Recibo</th>
                                     <th>Recibido de</th>
-                                    <th>Monto del recibo</th>
+                                    <th style="width: 110px;">Monto del recibo</th>
                                     <th>Fecha</th>
-                                    <th style="width: 250px;">Opciones</th>
+                                    <th style="width: 200px;">Opciones</th>
                                     </thead>
                                     <tbody>
                                     @foreach($receipts as $receipt)
