@@ -40,9 +40,18 @@ class Receipt extends Model
         return $this->hasMany(ReceiptPuc::class, 'receipt_id');
     }
 
+    public function company()
+    {
+        return $this->belongsTo(Company::class, 'company_id');
+    }
+
     /**
      * Dynamic attributes
      */
+    public function getNumberAttribute()
+    {
+        return sprintf("%05d", $this->id);
+    }
 
     /**
      * Methods

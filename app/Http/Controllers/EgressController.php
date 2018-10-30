@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Company;
 use App\Egress;
+use App\Entity;
 use App\Http\Requests\StoreEgressRequest;
 use App\Http\Requests\UpdateEgressRequest;
 use App\Puc;
@@ -33,8 +34,9 @@ class EgressController extends Controller
     {
         $pucs = Puc::orderBy('code')->get();
         $companies = Company::all()->pluck('name', 'id');        
+        $entities = Entity::all();
 
-        return view('accounting.egress.create', compact('pucs', 'companies'));
+        return view('accounting.egress.create', compact('pucs', 'companies', 'entities'));
     }
 
     /**
@@ -97,11 +99,13 @@ class EgressController extends Controller
      */
     public function edit($id)
     {
+        $entities = Entity::all();
         $pucs = Puc::orderBy('code')->get();
         $egress = Egress::find($id);
         $companies = Company::all()->pluck('name', 'id');
+        $entity = Entity::find($egress->entity_id);
 
-        return view('accounting.egress.edit', compact('pucs', 'egress', 'companies'));
+        return view('accounting.egress.edit', compact('pucs', 'egress', 'companies', 'entities', 'entity'));
     }
 
     /**

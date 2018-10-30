@@ -35,7 +35,7 @@ class Puc extends Model
 
     protected function updatePuc($code, $description) 
     {
-        $puc = $this->where('code')->first();
+        $puc = $this->where('code', $code)->first();
 
         if (!$puc) {
             $puc = new Puc();

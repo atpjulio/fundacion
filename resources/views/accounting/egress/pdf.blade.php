@@ -85,10 +85,10 @@ mpdf-->
         <tr>
             <td width="30%" style="border: 0.1mm solid #888888; ">
                 <span style="font-size: 9pt; color: #555555; font-family: sans;">
-                    ORIGEN Y FORMA DE PAGO:
+                    RECIBIDO DE:
                 </span>
                 <br><br>
-                {{ $egress->bank.' - '.$egress->payment }}
+                {{ $egress->entity->name }}
             </td>
             <td width="1%"></td>
             <td width="30%" style="border: 0.1mm solid #888888; ">
@@ -101,15 +101,15 @@ mpdf-->
             <td width="1%"></td>
             <td width="38%" style="border: 0.1mm solid #888888; ">
                 <span style="font-size: 9pt; color: #555555; font-family: sans;">
-                    NOTAS:
+                    POR CONCEPTO DE:
                 </span>
                 <br><br>
-                {{ $egress->notes }}
+                {{ $egress->concept }}
             </td>
         </tr>
     </table>
     <br>
-    <table class="items" width="100%" style="font-size: 9pt; border-collapse: collapse;" cellpadding="8">
+    <table class="items" width="100%" style="font-size: 9pt; border-collapse: collapse; border-bottom-width: 0; border-left-width: 0;" cellpadding="8">
         <thead>
         <tr>
             <td width="10%">Codigo</td>
@@ -129,17 +129,17 @@ mpdf-->
         </tr>
         @endforeach
         <!-- END ITEMS HERE -->
-        {{--
+        <!-- END ITEMS HERE -->
         <tr style="border-bottom-width: 0;">
             <td class="blanktotal" colspan="2"></td>
             <td class="totals"><b>TOTAL:</b></td>
             <td class="totals cost">
                 <b>
-                $ {!! number_format($receipt->amount, 0, ",", ".") !!}
+                $ {!! number_format($egress->amount, 0, ",", ".") !!}
                 </b>
             </td>
         </tr>
-        --}}
+        </tbody>
         </tbody>
     </table>
     <br><br><br>

@@ -30,14 +30,16 @@
                             <table class="table table-striped table-bordered table-condensed table-hover" id="myTable">
                                 <thead>
                                 <th># Comprobante</th>
-                                <th>Monto</th>
+                                <th>Recibido de</th>
+                                <th style="width: 110px;">Monto del recibo</th>
                                 <th>Fecha</th>
-                                <th>Opciones</th>
+                                <th style="width: 240px;">Opciones</th>
                                 </thead>
                                 <tbody>
                                 @foreach($egresses as $egress)
                                     <tr>
                                         <td>{!! sprintf("%05d", $egress->id) !!}</td>
+                                        <td>{!! $egress->entity->name !!}</td> 
                                         <td>$ {!! number_format($egress->amount, 2, ",", ".") !!}</td>
                                         <td>{!! \Carbon\Carbon::parse($egress->created_at)->format("d/m/Y") !!}</td>
                                         <td>

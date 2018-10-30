@@ -25,9 +25,23 @@ class StoreEgressRequest extends FormRequest
     {
         return [
             'created_at' => 'required',
+            'entity_id' => 'required',
+            'concept' => 'required',
+            'name' => 'required',
+            'doc' => 'required',
+            'address' => 'required',
+            'phone' => 'required',
             'notePucs.*' => 'required',
             'notePucs' => 'required',
             'pucDescription.*' => 'required',
+        ];
+    }
+
+    public function messages()
+    {
+        return [
+            'concept.required' => 'El concepto es obligatorio',
+            'doc.required' => 'El NIT/CC es obligatorio',
         ];
     }
 }

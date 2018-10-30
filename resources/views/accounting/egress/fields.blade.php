@@ -2,31 +2,34 @@
     <div class="card">
         <div class="card-block">
 			<div class="form-group  @if($errors->has('created_at')) has-error @endif">
-			    {!! Form::label('created_at', 'Fecha del comprobante', ['class' => 'control-label']) !!}
+			    {!! Form::label('created_at', 'Fecha del recibo de pago', ['class' => 'control-label']) !!}
 			    {!! Form::date('created_at', old('created_at', isset($egress) ? $egress->created_at : \Carbon\Carbon::now()), ['class' => 'form-control underlined', 'placeholder' => 'dd/mm/aaaa']) !!}
 			</div>
-			<div class="form-group  @if($errors->has('created_at')) has-error @endif">
-				{!! Form::label('bank_id', 'Banco de donde sale el dinero') !!}
-				{!! Form::select('bank_id', config('constants.banks'), old('bank_id', isset($egress) ? $egress->bank_id : ''), ['class' => 'form-control']) !!}
+			<div class="form-group @if($errors->has('entity_id')) has-error @endif">
+			    {!! Form::label('entity_id', 'Hemos recibido de', ['class' => 'control-label']) !!}
+			    <select name="entity_id" id="entity_id" class="form-control">
+			    	<option value="0">-- Añadir nuevo --</option>
+			    	@foreach($entities as $ent)
+			    		<option value="{{ $ent->id }}"
+			    			@if (isset($egress) and $egress->entity_id == $ent->id)
+			    				selected 
+		    				@endif>
+			    			{!! $ent->name !!}
+			    		</option>
+			    	@endforeach
+			    </select>
 			</div>
-			<div class="form-group  @if($errors->has('created_at')) has-error @endif">
-				{!! Form::label('payment_type', 'Forma de pago') !!}
-				{!! Form::select('payment_type', config('constants.paymentType'), old('payment_type', isset($egress) ? $egress->payment_type : ''), ['class' => 'form-control']) !!}
+			<div class="form-group @if($errors->has('concept')) has-error @endif">
+			    {!! Form::label('concept', 'Por concepto de', ['class' => 'control-label']) !!}
+			    {!! Form::textarea('concept', old('concept', isset($egress) ? $egress->concept : ''), ['class' => 'form-control underlined', 'placeholder' => 'Concepto', 'rows' => 4]) !!}
 			</div>
         </div>
     </div>
 </div>
 <div class="col-md-6">
     <div class="card">
-        <div class="card-block">
-			<div class="form-group @if($errors->has('company_id')) has-error @endif" style="margin-bottom: 31px;">
-			    {!! Form::label('company_id', 'Compañía a la que pertenece el comprobante', ['class' => 'control-label']) !!}
-			    {!! Form::select('company_id', $companies, old('company_id', isset($egress) ? $egress->company_id : ''), ['class' => 'form-control'   ]) !!}
-			</div>
-			<div class="form-group @if($errors->has('notes')) has-error @endif">
-			    {!! Form::label('notes', 'Detalles (opcional)', ['class' => 'control-label']) !!}
-			    {!! Form::textarea('notes', old('notes', isset($egress) ? $egress->notes : ''), ['class' => 'form-control underlined', 'placeholder' => 'Detalles', 'rows' => 4]) !!}
-			</div>
+        <div class="card-block" id="dynamic-entity-fields">
+        	@include('partials._entity_fields')
         </div>
     </div>
 </div>

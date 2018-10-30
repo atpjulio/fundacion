@@ -11,10 +11,9 @@ class Egress extends Model
 
     protected $fillable = [
         'company_id',
-        'bank_id',
+        'entity_id',
         'amount',
-        'payment_type',
-        'notes',
+        'concept',
         'created_at',
     ];
     /**
@@ -35,6 +34,11 @@ class Egress extends Model
     public function company()
     {
         return $this->belongsTo(Company::class, 'company_id');
+    }
+
+    public function entity()
+    {
+        return $this->hasOne(Entity::class, 'id', 'entity_id');
     }
 
     /**
@@ -61,11 +65,10 @@ class Egress extends Model
     protected function storeRecord($pucs, $request, $amount)
     {
         $egress = $this->create([
-            'company_id' => $request->get('company_id'),
+            'company_id' => 1,
             'amount' => $amount,
-            'bank_id' => $request->get('bank_id'),
-            'payment_type' => $request->get('payment_type'),
-            'notes' => $request->get('notes'),
+            'entity_id' => $request->get('entity_id'),
+            'concept' => $request->get('concept'),
         ]);
 
         EgressPuc::storeRecord($egress, $pucs);
@@ -77,12 +80,11 @@ class Egress extends Model
 
         if ($egress) {
             $egress->update([
-                'company_id' => $request->get('company_id'),
+                'company_id' => 1,
                 'amount' => $amount,
                 'created_at' => $egress->created_at,
-                'bank_id' => $request->get('bank_id'),
-                'payment_type' => $request->get('payment_type'),
-                'notes' => $request->get('notes'),
+                'entity_id' => $request->get('entity_id'),
+                'concept' => $request->get('concept'),
             ]);
 
             EgressPuc::updateRecord($egress, $pucs);

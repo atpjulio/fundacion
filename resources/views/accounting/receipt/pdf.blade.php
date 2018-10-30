@@ -46,22 +46,22 @@
             </td>
             <td width="40%" >
                 <span style="font-weight: bold; font-size: 14pt;">
-                    Fundación Multiactiva Casa Hogar el Milagro
+                    {{ $receipt->company->name }}
                 </span>
                 <br>
                 <strong>
-                NIT:
+                {{ config('constants.companiesDocumentTypes')[$receipt->company->doc_type] }}:
                 </strong> 
-                900254478-1
-                <br><strong>Dirección:</strong> Cl 60 No 46-76 Brr Boston
-                <br><strong>Tel:</strong> 3126214231
+                {{ $receipt->company->doc }}
+                <br><strong>Dirección:</strong> {{ $receipt->company->address->address }}
+                <br><strong>Tel:</strong> 3126214231 - 3157098010
                 <br>
             </td>
             <td width="45%" style="text-align: right;">
                 <span style="font-weight: bold; font-size: 14pt;">
                     No. Recibo
                     <br>
-                    {{ sprintf("%05d", $receipt->id) }}
+                    {{ $receipt->number }}
                 </span>
             </td>
         </tr>
