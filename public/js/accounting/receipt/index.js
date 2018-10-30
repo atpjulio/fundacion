@@ -1,4 +1,6 @@
 $(document).ready(function() {
+    var debit = 0;
+    var credit = 0;
     $('#myTable').DataTable({
         "language": {
             "lengthMenu": "Mostrando _MENU_ registros por página",
@@ -41,7 +43,9 @@ $(document).ready(function() {
 
         $('#puc_description').val(description);                
     });
-    $(".addRow").click(function(){
+    $(".addRow").click(function() {
+        debit += $('#puc_debit').val();
+        credit += $('#puc_credit').val()
         $("#pucsTable").append('<tr>' +
             '<td><input type="text" id="notePucs" name="notePucs[]" value="' + $('#puc_code').val() + '" class="form-control" placeholder="Código PUC"/></td>' + 
             '<td><input type="text" name="pucDescription[]" value="' + $('#puc_description').val()+ '" placeholder="Descripción" class="form-control"></td>' +
