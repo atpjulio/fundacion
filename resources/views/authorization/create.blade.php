@@ -156,6 +156,7 @@
         function sendInfo(id, eps_id) {
             $('#patient_id').val(id);
             // $('#myForm').submit();
+            $('#serviceLink').attr("href", "/eps-services/" + eps_id + "/create-from-authorization");
             $('#restOfFields').css('display', 'block');            
             $('#restOfFields').addClass('animated fadeIn');
             $('html, body').animate({
