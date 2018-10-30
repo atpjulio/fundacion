@@ -59,7 +59,7 @@ class City extends Model
         return $result ? $result->name : "";
     }
 
-    protected function getCityByCodeAndState($statecode, $code) 
+    protected function getCityByCodeAndState($stateCode, $code) 
     {
         $result = $this->where('code', $code)
             ->where('state_code', $stateCode)
