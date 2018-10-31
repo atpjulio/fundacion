@@ -76,6 +76,9 @@
 			                </tbody>
 			            </table>
 			        </div>
+			        <div class="col-12 text-right">
+			        	<p>Totales: <span class="text-info" id="debits">Débitos $ 0</span> | <span class="text-warning" id="credits">Créditos $ 0</span></p>
+			        </div>
 			    </div>
 			</div>
 

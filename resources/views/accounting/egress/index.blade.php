@@ -31,7 +31,7 @@
                                 <thead>
                                 <th># Comprobante</th>
                                 <th>Recibido de</th>
-                                <th style="width: 110px;">Monto del recibo</th>
+                                <th style="width: 110px;">Monto</th>
                                 <th>Fecha</th>
                                 <th style="width: 240px;">Opciones</th>
                                 </thead>

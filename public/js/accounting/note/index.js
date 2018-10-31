@@ -1,4 +1,6 @@
 $(document).ready(function() {
+    var debit = 0;
+    var credit = 0;
     $('#total').val($('#selected_price').val() * $('#total_days').val());
     $('#myTable').DataTable({
         "language": {
@@ -41,14 +43,19 @@ $(document).ready(function() {
                 description += element.trim();
             }
             counter++;
-            //console.log(element);
         });
-        // console.log(fullDescription);
-        // console.log(description);
 
         $('#puc_description').val(description);                
     });
     $(".addRow").click(function(){
+        if ($('#puc_debit').val() > 0) {
+            debit += parseFloat($('#puc_debit').val());
+            $('#debits').html("Débitos $ " + debit.toLocaleString('co-CO'));
+        }
+        if ($('#puc_credit').val() > 0) {
+            credit += parseFloat($('#puc_credit').val());
+            $('#credits').html("Créditos $ " + credit.toLocaleString('co-CO'));
+        }
         $("#pucsTable").append('<tr>' +
             '<td><input type="text" id="notePucs" name="notePucs[]" value="' + $('#puc_code').val() + '" class="form-control" placeholder="Código PUC"/></td>' + 
             '<td><input type="text" name="pucDescription[]" value="' + $('#puc_description').val()+ '" placeholder="Descripción" class="form-control"></td>' +
