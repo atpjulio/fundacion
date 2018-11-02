@@ -182,7 +182,7 @@ class AuthorizationController extends Controller
                     $cell->setValue($authorization->patient->full_name);
                 });
                 $sheet->cell('F10', function($cell) use ($authorization) {
-                    $cell->setValue($authorization->patient->dni.' - '.$authorization->patient->dni);
+                    $cell->setValue($authorization->patient->dni_type.' - '.$authorization->patient->dni);
                 });
                 $sheet->cell('I10', function($cell) use ($authorization) {
                     $cell->setValue(\Carbon\Carbon::parse($authorization->date_from)->format("d"));
@@ -212,7 +212,7 @@ class AuthorizationController extends Controller
                     $cell->setValue($authorization->eps->alias);
                 });
             });
-        })->setFilename('Hospedaje'.$authorization->eps->alias.'_'.$authorization->code)
+        })->setFilename('Hospedaje_'.$authorization->eps->alias.'_'.$authorization->code)
         ->export('xls');
 
     }
