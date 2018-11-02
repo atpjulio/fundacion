@@ -117,6 +117,7 @@ class Authorization extends Model
             $authorization->companion = ($request->get('companion') == "Si");
             $authorization->companion_dni = $authorization->companion ? join(",", $request->get('companionDni')) : null;
             $authorization->companion_eps_service_id = $authorization->companion ? join(",", $request->get('companionServiceId')) : null;
+            $authorization->status = config('constants.status.active');
 
             $authorization->save();
 
