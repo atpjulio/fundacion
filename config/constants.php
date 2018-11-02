@@ -3,7 +3,7 @@
 $myConstants = [
     'emails' => [
         'testing' => 'atpjulio@gmail.com',
-        'admin' => 'arielcanario@hotmail.com'
+        'admin' => 'fundacasahogar_elmilagro@hotmail.com'
     ],
     'stylesVersion' => '1.009',
     'productImages' => '/img/products/',
@@ -134,6 +134,7 @@ $myConstants = [
         'description' => 'Casa de Paso',
         'phoneNumber' => '+57 3126214231',
         'logo' => env('APP_URL').'img/logo.png',
+        'longLogo' => 'http://www.casahogarelmilagro.com/img/logo.png',
     ],
     'months' => [
         1 => 'Enero',
