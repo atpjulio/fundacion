@@ -23,6 +23,10 @@ class Authorization extends Model
         'guardianship',
         'guardianship_file',
         'notes',
+        'diagnosis',
+        'location',
+        'status',
+        'user_id',
     ];
 
     /**
@@ -48,6 +52,11 @@ class Authorization extends Model
     public function patient()
     {
         return $this->hasOne(Patient::class, 'id', 'patient_id');
+    }
+
+    public function user()
+    {
+        return $this->hasOne(User::class, 'id', 'user_id');
     }
 
     /**
@@ -81,6 +90,8 @@ class Authorization extends Model
         $authorization->date_to = \Carbon\Carbon::parse($request->get('date_from'))->addDays($request->get('total_days'))->format("Y-m-d");
         $authorization->notes = $request->get('notes');
         $authorization->companion = ($request->get('companion') == "Si");
+        $authorization->status = config('constants.status.active');
+        $authorization->user_id = auth()->user()->id;
         if ($authorization->companion) {
             $authorization->companion_dni = join(",", $request->get('companionDni'));
             $authorization->companion_eps_service_id = join(",", $request->get('companionServiceId'));
@@ -106,6 +117,8 @@ class Authorization extends Model
             $authorization->companion = ($request->get('companion') == "Si");
             $authorization->companion_dni = $authorization->companion ? join(",", $request->get('companionDni')) : null;
             $authorization->companion_eps_service_id = $authorization->companion ? join(",", $request->get('companionServiceId')) : null;
+            $authorization->status = config('constants.status.active');
+            $authorization->user_id = auth()->user()->id;
 
             $authorization->save();
 
