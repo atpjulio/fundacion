@@ -3,7 +3,8 @@
 $myConstants = [
     'emails' => [
         'testing' => 'atpjulio@gmail.com',
-        'admin' => 'fundacasahogar_elmilagro@hotmail.com'
+        'admin' => 'fundacasahogar_elmilagro@hotmail.com',
+        'admin2' => 'zuleima0326@gmail.com'
     ],
     'stylesVersion' => '1.009',
     'productImages' => '/img/products/',

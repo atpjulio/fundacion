@@ -11,14 +11,14 @@ class Departures extends Command
      *
      * @var string
      */
-    protected $signature = 'command:name';
+    protected $signature = 'fundacion:departures';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Command description';
+    protected $description = 'Send email to admin of patient leaving the house';
 
     /**
      * Create a new command instance.
@@ -37,6 +37,6 @@ class Departures extends Command
      */
     public function handle()
     {
-        //
+        \App\Utilities::emailDepartures();
     }
 }

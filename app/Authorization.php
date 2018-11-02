@@ -117,8 +117,6 @@ class Authorization extends Model
             $authorization->companion = ($request->get('companion') == "Si");
             $authorization->companion_dni = $authorization->companion ? join(",", $request->get('companionDni')) : null;
             $authorization->companion_eps_service_id = $authorization->companion ? join(",", $request->get('companionServiceId')) : null;
-            $authorization->status = config('constants.status.active');
-            $authorization->user_id = auth()->user()->id;
 
             $authorization->save();
 
@@ -136,5 +134,12 @@ class Authorization extends Model
     protected function findByCode($code)
     {
         return $this->where('code', $code)->first();
+    }
+
+    protected function findDepartures() 
+    {
+        return $this->where('date_to', \Carbon\Carbon::now()->format('Y-m-d'))
+            ->where('status', config('constants.status.active'))
+            ->get();
     }
 }

@@ -31,4 +31,34 @@ class Utilities extends Model
             //echo 'Caught exception: ',  $e->getMessage(), "\n";
         }
     }
+
+    static function emailDepartures()
+    {
+    	$authorizations = Authorization::findDepartures();
+    	$consoleMessage = " -> Sin salida de paciente";
+
+    	if ($authorizations) {
+
+    		foreach ($authorizations as $authorization) {
+				$user = $authorization->patient->toArray();
+    			$subject = "Salida de paciente: ".$authorization->patient->full_name;
+    			$content = "Paciente: ".$authorization->patient->full_name."<br>Con ingreso: ".
+    				\Carbon\Carbon::parse($authorization->date_from)->format("d/m/Y")."<br>EPS: ".
+    				$authorization->eps->name."<br>Autorización: ".$authorization->code."<br><br>Tiene programada su salida para el día de hoy";
+
+				$user['email'] = config('constants.emails.admin');
+    			self::sendEmail($user, $subject, $content);
+				$user['email'] = config('constants.emails.admin2');
+    			self::sendEmail($user, $subject, $content);    				
+
+    			echo  $subject."\n";
+
+    			$authorization->update([
+    				"status" => config('constants.status.inactive')
+    			]);
+    		}
+    		$message = " -> Salida de: ".count($authorizations)." paciente(s)\n";
+    	}
+    	echo \Carbon\Carbon::now()->format('Y-m-d').$message;
+    }
 }
