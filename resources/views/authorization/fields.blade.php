@@ -1,6 +1,6 @@
 <div class="form-group  @if($errors->has('code')) has-error @endif">
     {!! Form::label('code', 'Código', ['class' => 'control-label']) !!}
-    {!! Form::text('code', old('code', isset($code) ? $code : ''), ['class' => 'form-control underlined', 'placeholder' => 'Código de la autorización', isset($show) ? 'readonly' : '']) !!}
+    {!! Form::text('code', old('code', isset($code) ? $code : ''), ['class' => 'form-control underlined', 'placeholder' => 'Código de la autorización (puede estar vacío)', isset($show) ? 'readonly' : '']) !!}
 </div>
 @if (isset($show))
     <div class="form-group  @if($errors->has('eps_name')) has-error @endif">

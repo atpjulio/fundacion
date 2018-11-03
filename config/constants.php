@@ -1,6 +1,9 @@
 <?php
 
 $myConstants = [
+    'unathorized' => [
+        'prefix' => 'SA',
+    ],
     'emails' => [
         'testing' => 'atpjulio@gmail.com',
         'admin' => 'fundacasahogar_elmilagro@hotmail.com',

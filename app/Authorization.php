@@ -75,6 +75,14 @@ class Authorization extends Model
         return 1;
     }
 
+    public function getCodecAttribute()
+    {
+        if (strpos($this->code, config('constants.unathorized.prefix')) === FALSE) {
+            return $this->code;
+        }
+        return '';
+    }
+
     /**
      * Methods
      */
@@ -86,6 +94,16 @@ class Authorization extends Model
         $authorization->eps_service_id = $request->get('eps_service_id');
         $authorization->patient_id = $request->get('patient_id');
         $authorization->code = $request->get('code');
+        if (!$request->get('code')) {
+            $lastRecord = $this->orderBy('id', 'desc')
+                ->first();
+
+            $authorization->code = 'SA'.sprintf("%05d", 1);
+            if ($lastRecord) {
+                $authorization->code = 'SA'.sprintf("%05d", 1 + $lastRecord->id);
+            }
+        }
+
         $authorization->date_from = $request->get('date_from');
         $authorization->date_to = \Carbon\Carbon::parse($request->get('date_from'))->addDays($request->get('total_days'))->format("Y-m-d");
         $authorization->notes = $request->get('notes');
@@ -110,7 +128,12 @@ class Authorization extends Model
             $authorization->eps_id = $request->get('eps_id');
             $authorization->eps_service_id = $request->get('eps_service_id');
             $authorization->patient_id = $request->get('patient_id');
+            $oldCode = $authorization->code;
             $authorization->code = $request->get('code');
+            if ($authorization->codec == '' or empty($request->get('code'))) {
+                $authorization->code = $oldCode;
+            }
+
             $authorization->date_from = $request->get('date_from');
             $authorization->date_to = \Carbon\Carbon::parse($request->get('date_from'))->addDays($request->get('total_days'))->format("Y-m-d");
             $authorization->notes = $request->get('notes');
@@ -143,4 +166,17 @@ class Authorization extends Model
             ->where('status', config('constants.status.active'))
             ->get();
     }
+
+    protected function full()
+    {
+        return $this->where('code', 'not like', config('constants.unathorized.prefix').'%')
+            ->get();
+    }
+
+    protected function incomplete()
+    {
+        return $this->where('code', 'like', config('constants.unathorized.prefix').'%')
+            ->get();
+    }
+
 }

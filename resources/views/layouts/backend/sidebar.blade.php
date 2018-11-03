@@ -34,7 +34,13 @@
                         <li class="@if(Request::is('authorization')) active @endif" >
                             <a href="{{ route('authorization.index') }}">
                                 <i class="fas fa-list"></i>&nbsp;
-                                Listado
+                                Autorizadas
+                            </a>
+                        </li>
+                        <li class="@if(Request::is('authorization-incomplete')) active @endif" >
+                            <a href="{{ route('authorization.incomplete') }}">
+                                <i class="fas fa-list"></i>&nbsp;
+                                Incompletas
                             </a>
                         </li>
                     </ul>

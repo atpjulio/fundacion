@@ -24,7 +24,7 @@ class UpdateAuthorizationRequest extends FormRequest
     public function rules()
     {
         $rules = [
-            'code' => 'required|unique:authorizations,id,'.$this->request->get('id'),
+            'code' => 'unique:authorizations,id,'.$this->request->get('id'),
             'eps_id' => 'required',
             'eps_service_id' => 'required|numeric|min:1',
             'patient_id' => 'required',

@@ -59,6 +59,7 @@ Route::middleware(['auth', 'both'])->group(function () {
 
     Route::resource('authorization', 'AuthorizationController');
     Route::post('authorization/confirm', 'AuthorizationController@confirm')->name('authorization.confirm');
+    Route::get('authorization-incomplete', 'AuthorizationController@incomplete')->name('authorization.incomplete');
     Route::post('authorization/create-back', 'AuthorizationController@createBack')->name('authorization.create.back');
 
     Route::resource('patient', 'PatientController');

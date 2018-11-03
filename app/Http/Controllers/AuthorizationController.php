@@ -27,7 +27,7 @@ class AuthorizationController extends Controller
             session()->forget('authorization-create');
         }
 
-        $authorizations = Authorization::all();
+        $authorizations = Authorization::full();
 
         return view('authorization.index', compact('authorizations'));
     }
@@ -77,7 +77,7 @@ class AuthorizationController extends Controller
 
         Authorization::storeRecord($request);
 
-        Session::flash('message', 'Autorización '.$request->get('code').' guardada exitosamente');
+        Session::flash('message', 'Autorización guardada exitosamente');
         return redirect()->route('authorization.index');
     }
 
@@ -105,7 +105,7 @@ class AuthorizationController extends Controller
         $epss = $epss->pluck('name', 'id');
         $patients = Patient::all();
         $authorization = Authorization::find($id);
-        $code = $authorization->code;
+        $code = $authorization->codec;
         $dateFrom = $authorization->date_from;
         $dateTo = $authorization->date_to;
         $initialEpsId = $authorization->eps_id;
@@ -215,5 +215,17 @@ class AuthorizationController extends Controller
         })->setFilename('Hospedaje_'.$authorization->eps->alias.'_'.$authorization->code)
         ->export('xls');
 
+    }
+
+
+    public function incomplete()
+    {
+        if (session()->has('authorization-create')) {
+            session()->forget('authorization-create');
+        }
+
+        $authorizations = Authorization::incomplete();
+
+        return view('authorization.index', compact('authorizations'));
     }
 }

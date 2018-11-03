@@ -24,7 +24,7 @@ class ConfirmAuthorizationRequest extends FormRequest
     public function rules()
     {
         $rules = [
-            'code' => 'required|unique:authorizations',
+            'code' => 'unique:authorizations',
             'eps_id' => 'required',
             'eps_service_id' => 'required|numeric|min:1',
             'patient_id' => 'required',
