@@ -49,7 +49,7 @@
                                             <td>{!! $authorization->days !!}</td>
                                             <td>
                                                 {!! Form::button('Seleccionar', ['class' => 'btn btn-oval btn-success', 'id' => 'button'.$key ]) !!}
-                                                {!! Form::text('daily_price', $authorization->eps->daily_price, ['id' => 'daily_price']) !!}
+                                                {!! Form::hidden('daily_price', $authorization->eps->daily_price, ['id' => 'daily_price']) !!}
                                             </td>
                                         </tr>
                                     @endforeach
