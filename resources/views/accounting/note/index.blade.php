@@ -29,7 +29,7 @@
                         <div class="table-responsive">
                             <table class="table table-striped table-bordered table-condensed table-hover" id="myTable">
                                 <thead>
-                                <th># Nota</th>
+                                <th style="width: 100px;"># Nota</th>
                                 <th>Monto</th>
                                 <th>Fecha</th>
                                 <th>Opciones</th>
@@ -37,7 +37,7 @@
                                 <tbody>
                                 @foreach($notes as $note)
                                     <tr>
-                                        <td>{!! sprintf("%05d", $note->id) !!}</td>
+                                        <td>{!! $note->number !!}</td>
                                         <td>$ {!! number_format($note->amount, 2, ",", ".") !!}</td>
                                         <td>{!! \Carbon\Carbon::parse($note->created_at)->format("d/m/Y") !!}</td>
                                         <td>

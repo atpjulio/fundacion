@@ -50,7 +50,7 @@ class Receipt extends Model
      */
     public function getNumberAttribute()
     {
-        return sprintf("%05d", $this->id);
+        return 'R-'.date("Ym").sprintf("%05d", $this->id);
     }
 
     /**

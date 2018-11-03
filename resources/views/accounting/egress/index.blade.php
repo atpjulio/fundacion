@@ -29,7 +29,7 @@
                         <div class="table-responsive">
                             <table class="table table-striped table-bordered table-condensed table-hover" id="myTable">
                                 <thead>
-                                <th># Comprobante</th>
+                                <th style="width: 100px;"># Comprobante</th>
                                 <th>Recibido de</th>
                                 <th style="width: 110px;">Monto</th>
                                 <th>Fecha</th>
@@ -38,7 +38,7 @@
                                 <tbody>
                                 @foreach($egresses as $egress)
                                     <tr>
-                                        <td>{!! sprintf("%05d", $egress->id) !!}</td>
+                                        <td>{!! $egress->number !!}</td>
                                         <td>{!! $egress->entity->name !!}</td> 
                                         <td>$ {!! number_format($egress->amount, 2, ",", ".") !!}</td>
                                         <td>{!! \Carbon\Carbon::parse($egress->created_at)->format("d/m/Y") !!}</td>

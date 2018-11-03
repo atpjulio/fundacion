@@ -30,7 +30,7 @@
                             <div class="table-responsive">
                                 <table class="table table-striped table-bordered table-condensed table-hover" id="myTable">
                                     <thead>
-                                    <th># Recibo</th>
+                                    <th style="width: 100px;"># Recibo</th>
                                     <th>Recibido de</th>
                                     <th style="width: 110px;">Monto del recibo</th>
                                     <th>Fecha</th>
@@ -39,7 +39,7 @@
                                     <tbody>
                                     @foreach($receipts as $receipt)
                                         <tr>
-                                            <td>{!! sprintf("%05d", $receipt->id) !!}</td>
+                                            <td>{!! $receipt->number !!}</td>
                                             <td>{!! $receipt->entity->name !!}</td>
                                             <td>$ {!! number_format($receipt->amount, 2, ",", ".") !!}</td>
                                             <td>{!! \Carbon\Carbon::parse($receipt->created_at)->format("d/m/Y") !!}</td>

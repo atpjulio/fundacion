@@ -46,7 +46,7 @@ class Egress extends Model
      */
     public function getNumberAttribute()
     {
-        return sprintf("%05d", $this->id);
+        return 'G-'.date("Ym").sprintf("%05d", $this->id);
     }
 
     public function getBankAttribute()

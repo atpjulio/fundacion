@@ -38,6 +38,10 @@ class AccountingNote extends Model
     /**
      * Dynamic attributes
      */
+    public function getNumberAttribute()
+    {
+        return 'N-'.date("Ym").sprintf("%05d", $this->id);
+    }
 
     /**
      * Methods
