@@ -40,7 +40,7 @@ class AccountingNote extends Model
      */
     public function getNumberAttribute()
     {
-        return 'N-'.date("Ym").sprintf("%05d", $this->id);
+        return 'N-'.\Carbon\Carbon::parse($this->created_at)->format("Ym").sprintf("%05d", $this->id);
     }
 
     /**

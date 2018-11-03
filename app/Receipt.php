@@ -50,7 +50,7 @@ class Receipt extends Model
      */
     public function getNumberAttribute()
     {
-        return 'R-'.date("Ym").sprintf("%05d", $this->id);
+        return 'R-'.\Carbon\Carbon::parse($this->created_at)->format("Ym").sprintf("%05d", $this->id);
     }
 
     /**

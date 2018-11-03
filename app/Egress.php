@@ -46,7 +46,7 @@ class Egress extends Model
      */
     public function getNumberAttribute()
     {
-        return 'G-'.date("Ym").sprintf("%05d", $this->id);
+        return 'G-'.\Carbon\Carbon::parse($this->created_at)->format("Ym").sprintf("%05d", $this->id);
     }
 
     public function getBankAttribute()
