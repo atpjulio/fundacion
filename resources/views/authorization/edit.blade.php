@@ -79,13 +79,9 @@
                             <h3 class="title"> Fecha de validez </h3>
                         </div>
                         @include('authorization.fields2')
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-12" id="companionsDiv" @if ((isset($authorization) and $authorization->companion) or old('companion')) style="display: block;" @else style="display: none;" @endif>
-                <div class="card">
-                    <div class="card-block">
-                        @include('authorization.fields3')
+                        <div id="companionsDiv" @if (old('companion')) style="display: block;" @else style="display: none;" @endif>
+                            @include('authorization.companion')
+                        </div>
                     </div>
                 </div>
             </div>

@@ -32,8 +32,9 @@ class ConfirmAuthorizationRequest extends FormRequest
             // 'date_to' => 'required',
         ];
 
-        if ($this->request->get('companion') and $this->request->get('companionDni')) {
-            $rules['companionDni.*'] = 'required|companionDniNumber:'.join(",", $this->request->get('companionDni'));
+        if ($this->request->get('companion')) {
+            $rules['companion_dni'] = 'required';
+            $rules['companion_name'] = 'required';
         }
 
         return $rules;
@@ -43,7 +44,8 @@ class ConfirmAuthorizationRequest extends FormRequest
     {
         return [
             'patient_id.required' => 'Debes seleccionar un usuario',
-            'companion_dni_number' => 'Número de documento del acompañante no se encuentra registrado',
+            'companion_dni.required' => 'Número de documento del acompañante no puede estar vacío',
+            'companion_name.required' => 'Nombre del acompañante no puede estar vacío',
         ];
     }
 }

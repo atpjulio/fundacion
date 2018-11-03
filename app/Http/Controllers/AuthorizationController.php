@@ -61,7 +61,7 @@ class AuthorizationController extends Controller
 
     public function store(ConfirmAuthorizationRequest $request)
     {
-
+        /*
         if ($request->get('companionDni') and count($request->get('companionDni')) > 0) {
             foreach ($request->get('companionDni') as $key => $value) {
                 if (strlen($request->get('companionServiceId')[$key]) == 0) {            
@@ -74,7 +74,7 @@ class AuthorizationController extends Controller
                 }
             }            
         }
-
+        */
         Authorization::storeRecord($request);
 
         Session::flash('message', 'Autorización guardada exitosamente');
@@ -170,7 +170,6 @@ class AuthorizationController extends Controller
     public function excel($id) 
     {
         $authorization = Authorization::find($id);
-
         if (!$authorization) {
             Session::flash('message_danger', 'No se pudo crear planilla. Por favor intenta nuevamente');
             return redirect()->route('authorization.index');
@@ -181,6 +180,16 @@ class AuthorizationController extends Controller
                 $sheet->cell('B10', function($cell) use ($authorization) {
                     $cell->setValue($authorization->patient->full_name);
                 });
+
+                if ($authorization->companion) {
+                    $sheet->cell('B11', function($cell) use ($authorization) {
+                        $cell->setValue($authorization->companion_name);
+                    });
+                    $sheet->cell('F11', function($cell) use ($authorization) {
+                        $cell->setValue('CC - '.$authorization->companion_dni);
+                    });
+                }
+
                 $sheet->cell('F10', function($cell) use ($authorization) {
                     $cell->setValue($authorization->patient->dni_type.' - '.$authorization->patient->dni);
                 });
@@ -208,6 +217,9 @@ class AuthorizationController extends Controller
                 $sheet->cell('B15', function($cell) use ($authorization) {
                     $cell->setValue(State::getStateByCode($authorization->patient->state));
                 });
+                $sheet->cell('B16', function($cell) use ($authorization) {
+                    $cell->setValue($authorization->diagnosis);
+                });
                 $sheet->cell('B17', function($cell) use ($authorization) {
                     $cell->setValue($authorization->eps->alias);
                 });
@@ -220,7 +232,6 @@ class AuthorizationController extends Controller
 
     }
 
-
     public function incomplete()
     {
         if (session()->has('authorization-create')) {
@@ -231,4 +242,5 @@ class AuthorizationController extends Controller
 
         return view('authorization.index', compact('authorizations'));
     }
+
 }

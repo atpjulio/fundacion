@@ -27,6 +27,7 @@ class Authorization extends Model
         'location',
         'status',
         'user_id',
+        'companion_name',
     ];
 
     /**
@@ -107,12 +108,14 @@ class Authorization extends Model
         $authorization->date_from = $request->get('date_from');
         $authorization->date_to = \Carbon\Carbon::parse($request->get('date_from'))->addDays($request->get('total_days'))->format("Y-m-d");
         $authorization->notes = $request->get('notes');
-        $authorization->companion = ($request->get('companion') == "Si");
         $authorization->status = config('constants.status.active');
         $authorization->user_id = auth()->user()->id;
+        $authorization->diagnosis = ucwords(mb_strtolower($request->get('diagnosis')));
+        $authorization->location = config('constants.patient.location')[$request->get('location')];
+        $authorization->companion = ($request->get('companion') == "1");
         if ($authorization->companion) {
-            $authorization->companion_dni = join(",", $request->get('companionDni'));
-            $authorization->companion_eps_service_id = join(",", $request->get('companionServiceId'));
+            $authorization->companion_dni = $request->get('companion_dni');
+            $authorization->companion_name = ucwords(mb_strtolower($request->get('companion_name')));
         }
 
         $authorization->save();
@@ -137,10 +140,14 @@ class Authorization extends Model
             $authorization->date_from = $request->get('date_from');
             $authorization->date_to = \Carbon\Carbon::parse($request->get('date_from'))->addDays($request->get('total_days'))->format("Y-m-d");
             $authorization->notes = $request->get('notes');
-            $authorization->companion = ($request->get('companion') == "Si");
-            $authorization->companion_dni = $authorization->companion ? join(",", $request->get('companionDni')) : null;
-            $authorization->companion_eps_service_id = $authorization->companion ? join(",", $request->get('companionServiceId')) : null;
             $authorization->status = config('constants.status.active');
+            $authorization->diagnosis = ucwords(mb_strtolower($request->get('diagnosis')));
+            $authorization->location = config('constants.patient.location')[$request->get('location')];
+            $authorization->companion = ($request->get('companion') == "1");
+            if ($authorization->companion) {
+                $authorization->companion_dni = $request->get('companion_dni');
+                $authorization->companion_name = ucwords(mb_strtolower($request->get('companion_name')));
+            }
 
             $authorization->save();
 

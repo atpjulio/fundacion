@@ -46,3 +46,11 @@
         </div>
     </div>
 @endif
+<div class="form-group  @if($errors->has('diagnosis')) has-error @endif">
+    {!! Form::label('diagnosis', 'Diagnóstico', ['class' => 'control-label']) !!}
+    {!! Form::text('diagnosis', old('diagnosis', isset($authorization) ? $authorization->diagnosis : ''), ['class' => 'form-control underlined', 'placeholder' => 'Diagnóstico (opcional)']) !!}
+</div>
+<div class="form-group  @if($errors->has('location')) has-error @endif">
+    {!! Form::label('location', 'Ubicación del paciente', ['class' => 'control-label']) !!}
+    {!! Form::select('location', config('constants.patient.location'), old('location', isset($authorization) ? $authorization->location : ''), ['class' => 'form-control', isset($show) ? 'disabled' : '']) !!}
+</div>

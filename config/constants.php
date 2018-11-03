@@ -69,6 +69,14 @@ $myConstants = [
         7 => 'Desplazado Subsidiado',
         8 => 'Desplazado No Asegurado',
     ],
+    'patient' => [
+        'location' => [
+            0 => 'Hospedaje',
+            1 => 'Clínica',
+            2 => 'Unidad UCI',
+            3 => 'Habitación',
+        ],
+    ],
     'userRolesFrontEnd' => [
         1 => 'Usuario',
         9 => 'Administrador',

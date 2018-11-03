@@ -61,10 +61,10 @@ class City extends Model
 
     protected function getCityByCodeAndState($stateCode, $code) 
     {
-        $result = $this->where('code', $code)
-            ->where('state_code', $stateCode)
+        $result = $this->where('code', sprintf("%03d", $code))
+            ->where('state_code', sprintf("%02d", $stateCode))
             ->first();
 
-        return $result ? $result->name : "";
+        return $result ? ucwords(strtolower($result->name)) : "";
     }
 }
