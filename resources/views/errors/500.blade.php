@@ -3,12 +3,14 @@
 @section('content')
     <div class="auth-content">
         <strong>            
-            La página ha dejado de funcionar debido a inactividad
+            Uy, lo sentimos ha ocurrido un error en el sistema
         </strong>
         <br><br>
-        Por favor, ve hacia atrás actualiza la página e inténtalo nuevamente
+        Se ha enviado automáticamente un correo a soporte
         <br><br>
         Disculpas por las molestias causadas,<br>
+        Haz clic <a href="{{ route('login') }}">aquí</a> para ir al inicio
+        <br><br>
         El equipo IT de {!! config('constants.companyInfo.longName') !!}
     </div>
 @endsection

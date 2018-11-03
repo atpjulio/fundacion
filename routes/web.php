@@ -14,18 +14,6 @@ use App\Utilities;
 */
 
 Route::view('/', 'auth.login');
-Route::get('/enviar', ['as' => 'enviar', function () {
-
-  $user['email'] = 'atpjulio@yahoo.es';
-  $user['first_name'] = 'Julián';
-  $user['last_name'] = 'Soler';
-  $subject = 'Casa Hogar El Milagro';
-  $content = 'Primer correo electrónico';
-
-  Utilities::sendEmail($user, $subject, $content);
-
-  return "Se envío el email";
-}]);
 
 Route::middleware(['auth', 'admin'])->group(function () {
     Route::resource('company', 'CompanyController');
