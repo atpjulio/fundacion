@@ -101,10 +101,10 @@ class AuthorizationController extends Controller
     public function edit($id)
     {
         $epss = Eps::all();
-        $services = EpsService::getServices($epss->toArray()[$id]['id'])->pluck('name', 'id');
+        $authorization = Authorization::find($id);
+        $services = EpsService::getServices($authorization->eps_id)->pluck('name', 'id');
         $epss = $epss->pluck('name', 'id');
         $patients = Patient::all();
-        $authorization = Authorization::find($id);
         $code = $authorization->codec;
         $dateFrom = $authorization->date_from;
         $dateTo = $authorization->date_to;
