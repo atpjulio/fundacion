@@ -88,7 +88,7 @@ class Handler extends ExceptionHandler
 
             $handler = new SymfonyExceptionHandler();
             
-            $data['content'] = "<h1>".env('APP_URL')."</h1>".$handler->getHtml($e) ."<br>";
+            $data['content'] = "<h2>".env('APP_URL')."</h2>".$handler->getHtml($e) ."<br>";
             $x = json_encode(\Request::all());
             $data['content'] .= "<br>Requests<br>$x";
             $x = json_encode(\session()->all());
@@ -96,8 +96,9 @@ class Handler extends ExceptionHandler
 
             \Mail::send( 'emails.errors', $data, function( $message )
             {
-                $message->subject('Error en Fundación -> '.date("Y-m-d H:i:s"));
-                $message->from('elmilagrobq1@gmail.com', "Reporte: Fundación");
+                $companyName = config('constants.companyInfo.name');
+                $message->subject("Error en $companyName -> ".date("Y-m-d H:i:s"));
+                $message->from('elmilagrobq1@gmail.com', "Reporte: $companyName");
                 $message->to('atpjulio@gmail.com');
             });
 
