@@ -145,7 +145,7 @@ mpdf-->
             <tr>
                 <td align="center">{{ $service->code }}</td>
                 <td>{{ $service->name }}</td>
-                <td>{{ $invoice->authorization->code }}</td>
+                <td>{{ $invoice->authorization->codec }}</td>
                 <td align="center">{!! $invoice->days !!}</td>
                 <td class="cost">$ {{ number_format($invoice->eps->daily_price, 0, ",", ".") }}</td>
                 <td class="cost">$ {!! number_format($invoice->total, 0, ",", ".") !!}</td>

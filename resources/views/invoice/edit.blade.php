@@ -60,7 +60,7 @@
                                     <tbody>
                                     @foreach($authorizations as $key => $authorization)
                                         <tr>
-                                            <td>{!! $authorization->code !!}</td>
+                                            <td>{!! $authorization->codec !!}</td>
                                             <td>{!! $authorization->eps->alias ? $authorization->eps->alias : $authorization->eps->name !!}</td>
                                             <td>{!! $authorization->patient->full_name !!}</td>
                                             <td>{!! \Carbon\Carbon::parse($authorization->date_from)->format("d/m/Y") !!}</td>

@@ -159,7 +159,7 @@ mpdf-->
                 <tr>
                     <td align="right"> &#8250; {{ $service->code }}</td>
                     <td colspan="2" class="noleft">{{ mb_strtoupper($service->name) }}</td>
-                    <td style="width: 18%;" class="noleft">{!! $invoice->authorization->code !!}</td>
+                    <td style="width: 18%;" class="noleft">{!! $invoice->authorization->codec !!}</td>
                     <td align="center" class="noleft">{!! $invoice->days !!}</td>
                     <td class="cost noleft">$ {!! number_format($invoice->total, 0, ",", ".") !!}</td>
                 </tr>

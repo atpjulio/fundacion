@@ -41,7 +41,7 @@
                                     <tbody>
                                     @foreach($authorizations as $key => $authorization)
                                         <tr>
-                                            <td>{!! $authorization->code !!}</td>
+                                            <td>{!! $authorization->codec !!}</td>
                                             <td>{!! $authorization->eps->alias ? $authorization->eps->alias : $authorization->eps->name !!}</td>
                                             <td>{!! $authorization->patient->full_name !!}</td>
                                             <td>{!! \Carbon\Carbon::parse($authorization->date_from)->format("d/m/Y") !!}</td>
@@ -49,7 +49,7 @@
                                             <td>{!! $authorization->days !!}</td>
                                             <td>
                                                 {!! Form::button('Seleccionar', ['class' => 'btn btn-oval btn-success', 'id' => 'button'.$key ]) !!}
-                                                {!! Form::hidden('daily_price', $authorization->eps->daily_price, ['id' => 'daily_price']) !!}
+                                                {!! Form::text('daily_price', $authorization->eps->daily_price, ['id' => 'daily_price']) !!}
                                             </td>
                                         </tr>
                                     @endforeach
@@ -109,7 +109,8 @@
             });
             $('.btn-success').click(function() {
                 // console.log($(this).parent().parent().find('td')[5].outerText);
-                $('#total_days').val($(this).parent().parent().find('td')[5].outerText);
+                days = parseInt($(this).parent().parent().find('td')[5].outerText);
+                $('#total_days').val(days);
                 $('#selected_price').val($(this).parent().find('input')[0].value);
                 $('#total').val($('#selected_price').val() * $('#total_days').val());
                 $('#authorization_code').val($(this).parent().parent().find('td').first()[0].outerText);

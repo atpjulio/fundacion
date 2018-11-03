@@ -39,7 +39,7 @@
                         </li>
                         <li class="@if(Request::is('authorization-incomplete')) active @endif" >
                             <a href="{{ route('authorization.incomplete') }}">
-                                <i class="fas fa-list"></i>&nbsp;
+                                <i class="fas fa-circle-notch"></i>&nbsp;
                                 Incompletas
                             </a>
                         </li>
