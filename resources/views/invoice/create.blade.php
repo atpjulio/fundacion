@@ -48,7 +48,7 @@
                                             <td>{!! \Carbon\Carbon::parse($authorization->date_to)->format("d/m/Y") !!}</td>
                                             <td>{!! $authorization->days !!}</td>
                                             <td>
-                                                {!! Form::button('Seleccionar', ['class' => 'btn btn-oval btn-success', 'id' => 'button'.$key ]) !!}
+                                                {!! Form::button('Seleccionar', ['class' => 'btn btn-oval btn-success', 'id' => 'button' ]) !!}
                                                 {!! Form::hidden('daily_price', $authorization->eps->daily_price, ['id' => 'daily_price']) !!}
                                             </td>
                                         </tr>
