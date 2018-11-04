@@ -88,5 +88,5 @@
 @push('scripts')
     <script src="{{asset('js/jquery.dataTables.min.js')}}"></script>
     <script src="{{asset('js/dataTables.bootstrap.min.js')}}"></script>
-    <script src="{{asset('js/invoice/index.js')}}"></script>
+    <script src="{{asset('js/invoice/index.js').'?version='.config('constants.stylesVersion')}}"></script>
 @endpush
