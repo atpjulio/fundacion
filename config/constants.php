@@ -9,7 +9,7 @@ $myConstants = [
         'admin' => 'fundacasahogar_elmilagro@hotmail.com',
         'admin2' => 'zuleima0326@gmail.com'
     ],
-    'stylesVersion' => '1.013',
+    'stylesVersion' => '1.015',
     'productImages' => '/img/products/',
     'usersImages' => '/img/users/',
     'companiesImages' => '/img/companies/',
