@@ -17,6 +17,8 @@ $(document).ready(function() {
         }
     });
     $('.btn-success').click(function() {
+        console.log('Entering')
+        console.log($(this).parent().parent().find('td')[5].outerText);
         // console.log($(this).parent().parent().find('td')[5].outerText);
         days = parseInt($(this).parent().parent().find('td')[5].outerText);
         $('#total_days').val(days);
