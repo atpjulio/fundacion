@@ -1,4 +1,5 @@
 $(document).ready(function() {
+    var days = 0;
     $('#total').val($('#selected_price').val() * $('#total_days').val());
     $('#myTable').DataTable({
         "language": {
@@ -22,7 +23,9 @@ $(document).ready(function() {
         $('#total_days').val(days);
         $('#selected_price').val($(this).parent().find('input')[0].value);
         $('#total').val($('#selected_price').val() * $('#total_days').val());
-        $('#authorization_code').val($(this).parent().parent().find('td').first()[0].outerText);
+        //$('#total').val($('#selected_price').val() * $('#total_days').val() + parseInt($('#total').val()));
+        $('#authorization_code').val($(this).parent().parent().find('td').first()[0].outerText.trim());
+        //$('#authorization_code').val($(this).parent().parent().find('td').first()[0].outerText.trim() + "," + $('#authorization_code').val());
         $('html, body').animate({
             scrollTop: $('#beginning').offset().top
         }, 300, function(){

@@ -39,7 +39,7 @@
                                     @foreach($invoices as $invoice)
                                     <tr>
                                         <td>{!! sprintf("%05d", $invoice->number) !!}</td>
-                                        <td>{!! $invoice->authorization->codec !!}</td>
+                                        <td>{!! $invoice->authorization_code !!}</td>
                                         <td>$ {!! number_format($invoice->total, 2, ",", ".") !!}</td>
                                         <td>{!! $invoice->days !!}</td>
                                         <td>

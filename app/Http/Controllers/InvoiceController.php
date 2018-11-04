@@ -35,7 +35,7 @@ class InvoiceController extends Controller
         $companies = Company::all()->pluck('name', 'id');
         $invoices = Invoice::all();
         $lastNumber = count($invoices) > 0 ? $invoices->last()->number : 0;
-        $authorizations = Authorization::all();
+        $authorizations = Authorization::full();
 
         return view('invoice.create', compact('companies', 'lastNumber', 'authorizations'));
 //        $epss = Eps::all();
@@ -83,7 +83,7 @@ class InvoiceController extends Controller
         $companies = Company::all()->pluck('name', 'id');
         $invoice = Invoice::find($id);
         $lastNumber = $invoice->number;
-        $authorizations = Authorization::all();
+        $authorizations = Authorization::full();
 
         return view('invoice.edit', compact('companies', 'lastNumber', 'authorizations', 'invoice'));
     }
