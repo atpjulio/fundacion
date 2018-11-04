@@ -16,7 +16,7 @@ $(document).ready(function() {
             }
         }
     });
-    $('#button').click(function() {
+    $('.btn-success').click(function() {
         console.log('Entering')
         console.log($(this).parent().parent().find('td')[5].outerText);
         // console.log($(this).parent().parent().find('td')[5].outerText);
