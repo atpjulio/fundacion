@@ -20,6 +20,10 @@ class Invoice extends Model
         'status',
         'notes',
         'created_at',
+        'multiple',
+        'multiple_codes',
+        'multiple_days',
+        'multiple_totals',
     ];
 
     /**
@@ -60,6 +64,16 @@ class Invoice extends Model
         return sprintf("%05d", $this->number);        
     }
 
+    public function getMultipleTotalsFormatedAttribute()
+    {
+        $totals = json_decode($this->multiple_totals, true);
+        foreach ($totals as $key => $value) {
+            $totals[$key] = number_format($value, 2, ",", ".");
+        }
+
+        return $totals;        
+    }
+
     /**
      * Methods
      */
@@ -69,41 +83,70 @@ class Invoice extends Model
 
         $invoice->number = $request->get('number');
         $invoice->company_id = $request->get('company_id');
-        $invoice->authorization_code = $request->get('authorization_code');
-        $invoice->total = $request->get('total');
+        $invoice->authorization_code = $request->get('authorization_code') ?: '';
+        $invoice->total = $request->get('total') ?: 0;
         $invoice->notes = $request->get('notes');
         $invoice->created_at = $request->get('created_at');
         $invoice->eps_id = 0;
+        $invoice->multiple = $request->get('multiple') == "1";
+        if ($invoice->multiple) {
+            $invoice->multiple_codes = json_encode($request->get('multiple_codes'));
+            $invoice->multiple_days = json_encode($request->get('multiple_days'));
+            $invoice->multiple_totals = json_encode($request->get('multiple_totals'));
+        }
 
-        $authorization = Authorization::findByCode($request->get('authorization_code'));
+        $authorization = Authorization::findByCode($request->get('authorization_code') ?: $request->get('multiple_codes')[0]);
         if ($authorization) {
             $invoice->eps_id = $authorization->eps_id;
             // $invoice->total *=  $authorization->persons;
         }
-
+        // dd($invoice);
         $invoice->save();
 
-        InvoiceLog::storeRecord($request, config('constants.invoices.action.create'));
+        // InvoiceLog::storeRecord($request, config('constants.invoices.action.create'));
 
-        $notes = "Factura para autorización ".$invoice->authorization_code." de la EPS: ".$invoice->eps->code
-            ." - ".$invoice->eps->alias;
+        if ($invoice->multiple) {
+            $notes = "Factura para las autorizaciones ".join(",", $request->get('multiple_codes'))." de la EPS: ".$invoice->eps->code." - ".$invoice->eps->alias;
 
-        $pucs = [
-            [
-                'code' => '270528'.sprintf("%02d", $invoice->eps_id),
-                'type' => 1,
-                'description' => 'Ingresos devengados por facturar otros para '.$invoice->eps->code .' - '.$invoice->eps->alias,
-                'amount' => $invoice->total,
-            ],
-            [
-                'code' => '130505'.sprintf("%02d", $invoice->eps_id),
-                'type' => 0,
-                'description' => 'Cuentas por pagar para EPS '.$invoice->eps->code .' - '.$invoice->eps->alias,
-                'amount' => $invoice->total,
-            ],
-        ];
+            $pucs = [];
+            $pucTotal = 0;
+            foreach ($request->get('multiple_totals') as $total) {
+                array_push($pucs, [
+                    'code' => '270528'.sprintf("%02d", $invoice->eps_id),
+                    'type' => 1,
+                    'description' => 'Ingresos devengados por facturar otros para '.$invoice->eps->code .' - '.$invoice->eps->alias,
+                    'amount' => $total,
+                ]);
+                array_push($pucs, [
+                    'code' => '130505'.sprintf("%02d", $invoice->eps_id),
+                    'type' => 0,
+                    'description' => 'Cuentas por pagar para EPS '.$invoice->eps->code .' - '.$invoice->eps->alias,
+                    'amount' => $total,
+                ]);       
+                $pucTotal += $total;         
+            }
+            AccountingNote::storeRecord($invoice, $pucs, $notes, $pucTotal);            
+        } else {
+            $notes = "Factura para autorización ".$invoice->authorization_code." de la EPS: ".$invoice->eps->code
+                ." - ".$invoice->eps->alias;
 
-        AccountingNote::storeRecord($invoice, $pucs, $notes, $invoice->total);
+            $pucs = [
+                [
+                    'code' => '270528'.sprintf("%02d", $invoice->eps_id),
+                    'type' => 1,
+                    'description' => 'Ingresos devengados por facturar otros para '.$invoice->eps->code .' - '.$invoice->eps->alias,
+                    'amount' => $invoice->total,
+                ],
+                [
+                    'code' => '130505'.sprintf("%02d", $invoice->eps_id),
+                    'type' => 0,
+                    'description' => 'Cuentas por pagar para EPS '.$invoice->eps->code .' - '.$invoice->eps->alias,
+                    'amount' => $invoice->total,
+                ],
+            ];
+
+            AccountingNote::storeRecord($invoice, $pucs, $notes, $invoice->total);            
+        }
 
         return $invoice;
     }
@@ -115,40 +158,69 @@ class Invoice extends Model
         if ($invoice) {
             $invoice->number = $request->get('number');
             $invoice->company_id = $request->get('company_id');
-            $invoice->authorization_code = $request->get('authorization_code');
-            $invoice->total = $request->get('total');
+            $invoice->authorization_code = $request->get('authorization_code') ?: '';
+            $invoice->total = $request->get('total') ?: 0;
             $invoice->notes = $request->get('notes');
             $invoice->created_at = $request->get('created_at');
             $invoice->eps_id = 0;
 
-            $authorization = Authorization::findByCode($request->get('authorization_code'));
+            $invoice->multiple = $request->get('multiple') == "1";
+            if ($invoice->multiple) {
+                $invoice->multiple_codes = json_encode($request->get('multiple_codes'));
+                $invoice->multiple_days = json_encode($request->get('multiple_days'));
+                $invoice->multiple_totals = json_encode($request->get('multiple_totals'));
+            }
+
+            $authorization = Authorization::findByCode($request->get('authorization_code') ?: $request->get('multiple_codes')[0]);
             if ($authorization) {
                 $invoice->eps_id = $authorization->eps_id;
                 // $invoice->total *=  $authorization->persons;
             }
 
             $invoice->save();
-            InvoiceLog::processUpdate($invoice, config('constants.invoices.action.edit'));
+//            InvoiceLog::processUpdate($invoice, config('constants.invoices.action.edit'));
 
-            $notes = "Factura para autorización ".$invoice->authorization_code." de la EPS: ".$invoice->eps->code
-                ." - ".$invoice->eps->alias;
+            if ($invoice->multiple) {
+                $notes = "Factura para las autorizaciones ".join(",", $request->get('multiple_codes'))." de la EPS: ".$invoice->eps->code." - ".$invoice->eps->alias;
 
-            $pucs = [
-                [
-                    'code' => '414010'.sprintf("%02d", $invoice->eps_id),
-                    'type' => 1,
-                    'description' => 'Campamento y otros tipos de hospedaje para EPS '.$invoice->eps->code .' - '.$invoice->eps->alias,
-                    'amount' => $invoice->total,
-                ],
-                [
-                    'code' => '130505'.sprintf("%02d", $invoice->eps_id),
-                    'type' => 0,
-                    'description' => 'Campamento y otros tipos de hospedaje para EPS '.$invoice->eps->code .' - '.$invoice->eps->alias,
-                    'amount' => $invoice->total,
-                ],
-            ];
+                $pucs = [];
+                $pucTotal = 0;
+                foreach ($request->get('multiple_totals') as $total) {
+                    array_push($pucs, [
+                        'code' => '270528'.sprintf("%02d", $invoice->eps_id),
+                        'type' => 1,
+                        'description' => 'Ingresos devengados por facturar otros para '.$invoice->eps->code .' - '.$invoice->eps->alias,
+                        'amount' => $total,
+                    ]);
+                    array_push($pucs, [
+                        'code' => '130505'.sprintf("%02d", $invoice->eps_id),
+                        'type' => 0,
+                        'description' => 'Cuentas por pagar para EPS '.$invoice->eps->code .' - '.$invoice->eps->alias,
+                        'amount' => $total,
+                    ]);       
+                    $pucTotal += $total;         
+                }
+                AccountingNote::updateRecord($invoice, $pucs, $notes, $invoice->total);
+            } else {
+                $notes = "Factura para autorización ".$invoice->authorization_code." de la EPS: ".$invoice->eps->code
+                    ." - ".$invoice->eps->alias;
 
-            AccountingNote::updateRecord($invoice, $pucs, $notes, $invoice->total);
+                $pucs = [
+                    [
+                        'code' => '270528'.sprintf("%02d", $invoice->eps_id),
+                        'type' => 1,
+                        'description' => 'Ingresos devengados por facturar otros para '.$invoice->eps->code .' - '.$invoice->eps->alias,
+                        'amount' => $invoice->total,
+                    ],
+                    [
+                        'code' => '130505'.sprintf("%02d", $invoice->eps_id),
+                        'type' => 0,
+                        'description' => 'Cuentas por pagar para EPS '.$invoice->eps->code .' - '.$invoice->eps->alias,
+                        'amount' => $invoice->total,
+                    ],
+                ];
+                AccountingNote::updateRecord($invoice, $pucs, $notes, $invoice->total);
+            }
 
         }
 

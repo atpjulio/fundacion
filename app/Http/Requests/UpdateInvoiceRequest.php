@@ -23,11 +23,19 @@ class UpdateInvoiceRequest extends FormRequest
      */
     public function rules()
     {
-        return [
-            'number' => 'required|numeric|unique:invoices,id,'.$this->request->get('id'),
+
+        $rules = [
             'company_id' => 'required',
-            'authorization_code' => 'required',
-            'total' => 'required|numeric',
+            'number' => 'required|numeric|unique:invoices,id,'.$this->request->get('id'),
         ];
+
+        if ($this->request->get('multiple') == "1") {
+            // dd($this->request->all());            
+        } else {
+            $rules['authorization_code'] = 'required';
+            $rules['total'] = 'required|numeric';
+        }
+
+        return $rules;
     }
 }

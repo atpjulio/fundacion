@@ -23,11 +23,18 @@ class StoreInvoiceRequest extends FormRequest
      */
     public function rules()
     {
-        return [
-            'number' => 'required|numeric|unique:invoices',
+        $rules = [
             'company_id' => 'required',
-            'authorization_code' => 'required',
-            'total' => 'required|numeric',
+            'number' => 'required|numeric|unique:invoices',
         ];
+
+        if ($this->request->get('multiple') == "1") {
+            // dd($this->request->all());            
+        } else {
+            $rules['authorization_code'] = 'required';
+            $rules['total'] = 'required|numeric';
+        }
+
+        return $rules;
     }
 }

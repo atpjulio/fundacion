@@ -85,6 +85,21 @@ mpdf-->
 <div style="text-align: right">Fecha de elaboración: {{ date("d/m/Y") }}</div>
     <table width="100%" style="font-family: serif;" cellpadding="10">
         <tr>
+            @if ($invoice->multiple)
+            <td width="100%" style="border: 0.1mm solid #888888;">
+                <span style="font-size: 9pt; color: #555555; font-family: sans;">
+                    DATOS DE LA EMPRESA:
+                </span>
+                <br><br>
+                {{ $invoice->eps->code }} - {{ $invoice->eps->name }}
+                 - 
+                NIT: {{ $invoice->eps->nit }}
+                <br>
+                Dirección: {{ $invoice->eps->address->address }}
+                 - 
+                Tel: {{ $invoice->eps->phone->phone }}
+            </td>
+            @else
             <td width="45%" style="border: 0.1mm solid #888888; ">
                 <span style="font-size: 9pt; color: #555555; font-family: sans;">
                     DATOS DEL PACIENTE:
@@ -112,6 +127,7 @@ mpdf-->
                 <br>
                 Tel: {{ $invoice->eps->phone->phone }}
             </td>
+            @endif
         </tr>
     </table>
     <br>
@@ -128,29 +144,49 @@ mpdf-->
         </thead>
         <tbody>
         <!-- ITEMS HERE -->
-        @php
-            $total = 0;
-            $services = $invoice->authorization->eps_service_id;
-            $companionService = $invoice->authorization->companion_eps_service_id;
-
-            if ($companionService) {
-                $services .= ",".$companionService;
-            }            
-        @endphp
-        @foreach(explode(",", $services) as $serviceId)    
+        @if ($invoice->multiple)
             @php
-                $service = \App\EpsService::find($serviceId);
-                $total += $invoice->total;
+                $total = 0;
             @endphp
-            <tr>
-                <td align="center">{{ $service->code }}</td>
-                <td>{{ $service->name }}</td>
-                <td>{{ $invoice->authorization->codec }}</td>
-                <td align="center">{!! $invoice->days !!}</td>
-                <td class="cost">$ {{ number_format($invoice->eps->daily_price, 0, ",", ".") }}</td>
-                <td class="cost">$ {!! number_format($invoice->total, 0, ",", ".") !!}</td>
-            </tr>
-        @endforeach
+            @foreach (json_decode($invoice->multiple_codes, true) as $k => $authorizationCode)
+                @php
+                    $a = \App\Authorization::findByCode($authorizationCode);
+                    $total += json_decode($invoice->multiple_totals, true)[$k];
+                @endphp
+                <tr>
+                    <td align="center">{{ $a->service->code }}</td>
+                    <td>{{ $a->service->name }}</td>
+                    <td>{{ $a->codec }}</td>
+                    <td align="center">{!! json_decode($invoice->multiple_days, true)[$k] !!}</td>
+                    <td class="cost">$ {{ number_format($invoice->eps->daily_price, 0, ",", ".") }}</td>
+                    <td class="cost">$ {!! number_format(json_decode($invoice->multiple_totals, true)[$k], 0, ",", ".") !!}</td>
+                </tr>            
+            @endforeach            
+        @else
+            @php
+                $total = 0;
+                $services = $invoice->authorization->eps_service_id;
+                $companionService = $invoice->authorization->companion_eps_service_id;
+
+                if ($companionService) {
+                    $services .= ",".$companionService;
+                }            
+            @endphp
+            @foreach(explode(",", $services) as $serviceId)    
+                @php
+                    $service = \App\EpsService::find($serviceId);
+                    $total += $invoice->total;
+                @endphp
+                <tr>
+                    <td align="center">{{ $service->code }}</td>
+                    <td>{{ $service->name }}</td>
+                    <td>{{ $invoice->authorization->codec }}</td>
+                    <td align="center">{!! $invoice->days !!}</td>
+                    <td class="cost">$ {{ number_format($invoice->eps->daily_price, 0, ",", ".") }}</td>
+                    <td class="cost">$ {!! number_format($invoice->total, 0, ",", ".") !!}</td>
+                </tr>
+            @endforeach
+        @endif
         <!-- END ITEMS HERE -->
         <tr style="border-bottom-width: 0;">
             <td class="blanktotal" colspan="4"></td>

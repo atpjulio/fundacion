@@ -55,6 +55,22 @@ class InvoiceController extends Controller
      */
     public function store(StoreInvoiceRequest $request)
     {
+        if ($request->get('multiple') == "1") {
+            foreach ($request->get('multiple_codes') as $key => $value) {
+                if ($request->get('multiple_days')[$key] == "") {
+                    Session::flash('message_danger', 'Falta al menos un campo de días por llenar');
+                    return redirect()->back()->withInput();
+                }
+                if ($request->get('multiple_totals')[$key] == "") {
+                    Session::flash('message_danger', 'Falta al menos un campo de total por llenar');
+                    return redirect()->back()->withInput();
+                }
+                if ($value == "") {
+                    Session::flash('message_danger', 'Falta al menos un campo de autorización por llenar');
+                    return redirect()->back()->withInput();
+                }
+            }
+        }
         $invoice = Invoice::storeRecord($request);
 
         Session::flash('message', 'Factura '.$invoice->format_number.' guardada exitosamente');
@@ -97,6 +113,22 @@ class InvoiceController extends Controller
      */
     public function update(UpdateInvoiceRequest $request, $id)
     {
+        if ($request->get('multiple') == "1") {
+            foreach ($request->get('multiple_codes') as $key => $value) {
+                if ($request->get('multiple_days')[$key] == "") {
+                    Session::flash('message_danger', 'Falta al menos un campo de días por llenar');
+                    return redirect()->back()->withInput();
+                }
+                if ($request->get('multiple_totals')[$key] == "") {
+                    Session::flash('message_danger', 'Falta al menos un campo de total por llenar');
+                    return redirect()->back()->withInput();
+                }
+                if ($value == "") {
+                    Session::flash('message_danger', 'Falta al menos un campo de autorización por llenar');
+                    return redirect()->back()->withInput();
+                }
+            }
+        }
         Invoice::updateRecord($request);
 
         Session::flash('message', 'Factura actualizada exitosamente');
