@@ -20,12 +20,10 @@ $(document).ready(function() {
     $('#myTable').on('click','.btn-success', function() {
         days = parseInt($(this).parent().parent().find('td')[5].outerText);
         if ($('#multiple').is(":checked")) {
-            console.log($("#multiple_table tr").length);
-            console.log($("#multiple_table tr:nth-child(1)").find('td input')[0].value.length);
             if ($("#multiple_table tr:nth-child(1)").find('td input')[0].value.length > 0) {
                 $("#multiple_table").append(
                     '<tr><td><input type="text" id="multiple_codes" name="multiple_codes[]" value="' + $(this).parent().parent().find('td').first()[0].outerText.trim() + '" class="form-control" placeholder="Número de autorización" />'
-                    + '</td><td><input type="number" id="multiple_days" name="multiple_days[]" value="' + days + '" class="form-control" placeholder="Total de días" min="0"/>'
+                    + '</td><td><input type="number" id="multiple_days" name="multiple_days[]" value="' + days + '" class="form-control multipleDays" placeholder="Total de días" min="0"/>'
                     + '</td><td><input type="number" id="multiple_totals" name="multiple_totals[]" value="' + ($(this).parent().find('input')[0].value * days) + '" class="form-control" placeholder="Valor total" min="0"/>'
                     + '</td><td><a href="javascript:void(0);" class="removeRow btn btn-oval btn-danger">Quitar</a></td></tr>'
                 );
@@ -33,7 +31,7 @@ $(document).ready(function() {
                 $("#multiple_table tr:last").remove();
                 $("#multiple_table").append(
                     '<tr><td><input type="text" id="multiple_codes" name="multiple_codes[]" value="' + $(this).parent().parent().find('td').first()[0].outerText.trim() + '" class="form-control" placeholder="Número de autorizaciónnnnn" />'
-                    + '</td><td><input type="number" id="multiple_days" name="multiple_days[]" value="' + days + '" class="form-control" placeholder="Total de días" min="0"/>'
+                    + '</td><td><input type="number" id="multiple_days" name="multiple_days[]" value="' + days + '" class="form-control multipleDays" placeholder="Total de días" min="0"/>'
                     + '</td><td><input type="number" id="multiple_totals" name="multiple_totals[]" value="' + ($(this).parent().find('input')[0].value * days) + '" class="form-control" placeholder="Valor total" min="0"/>'
                     + '</td><td><a href="javascript:void(0);" class="addRow btn btn-oval btn-success">Añadir</a></td></tr>'
                 );
@@ -41,6 +39,7 @@ $(document).ready(function() {
 
             $('#alertTable').css('display', 'none');
             $('#tableMessage').html('');              
+            $('#selected_price').val($(this).parent().find('input')[0].value);
 
             $('html, body').animate({
                 scrollTop: $('#multiple_table').offset().top
@@ -65,6 +64,9 @@ $(document).ready(function() {
     $('#total_days').on('change', function (e) {
         $('#total').val($('#selected_price').val() * $('#total_days').val());
     });
+    $('#multiple_table').on('change', '.multipleDays', function (e) {
+        $(this).parent().parent().find('td input')[2].value = e.target.value * $('#selected_price').val();        
+    });
     $('#multiple').on('change', function (e) {
         if ($('#multiple').is(":checked")) {
             $('#multiple').val("1");
@@ -82,7 +84,7 @@ $(document).ready(function() {
         if ($('#multiple_codes').val().length > 0 && $('#multiple_days').val() > 0 && $('#multiple_totals').val() > 0) {
             $("#multiple_table").append(
                 '<tr><td><input type="text" id="multiple_codes" name="multiple_codes[]" class="form-control" placeholder="Número de autorización" value=""/>'
-                + '</td><td><input type="number" id="multiple_days" name="multiple_days[]" class="form-control" placeholder="Total de días" min="0" value=""/>'
+                + '</td><td><input type="number" id="multiple_days" name="multiple_days[]" class="form-control multipleDays" placeholder="Total de días" min="0" value=""/>'
                 + '</td><td><input type="number" id="multiple_totals" name="multiple_totals[]" class="form-control" placeholder="Valor total" min="0" value=""/>'
                 + '</td><td><a href="javascript:void(0);" class="removeRow btn btn-oval btn-danger">Quitar</a></td></tr>'
             );

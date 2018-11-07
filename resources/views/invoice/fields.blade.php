@@ -107,13 +107,13 @@ id="multiple_card">
                         </tr>
                         </thead>
                         <tbody>
-                        @if (empty(old('multiple_codes')))
+                        @if (empty(old('multiple_codes')) and !isset($invoice))
                         <tr>
                             <td>
                                 <input type="text" id="multiple_codes" name="multiple_codes[]" class="form-control" placeholder="Número de autorización" value="" />
                             </td>
                             <td>
-                                <input type="number" id="multiple_days" name="multiple_days[]" class="form-control" placeholder="Total de días" min="0"/>
+                                <input type="number" id="multiple_days" name="multiple_days[]" class="form-control multipleDays" placeholder="Total de días" min="0"/>
                             </td>
                             <td>
                                 <input type="number" id="multiple_totals" name="multiple_totals[]" class="form-control" placeholder="Valor total" min="0"/>
@@ -123,14 +123,15 @@ id="multiple_card">
                             </td>
                         </tr>
                         @else
-                            @if (!empty(old('multiple_codes')) and !isset($invoice))
+
+                            @if (empty(old('multiple_codes')) and !isset($invoice))
                                 @foreach(old('multiple_codes') as $k => $val)
                                     <tr>
                                         <td>
                                             <input type="text" id="multiple_codes" name="multiple_codes[]" class="form-control" placeholder="Número de autorización" value="{{ $val }}" />
                                         </td>
                                         <td>
-                                            <input type="number" id="multiple_days" name="multiple_days[]" class="form-control" placeholder="Total de días" min="0" value="{{ old('multiple_days')[$k] }}" />
+                                            <input type="number" id="multiple_days" name="multiple_days[]" class="form-control multipleDays" placeholder="Total de días" min="0" value="{{ old('multiple_days')[$k] }}" />
                                         </td>
                                         <td>
                                             <input type="number" id="multiple_totals" name="multiple_totals[]" class="form-control" placeholder="Valor total" min="0" value="{{ old('multiple_totals')[$k] }}" />
@@ -151,7 +152,7 @@ id="multiple_card">
                                             <input type="text" id="multiple_codes" name="multiple_codes[]" class="form-control" placeholder="Número de autorización" value="{{ $val }}" />
                                         </td>
                                         <td>
-                                            <input type="number" id="multiple_days" name="multiple_days[]" class="form-control" placeholder="Total de días" min="0" value="{{ json_decode($invoice->multiple_days, true)[$k] }}" />
+                                            <input type="number" id="multiple_days" name="multiple_days[]" class="form-control multipleDays" placeholder="Total de días" min="0" value="{{ json_decode($invoice->multiple_days, true)[$k] }}" />
                                         </td>
                                         <td>
                                             <input type="number" id="multiple_totals" name="multiple_totals[]" class="form-control" placeholder="Valor total" min="0" value="{{ json_decode($invoice->multiple_totals, true)[$k] }}" />
