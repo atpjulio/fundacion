@@ -61,7 +61,8 @@ class Invoice extends Model
 
     public function getFormatNumberAttribute()
     {
-        return sprintf("%05d", $this->number);        
+        // return sprintf("%05d", $this->number);        
+        return $this->number;        
     }
 
     public function getMultipleTotalsFormatedAttribute()

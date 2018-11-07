@@ -29,7 +29,7 @@
                         <div class="table-responsive">
                             <table class="table table-striped table-bordered table-condensed table-hover" id="myTable">
                                 <thead>
-                                <th style="width: 60px;"># Factura</th>
+                                <th># Factura</th>
                                 <th>Autorización</th>
                                 <th>Monto</th>
                                 <th>Días</th>
