@@ -38,13 +38,6 @@ class InvoiceController extends Controller
         $authorizations = Authorization::full();
 
         return view('invoice.create', compact('companies', 'lastNumber', 'authorizations'));
-//        $epss = Eps::all();
-//        $initialEpsId = $epss->toArray()[0]['id'];
-//        $services = EpsService::getServices($initialEpsId)->pluck('name', 'id');
-//        $epss = $epss->pluck('name', 'id');
-//        $patients = Patient::all();
-//
-//        return view('invoice.create', compact('epss', 'services', 'patients', 'initialEpsId'));
     }
 
     /**
@@ -98,6 +91,12 @@ class InvoiceController extends Controller
     {
         $companies = Company::all()->pluck('name', 'id');
         $invoice = Invoice::find($id);
+
+        if (!$invoice) {
+            Session::flash('message_danger', 'Factura no encontrada');
+            return redirect()->back()->withInput();            
+        }
+
         $lastNumber = $invoice->number;
         $authorizations = Authorization::full();
 
@@ -146,6 +145,11 @@ class InvoiceController extends Controller
         if (auth()->user()->hasRole('admin')) {
             $invoice = Invoice::find($id);
 
+            if (!$invoice) {
+                Session::flash('message_danger', 'Factura no encontrada');
+                return redirect()->back()->withInput();            
+            }
+
             $invoice->delete();
 
             Session::flash('message', 'Factura eliminada exitosamente');
@@ -168,8 +172,11 @@ class InvoiceController extends Controller
         $mpdf->Output('Factura '.date("Y-m-d"), 'I');
         */
         $invoice = Invoice::find($id);
+        if (!$invoice) {
+            Session::flash('message_danger', 'Factura no encontrada');
+            return redirect()->back()->withInput();            
+        }
 
-        //dd($invoice->authorization->service);
         $html = \View::make('invoice.pdf', compact('invoice'));
         $mpdf = new \Mpdf\Mpdf([
             'margin_left' => 20,
@@ -195,6 +202,12 @@ class InvoiceController extends Controller
     public function relation()
     {
         $epss = Eps::all();
+
+        if (!$epss) {
+            Session::flash('message_danger', 'No se encontró el listado de EPS');
+            return redirect()->back()->withInput();            
+        }
+
         $invoicesAmount = count(Invoice::getInvoicesByEpsId($epss->toArray()[0]['id'], date("Y-m-d"), date("Y-m-d")));
         $epss = $epss->pluck('name', 'id');
         $companies = Company::all()->pluck('name', 'id');
