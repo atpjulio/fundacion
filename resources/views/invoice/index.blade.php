@@ -33,12 +33,12 @@
                                 <th>Autorización</th>
                                 <th>Monto</th>
                                 <th>Días</th>
-                                <th style="width: 190px;">Opciones</th>
+                                <th style="width: 200px;">Opciones</th>
                                 </thead>
                                 <tbody>
                                     @foreach($invoices as $invoice)
                                     <tr>
-                                        <td>{!! sprintf("%05d", $invoice->number) !!}</td>
+                                        <td>{!! $invoice->format_number !!}</td>
                                         <td>{!! !$invoice->multiple ? $invoice->authorization_code : join(" | ", json_decode($invoice->multiple_codes, true)) !!}</td>
                                         <td>$ {!! !$invoice->multiple ? number_format($invoice->total, 2, ",", ".") : join(" | ", $invoice->multiple_totals_formated)!!}</td>
                                         <td>{!! !$invoice->multiple ? $invoice->days : join(" | ", json_decode($invoice->multiple_days, true)) !!}</td>
