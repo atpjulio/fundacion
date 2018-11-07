@@ -181,7 +181,7 @@ class InvoiceController extends Controller
         $mpdf->SetAuthor($invoice->company->name);
         $mpdf->SetDisplayMode('fullpage');
         $mpdf->WriteHTML($html);
-        $mpdf->Output('Factura No '.$invoice->format_number).'.pdf', 'I');
+        $mpdf->Output('Factura No '.$invoice->number.'.pdf', 'I');
 
     }
 
