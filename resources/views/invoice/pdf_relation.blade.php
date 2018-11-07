@@ -134,15 +134,75 @@ mpdf-->
         @foreach ($invoices as $invoice)
         <tr>
             <td align="center">{{ $invoice->format_number }}</td>
+            @if ($invoice->multiple)
+            <td width="14%" class="noleft">
+                @php
+                    foreach (json_decode($invoice->multiple_codes) as $authorizationCode) {
+                        $a = \App\Authorization::findByCode($authorizationCode);
+                        if ($a) {
+                            echo $a->patient->dni."<br>";
+                        }
+                    }
+                @endphp
+            </td>
+            <td colspan="2" class="noleft">
+                @php
+                    foreach (json_decode($invoice->multiple_codes) as $authorizationCode) {
+                        $a = \App\Authorization::findByCode($authorizationCode);
+                        if ($a) {
+                            echo mb_strtoupper($a->patient->last_name.' '.$a->patient->first_name)."<br>";
+                        }
+                    }
+                @endphp
+            </td>
+            @else
             <td width="14%" class="noleft">
                 {!! $invoice->authorization->patient->dni !!}
             </td>
             <td colspan="2" class="noleft">
                 {{ mb_strtoupper($invoice->authorization->patient->last_name.' '.$invoice->authorization->patient->first_name) }}
             </td>
+            @endif
             <td class="noleft"></td>
             <td class="noleft"></td>
         </tr>
+            @if ($invoice->multiple)
+                @php
+                    $subTotal = 0;
+                @endphp
+                @foreach (json_decode($invoice->multiple_codes) as $k => $authorizationCode)
+                <tr>
+                    @php
+                        $a = \App\Authorization::findByCode($authorizationCode);
+                    @endphp
+                    <td align="right">
+                        @if ($a)
+                            &#8250; {!! $a->service->code !!}
+                        @endif
+                    </td>
+                    <td colspan="2" class="noleft">
+                        @if ($a)
+                            {{ mb_strtoupper($a->service->name) }}
+                        @endif
+                    </td>
+                    <td style="width: 18%;" class="noleft">
+                        @if ($a)
+                            {{ mb_strtoupper($a->codec) }}
+                        @endif
+                    </td>
+                    <td align="center" class="noleft">
+                        {!! json_decode($invoice->multiple_days, true)[$k] !!}
+                    </td>
+                    <td class="cost noleft">
+                        $ {!! number_format(json_decode($invoice->multiple_totals, true)[$k], 0, ",", ".") !!}
+                    </td>
+                </tr>
+                @php
+                    $subTotal += json_decode($invoice->multiple_totals, true)[$k];
+                @endphp
+
+                @endforeach
+            @else
             @php
                 $subTotal = 0;
                 $services = $invoice->authorization->eps_service_id;
@@ -173,6 +233,7 @@ mpdf-->
                 </td>
                 <td class="cost noleft">$ {!! number_format($subTotal, 0, ",", ".") !!}</td>
             </tr>
+            @endif
             @php
                 $total += $subTotal;
             @endphp
