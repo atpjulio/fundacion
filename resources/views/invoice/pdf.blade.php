@@ -86,7 +86,7 @@ mpdf-->
     <table width="100%" style="font-family: serif;" cellpadding="10">
         <tr>
             @if ($invoice->multiple)
-            <td width="100%" style="border: 0.1mm solid #888888;">
+            <td width="69%" style="border: 0.1mm solid #888888;">
                 <span style="font-size: 9pt; color: #555555; font-family: sans;">
                     DATOS DE LA EMPRESA:
                 </span>
@@ -99,8 +99,17 @@ mpdf-->
                  - 
                 Tel: {{ $invoice->eps->phone->phone }}
             </td>
+            <td width="1%">&nbsp;</td>
+            <td width="30%" style="border: 0.1mm solid #888888; ">
+                <span style="font-size: 9pt; color: #555555; font-family: sans;">
+                    SON:
+                </span>
+                <br><br>
+                {{ ucfirst(\App\NumberToLetter::convertirEurosEnLetras(number_format(array_sum(json_decode($invoice->multiple_totals, true)), 0, ",", "."), 0)) }} M/L
+            </td>                        
+
             @else
-            <td width="45%" style="border: 0.1mm solid #888888; ">
+            <td width="34%" style="border: 0.1mm solid #888888; ">
                 <span style="font-size: 9pt; color: #555555; font-family: sans;">
                     DATOS DEL PACIENTE:
                 </span>
@@ -110,11 +119,10 @@ mpdf-->
                 Número de Documento: {{ $invoice->authorization->patient->dni}}
                 <br>
                 {{ $invoice->authorization->patient->full_name}}
-                <br>
-                
+                <br>                
             </td>
-            <td width="10%">&nbsp;</td>
-            <td width="45%" style="border: 0.1mm solid #888888;">
+            <td width="1%">&nbsp;</td>
+            <td width="34%" style="border: 0.1mm solid #888888;">
                 <span style="font-size: 9pt; color: #555555; font-family: sans;">
                     DATOS DE LA EMPRESA:
                 </span>
@@ -127,6 +135,14 @@ mpdf-->
                 <br>
                 Tel: {{ $invoice->eps->phone->phone }}
             </td>
+            <td width="1%">&nbsp;</td>
+            <td width="30%" style="border: 0.1mm solid #888888; ">
+                <span style="font-size: 9pt; color: #555555; font-family: sans;">
+                    SON:
+                </span>
+                <br><br>
+                {{ ucfirst(\App\NumberToLetter::convertirEurosEnLetras(number_format($invoice->total, 0, ",", "."), 0)) }} M/L
+            </td>                        
             @endif
         </tr>
     </table>
