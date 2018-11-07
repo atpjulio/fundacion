@@ -39,9 +39,9 @@
                                     @foreach($invoices as $invoice)
                                     <tr>
                                         <td>{!! $invoice->format_number !!}</td>
-                                        <td>{!! !$invoice->multiple ? $invoice->authorization_code : join(" | ", json_decode($invoice->multiple_codes, true)) !!}</td>
-                                        <td>$ {!! !$invoice->multiple ? number_format($invoice->total, 2, ",", ".") : join(" | ", $invoice->multiple_totals_formated)!!}</td>
-                                        <td>{!! !$invoice->multiple ? $invoice->days : join(" | ", json_decode($invoice->multiple_days, true)) !!}</td>
+                                        <td>{!! !$invoice->multiple ? $invoice->authorization_code : join("<br>", json_decode($invoice->multiple_codes, true)) !!}</td>
+                                        <td>$ {!! !$invoice->multiple ? number_format($invoice->total, 2, ",", ".") : join("<br>$ ", $invoice->multiple_totals_formated)!!}</td>
+                                        <td>{!! !$invoice->multiple ? $invoice->days : join("<br>", json_decode($invoice->multiple_days, true)) !!}</td>
                                         <td>
                                             <a href="{{ route('invoice.edit', $invoice->id) }}" class="btn btn-pill-left btn-info btn-sm">
                                                 Editar
