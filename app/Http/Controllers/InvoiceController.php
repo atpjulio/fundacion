@@ -161,16 +161,6 @@ class InvoiceController extends Controller
 
     public function pdf($id) 
     {
-        /*
-        $mpdf = new \Mpdf\Mpdf(['tempDir' => storage_path('app')]);
-
-        $mpdf->SetHTMLHeader('<div style="text-align: right; font-weight: bold; font-size: 30px;">INVOICE</div>');
-        $mpdf->SetHTMLFooter('<table width="100%"><tr><td width="33%">{DATE Y-m-j}</td><td width="33%" align="center">{PAGENO}/{nbpg}</td><td width="33%" style="text-align: right;">'.env('APP_URL').'</td></tr></table>');
-
-        $view = \View::make('invoice.pdf');
-        $mpdf->WriteHTML($view);
-        $mpdf->Output('Factura '.date("Y-m-d"), 'I');
-        */
         $invoice = Invoice::find($id);
         if (!$invoice) {
             Session::flash('message_danger', 'Factura no encontrada');
@@ -187,15 +177,11 @@ class InvoiceController extends Controller
             'margin_footer' => 10
         ]);
         $mpdf->SetProtection(array('print'));
-        $mpdf->SetTitle($invoice->company->name." - Factura ".sprintf("%05d", $invoice->number));
+        $mpdf->SetTitle($invoice->company->name." - Factura ".$invoice->format_number);
         $mpdf->SetAuthor($invoice->company->name);
-        // $mpdf->SetWatermarkText("Paid");
-        // $mpdf->showWatermarkText = true;
-        // $mpdf->watermark_font = 'DejaVuSansCondensed';
-        // $mpdf->watermarkTextAlpha = 0.1;
         $mpdf->SetDisplayMode('fullpage');
         $mpdf->WriteHTML($html);
-        $mpdf->Output('Factura No '.sprintf("%05d", $invoice->number).'.pdf', 'I');
+        $mpdf->Output('Factura No '.$invoice->format_number).'.pdf', 'I');
 
     }
 
