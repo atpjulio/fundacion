@@ -28,7 +28,7 @@ class ConfirmAuthorizationRequest extends FormRequest
             'eps_id' => 'required',
             'eps_service_id' => 'required|numeric|min:1',
             'patient_id' => 'required',
-            'date_from' => 'required',
+            'date_from' => 'required|date_format:Y-m-d',
             // 'date_to' => 'required',
         ];
 
@@ -43,6 +43,7 @@ class ConfirmAuthorizationRequest extends FormRequest
     public function messages()
     {
         return [
+            'date_from.date_format' => 'El campo fecha de inicio tiene un valor inválido',
             'patient_id.required' => 'Debes seleccionar un usuario',
             'companion_dni.required' => 'Número de documento del acompañante no puede estar vacío',
             'companion_name.required' => 'Nombre del acompañante no puede estar vacío',
