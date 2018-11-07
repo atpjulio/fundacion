@@ -33,7 +33,7 @@
                                 <th>Autorización</th>
                                 <th>Monto</th>
                                 <th>Días</th>
-                                <th>Opciones</th>
+                                <th style="width: 160px;">Opciones</th>
                                 </thead>
                                 <tbody>
                                     @foreach($invoices as $invoice)
