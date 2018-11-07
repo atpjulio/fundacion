@@ -107,7 +107,7 @@ id="multiple_card">
                         </tr>
                         </thead>
                         <tbody>
-                        @if (empty(old('multiple_codes')))
+                        @if (empty(old('multiple_codes')) and !isset($invoice))
                         <tr>
                             <td>
                                 <input type="text" id="multiple_codes" name="multiple_codes[]" class="form-control" placeholder="Número de autorización" value="" />
@@ -123,7 +123,7 @@ id="multiple_card">
                             </td>
                         </tr>
                         @else
-                            @if (!empty(old('multiple_codes')) and !isset($invoice))
+                            @if (!empty(old('multiple_codes')))
                                 @foreach(old('multiple_codes') as $k => $val)
                                     <tr>
                                         <td>
