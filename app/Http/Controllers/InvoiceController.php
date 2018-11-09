@@ -150,6 +150,11 @@ class InvoiceController extends Controller
                 return redirect()->back()->withInput();            
             }
 
+            $note = AccountingNote::where('invoice_id', $invoice->id)->first();
+            if ($note) {
+                $note->delete();
+            }
+
             $invoice->delete();
 
             Session::flash('message', 'Factura eliminada exitosamente');
