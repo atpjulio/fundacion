@@ -187,7 +187,7 @@ class Invoice extends Model
 
                 $pucs = [];
                 $pucTotal = 0;
-                foreach ($request->get('multiple_totals') as $total) {
+                foreach ($request->get('multiple_totals') as $key => $total) {
                     array_push($pucs, [
                         'code' => '270528'.sprintf("%02d", $invoice->eps_id),
                         'type' => 1,
