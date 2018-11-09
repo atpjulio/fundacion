@@ -15,7 +15,8 @@ $(document).ready(function() {
                 "next":       "Siguiente",
                 "previous":   "Anterior"
             }
-        }
+        },
+        "order": [[0, "desc"]]
     });
     $('#entity_id').on('change', function (e) {
         if ($('#entity_id').val() != "0") {            

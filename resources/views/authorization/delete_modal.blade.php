@@ -11,7 +11,7 @@
             <div class="modal-body">
                 <p>Confirma que deseas borrar la autorización: </p>
                 <div class="text-center">
-                    {!! $authorization->code !!}
+                    {!! $authorization->codec !!}
                 </div>
             </div>
 

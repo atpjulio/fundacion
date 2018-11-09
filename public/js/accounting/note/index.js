@@ -16,7 +16,8 @@ $(document).ready(function() {
                 "next":       "Siguiente",
                 "previous":   "Anterior"
             }
-        }
+        },
+        "order": [[0, "desc"]]
     });
     $('.btn-success').click(function() {
         // console.log($(this).parent().parent().find('td')[5].outerText);
