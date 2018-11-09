@@ -129,7 +129,7 @@ class Invoice extends Model
                     $currentAuthorization->update(['invoice_id' => $invoice->id]);        
                 }
             }
-            AccountingNote::storeRecord($invoice, $pucs, $notes, $pucTotal);            
+            AccountingNote::storeRecord($invoice, $pucs, $notes, $pucTotal);
         } else {
             $authorization->update(['invoice_id' => $invoice->id]);
             $notes = "Factura para autorización ".$invoice->authorization_code." de la EPS: ".$invoice->eps->code
@@ -149,7 +149,6 @@ class Invoice extends Model
                     'amount' => $invoice->total,
                 ],
             ];
-
             AccountingNote::storeRecord($invoice, $pucs, $notes, $invoice->total);            
         }
 
