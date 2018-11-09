@@ -81,7 +81,7 @@
     </div>
 </htmlpagefooter>
 <sethtmlpageheader name="myheader{{ $index }}" value="on" show-this-page="1" />
-<sethtmlpagefooter name="myfooter" value="on" />
+<sethtmlpagefooter name="myfooter" value="off" />
 mpdf-->
 <div style="text-align: right">Fecha de elaboración: {{ date("d/m/Y") }}</div>
     <table width="100%" style="font-family: serif;" cellpadding="10">
