@@ -251,14 +251,14 @@ class AuthorizationController extends Controller
     {
         $authorizations = Authorization::open();
 
-        return view('authorization.index', compact('authorizations'));
+        return view('authorization.open', compact('authorizations'));
     }
 
     public function close()
     {
         $authorizations = Authorization::close();
 
-        return view('authorization.index', compact('authorizations'));
+        return view('authorization.close', compact('authorizations'));
     }
 
 
