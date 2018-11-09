@@ -32,7 +32,7 @@
             border: 0.1mm solid #000000;
         }
         .items td.cost {
-            /* text-align: "." center;*/
+            text-align: "." center;
         }
     </style>
 </head>
@@ -176,7 +176,7 @@ mpdf-->
                     <td>{{ $a->codec }}</td>
                     <td align="center">{!! json_decode($invoice->multiple_days, true)[$k] !!}</td>
                     <td class="cost">$ {{ number_format($invoice->eps->daily_price, 0, ",", ".") }}</td>
-                    <td class="cost">$ {!! number_format(json_decode($invoice->multiple_totals, true)[$k], 0, ",", ".") !!}</td>
+                    <td class="">$ {!! number_format(json_decode($invoice->multiple_totals, true)[$k], 0, ",", ".") !!}</td>
                 </tr>            
             @endforeach            
         @else

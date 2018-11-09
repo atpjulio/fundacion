@@ -138,9 +138,9 @@ id="multiple_card">
                                         </td>
                                         <td>
                                             @if ($k > 0)
-                                                <a href="javascript:void(0);" class="removeRow btn btn-oval btn-danger">Añadir</a>
+                                                <a href="javascript:void(0);" class="removeRow btn btn-oval btn-danger">Quitar</a>
                                             @else
-                                                <a href="javascript:void(0);" class="addRow btn btn-oval btn-success">Quitar</a>
+                                                <a href="javascript:void(0);" class="addRow btn btn-oval btn-success">Añadir</a>
                                             @endif
                                         </td>
                                     </tr>
@@ -158,11 +158,7 @@ id="multiple_card">
                                             <input type="number" id="multiple_totals" name="multiple_totals[]" class="form-control" placeholder="Valor total" min="0" value="{{ json_decode($invoice->multiple_totals, true)[$k] }}" />
                                         </td>
                                         <td>
-                                            @if ($k > 0)
-                                                <a href="javascript:void(0);" class="removeRow btn btn-oval btn-danger">Añadir</a>
-                                            @else
-                                                <a href="javascript:void(0);" class="addRow btn btn-oval btn-success">Quitar</a>
-                                            @endif
+                                            <a href="javascript:void(0);" class="removeRow btn btn-oval btn-danger">Quitar</a>
                                         </td>
                                     </tr>
                                 @endforeach
