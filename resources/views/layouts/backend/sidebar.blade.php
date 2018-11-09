@@ -113,7 +113,7 @@
                         </li>
                         <li class="@if(Request::is('invoice-volume')) active @endif" >
                             <a href="{{ route('invoice.volume') }}">
-                                <i class="fas fa-crop-alt"></i>&nbsp;
+                                <i class="fas fa-database"></i>&nbsp;
                                 Volumen de Facturas
                             </a>
                         </li>
