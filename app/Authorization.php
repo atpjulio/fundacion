@@ -198,6 +198,13 @@ class Authorization extends Model
             ->get();
     }
 
+    protected function openForInvoices()
+    {
+        return $this->where('invoice_id', 0)
+            ->where('code', 'not like', config('constants.unathorized.prefix').'%')
+            ->get();
+    }
+
     protected function close()
     {
         return $this->where('invoice_id', '<>', 0)
