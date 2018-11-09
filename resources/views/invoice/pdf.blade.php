@@ -219,7 +219,7 @@ mpdf-->
     <table width="100%" style="font-size: 12pt;" cellpadding="10">
         <tr>
             <td width="45%" style="border-width: 0; line-height: 1.9em;" align="center">
-                <br>
+                <img src="{{ asset('img/signature.png') }}" alt="" height="40" style="margin-bottom: -17px;">
                 _____________________________________
                 <br>
                 Firma de la persona autorizada
