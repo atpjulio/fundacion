@@ -110,7 +110,7 @@ id="multiple_card">
                         @if (empty(old('multiple_codes')) and !isset($invoice))
                         <tr>
                             <td>
-                                <input type="text" id="multiple_codes" name="multiple_codes[]" class="form-control" placeholder="Número de autorización" value="" />
+                                <input type="text" id="multiple_codes" name="multiple_codes[]" class="form-control" placeholder="Número de autorización" value="" readonly />
                             </td>
                             <td>
                                 <input type="number" id="multiple_days" name="multiple_days[]" class="form-control multipleDays" placeholder="Total de días" min="0"/>
@@ -128,7 +128,7 @@ id="multiple_card">
                                 @foreach(old('multiple_codes') as $k => $val)
                                     <tr>
                                         <td>
-                                            <input type="text" id="multiple_codes" name="multiple_codes[]" class="form-control" placeholder="Número de autorización" value="{{ $val }}" />
+                                            <input type="text" id="multiple_codes" name="multiple_codes[]" class="form-control" placeholder="Número de autorización" value="{{ $val }}" readonly />
                                         </td>
                                         <td>
                                             <input type="number" id="multiple_days" name="multiple_days[]" class="form-control multipleDays" placeholder="Total de días" min="0" value="{{ old('multiple_days')[$k] }}" />
@@ -149,7 +149,7 @@ id="multiple_card">
                                 @foreach(json_decode($invoice->multiple_codes, true) as $k => $val)
                                     <tr>
                                         <td>
-                                            <input type="text" id="multiple_codes" name="multiple_codes[]" class="form-control" placeholder="Número de autorización" value="{{ $val }}" />
+                                            <input type="text" id="multiple_codes" name="multiple_codes[]" class="form-control" placeholder="Número de autorización" value="{{ $val }}" readonly/>
                                         </td>
                                         <td>
                                             <input type="number" id="multiple_days" name="multiple_days[]" class="form-control multipleDays" placeholder="Total de días" min="0" value="{{ json_decode($invoice->multiple_days, true)[$k] }}" />
