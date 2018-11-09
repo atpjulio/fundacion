@@ -33,18 +33,6 @@
                         </li>
                         <li class="@if(Request::is('authorization')) active @endif" >
                             <a href="{{ route('authorization.index') }}">
-                                <i class="far fa-envelope-open"></i>&nbsp;
-                                Abiertas
-                            </a>
-                        </li>
-                        <li class="@if(Request::is('authorization')) active @endif" >
-                            <a href="{{ route('authorization.index') }}">
-                                <i class="far fa-envelope"></i>&nbsp;
-                                Cerradas
-                            </a>
-                        </li>
-                        <li class="@if(Request::is('authorization')) active @endif" >
-                            <a href="{{ route('authorization.index') }}">
                                 <i class="fas fa-list"></i>&nbsp;
                                 Autorizadas
                             </a>
