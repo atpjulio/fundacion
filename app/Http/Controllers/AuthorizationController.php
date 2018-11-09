@@ -138,11 +138,15 @@ class AuthorizationController extends Controller
     {
         if (auth()->user()->hasRole('admin')) {
             $authorization = Authorization::find($id);
+            $code = $authorization->code;
 
             $authorization->delete();
-
             Session::flash('message', 'Autorización eliminada exitosamente');
-            return redirect()->route('authorization.index');
+
+            if (strpos($code, config('constants.unathorized.prefix')) !== false) {
+                return redirect()->route('authorization.index');
+            }
+            return redirect()->route('authorization.incomplete');
         }
         Session::flash('message_danger', 'No tienes permiso para borrar autorizaciones. Este movimiento ha sido notificado');
         return redirect()->route('authorization.index');

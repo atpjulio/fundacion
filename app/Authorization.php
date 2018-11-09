@@ -28,6 +28,7 @@ class Authorization extends Model
         'status',
         'user_id',
         'companion_name',
+        'invoice_id',
     ];
 
     /**
@@ -58,6 +59,11 @@ class Authorization extends Model
     public function user()
     {
         return $this->hasOne(User::class, 'id', 'user_id');
+    }
+
+    public function invoice()
+    {
+        return $this->belongsTo(Invoice::class);
     }
 
     /**
@@ -184,6 +190,15 @@ class Authorization extends Model
     {
         return $this->where('code', 'like', config('constants.unathorized.prefix').'%')
             ->get();
+    }
+
+    protected function open()
+    {
+ //       $firstTry = $this->join('invoices', 'authorizations.code', '=', 'invoice.authorization_code')
+ //           ->select('authorizations.*')
+ //           ->get();
+
+ //       if ()
     }
 
 }

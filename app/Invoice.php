@@ -100,9 +100,7 @@ class Invoice extends Model
         $authorization = Authorization::findByCode($request->get('authorization_code') ?: $request->get('multiple_codes')[0]);
         if ($authorization) {
             $invoice->eps_id = $authorization->eps_id;
-            // $invoice->total *=  $authorization->persons;
         }
-        // dd($invoice);
         $invoice->save();
 
         // InvoiceLog::storeRecord($request, config('constants.invoices.action.create'));
@@ -112,7 +110,7 @@ class Invoice extends Model
 
             $pucs = [];
             $pucTotal = 0;
-            foreach ($request->get('multiple_totals') as $total) {
+            foreach ($request->get('multiple_totals') as $key => $total) {
                 array_push($pucs, [
                     'code' => '270528'.sprintf("%02d", $invoice->eps_id),
                     'type' => 1,
@@ -125,10 +123,15 @@ class Invoice extends Model
                     'description' => 'Cuentas por pagar para EPS '.$invoice->eps->code .' - '.$invoice->eps->alias,
                     'amount' => $total,
                 ]);       
-                $pucTotal += $total;         
+                $pucTotal += $total;
+                $currentAuthorization = Authorization::findByCode($request->get('multiple_codes')[$key]);
+                if ($currentAuthorization) {
+                    $currentAuthorization->update(['invoice_id' => $invoice->id]);        
+                }
             }
             AccountingNote::storeRecord($invoice, $pucs, $notes, $pucTotal);            
         } else {
+            $authorization->update(['invoice_id' => $invoice->id]);
             $notes = "Factura para autorización ".$invoice->authorization_code." de la EPS: ".$invoice->eps->code
                 ." - ".$invoice->eps->alias;
 
@@ -176,11 +179,8 @@ class Invoice extends Model
             $authorization = Authorization::findByCode($request->get('authorization_code') ?: $request->get('multiple_codes')[0]);
             if ($authorization) {
                 $invoice->eps_id = $authorization->eps_id;
-                // $invoice->total *=  $authorization->persons;
             }
-
             $invoice->save();
-//            InvoiceLog::processUpdate($invoice, config('constants.invoices.action.edit'));
 
             if ($invoice->multiple) {
                 $notes = "Factura para las autorizaciones ".join(",", $request->get('multiple_codes'))." de la EPS: ".$invoice->eps->code." - ".$invoice->eps->alias;
@@ -201,9 +201,14 @@ class Invoice extends Model
                         'amount' => $total,
                     ]);       
                     $pucTotal += $total;         
+                    $currentAuthorization = Authorization::findByCode($request->get('multiple_codes')[$key]);
+                    if ($currentAuthorization) {
+                        $currentAuthorization->update(['invoice_id' => $invoice->id]);        
+                    }
                 }
                 AccountingNote::updateRecord($invoice, $pucs, $notes, $invoice->total);
             } else {
+                $authorization->update(['invoice_id' => $invoice->id]);
                 $notes = "Factura para autorización ".$invoice->authorization_code." de la EPS: ".$invoice->eps->code
                     ." - ".$invoice->eps->alias;
 
@@ -265,5 +270,31 @@ class Invoice extends Model
     {
         return $this->where('authorization_code', $code)
             ->first();
+    }
+
+    protected function setInvoiceToAuthorizations()
+    {
+        $invoices = $this::all();
+
+        foreach ($invoices as $key => $invoice) {
+            echo "\n\nInvoice id :".$invoice ;
+            if ($invoice->multiple) {
+                foreach (json_decode($invoice->multiple_codes, true) as $code) {
+                    $currentAuthorization = Authorization::findByCode($code);
+                    echo "\nMultiple, processing code: ".$code;
+                    if ($currentAuthorization and $currentAuthorization->invoice_id == 0) {
+                        echo "\n[ <<< TRUE >>> ]";
+                        $currentAuthorization->update(['invoice_id' => $invoice->id]);        
+                    }
+                }
+            } else {
+                echo "\nSingle, processing code: ".$invoice->authorization_code;
+                $currentAuthorization = Authorization::findByCode($invoice->authorization_code);
+                if ($currentAuthorization and $currentAuthorization->invoice_id == 0) {
+                    echo "\n[ <<< TRUE >>> ]";
+                    $currentAuthorization->update(['invoice_id' => $invoice->id]);        
+                }
+            }
+        }
     }
 }
