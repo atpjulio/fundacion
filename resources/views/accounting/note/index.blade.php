@@ -7,7 +7,7 @@
 @section('content')
     <div class="title-block">
         <div class="float-left">
-            <h3 class="title"> Notas Internas </h3>
+            <h3 class="title"> Notas Internas (Total: {{ count($notes) }})</h3>
             <p class="title-description"> Aquí puedes ver el listado de todas las notas internas y crear, actualizar o eliminar cualquiera de ellas </p>
         </div>
         <div class="float-right animated fadeInRight">
