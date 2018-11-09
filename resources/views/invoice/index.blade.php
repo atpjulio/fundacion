@@ -8,7 +8,7 @@
     <div class="title-block">
         <div class="float-left">
             <h3 class="title"> Administrar Facturas (Total: {{ count($invoices) }})</h3>
-            <p class="title-description"> Aquí puedes ver el listado de todos las facturas y crear, actualizar o eliminar cualquiera de ellas </p>
+            <p class="title-description"> Aquí puedes ver el listado de todas las facturas y crear, actualizar o eliminar cualquiera de ellas </p>
         </div>
         <div class="float-right animated fadeInRight">
             <a href="{{ route('invoice.create') }}" class="btn btn-pill-left btn-primary btn-lg">

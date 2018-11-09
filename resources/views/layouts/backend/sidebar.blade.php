@@ -111,6 +111,12 @@
                                 Relación de Facturas
                             </a>
                         </li>
+                        <li class="@if(Request::is('invoice-volume')) active @endif" >
+                            <a href="{{ route('invoice.volume') }}">
+                                <i class="fas fa-crop-alt"></i>&nbsp;
+                                Volumen de Facturas
+                            </a>
+                        </li>
                         <li class="@if(Request::is('rip*')) active @endif" >
                             <a href="{{ route('rip.index') }}">
                                 <i class="far fa-file-archive"></i>&nbsp;

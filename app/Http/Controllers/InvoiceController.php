@@ -240,4 +240,55 @@ class InvoiceController extends Controller
 
     }
 
+    public function volume()
+    {
+        $epss = Eps::all();
+
+        if (!$epss) {
+            Session::flash('message_danger', 'No se encontró el listado de EPS');
+            return redirect()->back()->withInput();            
+        }
+
+        $invoicesAmount = count(Invoice::getInvoicesByEpsId($epss->toArray()[0]['id'], date("Y-m-d"), date("Y-m-d")));
+        $epss = $epss->pluck('name', 'id');
+        $companies = Company::all()->pluck('name', 'id');
+
+        return view('invoice.volume', compact('epss', 'companies', 'invoicesAmount'));
+    }
+
+    public function volumePDF(Request $request) 
+    {
+        $epsId = $request->get('eps_id');
+        $initialDate = $request->get('initial_date');
+        $finalDate = $request->get('final_date');
+        $companyId = $request->get('company_id');
+
+        $invoices = Invoice::getInvoicesByEpsId($epsId, $initialDate, $finalDate);
+
+        if (count($invoices) == 0) {
+            Session::flash('message_danger', 'No hay facturas disponibles para el rango de fecha seleccionado');
+            return redirect()->back();
+        }
+
+        $company = Company::find($companyId);
+        $eps = Eps::find($epsId);
+
+        $html = \View::make('invoice.pdf_volume', compact('invoices', 'company', 'eps', 'initialDate', 'finalDate'));
+        $mpdf = new \Mpdf\Mpdf([
+            'margin_left' => 20,
+            'margin_right' => 15,
+            'margin_top' => 48,
+            'margin_bottom' => 25,
+            'margin_header' => 10,
+            'margin_footer' => 10
+        ]);
+        $mpdf->SetProtection(array('print'));
+        $mpdf->SetTitle($company->name." - Volumen de Facturas ".$eps->alias);
+        $mpdf->SetAuthor($company->name);
+        $mpdf->SetDisplayMode('fullpage');
+        $mpdf->WriteHTML($html);
+        $mpdf->Output("Volumen de Facturas ".$eps->alias.'.pdf', 'I');
+
+    }
+
 }
