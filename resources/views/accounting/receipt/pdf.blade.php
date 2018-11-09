@@ -73,7 +73,7 @@
     </div>
 </htmlpagefooter>
 <sethtmlpageheader name="myheader" value="on" show-this-page="1" />
-<sethtmlpagefooter name="myfooter" value="on" />
+<sethtmlpagefooter name="myfooter" value="off" />
 mpdf-->
     <!--
     <div style="text-align: right; font-size: 12pt;">
@@ -146,13 +146,11 @@ mpdf-->
     <table width="100%" style="font-size: 12pt;" cellpadding="10">
         <tr>
             <td width="45%" style="border-width: 0; line-height: 1.9em;" align="center">
-                <!--
-                <br>
+                <img src="{{ asset('img/signature.png') }}" alt="" height="40" style="margin-bottom: -17px;">
                 _____________________________________
                 <br>
                 Firma de la persona autorizada
                 <br>
-                -->
             </td>
             <td width="10%">&nbsp;</td>
             <td width="45%" style="border-width: 0; font-size: 12pt; line-height: 2.1em;">
@@ -172,7 +170,7 @@ mpdf-->
     <br>
     <hr>
     <div style="text-align: center; font-style: italic;">
-        Recibo generado automáticamente
+        Recibo generado automáticamente por {{ env('APP_URL') }}
     </div>
 </body>
 </html>
