@@ -7,7 +7,7 @@
 @section('content')
     <div class="title-block">
         <div class="float-left">
-            <h3 class="title"> Listado de Autorizaciones Cerradas </h3>
+            <h3 class="title"> Listado de Autorizaciones Cerradas (Total: {{ count($authorizations) }})</h3>
             <p class="title-description"> Aquí puedes ver el listado de las autorizaciones cerradas </p>
         </div>
         <div class="float-right animated fadeInRight">

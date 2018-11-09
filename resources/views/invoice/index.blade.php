@@ -7,7 +7,7 @@
 @section('content')
     <div class="title-block">
         <div class="float-left">
-            <h3 class="title"> Administrar Facturas </h3>
+            <h3 class="title"> Administrar Facturas (Total: {{ count($invoices) }})</h3>
             <p class="title-description"> Aquí puedes ver el listado de todos las facturas y crear, actualizar o eliminar cualquiera de ellas </p>
         </div>
         <div class="float-right animated fadeInRight">
