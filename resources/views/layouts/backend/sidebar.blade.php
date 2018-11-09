@@ -31,6 +31,18 @@
                                 Nueva Autorización
                             </a>
                         </li>
+                        <li class="@if(Request::is('authorization-open')) active @endif" >
+                            <a href="{{ route('authorization.open') }}">
+                                <i class="far fa-envelope-open"></i>&nbsp;
+                                Abiertas
+                            </a>
+                        </li>
+                        <li class="@if(Request::is('authorization-close')) active @endif" >
+                            <a href="{{ route('authorization.close') }}">
+                                <i class="far fa-envelope"></i>&nbsp;
+                                Cerradas
+                            </a>
+                        </li>
                         <li class="@if(Request::is('authorization')) active @endif" >
                             <a href="{{ route('authorization.index') }}">
                                 <i class="fas fa-list"></i>&nbsp;

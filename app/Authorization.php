@@ -194,11 +194,14 @@ class Authorization extends Model
 
     protected function open()
     {
- //       $firstTry = $this->join('invoices', 'authorizations.code', '=', 'invoice.authorization_code')
- //           ->select('authorizations.*')
- //           ->get();
+        return $this->where('invoice_id', 0)
+            ->get();
+    }
 
- //       if ()
+    protected function close()
+    {
+        return $this->where('invoice_id', '<>', 0)
+            ->get();
     }
 
 }
