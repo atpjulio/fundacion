@@ -38,7 +38,7 @@ class Rip extends Model
      */
     protected function produceRIPS($request)
     {
-        $filePrefix = ['AT', 'US', 'AF', 'RIPS'];
+        $filePrefix = ['AT', 'US', 'AF', 'CT', 'RIPS'];
         $prefixCounter = 0;
 
         $invoices = Invoice::getInvoicesByEpsId($request->get('eps_id'));
@@ -51,13 +51,17 @@ class Rip extends Model
         $lastRip = $this->all()
             ->last();
         // Creating AT file
-        $this->produceAT($invoices, $lastRip ? $lastRip->id + 1 : 1);   
+        $counterAT = $this->produceAT($invoices, $lastRip ? $lastRip->id + 1 : 1);   
 
         // Creating US file
-        $this->produceUS($invoices, $lastRip ? $lastRip->id + 1 : 1);   
+        $counterUS = $this->produceUS($invoices, $lastRip ? $lastRip->id + 1 : 1);   
 
         // Creating AF file
-        $this->produceAF($invoices, $lastRip ? $lastRip->id + 1 : 1);   
+        $counterAF = $this->produceAF($invoices, $lastRip ? $lastRip->id + 1 : 1);   
+
+        // Creating CT file
+        $this->produceCT($invoices[0], $lastRip ? $lastRip->id + 1 : 1, $counterUS, $counterAT, 
+            $counterAF);   
 
         // Creating Excel file
         $this->produceExcel($invoices, $lastRip ? $lastRip->id + 1 : 1, $request);
@@ -125,47 +129,93 @@ class Rip extends Model
     protected function produceAT($invoices, $id, $update = false)
     {
         $line = "";
+        $counter = 0;
         foreach ($invoices as $invoice) {
-            $days = \Carbon\Carbon::parse($invoice->authorization->date_to)->diffInDays(\Carbon\Carbon::parse($invoice->authorization->date_from));
-            $line .= $invoice->number.",".substr($invoice->company->doc, 0, 9).","
-                .$invoice->authorization->patient->dni_type.",".$invoice->authorization->patient->dni.","
-                .$invoice->authorization->code.",1,".$invoice->authorization->service->code.","
-                .mb_strtoupper($invoice->authorization->service->name).","
-                .$days.",".$invoice->eps->daily_price.","
-                .floatval($days * $invoice->eps->daily_price)."\r";
+            if ($invoice->multiple) {
+                foreach (json_decode($invoice->multiple_codes, true) as $key => $value) {
+                    $currentAuthorization = Authorization::findByCode($value);
+                    if ($currentAuthorization) {
+                        $days = json_decode($invoice->multiple_days, true)[$key];
+                        $line .= $invoice->number.",".substr($invoice->company->doc, 0, 9).","
+                            .$currentAuthorization->patient->dni_type.",".$currentAuthorization->patient->dni.","
+                            .$currentAuthorization->code.",1,".$currentAuthorization->service->code.","
+                            .mb_strtoupper($currentAuthorization->service->name).","
+                            .$days.",".$invoice->eps->daily_price.","
+                            .floatval($days * $invoice->eps->daily_price)."\r";
+                        $counter++;
+                    }
+                }
+            } else {            
+                $days = \Carbon\Carbon::parse($invoice->authorization->date_to)->diffInDays(\Carbon\Carbon::parse($invoice->authorization->date_from));
+                $line .= $invoice->number.",".substr($invoice->company->doc, 0, 9).","
+                    .$invoice->authorization->patient->dni_type.",".$invoice->authorization->patient->dni.","
+                    .$invoice->authorization->code.",1,".$invoice->authorization->service->code.","
+                    .mb_strtoupper($invoice->authorization->service->name).","
+                    .$days.",".$invoice->eps->daily_price.","
+                    .floatval($days * $invoice->eps->daily_price)."\r";
+                $counter++;
+            }
         }
 
         $fileName = "AT".sprintf("%06d", $id).".TXT";
 
         Storage::put(config('constants.ripsFiles').$fileName, $line);
+
+        return $counter;
     }
 
     protected function produceUS($invoices, $id, $update = false)
     {
         $line = "";
+        $counter = 0;
         foreach ($invoices as $invoice) {
-            $arrayFirstName = explode(" ", $invoice->authorization->patient->first_name);
-            $firstName = $arrayFirstName[0].",".(isset($arrayFirstName[1]) ? $arrayFirstName[1] : '');
-            $arrayLastName = explode(" ", $invoice->authorization->patient->last_name);
-            $lastName = $arrayLastName[0].",".(isset($arrayLastName[1]) ? $arrayLastName[1] : '');
+            if ($invoice->multiple) {
+                foreach (json_decode($invoice->multiple_codes, true) as $key => $value) {
+                    $currentAuthorization = Authorization::findByCode($value);
+                    if ($currentAuthorization) {
+                        $arrayFirstName = explode(" ", $currentAuthorization->patient->first_name);
+                        $firstName = $arrayFirstName[0].",".(isset($arrayFirstName[1]) ? $arrayFirstName[1] : '');
+                        $arrayLastName = explode(" ", $currentAuthorization->patient->last_name);
+                        $lastName = $arrayLastName[0].",".(isset($arrayLastName[1]) ? $arrayLastName[1] : '');
 
-            $line .= $invoice->authorization->patient->dni_type.",".$invoice->authorization->patient->dni
-                .",".$invoice->eps->code.",".$invoice->authorization->patient->type.","
-                .$lastName.",".$firstName.",".$invoice->authorization->patient->age.",1,"
-                .config('constants.genderShort.'.$invoice->authorization->patient->gender).","
-                .$invoice->authorization->patient->state.","
-                .$invoice->authorization->patient->city.","
-                .$invoice->authorization->patient->zone."\r";
+                        $line .= $currentAuthorization->patient->dni_type.",".$currentAuthorization->patient->dni
+                            .",".$invoice->eps->code.",".$currentAuthorization->patient->type.","
+                            .$lastName.",".$firstName.",".$currentAuthorization->patient->age.",1,"
+                            .config('constants.genderShort.'.$currentAuthorization->patient->gender).","
+                            .$currentAuthorization->patient->state.","
+                            .$currentAuthorization->patient->city.","
+                            .$currentAuthorization->patient->zone."\r";
+                        $counter++;
+                    }
+                }
+            } else {
+                $arrayFirstName = explode(" ", $invoice->authorization->patient->first_name);
+                $firstName = $arrayFirstName[0].",".(isset($arrayFirstName[1]) ? $arrayFirstName[1] : '');
+                $arrayLastName = explode(" ", $invoice->authorization->patient->last_name);
+                $lastName = $arrayLastName[0].",".(isset($arrayLastName[1]) ? $arrayLastName[1] : '');
+
+                $line .= $invoice->authorization->patient->dni_type.",".$invoice->authorization->patient->dni
+                    .",".$invoice->eps->code.",".$invoice->authorization->patient->type.","
+                    .$lastName.",".$firstName.",".$invoice->authorization->patient->age.",1,"
+                    .config('constants.genderShort.'.$invoice->authorization->patient->gender).","
+                    .$invoice->authorization->patient->state.","
+                    .$invoice->authorization->patient->city.","
+                    .$invoice->authorization->patient->zone."\r";
+                $counter++;
+            }
         }
 
         $fileName = "US".sprintf("%06d", $id).".TXT";
 
-        Storage::put(config('constants.ripsFiles').$fileName, $line);        
+        Storage::put(config('constants.ripsFiles').$fileName, $line);
+
+        return $counter;
     }
 
     protected function produceAF($invoices, $id, $update = false)
     {
         $line = "";
+        $counter = 0;
         foreach ($invoices as $invoice) {
             $createdAt = \Carbon\Carbon::parse($invoice->created_at)->format("d/m/Y");
 
@@ -174,9 +224,29 @@ class Rip extends Model
                 .$invoice->number.",".$createdAt.",".$createdAt.",".$createdAt.","
                 .$invoice->eps->code.",".substr(mb_strtoupper($invoice->eps->name), 0, 30).",,,,"
                 ."0.00,0.00,0.00,".$invoice->total."\r";
+            $counter++;
         }
 
         $fileName = "AF".sprintf("%06d", $id).".TXT";
+
+        Storage::put(config('constants.ripsFiles').$fileName, $line);        
+
+        return $counter;
+    }
+
+    protected function produceCT($invoice, $id, $counterUS, $counterAT, $counterAF, $update = false)
+    {
+
+        $counters = ['AF' => $counterAF, 'US' => $counterUS, 'AT' => $counterAT];
+        $line = "";
+        foreach ($counters as $type => $counter) {
+            $createdAt = \Carbon\Carbon::parse($invoice->created_at)->format("d/m/Y");
+
+            $line .= substr($invoice->company->doc, 0, 9).",".$createdAt.","
+                .$type.sprintf("%06d", $id).",".$counter."\r";
+        }
+
+        $fileName = "CT".sprintf("%06d", $id).".TXT";
 
         Storage::put(config('constants.ripsFiles').$fileName, $line);        
     }
@@ -290,53 +360,108 @@ class Rip extends Model
                 });
                 $counter = 2;
                 foreach ($invoices as $invoice) {
-                    $arrayFirstName = explode(" ", $invoice->authorization->patient->first_name);
-                    $arrayLastName = explode(" ", $invoice->authorization->patient->last_name);
+                    if ($invoice->multiple) {
+                        foreach (json_decode($invoice->multiple_codes, true) as $key => $value) {
+                            $currentAuthorization = Authorization::findByCode($value);
+                            if ($currentAuthorization) {
+                                $arrayFirstName = explode(" ", $currentAuthorization->patient->first_name);
+                                $arrayLastName = explode(" ", $currentAuthorization->patient->last_name);
 
-                    $sheet->cell('A'.$counter, function($cell) use ($invoice) {
-                        $cell->setValue($invoice->authorization->patient->dni_type);   
-                    });
-                    $sheet->cell('B'.$counter, function($cell) use ($invoice) {
-                        $cell->setValue($invoice->authorization->patient->dni);   
-                    });
-                    $sheet->cell('C'.$counter, function($cell) use ($invoice) {
-                        $cell->setValue($invoice->eps->code);   
-                    });
-                    $sheet->cell('D'.$counter, function($cell) use ($invoice) {
-                        $cell->setValue($invoice->authorization->patient->type);   
-                    });
-                    $sheet->cell('E'.$counter, function($cell) use ($arrayLastName) {
-                        $cell->setValue(mb_strtoupper($arrayLastName[0]));   
-                    });
-                    $sheet->cell('F'.$counter, function($cell) use ($arrayLastName) {
-                        $cell->setValue(isset($arrayLastName[1]) ? mb_strtoupper($arrayLastName[1]) : '');   
-                    });
-                    $sheet->cell('G'.$counter, function($cell) use ($arrayFirstName) {
-                        $cell->setValue(mb_strtoupper($arrayFirstName[0]));   
-                    });
-                    $sheet->cell('H'.$counter, function($cell) use ($arrayFirstName) {
-                        $cell->setValue(isset($arrayFirstName[1]) ? mb_strtoupper($arrayFirstName[1]) : '');   
-                    });
-                    $sheet->cell('I'.$counter, function($cell) use ($invoice) {
-                        $cell->setValue($invoice->authorization->patient->age);   
-                    });
-                    $sheet->cell('J'.$counter, function($cell) {
-                        $cell->setValue("1");   
-                    });
-                    $sheet->cell('K'.$counter, function($cell) use ($invoice) {
-                        $cell->setValue(config('constants.genderShort.'.$invoice->authorization->patient->gender));   
-                    });
-                    $sheet->cell('L'.$counter, function($cell) use ($invoice) {
-                        $cell->setValue($invoice->authorization->patient->state);   
-                    });
-                    $sheet->cell('M'.$counter, function($cell) use ($invoice) {
-                        $cell->setValue($invoice->authorization->patient->city);   
-                    });
-                    $sheet->cell('N'.$counter, function($cell) use ($invoice) {
-                        $cell->setValue($invoice->authorization->patient->zone);   
-                    });
-                    $counter++;
-                    $counterUS++;
+                                $sheet->cell('A'.$counter, function($cell) use ($currentAuthorization) {
+                                    $cell->setValue($currentAuthorization->patient->dni_type);   
+                                });
+                                $sheet->cell('B'.$counter, function($cell) use ($currentAuthorization) {
+                                    $cell->setValue($currentAuthorization->patient->dni);   
+                                });
+                                $sheet->cell('C'.$counter, function($cell) use ($invoice) {
+                                    $cell->setValue($invoice->eps->code);   
+                                });
+                                $sheet->cell('D'.$counter, function($cell) use ($currentAuthorization) {
+                                    $cell->setValue($currentAuthorization->patient->type);   
+                                });
+                                $sheet->cell('E'.$counter, function($cell) use ($arrayLastName) {
+                                    $cell->setValue(mb_strtoupper($arrayLastName[0]));   
+                                });
+                                $sheet->cell('F'.$counter, function($cell) use ($arrayLastName) {
+                                    $cell->setValue(isset($arrayLastName[1]) ? mb_strtoupper($arrayLastName[1]) : '');   
+                                });
+                                $sheet->cell('G'.$counter, function($cell) use ($arrayFirstName) {
+                                    $cell->setValue(mb_strtoupper($arrayFirstName[0]));   
+                                });
+                                $sheet->cell('H'.$counter, function($cell) use ($arrayFirstName) {
+                                    $cell->setValue(isset($arrayFirstName[1]) ? mb_strtoupper($arrayFirstName[1]) : '');   
+                                });
+                                $sheet->cell('I'.$counter, function($cell) use ($currentAuthorization) {
+                                    $cell->setValue($currentAuthorization->patient->age);   
+                                });
+                                $sheet->cell('J'.$counter, function($cell) {
+                                    $cell->setValue("1");   
+                                });
+                                $sheet->cell('K'.$counter, function($cell) use ($currentAuthorization) {
+                                    $cell->setValue(config('constants.genderShort.'.$currentAuthorization->patient->gender));   
+                                });
+                                $sheet->cell('L'.$counter, function($cell) use ($currentAuthorization) {
+                                    $cell->setValue($currentAuthorization->patient->state);   
+                                });
+                                $sheet->cell('M'.$counter, function($cell) use ($currentAuthorization) {
+                                    $cell->setValue($currentAuthorization->patient->city);   
+                                });
+                                $sheet->cell('N'.$counter, function($cell) use ($currentAuthorization) {
+                                    $cell->setValue($currentAuthorization->patient->zone);   
+                                });
+                                $counter++;
+                                $counterUS++;                        
+                            }
+                        }
+                    } else {
+                        $arrayFirstName = explode(" ", $invoice->authorization->patient->first_name);
+                        $arrayLastName = explode(" ", $invoice->authorization->patient->last_name);
+
+                        $sheet->cell('A'.$counter, function($cell) use ($invoice) {
+                            $cell->setValue($invoice->authorization->patient->dni_type);   
+                        });
+                        $sheet->cell('B'.$counter, function($cell) use ($invoice) {
+                            $cell->setValue($invoice->authorization->patient->dni);   
+                        });
+                        $sheet->cell('C'.$counter, function($cell) use ($invoice) {
+                            $cell->setValue($invoice->eps->code);   
+                        });
+                        $sheet->cell('D'.$counter, function($cell) use ($invoice) {
+                            $cell->setValue($invoice->authorization->patient->type);   
+                        });
+                        $sheet->cell('E'.$counter, function($cell) use ($arrayLastName) {
+                            $cell->setValue(mb_strtoupper($arrayLastName[0]));   
+                        });
+                        $sheet->cell('F'.$counter, function($cell) use ($arrayLastName) {
+                            $cell->setValue(isset($arrayLastName[1]) ? mb_strtoupper($arrayLastName[1]) : '');   
+                        });
+                        $sheet->cell('G'.$counter, function($cell) use ($arrayFirstName) {
+                            $cell->setValue(mb_strtoupper($arrayFirstName[0]));   
+                        });
+                        $sheet->cell('H'.$counter, function($cell) use ($arrayFirstName) {
+                            $cell->setValue(isset($arrayFirstName[1]) ? mb_strtoupper($arrayFirstName[1]) : '');   
+                        });
+                        $sheet->cell('I'.$counter, function($cell) use ($invoice) {
+                            $cell->setValue($invoice->authorization->patient->age);   
+                        });
+                        $sheet->cell('J'.$counter, function($cell) {
+                            $cell->setValue("1");   
+                        });
+                        $sheet->cell('K'.$counter, function($cell) use ($invoice) {
+                            $cell->setValue(config('constants.genderShort.'.$invoice->authorization->patient->gender));   
+                        });
+                        $sheet->cell('L'.$counter, function($cell) use ($invoice) {
+                            $cell->setValue($invoice->authorization->patient->state);   
+                        });
+                        $sheet->cell('M'.$counter, function($cell) use ($invoice) {
+                            $cell->setValue($invoice->authorization->patient->city);   
+                        });
+                        $sheet->cell('N'.$counter, function($cell) use ($invoice) {
+                            $cell->setValue($invoice->authorization->patient->zone);   
+                        });
+                        $counter++;
+                        $counterUS++;                        
+                    }
                 }                
             });
 
@@ -601,43 +726,89 @@ class Rip extends Model
 
                 $counter = 2;
                 foreach ($invoices as $invoice) {
-                    $days = \Carbon\Carbon::parse($invoice->authorization->date_to)->diffInDays(\Carbon\Carbon::parse($invoice->authorization->date_from));
+                    if ($invoice->multiple) {
+                        foreach (json_decode($invoice->multiple_codes, true) as $key => $value) {
+                            $currentAuthorization = Authorization::findByCode($value);
+                            if ($currentAuthorization) {
+                                $days = \Carbon\Carbon::parse($currentAuthorization->date_to)->diffInDays(\Carbon\Carbon::parse($currentAuthorization->date_from));
 
-                    $sheet->cell('A'.$counter, function($cell) use ($invoice) {
-                        $cell->setValue($invoice->number);   
-                    });
-                    $sheet->cell('B'.$counter, function($cell) use ($invoice) {
-                        $cell->setValue(substr($invoice->company->doc, 0, 9));   
-                    });
-                    $sheet->cell('C'.$counter, function($cell) use ($invoice) {
-                        $cell->setValue($invoice->authorization->patient->dni_type);   
-                    });
-                    $sheet->cell('D'.$counter, function($cell) use ($invoice) {
-                        $cell->setValue($invoice->authorization->patient->dni);   
-                    });
-                    $sheet->cell('E'.$counter, function($cell) use ($invoice) {
-                        $cell->setValue($invoice->authorization->code);   
-                    });
-                    $sheet->cell('F'.$counter, function($cell) use ($invoice) {
-                        $cell->setValue("1");   
-                    });
-                    $sheet->cell('G'.$counter, function($cell) use ($invoice) {
-                        $cell->setValue($invoice->authorization->service->code);   
-                    });
-                    $sheet->cell('H'.$counter, function($cell) use ($invoice) {
-                        $cell->setValue(mb_strtoupper($invoice->authorization->service->name));   
-                    });
-                    $sheet->cell('I'.$counter, function($cell) use ($days) {
-                        $cell->setValue($days);   
-                    });
-                    $sheet->cell('J'.$counter, function($cell) use ($invoice) {
-                        $cell->setValue($invoice->eps->daily_price);   
-                    });
-                    $sheet->cell('K'.$counter, function($cell) use ($invoice, $days) {
-                        $cell->setValue(floatval($days * $invoice->eps->daily_price));   
-                    });
-                    $counter++;
-                    $counterAT++;
+                                $sheet->cell('A'.$counter, function($cell) use ($invoice) {
+                                    $cell->setValue($invoice->number);   
+                                });
+                                $sheet->cell('B'.$counter, function($cell) use ($invoice) {
+                                    $cell->setValue(substr($invoice->company->doc, 0, 9));   
+                                });
+                                $sheet->cell('C'.$counter, function($cell) use ($currentAuthorization) {
+                                    $cell->setValue($currentAuthorization->patient->dni_type);   
+                                });
+                                $sheet->cell('D'.$counter, function($cell) use ($currentAuthorization) {
+                                    $cell->setValue($currentAuthorization->patient->dni);   
+                                });
+                                $sheet->cell('E'.$counter, function($cell) use ($currentAuthorization) {
+                                    $cell->setValue($currentAuthorization->code);   
+                                });
+                                $sheet->cell('F'.$counter, function($cell) use ($invoice) {
+                                    $cell->setValue("1");   
+                                });
+                                $sheet->cell('G'.$counter, function($cell) use ($currentAuthorization) {
+                                    $cell->setValue($currentAuthorization->service->code);   
+                                });
+                                $sheet->cell('H'.$counter, function($cell) use ($currentAuthorization) {
+                                    $cell->setValue(mb_strtoupper($currentAuthorization->service->name));   
+                                });
+                                $sheet->cell('I'.$counter, function($cell) use ($days) {
+                                    $cell->setValue($days);   
+                                });
+                                $sheet->cell('J'.$counter, function($cell) use ($invoice) {
+                                    $cell->setValue($invoice->eps->daily_price);   
+                                });
+                                $sheet->cell('K'.$counter, function($cell) use ($invoice, $days) {
+                                    $cell->setValue(floatval($days * $invoice->eps->daily_price));   
+                                });
+                                $counter++;
+                                $counterAT++;
+                            }
+                        }
+                    } else {
+                        $days = \Carbon\Carbon::parse($invoice->authorization->date_to)->diffInDays(\Carbon\Carbon::parse($invoice->authorization->date_from));
+
+                        $sheet->cell('A'.$counter, function($cell) use ($invoice) {
+                            $cell->setValue($invoice->number);   
+                        });
+                        $sheet->cell('B'.$counter, function($cell) use ($invoice) {
+                            $cell->setValue(substr($invoice->company->doc, 0, 9));   
+                        });
+                        $sheet->cell('C'.$counter, function($cell) use ($invoice) {
+                            $cell->setValue($invoice->authorization->patient->dni_type);   
+                        });
+                        $sheet->cell('D'.$counter, function($cell) use ($invoice) {
+                            $cell->setValue($invoice->authorization->patient->dni);   
+                        });
+                        $sheet->cell('E'.$counter, function($cell) use ($invoice) {
+                            $cell->setValue($invoice->authorization->code);   
+                        });
+                        $sheet->cell('F'.$counter, function($cell) use ($invoice) {
+                            $cell->setValue("1");   
+                        });
+                        $sheet->cell('G'.$counter, function($cell) use ($invoice) {
+                            $cell->setValue($invoice->authorization->service->code);   
+                        });
+                        $sheet->cell('H'.$counter, function($cell) use ($invoice) {
+                            $cell->setValue(mb_strtoupper($invoice->authorization->service->name));   
+                        });
+                        $sheet->cell('I'.$counter, function($cell) use ($days) {
+                            $cell->setValue($days);   
+                        });
+                        $sheet->cell('J'.$counter, function($cell) use ($invoice) {
+                            $cell->setValue($invoice->eps->daily_price);   
+                        });
+                        $sheet->cell('K'.$counter, function($cell) use ($invoice, $days) {
+                            $cell->setValue(floatval($days * $invoice->eps->daily_price));   
+                        });
+                        $counter++;
+                        $counterAT++;
+
+                    }                                                
                 }
             });
 
