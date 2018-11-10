@@ -114,6 +114,11 @@ class InvoiceController extends Controller
     public function update(UpdateInvoiceRequest $request, $id)
     {
         if ($request->get('multiple') == "1") {
+            if ($request->get('multiple_codes') == null) {
+                Session::flash('message_danger', 'Falta al menos un código de autorización por llenar');
+                return redirect()->back()->withInput();                
+            }
+
             foreach ($request->get('multiple_codes') as $key => $value) {
                 if ($request->get('multiple_days')[$key] == "") {
                     Session::flash('message_danger', 'Falta al menos un campo de días por llenar');
