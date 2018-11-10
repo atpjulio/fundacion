@@ -13,7 +13,6 @@
                 <tr>
                     <td style="padding: 10px;background-color:#FFFFFF" align="left;">
                         <p>&nbsp;</p>
-                        <br>
                         {!! $content !!}
                         <br>
                         <p>Saludos,</p>

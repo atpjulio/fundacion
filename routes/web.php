@@ -15,6 +15,12 @@ use App\Utilities;
 
 Route::view('/', 'auth.login');
 
+/*
+Route::get('/enviar', function() {
+    $users = \App\User::all();
+    \App\Utilities::sendEmails($users, 'Asunto', 'Contenido');
+});
+*/
 Route::middleware(['auth', 'admin'])->group(function () {
     Route::resource('company', 'CompanyController');
 
