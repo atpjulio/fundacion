@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\AccountingNote;
 use App\Authorization;
 use App\Company;
 use App\Eps;
