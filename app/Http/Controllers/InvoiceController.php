@@ -151,6 +151,24 @@ class InvoiceController extends Controller
         if (auth()->user()->hasRole('admin')) {
             $invoice = Invoice::find($id);
 
+            if ($invoice->multiple) {
+                foreach (json_decode($invoice->multiple_codes, true) as $code) {
+                    $authorization = Authorization::findByCode($code);
+                    if ($authorization) {
+                        $authorization->update([
+                            'invoice_id' => 0
+                        ]);
+                    }
+                }
+            } else {
+                $authorization = Authorization::findByCode($invoice->authorization_code);
+                if ($authorization) {
+                    $authorization->update([
+                        'invoice_id' => 0
+                    ]);
+                }
+            }
+
             if (!$invoice) {
                 Session::flash('message_danger', 'Factura no encontrada');
                 return redirect()->back()->withInput();            
