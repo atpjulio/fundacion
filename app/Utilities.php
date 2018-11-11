@@ -62,9 +62,8 @@ class Utilities extends Model
     static function emailDepartures()
     {
     	$authorizations = Authorization::findDepartures();
-    	$consoleMessage = " -> Sin salida de paciente";
-
-    	if ($authorizations) {
+    	$message = " -> Sin salida de paciente";
+    	if (count($authorizations) > 0) {
 
     		foreach ($authorizations as $authorization) {
 				$user = $authorization->patient->toArray();
@@ -87,6 +86,8 @@ class Utilities extends Model
     		$message = " -> Salida de: ".count($authorizations)." paciente(s)\n";
     	} else {
             $user['email'] = config('constants.emails.testing');
+            $user['first_name'] = $user['last_name'] = '';
+
             $subject = "Cron de Fundación ".\Carbon\Carbon::now()->format('Y-m-d H:i:s');
             $content = "En estos momentos se ha ejecutado el cron de ".config('constants.companyInfo.longName');
             self::sendEmail($user, $subject, $content);
