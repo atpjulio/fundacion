@@ -145,7 +145,7 @@ id="multiple_card">
                                         </td>
                                     </tr>
                                 @endforeach
-                            @elseif ($invoice->multiple)
+                            @elseif (isset($invoie) and $invoice->multiple)
                                 @foreach(json_decode($invoice->multiple_codes, true) as $k => $val)
                                     <tr>
                                         <td>
