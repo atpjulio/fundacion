@@ -195,7 +195,7 @@ class Patient extends Model
                 $phones = Phone::create([
                     'model_id' => $patient->id,
                     'model_type' => config('constants.modelType.patient'),
-                    'phone' => $data[18],
+                    'phone' => substr($data[18], 0, 15),
                 ]);
             }
         }
