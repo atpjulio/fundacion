@@ -185,8 +185,8 @@ class Patient extends Model
             $address = Address::create([
                 'model_id' => $patient->id,
                 'model_type' => config('constants.modelType.patient'),
-                'address' => ucwords(mb_strtolower($data[17])),
-                'address2' => ucwords(mb_strtolower($data[20])),
+                'address' => substr(ucwords(mb_strtolower($data[17])), 0, 50),
+                'address2' => substr(ucwords(mb_strtolower($data[20])), 0, 50),
                 'state' => sprintf("%02d", $data[11]),
                 'city' => sprintf("%03d", $data[12]),
             ]);
