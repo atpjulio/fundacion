@@ -180,6 +180,12 @@ class PatientController extends Controller
 
     public function importProcessTxt(UploadTxtRequest $request)
     {
+        $eps = Eps::checkIfExists($request->get('eps_code'));
+        if (!$eps) {
+            Session::flash("message_danger", "Información de EPS no encontrada. Por favor inténtalo nuevamente");
+            return redirect()->back();
+        }
+
         $file = $request->file('txt_file');
         $counter = 0;
 
@@ -187,7 +193,7 @@ class PatientController extends Controller
         if ($fileResource) {
             while (($line = fgets($fileResource)) !== false) {
                 if (strpos($line, "SERIAL") === false) {
-                    Patient::storeRecordFromTxt($line, $request->get('eps_code'));
+                    Patient::storeRecordFromTxt($line, $eps->id);
                     $counter++;
                 }
             }

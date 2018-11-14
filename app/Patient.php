@@ -156,7 +156,7 @@ class Patient extends Model
         return $patient;
     }
 
-    protected function storeRecordFromTxt($line, $epsCode)
+    protected function storeRecordFromTxt($line, $epsId)
     {
         $data = explode(",", $line);
         $dniType = $data[1];
@@ -165,21 +165,21 @@ class Patient extends Model
         if (!$this->checkIfExists($dni, $dniType)) {
             $lastName = trim($data[3].' '.$data[4]);
             $firstName = trim($data[5].' '.$data[6]);
-            //$birthDate = \Carbon\Carbon::parse()
-            //    ->format("Y-m-d");
+            $birthDate = DateTime::createFromFormat('d/m/Y', $data[7])->format('Y-m-d');
 
+            dd($birthDate);
             $patient = $this->create([
-                'eps_id' => $eps->id,
+                'eps_id' => $epsId,
                 'dni_type' => strtoupper($dniType),
                 'dni' => strtoupper($dni),
                 'first_name' => ucwords(mb_strtolower($firstName)),
                 'last_name' => ucwords(mb_strtolower($lastName)),
                 'birth_date' => $birthDate,
-                'gender' => ($line->sexo == 'F') ? 0 : 1,
+                'gender' => ($data[8] == 'F') ? 0 : 1,
                 'type' => intval($line->tipo_de_usuario),
-                'state' => intval($line->codigo_del_departamento_de_residencia_habitual).'',
-                'city' => intval($line->codigo_de_municipios_de_residencia_habitual).'',
-                'zone' => $line->zona_de_residencia_habitual,
+                'state' => sprintf("%02d", $data[11]),
+                'city' => $data[12],
+                'zone' => $data[13],
             ]);
 
         }

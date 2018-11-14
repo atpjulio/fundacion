@@ -32,7 +32,7 @@
                                 <th>Código</th>
                                 <th>EPS</th>
                                 <th>Desde</th>
-                                <th>Hasta</th>
+                                <th>Factura</th>
                                 <th>Días</th>
                                 <th>Opciones</th>
                                 </thead>
@@ -42,7 +42,7 @@
                                         <td>{!! $authorization->codec ?: '--' !!}</td>
                                         <td>{!! $authorization->eps->code !!} - {!! $authorization->eps->alias ? $authorization->eps->alias : $authorization->eps->name !!}</td>
                                         <td>{!! \Carbon\Carbon::parse($authorization->date_from)->format("d/m/Y") !!}</td>
-                                        <td>{!! \Carbon\Carbon::parse($authorization->date_to)->format("d/m/Y") !!}</td>
+                                        <td>{!! $authorization->invoice ? $authorization->invoice->number : '--' !!}</td>
                                         <td>{!! $authorization->days !!}</td>
                                         <td>
                                             @role('admin')
