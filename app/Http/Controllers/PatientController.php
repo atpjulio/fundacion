@@ -193,8 +193,9 @@ class PatientController extends Controller
         if ($fileResource) {
             while (($line = fgets($fileResource)) !== false) {
                 if (strpos($line, "SERIAL") === false) {
-                    Patient::storeRecordFromTxt($line, $eps->id);
-                    $counter++;
+                    if (Patient::storeRecordFromTxt($line, $eps->id)) {
+                        $counter++;
+                    }
                 }
             }
             fclose($fileResource);

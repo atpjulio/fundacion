@@ -162,12 +162,12 @@ class Patient extends Model
         $dniType = $data[1];
         $dni = $data[2];
 
+        $patient = null;
         if (!$this->checkIfExists($dni, $dniType)) {
             $lastName = trim($data[3].' '.$data[4]);
             $firstName = trim($data[5].' '.$data[6]);
-            $birthDate = DateTime::createFromFormat('d/m/Y', $data[7])->format('Y-m-d');
+            $birthDate = \DateTime::createFromFormat('d/m/Y', $data[7])->format('Y-m-d');
 
-            dd($birthDate);
             $patient = $this->create([
                 'eps_id' => $epsId,
                 'dni_type' => strtoupper($dniType),
@@ -176,12 +176,28 @@ class Patient extends Model
                 'last_name' => ucwords(mb_strtolower($lastName)),
                 'birth_date' => $birthDate,
                 'gender' => ($data[8] == 'F') ? 0 : 1,
-                'type' => intval($line->tipo_de_usuario),
+                'type' => 2,
                 'state' => sprintf("%02d", $data[11]),
-                'city' => $data[12],
+                'city' => sprintf("%03d", $data[12]),
                 'zone' => $data[13],
             ]);
 
+            $address = Address::create([
+                'model_id' => $patient->id,
+                'model_type' => config('constants.modelType.patient'),
+                'address' => ucwords(mb_strtolower($data[17])),
+                'address2' => ucwords(mb_strtolower($data[20])),
+                'state' => sprintf("%02d", $data[11]),
+                'city' => sprintf("%03d", $data[12]),
+            ]);
+
+            if (strlen($data[19]) > 1 and is_numeric($data[19])) {
+                $phones = Phone::create([
+                    'model_id' => $patient->id,
+                    'model_type' => config('constants.modelType.patient'),
+                    'phone' => $data[19],
+                ]);
+            }
         }
         return $patient;
     }
