@@ -191,11 +191,11 @@ class Patient extends Model
                 'city' => sprintf("%03d", $data[12]),
             ]);
 
-            if (strlen($data[19]) > 1 and is_numeric($data[19])) {
+            if (strlen($data[18]) > 1 and is_numeric($data[18])) {
                 $phones = Phone::create([
                     'model_id' => $patient->id,
                     'model_type' => config('constants.modelType.patient'),
-                    'phone' => $data[19],
+                    'phone' => $data[18],
                 ]);
             }
         }
