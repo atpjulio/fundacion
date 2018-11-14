@@ -156,6 +156,36 @@ class Patient extends Model
         return $patient;
     }
 
+    protected function storeRecordFromTxt($line, $epsCode)
+    {
+        $data = explode(",", $line);
+        $dniType = $data[1];
+        $dni = $data[2];
+
+        if (!$this->checkIfExists($dni, $dniType)) {
+            $lastName = trim($data[3].' '.$data[4]);
+            $firstName = trim($data[5].' '.$data[6]);
+            //$birthDate = \Carbon\Carbon::parse()
+            //    ->format("Y-m-d");
+
+            $patient = $this->create([
+                'eps_id' => $eps->id,
+                'dni_type' => strtoupper($dniType),
+                'dni' => strtoupper($dni),
+                'first_name' => ucwords(mb_strtolower($firstName)),
+                'last_name' => ucwords(mb_strtolower($lastName)),
+                'birth_date' => $birthDate,
+                'gender' => ($line->sexo == 'F') ? 0 : 1,
+                'type' => intval($line->tipo_de_usuario),
+                'state' => intval($line->codigo_del_departamento_de_residencia_habitual).'',
+                'city' => intval($line->codigo_de_municipios_de_residencia_habitual).'',
+                'zone' => $line->zona_de_residencia_habitual,
+            ]);
+
+        }
+        return $patient;
+    }
+
     protected function getPatientsForEps($epsId)
     {
         return $this->where('eps_id', $epsId)

@@ -18,11 +18,21 @@ class CustomValidationRules extends Validator
         }
         return true;
     }
+
     public function validateCheckExcelExtension($attribute, $value, $parameters,$messages) {
         //dd($attribute, $value->getClientOriginalExtension(), $parameters,$messages);
         $extension = strtolower($value->getClientOriginalExtension());
 
         if($extension === "xls" or $extension === "xlsx"){
+            return true;
+        }
+        return false;
+    }
+
+    public function validateCheckTxtExtension($attribute, $value, $parameters,$messages) {
+        $extension = strtolower($value->getClientOriginalExtension());
+
+        if($extension === "txt"){
             return true;
         }
         return false;

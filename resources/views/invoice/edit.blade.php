@@ -53,7 +53,7 @@
                         "previous":   "Anterior"
                     }
                 },
-                "oSearch": {"sSearch": "{{ $invoice->authorization_code }}"}
+                // "oSearch": {"sSearch": "{{ $invoice->authorization_code }}"}
             });
             $('#myTable').on('click','.btn-success', function() {
                 days = parseInt($(this).parent().parent().find('td')[5].outerText);

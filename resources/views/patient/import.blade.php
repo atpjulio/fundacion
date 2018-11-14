@@ -14,30 +14,28 @@
         </div>
     </div>
 
-    {!! Form::open(['route' => 'patient.import.process', 'method' => 'POST', 'files' => true]) !!}
     <section class="section">
         <div class="row">
             <div class="col-md-6">
                 <div class="card">
                     <div class="card-block">
                         <div class="card-title-block">
-                            <h3 class="title"> Importar Usuarios </h3>
+                            <h3 class="title"> Importar Usuarios desde TXT </h3>
                         </div>
-
-                        <p>
-                            Paso 1: Seleccionar el archivo
-                            <br>
-                            Paso 2: Subir archivo
-                        </p>
+                        {!! Form::open(['route' => 'patient.import.process.txt', 'method' => 'POST', 'files' => true]) !!}
+                        <div class="form-group  @if($errors->has('eps_code')) has-error @endif">
+                            {!! Form::label('eps_code', 'Seleccione EPS y luego cargue el archivo', ['class' => 'control-label']) !!}
+                            {!! Form::select('eps_code', $epss, old('eps_code'), ['class' => 'form-control']) !!}
+                        </div>
                         <div class="custom-file">
-                            <input type="file" class="custom-file-input" id="customFileLang" lang="es" name="excel_file">
+                            <input type="file" class="custom-file-input" id="customFileLang" lang="es" name="txt_file">
                             <label class="custom-file-label form-control-file" for="customFileLang">Seleccionar archivo</label>
                         </div>
-                        <br>
-                        <br>
-                        {{--
-                        @include('patient.fields')
-                        --}}
+                        <br><br>
+                        <div class="text-center mb-4">
+                            {!! Form::submit('Subir', ['class' => 'btn btn-oval btn-primary']) !!}
+                        </div>
+                        {!! Form::close() !!}
                     </div>
                 </div>
             </div>
@@ -45,27 +43,29 @@
                 <div class="card">
                     <div class="card-block">
                         <div class="card-title-block">
-                            <h3 class="title"> Formato que acepta el sistema </h3>
+                            <h3 class="title"> Importar Usuarios desde Excel </h3>
                             <br>
-                            <p>Por favor utiliza el siguiente formato, de otra manera no se garantiza la carga correcta de los usuarios</p>
-                            <div class="text-center">
-                                <a href="{{ asset('files/Formato Usuarios.xls') }}" class="btn btn-oval btn-success">
-                                    <i class="fas fa-file-excel"></i>
-                                    Descargar formato
-                                </a>
+                            <p>Por favor utiliza el siguiente <a href="{{ asset('files/Formato Usuarios.xls') }}">formato</a></p>
+                            <p>Y al llenar el archivo, lo subes al sistema</p>
+                            {!! Form::open(['route' => 'patient.import.process', 'method' => 'POST', 'files' => true]) !!}
+                            <div class="custom-file">
+                                <input type="file" class="custom-file-input" id="customFileLang" lang="es" name="excel_file">
+                                <label class="custom-file-label form-control-file" for="customFileLang">Seleccionar archivo</label>
                             </div>
+                            <br><br>
+                            <div class="text-center">
+                                {!! Form::submit('Subir', ['class' => 'btn btn-oval btn-primary']) !!}
+                            </div>
+                            {!! Form::close() !!}
                         </div>
                     </div>
                 </div>
             </div>
-            <div class="col-md-6">
-                <div class="text-center">
-                    {!! Form::submit('Subir', ['class' => 'btn btn-oval btn-primary']) !!}
-                </div>
+            <div class="col-md-12">
             </div>
         </div>
     </section>
-    {!! Form::close() !!}
+    
 @endsection
 
 @push('scripts')

@@ -76,6 +76,7 @@ Route::middleware(['auth', 'both'])->group(function () {
     Route::get('patient-create-from-authorization', 'PatientController@createAuthorization')->name('patient.create.authorization');
     Route::get('patient-import', 'PatientController@import')->name('patient.import');
     Route::post('patient-import-process', 'PatientController@importProcess')->name('patient.import.process');
+    Route::post('patient-import-process-txt', 'PatientController@importProcessTxt')->name('patient.import.process.txt');
 
     Route::get('user/profile/{id}', 'UserController@profile')->name('user.profile');
     Route::put('user/profile/{id}', 'UserController@profileUpdate')->name('user.profile.update');

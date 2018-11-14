@@ -6,8 +6,10 @@ use App\Eps;
 use App\Http\Requests\StorePatientRequest;
 use App\Http\Requests\UpdatePatientRequest;
 use App\Http\Requests\UploadExcelRequest;
+use App\Http\Requests\UploadTxtRequest;
 use App\Patient;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Storage;
 use Maatwebsite\Excel\Facades\Excel;
@@ -143,7 +145,9 @@ class PatientController extends Controller
 
     public function import()
     {
-        return view('patient.import');
+        $epss = Eps::all()->pluck('name', 'code');
+
+        return view('patient.import', compact('epss'));
     }
 
     public function importProcess(UploadExcelRequest $request)
@@ -172,6 +176,29 @@ class PatientController extends Controller
         Storage::delete($fileName);
 
         return redirect()->route('patient.import');
+    }
 
+    public function importProcessTxt(UploadTxtRequest $request)
+    {
+        $file = $request->file('txt_file');
+        $counter = 0;
+
+        $fileResource  = fopen($file, "r");
+        if ($fileResource) {
+            while (($line = fgets($fileResource)) !== false) {
+                if (strpos($line, "SERIAL") === false) {
+                    Patient::storeRecordFromTxt($line, $request->get('eps_code'));
+                    $counter++;
+                }
+            }
+            fclose($fileResource);
+        }         
+
+        if ($counter > 0) {
+            Session::flash("message", "Se guardaron $counter usuarios exitosamente!");
+        } else {
+            Session::flash("message_warning", "No se guardó ningún usuario. Es posible que ya estén guardados en el sistema");
+        }
+        return redirect()->route('patient.import');
     }
 }
