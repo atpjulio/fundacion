@@ -100,7 +100,7 @@
                     }
                 },
                 "order": [[0, "asc"]],
-                "pageLength": 100,
+                "pageLength": 25,
                 "bProcessing": true,
                 // "data": {{ $patients->take(50) }}
                 // "deferRender":    true,
