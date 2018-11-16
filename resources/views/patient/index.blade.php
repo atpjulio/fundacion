@@ -1,7 +1,6 @@
 @extends('layouts.backend.template')
 
 @push('styles')
-    <link rel="stylesheet" href="{{ asset('css/dataTables.bootstrap.min.css') }}">
     <link rel="stylesheet" href="https://cdn.datatables.net/scroller/1.5.1/css/scroller.dataTables.min.css">
 @endpush
 
@@ -80,8 +79,9 @@
 @endsection
 
 @push('scripts')
-    <script src="{{ asset('js/jquery.dataTables.min.js') }}"></script>
-    <script src="{{ asset('js/dataTables.bootstrap.min.js') }}"></script>
+    <script src="https://code.jquery.com/jquery-3.3.1.js"></script>
+    <script src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/scroller/1.5.1/js/dataTables.scroller.min.js"></script>
     <script>
         $(document).ready(function() {
             $('#myTable').DataTable({
