@@ -100,11 +100,11 @@
                     }
                 },
                 "order": [[0, "desc"]],
-                "data": {{ $patients->take(100) }}
-                "deferRender":    true,
-                "scrollY":        100,
-                "scrollCollapse": true,
-                "scroller":       true
+                // "data": {{ $patients->take(100) }}
+                // "deferRender":    true,
+                // "scrollY":        100,
+                // "scrollCollapse": true,
+                // "scroller":       true
             });
         } );
         
