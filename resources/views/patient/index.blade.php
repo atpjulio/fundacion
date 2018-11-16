@@ -8,7 +8,7 @@
 @section('content')
     <div class="title-block">
         <div class="float-left">
-            <h3 class="title"> Listado de Usuarios </h3>
+            <h3 class="title"> Listado de Usuarios (Total: {{ count($patients) }}) </h3>
             <p class="title-description"> Aquí puedes ver el listado de todas los usuarios y crear, actualizar o eliminar cualquiera de ellos </p>
         </div>
         <div class="float-right animated fadeInRight">
