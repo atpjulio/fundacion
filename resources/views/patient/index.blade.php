@@ -101,6 +101,7 @@
                 },
                 "order": [[0, "asc"]],
                 "pageLength": 100,
+                "bProcessing": true,
                 // "data": {{ $patients->take(50) }}
                 // "deferRender":    true,
                 // "scrollY":        100,
