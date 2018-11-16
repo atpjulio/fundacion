@@ -15,10 +15,6 @@ $(document).ready(function() {
                 "previous":   "Anterior"
             }
         },
-        "order": [[0, "desc"]],
-//        "deferRender":    true,
-//        "scrollY":        100,
-//        "scrollCollapse": true,
-//        "scroller":       true
+        "order": [[0, "desc"]]
     });
 } );
