@@ -2,6 +2,7 @@
 
 @push('styles')
     <link rel="stylesheet" href="{{ asset('css/dataTables.bootstrap.min.css') }}">
+    <link rel="stylesheet" href="https://cdn.datatables.net/scroller/1.5.1/css/scroller.dataTables.min.css">
 @endpush
 
 @section('content')
@@ -99,7 +100,7 @@
                     }
                 },
                 "order": [[0, "desc"]],
-                "data": {{ $patients }}
+                
                 "deferRender":    true,
                 "scrollY":        100,
                 "scrollCollapse": true,
