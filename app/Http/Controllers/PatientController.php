@@ -28,7 +28,7 @@ class PatientController extends Controller
      */
     public function index()
     {
-        $patients = Patient::all();
+        $patients = Patient::paginate(200);//all();
 
         return view('patient.index', compact('patients'));
     }
