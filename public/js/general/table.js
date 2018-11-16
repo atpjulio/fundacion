@@ -1,6 +1,6 @@
 $(document).ready(function() {
     $('#myTable').DataTable({
-        "pageLength": 100,
+        "pageLength": 50,
         "language": {
             "lengthMenu": "Mostrando _MENU_ registros por página",
             "zeroRecords": "No se encontró ningún resultado",
