@@ -99,6 +99,7 @@
                     }
                 },
                 "order": [[0, "desc"]],
+                "data": {{ $patients }}
                 "deferRender":    true,
                 "scrollY":        100,
                 "scrollCollapse": true,
