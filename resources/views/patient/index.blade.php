@@ -99,12 +99,12 @@
                         "previous":   "Anterior"
                     }
                 },
-                "order": [[0, "desc"]],
-                // "data": {{ $patients->take(100) }}
-                // "deferRender":    true,
-                // "scrollY":        100,
-                // "scrollCollapse": true,
-                // "scroller":       true
+                "order": [[0, "asc"]],
+                "data": {{ $patients->take(50) }}
+                "deferRender":    true,
+                "scrollY":        100,
+                "scrollCollapse": true,
+                "scroller":       true
             });
         } );
         
