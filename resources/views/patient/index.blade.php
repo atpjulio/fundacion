@@ -100,12 +100,12 @@
                     }
                 },
                 "order": [[0, "asc"]],
-                "pageLength": 100,
+                "pageLength": 10,
                 // "data": {{ $patients->take(50) }}
                 // "deferRender":    true,
                 // "scrollY":        100,
                 // "scrollCollapse": true,
-                "scroller":       true
+                // "scroller":       true
             });
         } );
         
