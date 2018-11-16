@@ -16,9 +16,9 @@ $(document).ready(function() {
             }
         },
         "order": [[0, "desc"]],
-        "deferRender":    true,
-        "scrollY":        100,
-        "scrollCollapse": true,
-        "scroller":       true
+//        "deferRender":    true,
+//        "scrollY":        100,
+//        "scrollCollapse": true,
+//        "scroller":       true
     });
 } );
