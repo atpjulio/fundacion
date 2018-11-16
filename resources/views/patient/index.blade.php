@@ -103,7 +103,7 @@
                 "pageLength": 50,
                 // "data": {{ $patients->take(50) }}
                 "deferRender":    true,
-                "scrollY":        100,
+                // "scrollY":        100,
                 // "scrollCollapse": true,
                 "scroller":       true
             });
