@@ -28,9 +28,10 @@ class PatientController extends Controller
      */
     public function index()
     {
-        $patients = Patient::all();
+        $total = Patient::count();
+        $patients = Patient::searchRecords('');
 
-        return view('patient.index', compact('patients'));
+        return view('patient.index', compact('total', 'patients'));
     }
 
     /**

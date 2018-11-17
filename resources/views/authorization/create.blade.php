@@ -18,7 +18,6 @@
         </div>
     </div>
 
-    {!! Form::open(['route' => 'authorization.store', 'method' => 'POST', 'id' => 'myForm']) !!}
     <section class="section">
         <div class="row">
             <div class="col-12">
@@ -36,8 +35,19 @@
                 </div>
             </div>
         </div>
+        {!! Form::open(['route' => 'authorization.store', 'method' => 'POST', 'id' => 'myForm']) !!}
         <div id="restOfFields" style="display: none;">
             <div class="row">
+                <div class="col-md-12">
+                    <div class="card">
+                        <div class="card-block">
+                            <div class="card-title-block">
+                                <h3 class="title" id="authFields"> Paciente seleccionado </h3>
+                            </div>
+                            <p id="selected_patient"></p>
+                        </div>
+                    </div>
+                </div>
                 <div class="col-md-6">
                     <div class="card">
                         <div class="card-block">
@@ -68,9 +78,9 @@
                 </div>                
             </div>
         </div>
+        {!! Form::hidden('patient_id', null, ['id' => 'patient_id']) !!}
+        {!! Form::close() !!}
     </section>
-    {!! Form::hidden('patient_id', null, ['id' => 'patient_id']) !!}
-    {!! Form::close() !!}
 @endsection
 
 @push('scripts')

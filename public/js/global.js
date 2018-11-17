@@ -61,7 +61,26 @@ function fillPatients(id)
                 }
             }
         });
+    });
+}
 
+function fillFilteredEpsPatients(search)
+{
+    $.get("/get-eps-patients-filtered/" + search, function (data, status) {
+        $('#dynamic-patients').html(data);
+        $('#searching').on('change', function (e) {
+            fillFilteredEpsPatients($('#searching').val());
+        });
+    });
+}
+
+function fillFilteredPatients(search)
+{
+    $.get("/get-patients/" + search, function (data, status) {
+        $('#dynamic-patients').html(data);
+        $('#searching').on('change', function (e) {
+            fillFilteredPatients($('#searching').val());
+        });
     });
 }
 

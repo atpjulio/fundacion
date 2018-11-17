@@ -65,6 +65,18 @@ class AjaxController extends Controller
         return view('partials._eps_patients', compact('patients'));
     }
 
+    public function getEpsPatientsFiltered($search)
+    {
+        $patients = Patient::searchRecords($search);
+        return view('partials._eps_patients', compact('patients'));
+    }
+
+    public function getPatients($search)
+    {
+        $patients = Patient::searchRecords($search);
+        return view('partials._patients', compact('patients'));
+    }
+
     public function getInvoicesAmount($data) 
     {
         $epsId = explode("_", $data)[0];

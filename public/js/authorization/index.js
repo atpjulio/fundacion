@@ -1,4 +1,5 @@
 $(document).ready(function() {
+    /*
     $('#myTable').DataTable({
         "language": {
             "lengthMenu": "Mostrando _MENU_ registros por página",
@@ -15,6 +16,10 @@ $(document).ready(function() {
             }
         }
     });
+    */
+    $('#searching').on('change', function (e) {
+        fillFilteredEpsPatients($('#searching').val());
+    });
     $('#companion').on('change', function (e) {
         if ($('#companion').val() == 1) {
             $('#companionsDiv').css('display', 'block');
@@ -26,8 +31,8 @@ $(document).ready(function() {
     $('#epsSelect').on('change', function (e) {
         $('#serviceLink').attr("href", "/eps-services/" + $('#epsSelect').val() + "/create-from-authorization");
         fillServices($('#epsSelect').val());
-        fillPatients($('#epsSelect').val());
-        fillCompanionServices($('#epsSelect').val());
+        // fillPatients($('#epsSelect').val());
+        // fillCompanionServices($('#epsSelect').val());
     });
     $('#companion_eps_service_id').on('change', function(e) {
         if ($(this).val() > 0) {             
@@ -70,8 +75,9 @@ $(document).ready(function() {
     });
 
 } );
-function sendInfo(id, eps_id) {
+function sendInfo(id, eps_id, name) {
     $('#patient_id').val(id);
+    $('#selected_patient').html(name);
     // $('#myForm').submit();
     $('#serviceLink').attr("href", "/eps-services/" + eps_id + "/create-from-authorization");
     $('#restOfFields').css('display', 'block');            
@@ -83,6 +89,13 @@ function sendInfo(id, eps_id) {
         });
     $('#epsSelect').val(eps_id);
     fillServices($('#epsSelect').val());
-    fillPatients($('#epsSelect').val());
-    fillCompanionServices($('#epsSelect').val());
+    // fillPatients($('#epsSelect').val());
+    // fillCompanionServices($('#epsSelect').val());
 }
+
+function updateInfo(id, name) {
+    $('#patient_id').val(id);
+    $('#selected_patient').html(name);
+    $('#myForm').submit();
+}
+

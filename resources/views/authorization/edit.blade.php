@@ -18,8 +18,6 @@
         </div>
     </div>
 
-    {!! Form::open(['route' => ['authorization.update', $authorization->id], 'method' => 'PUT', 'id' => 'myForm']) !!}
-    {!! Form::hidden('id', $authorization->id) !!}
     <section class="section">
         <div class="row">
             <div class="col-12">
@@ -29,6 +27,10 @@
                             <h3 class="title"> Usuario al que pertenece esta autorización
                             </h3>
                         </div>
+                        <div class="col-12" id="dynamic-patients">
+                            @include('partials._eps_patients_edit')
+                        </div>
+                        {{--  
                         <div class="col-12">
                             <div class="table-responsive">
                                 <table class="table table-striped table-bordered table-condensed table-hover" id="myTable">
@@ -59,6 +61,21 @@
                                 </table>
                             </div>
                         </div>
+                        --}}
+                    </div>
+                </div>
+            </div>
+        </div>
+        {!! Form::open(['route' => ['authorization.update', $authorization->id], 'method' => 'PUT', 'id' => 'myForm']) !!}
+        {!! Form::hidden('id', $authorization->id) !!}
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-block">
+                        <div class="card-title-block">
+                            <h3 class="title" id="authFields"> Paciente seleccionado </h3>
+                        </div>
+                        <p id="selected_patient">{!! $authorization->patient->full_name !!}</p>
                     </div>
                 </div>
             </div>
@@ -66,7 +83,7 @@
                 <div class="card">
                     <div class="card-block">
                         <div class="card-title-block">
-                            <h3 class="title"> Información de la Autorización </h3>
+                            <h3 class="title" id="authFields"> Información de la Autorización </h3>
                         </div>
                         @include('authorization.fields')
                     </div>
@@ -91,15 +108,17 @@
                 </div>
             </div>
         </div>
+        {!! Form::hidden('patient_id', $authorization->patient->id, ['id' => 'patient_id']) !!}
+        {!! Form::close() !!}
     </section>
-    {!! Form::hidden('patient_id', $authorization->patient->id, ['id' => 'patient_id']) !!}
-    {!! Form::close() !!}
 @endsection
 
 @push('scripts')
     <script src="{{ asset('js/jquery.dataTables.min.js') }}"></script>
     <script src="{{ asset('js/dataTables.bootstrap.min.js') }}"></script>
+    <script src="{{ asset('js/authorization/index.js') }}"></script>
     <script>
+        /*
         $(document).ready(function() {
             $('#myTable').DataTable({
                 "language": {
@@ -176,5 +195,6 @@
             $('#patient_id').val(id);
             $('#myForm').submit();
         }
+        */
     </script>
 @endpush

@@ -46,8 +46,7 @@ class AuthorizationController extends Controller
         $initialEpsId = $epss->toArray()[0]['id'];
         $services = EpsService::getServices($initialEpsId)->pluck('name', 'id');
         $epss = $epss->pluck('name', 'id');
-        //$patients = Patient::getPatientsForEps($initialEpsId);// Patient::all();
-        $patients = Patient::all();
+        $patients = Patient::searchRecords('');
 
         return view('authorization.create', compact('epss', 'services', 'patients', 'initialEpsId'));
     }
@@ -104,7 +103,7 @@ class AuthorizationController extends Controller
         $authorization = Authorization::find($id);
         $services = EpsService::getServices($authorization->eps_id)->pluck('name', 'id');
         $epss = $epss->pluck('name', 'id');
-        $patients = Patient::all();
+        $patients = Patient::searchRecords($authorization->patient->dni);
         $code = $authorization->codec;
         $dateFrom = $authorization->date_from;
         $dateTo = $authorization->date_to;

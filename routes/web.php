@@ -82,16 +82,19 @@ Route::middleware(['auth', 'both'])->group(function () {
     Route::put('user/profile/{id}', 'UserController@profileUpdate')->name('user.profile.update');
 
     Route::get('authorization/excel/{id}', 'AuthorizationController@excel')->name('authorization.excel');
+
+    Route::get('/get-companion-services/{id}', 'AjaxController@getCompanionServices');
+    Route::get('/get-invoices-amount/{data}', 'AjaxController@getInvoicesAmount');
+    Route::get('/get-eps-patients-filtered/{search}', 'AjaxController@getEpsPatientsFiltered');
+    Route::get('/get-eps-patients/{id}', 'AjaxController@getEpsPatients');
+    Route::get('/get-patients/{search}', 'AjaxController@getPatients');
+    Route::get('/get-day-range/{date}', 'AjaxController@getDayRange');
+    Route::get('/get-services/{id}', 'AjaxController@getServices');
+    Route::get('/get-cities/{id}', 'AjaxController@getCities');
+    Route::get('/get-entity/{id}', 'AjaxController@getEntity');
 });
 
 Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
 
-Route::get('/get-companion-services/{id}', 'AjaxController@getCompanionServices');
-Route::get('/get-invoices-amount/{data}', 'AjaxController@getInvoicesAmount');
-Route::get('/get-eps-patients/{id}', 'AjaxController@getEpsPatients');
-Route::get('/get-day-range/{date}', 'AjaxController@getDayRange');
-Route::get('/get-services/{id}', 'AjaxController@getServices');
-Route::get('/get-cities/{id}', 'AjaxController@getCities');
-Route::get('/get-entity/{id}', 'AjaxController@getEntity');

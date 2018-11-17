@@ -1,7 +1,8 @@
 <div class="table-responsive">
     <div id="" class="dataTables_filter float-right form-inline mb-3 mt-0">
         <label class="mr-2">Buscar:</label>
-        <input type="search" class="form-control form-control-sm" placeholder="" id="searching">
+        <input type="search" class="form-control form-control-sm" placeholder="" id="searching"
+        value="{{ old('searching', $authorization->patient->dni) }}" name="searching">
     </div>    
     <table class="table table-striped table-bordered table-condensed table-hover" id="myTable">
         <thead>
@@ -22,7 +23,7 @@
                 <td>{!! \Carbon\Carbon::parse($patient->birth_date)->format("d/m/Y") !!}</td>
                 <td>{!! $patient->age !!}</td>
                 <td>
-                    <button type="button" class="btn btn-oval btn-primary btn-sm" onclick="sendInfo({{ $patient->id }}, {{ $patient->eps_id }}, '{{ $patient->full_name }}')">
+                    <button type="button" class="btn btn-oval btn-warning btn-sm" onclick="sendInfo({{ $patient->id }}, {{ $patient->eps_id }}, '{{ $patient->full_name }}')">
                         Seleccionar
                     </button>
                 </td>

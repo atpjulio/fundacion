@@ -9,7 +9,8 @@ $myConstants = [
         'admin' => 'fundacasahogar_elmilagro@hotmail.com',
         'admin2' => 'zuleima0326@gmail.com'
     ],
-    'stylesVersion' => '1.065',
+    'pagination' => 20,
+    'stylesVersion' => '1.067',
     'productImages' => '/img/products/',
     'usersImages' => '/img/users/',
     'companiesImages' => '/img/companies/',
@@ -121,7 +122,6 @@ $myConstants = [
         'active' => 1,
         'inactive' => 9,
     ],
-    'pagination' => 1000,
     'documentTypes' => [
         "CC" => "CC - Cédula de Ciudadanía",
         "TI" => "TI - Tarjeta de Identidad",
