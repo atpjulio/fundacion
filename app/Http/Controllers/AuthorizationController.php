@@ -214,7 +214,19 @@ class AuthorizationController extends Controller
                     $cell->setValue($authorization->eps->alias);
                 });
                 $sheet->cell('I2', function($cell) use ($authorization) {
-                    $cell->setValue($authorization->codec ?: 'S/N');
+                    $cell->setValue($authorization->codec ?: '');
+                });
+                $sheet->cell('J14', function($cell) use ($authorization) {
+                    $cell->setValue($authorization->location == config('constants.location')[0] ? 'Si' : '');
+                });
+                $sheet->cell('J15', function($cell) use ($authorization) {
+                    $cell->setValue($authorization->location == config('constants.location')[1] ? 'Si' : '');
+                });
+                $sheet->cell('J16', function($cell) use ($authorization) {
+                    $cell->setValue($authorization->location == config('constants.location')[2] ? 'Si' : '');
+                });
+                $sheet->cell('J17', function($cell) use ($authorization) {
+                    $cell->setValue($authorization->location == config('constants.location')[3] ? 'Si' : '');
                 });
             });
         })->setFilename('Hospedaje_'.$authorization->eps->alias.'_'.$authorization->code)
