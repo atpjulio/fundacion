@@ -213,7 +213,7 @@ class AuthorizationController extends Controller
                 $sheet->cell('B17', function($cell) use ($authorization) {
                     $cell->setValue($authorization->eps->alias);
                 });
-                $sheet->cell('J2', function($cell) use ($authorization) {
+                $sheet->cell('I2', function($cell) use ($authorization) {
                     $cell->setValue($authorization->codec ?: 'S/N');
                 });
             });
