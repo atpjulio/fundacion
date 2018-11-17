@@ -56,13 +56,11 @@ class Invoice extends Model
      */
     public function getDaysAttribute()
     {
-//        return \Carbon\Carbon::parse($this->authorization->date_to)->diffInDays(\Carbon\Carbon::parse($this->authorization->date_from));        
         return intval($this->total / $this->eps->daily_price);        
     }
 
     public function getFormatNumberAttribute()
     {
-        // return sprintf("%05d", $this->number);        
         return $this->number;        
     }
 

@@ -54,7 +54,8 @@ class Rip extends Model
         $counterAT = $this->produceAT($invoices, $lastRip ? $lastRip->id + 1 : 1);   
 
         // Creating US file
-        $counterUS = $this->produceUS($invoices, $lastRip ? $lastRip->id + 1 : 1);   
+        $patients = Patient::getPatientsForEps($request->get('eps_id'));
+        $counterUS = $this->produceUS($patients, $lastRip ? $lastRip->id + 1 : 1);   
 
         // Creating AF file
         $counterAF = $this->produceAF($invoices, $lastRip ? $lastRip->id + 1 : 1);   
@@ -146,7 +147,7 @@ class Rip extends Model
                     }
                 }
             } else {            
-                $days = \Carbon\Carbon::parse($invoice->authorization->date_to)->diffInDays(\Carbon\Carbon::parse($invoice->authorization->date_from));
+                $days = $invoice->days;
                 $line .= $invoice->number.",".substr($invoice->company->doc, 0, 9).","
                     .$invoice->authorization->patient->dni_type.",".$invoice->authorization->patient->dni.","
                     .$invoice->authorization->code.",1,".$invoice->authorization->service->code.","
@@ -164,45 +165,24 @@ class Rip extends Model
         return $counter;
     }
 
-    protected function produceUS($invoices, $id, $update = false)
+    protected function produceUS($patients, $id, $update = false)
     {
         $line = "";
         $counter = 0;
-        foreach ($invoices as $invoice) {
-            if ($invoice->multiple) {
-                foreach (json_decode($invoice->multiple_codes, true) as $key => $value) {
-                    $currentAuthorization = Authorization::findByCode($value);
-                    if ($currentAuthorization) {
-                        $arrayFirstName = explode(" ", $currentAuthorization->patient->first_name);
-                        $firstName = $arrayFirstName[0].",".(isset($arrayFirstName[1]) ? $arrayFirstName[1] : '');
-                        $arrayLastName = explode(" ", $currentAuthorization->patient->last_name);
-                        $lastName = $arrayLastName[0].",".(isset($arrayLastName[1]) ? $arrayLastName[1] : '');
+        foreach ($patients as $patient) {
+            $arrayFirstName = explode(" ", $patient->first_name);
+            $firstName = $arrayFirstName[0].",".(isset($arrayFirstName[1]) ? $arrayFirstName[1] : '');
+            $arrayLastName = explode(" ", $patient->last_name);
+            $lastName = $arrayLastName[0].",".(isset($arrayLastName[1]) ? $arrayLastName[1] : '');
 
-                        $line .= $currentAuthorization->patient->dni_type.",".$currentAuthorization->patient->dni
-                            .",".$invoice->eps->code.",".$currentAuthorization->patient->type.","
-                            .$lastName.",".$firstName.",".$currentAuthorization->patient->age.",1,"
-                            .config('constants.genderShort.'.$currentAuthorization->patient->gender).","
-                            .$currentAuthorization->patient->state.","
-                            .$currentAuthorization->patient->city.","
-                            .$currentAuthorization->patient->zone."\r";
-                        $counter++;
-                    }
-                }
-            } else {
-                $arrayFirstName = explode(" ", $invoice->authorization->patient->first_name);
-                $firstName = $arrayFirstName[0].",".(isset($arrayFirstName[1]) ? $arrayFirstName[1] : '');
-                $arrayLastName = explode(" ", $invoice->authorization->patient->last_name);
-                $lastName = $arrayLastName[0].",".(isset($arrayLastName[1]) ? $arrayLastName[1] : '');
-
-                $line .= $invoice->authorization->patient->dni_type.",".$invoice->authorization->patient->dni
-                    .",".$invoice->eps->code.",".$invoice->authorization->patient->type.","
-                    .$lastName.",".$firstName.",".$invoice->authorization->patient->age.",1,"
-                    .config('constants.genderShort.'.$invoice->authorization->patient->gender).","
-                    .$invoice->authorization->patient->state.","
-                    .$invoice->authorization->patient->city.","
-                    .$invoice->authorization->patient->zone."\r";
-                $counter++;
-            }
+            $line .= $patient->dni_type.",".$patient->dni
+                .",".$patient->eps->code.",".$patient->type.","
+                .$lastName.",".$firstName.",".$patient->age.",1,"
+                .config('constants.genderShort.'.$patient->gender).","
+                .$patient->state.","
+                .$patient->city.","
+                .$patient->zone."\r";
+            $counter++;
         }
 
         $fileName = "US".sprintf("%06d", $id).".TXT";
@@ -227,24 +207,6 @@ class Rip extends Model
                 .$invoice->eps->code.",".substr(mb_strtoupper($invoice->eps->name), 0, 30).",,,,"
                 ."0.00,0.00,0.00,".$total."\r";
             $counter++;                
-/*
-            if ($invoice->multiple) {
-                $total = array_sum(json_decode($invoice->multiple_totals), true);
-                $line .= substr($invoice->company->doc, 0, 9).",".mb_strtoupper($invoice->company->name).","
-                    .$invoice->company->doc_type.",".substr($invoice->company->doc, 0, 9).","
-                    .$invoice->number.",".$createdAt.",".$createdAt.",".$createdAt.","
-                    .$invoice->eps->code.",".substr(mb_strtoupper($invoice->eps->name), 0, 30).",,,,"
-                    ."0.00,0.00,0.00,".$total."\r";
-                $counter++;                
-            } else {
-                $line .= substr($invoice->company->doc, 0, 9).",".mb_strtoupper($invoice->company->name).","
-                    .$invoice->company->doc_type.",".substr($invoice->company->doc, 0, 9).","
-                    .$invoice->number.",".$createdAt.",".$createdAt.",".$createdAt.","
-                    .$invoice->eps->code.",".substr(mb_strtoupper($invoice->eps->name), 0, 30).",,,,"
-                    ."0.00,0.00,0.00,".$invoice->total."\r";
-                $counter++;                
-            }
-  */      
         }
 
         $fileName = "AF".sprintf("%06d", $id).".TXT";
