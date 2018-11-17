@@ -219,15 +219,23 @@ class Rip extends Model
         foreach ($invoices as $invoice) {
             $createdAt = \Carbon\Carbon::parse($invoice->created_at)->format("d/m/Y");
 
+            $total = $invoice->multiple ? array_sum(json_decode($invoice->multiple_totals, true)) : $invoice->total;
+
+            $line .= substr($invoice->company->doc, 0, 9).",".mb_strtoupper($invoice->company->name).","
+                .$invoice->company->doc_type.",".substr($invoice->company->doc, 0, 9).","
+                .$invoice->number.",".$createdAt.",".$createdAt.",".$createdAt.","
+                .$invoice->eps->code.",".substr(mb_strtoupper($invoice->eps->name), 0, 30).",,,,"
+                ."0.00,0.00,0.00,".$total."\r";
+            $counter++;                
+/*
             if ($invoice->multiple) {
-                foreach (json_decode($invoice->multiple_totals, true) as $total) {
-                    $line .= substr($invoice->company->doc, 0, 9).",".mb_strtoupper($invoice->company->name).","
-                        .$invoice->company->doc_type.",".substr($invoice->company->doc, 0, 9).","
-                        .$invoice->number.",".$createdAt.",".$createdAt.",".$createdAt.","
-                        .$invoice->eps->code.",".substr(mb_strtoupper($invoice->eps->name), 0, 30).",,,,"
-                        ."0.00,0.00,0.00,".$total."\r";
-                    $counter++;                
-                }
+                $total = array_sum(json_decode($invoice->multiple_totals), true);
+                $line .= substr($invoice->company->doc, 0, 9).",".mb_strtoupper($invoice->company->name).","
+                    .$invoice->company->doc_type.",".substr($invoice->company->doc, 0, 9).","
+                    .$invoice->number.",".$createdAt.",".$createdAt.",".$createdAt.","
+                    .$invoice->eps->code.",".substr(mb_strtoupper($invoice->eps->name), 0, 30).",,,,"
+                    ."0.00,0.00,0.00,".$total."\r";
+                $counter++;                
             } else {
                 $line .= substr($invoice->company->doc, 0, 9).",".mb_strtoupper($invoice->company->name).","
                     .$invoice->company->doc_type.",".substr($invoice->company->doc, 0, 9).","
@@ -236,6 +244,7 @@ class Rip extends Model
                     ."0.00,0.00,0.00,".$invoice->total."\r";
                 $counter++;                
             }
+  */      
         }
 
         $fileName = "AF".sprintf("%06d", $id).".TXT";
@@ -960,100 +969,6 @@ class Rip extends Model
                 });
                 
             });
-            /*
-            $excel->sheet('PLANILLA', function($sheet) use ($invoices, $ripDate) {
-                $sheet->setWidth('A', 5);
-                $sheet->setWidth('B', 12);
-                $sheet->setWidth('C', 20);
-                $sheet->setWidth('D', 20);
-                $sheet->setWidth('E', 12);
-                $sheet->setWidth('F', 17);
-
-                $sheet->cell('B2', function($cell) use ($invoices) {
-                    $cell->setValue(mb_strtoupper($invoices[0]->company->name));   
-                    $cell->setFontWeight('bold');
-                });
-                $sheet->cell('B3', function($cell) use ($invoices) {
-                    $string = config('constants.companiesDocumentTypes')[$invoices[0]->company->doc_type].' '.$invoices[0]->company->doc;
-                    $cell->setValue($string);   
-                    $cell->setFontWeight('bold');
-                });
-                $sheet->cell('B4', function($cell) use ($invoices) {
-                    $string = $invoices[0]->company->address->address.' TEL: '.
-                        $invoices[0]->company->phone->phone;
-                    $cell->setValue(mb_strtoupper($string));   
-                    $cell->setFontWeight('bold');
-                });
-                $sheet->cell('B5', function($cell) use ($invoices) {
-                    $string = 'Relacion de facturas de '.$invoices[0]->eps->name;
-                    $cell->setValue(mb_strtoupper($string));   
-                    $cell->setFontWeight('bold');
-                });
-                $sheet->cell('F6', function($cell) use ($ripDate) {
-                    $string = \Carbon\Carbon::parse($ripDate)->format('d/m/Y');
-                    $cell->setValue($string);   
-                    $cell->setFontWeight('bold');
-                    $cell->setAlignment('right');
-                });
-
-                $sheet->cell('B8', function($cell) {
-                    $cell->setValue('No FACTURA');
-                    $cell->setAlignment('center');
-                    $cell->setFontWeight('bold');
-                });
-
-                $sheet->cell('C8', function($cell) {
-                    $cell->setValue('DATOS DEL AFILIADO');
-                    $cell->setAlignment('center');
-                    $cell->setFontWeight('bold');
-                });
-
-                $sheet->cell('D8', function($cell) {
-                    $cell->setValue('AUTORIZACION');
-                    $cell->setAlignment('center');
-                    $cell->setFontWeight('bold');
-                });
-
-                $sheet->cell('E8', function($cell) {
-                    $cell->setValue('CANTIDAD');
-                    $cell->setAlignment('center');
-                    $cell->setFontWeight('bold');
-                });
-
-                $sheet->cell('F8', function($cell) {
-                    $cell->setValue('VALOR FACTURA');
-                    $cell->setAlignment('center');
-                    $cell->setFontWeight('bold');
-                });
-
-                $counter = 9;
-                foreach ($invoices as $invoice) {
-                    $sheet->cell('B'.$counter, function($cell) use ($invoice) {
-                        $cell->setValue($invoice->number);
-                    });
-
-                    $sheet->cell('C'.$counter, function($cell) {
-                        $cell->setValue('#N/D');
-                    });
-
-                    $sheet->cell('D'.$counter, function($cell) use ($invoice) {
-                        $cell->setValue($invoice->authorization->code);
-                    });
-
-                    $sheet->cell('E'.$counter, function($cell) use ($invoice) {
-                        $days = \Carbon\Carbon::parse($invoice->authorization->date_to)->diffInDays(\Carbon\Carbon::parse($invoice->authorization->date_from));
-
-                        $cell->setValue($days);
-                    });
-
-                    $sheet->cell('F'.$counter, function($cell) use ($invoice) {
-                        $cell->setValue($invoice->total);
-                    });
-                    $counter++;
-                }
-
-            });
-            */
             $excel->sheet('CONSULTA', function($sheet) {
                 $sheet->setHeight(1, 50);
                 $sheet->getStyle('A1:Q1')->getAlignment()->setWrapText(true);
