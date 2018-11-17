@@ -68,6 +68,7 @@ function fillFilteredEpsPatients(search)
 {
     $.get("/get-eps-patients-filtered/" + search, function (data, status) {
         $('#dynamic-patients').html(data);
+        $('#searching').val(search);
         $('#searching').on('change', function (e) {
             fillFilteredEpsPatients($('#searching').val());
         });
@@ -78,6 +79,7 @@ function fillFilteredPatients(search)
 {
     $.get("/get-patients/" + search, function (data, status) {
         $('#dynamic-patients').html(data);
+        $('#searching').val(search);
         $('#searching').on('change', function (e) {
             fillFilteredPatients($('#searching').val());
         });
