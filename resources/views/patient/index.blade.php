@@ -45,33 +45,5 @@
 @push('scripts')
     <script src="{{ asset('js/jquery.dataTables.min.js') }}"></script>
     <script src="{{ asset('js/dataTables.bootstrap.min.js') }}"></script>
-    <script>
-        $(document).ready(function() {
-            $('#searching').on('change', function (e) {
-                fillFilteredPatients($('#searching').val());
-            });
-
-            /*
-            $('#myTable').DataTable({
-                "language": {
-                    "lengthMenu": "Mostrando _MENU_ registros por página",
-                    "zeroRecords": "No se encontró ningún resultado",
-                    "info": "Mostrando página _PAGE_ de _PAGES_",
-                    "infoEmpty": "No hay información disponible",
-                    "infoFiltered": "(filtrando de un total de _MAX_ registros)",
-                    "search":         "Buscar:",
-                    "paginate": {
-                        "first":      "Primera",
-                        "last":       "Última",
-                        "next":       "Siguiente",
-                        "previous":   "Anterior"
-                    }
-                },
-                "order": [[0, "asc"]],
-                "pageLength": 25,
-            });
-            */
-        } );
-        
-    </script>
+    <script src="{{ asset('js/patient/index.js') }}"></script>
 @endpush

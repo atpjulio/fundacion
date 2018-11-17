@@ -180,10 +180,20 @@ class Authorization extends Model
             ->get();
     }
 
-    protected function full()
+    protected function full($search = '')
+    {
+        return $this::join('invoices', 'authorizations.invoice_id', '=', 'invoices.id')
+            ->select('authorizations.*', 'invoices.number')
+            ->where('authorizations.code', 'not like', config('constants.unathorized.prefix').'%')
+            ->where('authorizations.code', 'like', '%'.$search.'%')
+            ->orWhere('invoices.number', $search)
+            ->paginate(config('constants.pagination'));
+    }
+
+    protected function fullCount()
     {
         return $this->where('code', 'not like', config('constants.unathorized.prefix').'%')
-            ->get();
+            ->count();        
     }
 
     protected function incomplete()
@@ -205,10 +215,20 @@ class Authorization extends Model
             ->get();
     }
 
-    protected function close()
+    protected function close($search = '')
+    {
+        return $this::join('invoices', 'authorizations.invoice_id', '=', 'invoices.id')
+            ->select('authorizations.*', 'invoices.number')
+            ->where('authorizations.invoice_id', '<>', 0)
+            ->where('authorizations.code', 'like', '%'.$search.'%')
+            ->orWhere('invoices.number', $search)
+            ->paginate(config('constants.pagination'));
+    }
+
+    protected function closeCount()
     {
         return $this->where('invoice_id', '<>', 0)
-            ->get();
+            ->count();
     }
 
 }

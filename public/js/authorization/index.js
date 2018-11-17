@@ -98,4 +98,3 @@ function updateInfo(id, name) {
     $('#selected_patient').html(name);
     $('#myForm').submit();
 }
-

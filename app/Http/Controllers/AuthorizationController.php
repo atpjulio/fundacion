@@ -27,9 +27,10 @@ class AuthorizationController extends Controller
             session()->forget('authorization-create');
         }
 
+        $total = Authorization::fullCount();
         $authorizations = Authorization::full();
 
-        return view('authorization.index', compact('authorizations'));
+        return view('authorization.index', compact('total', 'authorizations'));
     }
 
     /**
@@ -60,20 +61,6 @@ class AuthorizationController extends Controller
 
     public function store(ConfirmAuthorizationRequest $request)
     {
-        /*
-        if ($request->get('companionDni') and count($request->get('companionDni')) > 0) {
-            foreach ($request->get('companionDni') as $key => $value) {
-                if (strlen($request->get('companionServiceId')[$key]) == 0) {            
-                    Session::flash('message_danger', 'Valor inválido para el servicio del acompañante');
-                    return redirect()->back()->withInput();
-                }
-                if (strlen($value) == 0) {
-                    Session::flash('message_danger', 'Valor inválido para el documento del acompañante');
-                    return redirect()->back()->withInput();
-                }
-            }            
-        }
-        */
         Authorization::storeRecord($request);
 
         Session::flash('message', 'Autorización guardada exitosamente');
@@ -243,7 +230,7 @@ class AuthorizationController extends Controller
 
         $authorizations = Authorization::incomplete();
 
-        return view('authorization.index', compact('authorizations'));
+        return view('authorization.incomplete', compact('authorizations'));
     }
 
     public function open()
@@ -255,11 +242,10 @@ class AuthorizationController extends Controller
 
     public function close()
     {
+        $total = Authorization::closeCount();
         $authorizations = Authorization::close();
 
-        return view('authorization.close', compact('authorizations'));
+        return view('authorization.close', compact('total', 'authorizations'));
     }
-
-
 
 }

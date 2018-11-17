@@ -107,3 +107,15 @@ function fillEntityFields(id)
         $('#dynamic-entity-fields').html(data);
     });
 }
+
+function fullAuthorizations(search)
+{
+    $.get("/get-full-authorizations/" + search, function (data, status) {
+        console.log(data);
+        $('#dynamic-authorizations').html(data);
+        $('#searching').val(search);
+        $('#searching').on('change', function (e) {
+            fullAuthorizations($('#searching').val());
+        });
+    });
+}

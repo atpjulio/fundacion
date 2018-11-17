@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Authorization;
 use App\City;
 use App\Entity;
 use App\EpsService;
@@ -87,4 +88,17 @@ class AjaxController extends Controller
         return view('partials._invoice_amount', compact('invoicesAmount'));
 
     }
+
+    public function getFullAuthorizations($search)
+    {
+        $authorizations = Authorization::full($search);
+        return view('partials._authorizations', compact('authorizations'));
+    }
+
+    public function getClosedAuthorizations($search)
+    {
+        $authorizations = Authorization::close($search);
+        return view('partials._close_authorizations', compact('authorizations'));
+    }
+
 }
