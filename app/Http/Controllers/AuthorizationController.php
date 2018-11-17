@@ -166,7 +166,7 @@ class AuthorizationController extends Controller
         }
 
         Excel::load('public/files/hospedaje.xls', function($excel) use ($authorization) {
-            $excel->sheet('FORMATO', function($sheet) use ($authorization) {                    
+            $excel->sheet(\Carbon\Carbon::parse($authorization->date_from)->format("m"), function($sheet) use ($authorization) {
                 $sheet->cell('B10', function($cell) use ($authorization) {
                     $cell->setValue($authorization->patient->full_name);
                 });
