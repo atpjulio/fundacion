@@ -187,6 +187,7 @@ class Authorization extends Model
             ->where('authorizations.code', 'not like', config('constants.unathorized.prefix').'%')
             ->where('authorizations.code', 'like', '%'.$search.'%')
             ->orWhere('invoices.number', $search)
+            ->orderBy('invoices.number', 'DESC')
             ->paginate(config('constants.pagination'));
     }
 
@@ -222,6 +223,7 @@ class Authorization extends Model
             ->where('authorizations.invoice_id', '<>', 0)
             ->where('authorizations.code', 'like', '%'.$search.'%')
             ->orWhere('invoices.number', $search)
+            ->orderBy('invoices.number', 'DESC')
             ->paginate(config('constants.pagination'));
     }
 

@@ -166,82 +166,133 @@ class AuthorizationController extends Controller
         }
 
         Excel::load('public/files/hospedaje.xls', function($excel) use ($authorization) {
-                        
-            $excel->sheet('FORMATO', function($sheet) use ($authorization) {
+            
+            $monthDiff = intval(substr($authorization->date_to, 5, 2)) - intval(substr($authorization->date_from, 5, 2));
 
-                // $sheetName = \Carbon\Carbon::parse($authorization->date_from)->format("M-Y");
-                // $sheet->setTitle($sheet->getTitle() + 'ssss');
-
-                $sheet->cell('B10', function($cell) use ($authorization) {
-                    $cell->setValue($authorization->patient->full_name);
-                });
-
-                if ($authorization->companion) {
-                    $sheet->cell('B11', function($cell) use ($authorization) {
-                        $cell->setValue($authorization->companion_name);
+            for ($i = 0; $i <= $monthDiff; $i++) {
+                $excel->sheet($i, function($sheet) use ($authorization, $i, $monthDiff) {
+                    $sheet->cell('B10', function($cell) use ($authorization) {
+                        $cell->setValue($authorization->patient->full_name);
                     });
-                    $sheet->cell('F11', function($cell) use ($authorization) {
-                        $cell->setValue('CC - '.$authorization->companion_dni);
+
+                    if ($authorization->companion) {
+                        $sheet->cell('B11', function($cell) use ($authorization) {
+                            $cell->setValue($authorization->companion_name);
+                        });
+                        $sheet->cell('F11', function($cell) use ($authorization) {
+                            $cell->setValue('CC - '.$authorization->companion_dni);
+                        });
+                    }
+
+                    $sheet->cell('F10', function($cell) use ($authorization) {
+                        $cell->setValue($authorization->patient->dni_type.' - '.$authorization->patient->dni);
                     });
-                }
 
-                $sheet->cell('F10', function($cell) use ($authorization) {
-                    $cell->setValue($authorization->patient->dni_type.' - '.$authorization->patient->dni);
-                });
-                $sheet->cell('I10', function($cell) use ($authorization) {
-                    $cell->setValue(\Carbon\Carbon::parse($authorization->date_from)->format("d"));
-                });
-                $sheet->cell('J10', function($cell) use ($authorization) {
-                    $cell->setValue(\Carbon\Carbon::parse($authorization->date_from)->format("m"));
-                });
-                $sheet->cell('K10', function($cell) use ($authorization) {
-                    $cell->setValue(\Carbon\Carbon::parse($authorization->date_from)->format("Y"));
-                });
-                $sheet->cell('I11', function($cell) use ($authorization) {
-                    $cell->setValue(\Carbon\Carbon::parse($authorization->date_to)->format("d"));
-                });
-                $sheet->cell('J11', function($cell) use ($authorization) {
-                    $cell->setValue(\Carbon\Carbon::parse($authorization->date_to)->format("m"));
-                });
-                $sheet->cell('K11', function($cell) use ($authorization) {
-                    $cell->setValue(\Carbon\Carbon::parse($authorization->date_to)->format("Y"));
-                });
-                $sheet->cell('B14', function($cell) use ($authorization) {
-                    $cell->setValue(City::getCityByCodeAndState($authorization->patient->state, $authorization->patient->city));
-                });
-                $sheet->cell('B15', function($cell) use ($authorization) {
-                    $cell->setValue(State::getStateByCode($authorization->patient->state));
-                });
-                $sheet->cell('B16', function($cell) use ($authorization) {
-                    $cell->setValue($authorization->diagnosis);
-                });
-                $sheet->cell('B17', function($cell) use ($authorization) {
-                    $cell->setValue($authorization->eps->alias);
-                });
-                $sheet->cell('I2', function($cell) use ($authorization) {
-                    $cell->setValue($authorization->codec ?: '');
-                });
-                $sheet->cell('J14', function($cell) use ($authorization) {
-                    $cell->setValue($authorization->location === 'Hospedaje' ? 'Si' : '');
-                });
-                $sheet->cell('J15', function($cell) use ($authorization) {
-                    $cell->setValue($authorization->location === 'Clínica' ? 'Si' : '');
-                });
-                $sheet->cell('J16', function($cell) use ($authorization) {
-                    $cell->setValue($authorization->location === 'Unidad UCI' ? 'Si' : '');
-                });
-                $sheet->cell('J17', function($cell) use ($authorization) {
-                    $cell->setValue($authorization->location === 'Habitación' ? 'Si' : '');
-                });
-            });
+                    if ($monthDiff > 0) {
+                        if ($i == $monthDiff) {                    
+                            $sheet->cell('I10', function($cell) use ($authorization) {
+                                $cell->setValue(\Carbon\Carbon::parse($authorization->date_to)
+                                    ->startOfMonth()->format("d"));
+                            });
+                            $sheet->cell('J10', function($cell) use ($authorization) {
+                                $cell->setValue(\Carbon\Carbon::parse($authorization->date_to)
+                                    ->startOfMonth()->format("m"));
+                            });
+                            $sheet->cell('K10', function($cell) use ($authorization) {
+                                $cell->setValue(\Carbon\Carbon::parse($authorization->date_to)
+                                    ->startOfMonth()->format("Y"));
+                            });
+                            $sheet->cell('I11', function($cell) use ($authorization) {
+                                $cell->setValue(\Carbon\Carbon::parse($authorization->date_to)->format("d"));
+                            });
+                            $sheet->cell('J11', function($cell) use ($authorization) {
+                                $cell->setValue(\Carbon\Carbon::parse($authorization->date_to)->format("m"));
+                            });
+                            $sheet->cell('K11', function($cell) use ($authorization) {
+                                $cell->setValue(\Carbon\Carbon::parse($authorization->date_to)->format("Y"));
+                            });
+                        } else {
+                            $sheet->cell('I10', function($cell) use ($authorization) {
+                                $cell->setValue(\Carbon\Carbon::parse($authorization->date_from)->format("d"));
+                            });
+                            $sheet->cell('J10', function($cell) use ($authorization) {
+                                $cell->setValue(\Carbon\Carbon::parse($authorization->date_from)->format("m"));
+                            });
+                            $sheet->cell('K10', function($cell) use ($authorization) {
+                                $cell->setValue(\Carbon\Carbon::parse($authorization->date_from)->format("Y"));
+                            });
+                            $sheet->cell('I11', function($cell) use ($authorization) {
+                                $cell->setValue(\Carbon\Carbon::parse($authorization->date_from)
+                                    ->endOfMonth()->format("d"));
+                            });
+                            $sheet->cell('J11', function($cell) use ($authorization) {
+                                $cell->setValue(\Carbon\Carbon::parse($authorization->date_from)
+                                    ->endOfMonth()->format("m"));
+                            });
+                            $sheet->cell('K11', function($cell) use ($authorization) {
+                                $cell->setValue(\Carbon\Carbon::parse($authorization->date_from)
+                                    ->endOfMonth()->format("Y"));
+                            });
+                        }
+                    } else {
+                        $sheet->cell('I10', function($cell) use ($authorization) {
+                            $cell->setValue(\Carbon\Carbon::parse($authorization->date_from)->format("d"));
+                        });
+                        $sheet->cell('J10', function($cell) use ($authorization) {
+                            $cell->setValue(\Carbon\Carbon::parse($authorization->date_from)->format("m"));
+                        });
+                        $sheet->cell('K10', function($cell) use ($authorization) {
+                            $cell->setValue(\Carbon\Carbon::parse($authorization->date_from)->format("Y"));
+                        });
+                        $sheet->cell('I11', function($cell) use ($authorization) {
+                            $cell->setValue(\Carbon\Carbon::parse($authorization->date_to)->format("d"));
+                        });
+                        $sheet->cell('J11', function($cell) use ($authorization) {
+                            $cell->setValue(\Carbon\Carbon::parse($authorization->date_to)->format("m"));
+                        });
+                        $sheet->cell('K11', function($cell) use ($authorization) {
+                            $cell->setValue(\Carbon\Carbon::parse($authorization->date_to)->format("Y"));
+                        });
+                    }
 
-            $sheetName = \Carbon\Carbon::parse($authorization->date_from)->format("M-Y");
+                    $sheet->cell('B14', function($cell) use ($authorization) {
+                        $cell->setValue(City::getCityByCodeAndState($authorization->patient->state, $authorization->patient->city));
+                    });
+                    $sheet->cell('B15', function($cell) use ($authorization) {
+                        $cell->setValue(State::getStateByCode($authorization->patient->state));
+                    });
+                    $sheet->cell('B16', function($cell) use ($authorization) {
+                        $cell->setValue($authorization->diagnosis);
+                    });
+                    $sheet->cell('B17', function($cell) use ($authorization) {
+                        $cell->setValue($authorization->eps->alias);
+                    });
+                    $sheet->cell('K2', function($cell) use ($authorization) {
+                        $cell->setValue($authorization->codec ?: '');
+                    });
+                    $sheet->cell('J14', function($cell) use ($authorization) {
+                        $cell->setValue($authorization->location === 'Hospedaje' ? 'Si' : '');
+                    });
+                    $sheet->cell('J15', function($cell) use ($authorization) {
+                        $cell->setValue($authorization->location === 'Clínica' ? 'Si' : '');
+                    });
+                    $sheet->cell('J16', function($cell) use ($authorization) {
+                        $cell->setValue($authorization->location === 'Unidad UCI' ? 'Si' : '');
+                    });
+                    $sheet->cell('J17', function($cell) use ($authorization) {
+                        $cell->setValue($authorization->location === 'Habitación' ? 'Si' : '');
+                    });
+                });
+            }
+
+            for ($j = 2; $j > $monthDiff; $j--) {
+                $excel->removeSheetByIndex($j);    
+            }
             $excel->setActiveSheetIndex(0);
-            // $excel->sheet('FORMATO')->setTitle($sheetName);
 
         })->setFilename('Hospedaje_'.$authorization->eps->alias.'_'.$authorization->code)
         ->export('xls');
-
+        
     }
 
     public function incomplete()
