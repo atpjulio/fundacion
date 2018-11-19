@@ -16,6 +16,14 @@
                 Nuevo Recibo
             </a>            
         </div>
+        {{-- 
+        <div class="float-right animated fadeInRight">
+            <a href="{{ route('receipt.import') }}" class="btn btn-pill-left btn-secondary btn-lg">
+                <i class="fas fa-file-import"></i>
+                Importar Recibos
+            </a>
+        </div> 
+         --}}
     </div>
 
     <section class="section">

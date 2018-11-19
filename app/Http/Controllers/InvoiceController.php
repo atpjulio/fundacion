@@ -320,4 +320,33 @@ class InvoiceController extends Controller
 
     }
 
+    public function import()
+    {
+
+    }
+
+    public function importProcess(Request $request)
+    {
+        $file = $request->file('txt_file');
+        $counter = 0;
+
+        $fileResource  = fopen($file, "r");
+        if ($fileResource) {
+            while (($line = fgets($fileResource)) !== false) {
+                if (strpos($line, "Factura") === false) {
+                    if (Invoice::storeRecordFromTxt($line)) {
+                        $counter++;
+                    }
+                }
+            }
+            fclose($fileResource);
+        }         
+
+        if ($counter > 0) {
+            Session::flash("message", "Se guardaron $counter facturas exitosamente!");
+        } else {
+            Session::flash("message_warning", "No se guardó ningún factura. Es posible que ya estén guardadas en el sistema");
+        }
+        return redirect()->route('invoice.import');
+    }
 }

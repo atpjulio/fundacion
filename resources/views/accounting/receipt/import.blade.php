@@ -14,10 +14,10 @@
         </div>
     </div>
 
-    {{-- !! Form::open(['route' => 'receipt.import.process', 'method' => 'POST', 'files' => true]) !! --}}
+    {!! Form::open(['route' => 'receipt.import.process', 'method' => 'POST', 'files' => true]) !!}
     <section class="section">
-        <div class="row">
-            <div class="col-md-6">
+        <div class="row justify-content-center">
+            <div class="col-8">
                 <div class="card">
                     <div class="card-block">
                         <div class="card-title-block">
@@ -25,12 +25,12 @@
                         </div>
 
                         <p>
-                            Paso 1: Seleccionar el archivo
+                            Paso 1: Seleccionar el archivo TXT
                             <br>
                             Paso 2: Subir archivo
                         </p>
                         <div class="custom-file">
-                            <input type="file" class="custom-file-input" id="customFileLang" lang="es" name="excel_file">
+                            <input type="file" class="custom-file-input" id="customFileLang" lang="es" name="txt_file">
                             <label class="custom-file-label form-control-file" for="customFileLang">Seleccionar archivo</label>
                         </div>
                         <br>
@@ -38,42 +38,20 @@
                     </div>
                 </div>
             </div>
-            <div class="col-md-6">
-                <div class="card">
-                    <div class="card-block">
-                        <div class="card-title-block">
-                            <h3 class="title"> Formato que acepta el sistema </h3>
-                            <br>
-                            <p>Por favor utiliza el siguiente formato, de otra manera no se garantiza la carga correcta de los recibos</p>
-                            <br>
-                            <strong class="text-warning">Esto está en construcción</strong>
-                            {{-- 
-                            <div class="text-center">
-                                <a href="{{ asset('files/Formato Usuarios.xls') }}" class="btn btn-oval btn-success">
-                                    <i class="fas fa-file-excel"></i>
-                                    Descargar formato
-                                </a>
-                            </div>
-                             --}}
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-6">
+            <div class="col-md-12">
                 <div class="text-center">
                     {!! Form::submit('Subir', ['class' => 'btn btn-oval btn-primary']) !!}
                 </div>
             </div>
         </div>
     </section>
-    {{-- !! Form::close() !! --}}
+    {!! Form::close() !!}
 @endsection
 
 @push('scripts')
     <script language="javascript" type="text/javascript">
         $(document).ready(function() {
             $('.custom-file-input').on('change', function () {
-                // console.log($(this)[0].files[0].name);
                 $(this).next('.form-control-file').addClass("selected").html($(this)[0].files[0].name);
             });
         });

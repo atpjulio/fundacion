@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Entity;
 use App\Http\Requests\StoreReceiptRequest;
 use App\Http\Requests\UpdateReceiptRequest;
+use App\Http\Requests\UploadTxtRequest;
 use App\Invoice;
 use App\Puc;
 use App\Receipt;
@@ -20,7 +21,8 @@ class ReceiptController extends Controller
      */
     public function index()
     {
-        $receipts = Receipt::all();
+        $receipts = Receipt::orderBy('id', 'desc')
+            ->get();
 
         return view('accounting.receipt.index', compact('receipts'));
     }
@@ -233,6 +235,36 @@ class ReceiptController extends Controller
         $receipts = Receipt::all();
 
         return view('accounting.receipt.index', compact('receipts'));
+    }
+
+    public function import()
+    {
+        return view('accounting.receipt.import');
+    }
+
+    public function importProcess(UploadTxtRequest $request)
+    {
+        $file = $request->file('txt_file');
+        $counter = 0;
+
+        $fileResource  = fopen($file, "r");
+        if ($fileResource) {
+            while (($line = fgets($fileResource)) !== false) {
+                if (strpos($line, "Factura") === false) {
+                    if (Receipt::storeRecordFromTxt($line, $eps->id)) {
+                        $counter++;
+                    }
+                }
+            }
+            fclose($fileResource);
+        }         
+
+        if ($counter > 0) {
+            Session::flash("message", "Se guardaron $counter recibos exitosamente!");
+        } else {
+            Session::flash("message_warning", "No se guardó ningún recibo. Es posible que ya estén guardados en el sistema");
+        }
+        return redirect()->route('receipt.import');
     }
 
 }

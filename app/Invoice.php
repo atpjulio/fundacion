@@ -294,4 +294,5 @@ class Invoice extends Model
             }
         }
     }
+
 }

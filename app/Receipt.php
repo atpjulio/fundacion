@@ -86,4 +86,33 @@ class Receipt extends Model
         return $receipt;
     }
 
+    protected function storeRecordFromTxt($line)
+    {
+        $data = explode(",", $line);
+        $epsCode = $data[0];
+        $createdAt = $data[1];
+        $number = $data[2];
+        $total = $data[3];
+
+        $eps = Eps::checkIfExists($epsCode);
+        if (!$eps) {
+            return null;
+        }
+
+        $entity = Entity::checkIfExists($eps->nit);
+        if (!$entity) {
+            return null;
+        }
+
+        $receipt = $this->create([
+            'entity_id' => $entity->id
+            'concept' => $request->get('concept'),
+            'amount' => $amount,
+            'created_at' => $request->get('created_at'),
+        ]);
+
+        ReceiptPuc::storeRecord($receipt, $pucs);
+
+    }
+
 }

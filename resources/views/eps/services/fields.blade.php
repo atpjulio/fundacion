@@ -4,5 +4,5 @@
 </div>
 <div class="form-group @if($errors->has('name')) has-error @endif">
     {!! Form::label('name', 'Nombre', ['class' => 'control-label']) !!}
-    {!! Form::text('name', old('name', isset($service) ? $service->name : ''), ['class' => 'form-control underlined', 'placeholder' => 'Nombre del servicio']) !!}
+    {!! Form::text('name', old('name', isset($service) ? $service->name : ''), ['class' => 'form-control underlined', 'placeholder' => 'Nombre del servicio', 'maxlength' => 190]) !!}
 </div>

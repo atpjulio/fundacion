@@ -92,11 +92,6 @@ class PatientController extends Controller
         $epss = Eps::all()->pluck('name', 'id');
         $patient = Patient::find($id);
         return view('patient.edit', compact('patient', 'epss'));
-
-//        $address = $patient->address;
-//        $phone = $patient->phone;
-//
-//        return view('patient.edit', compact('patient', 'address', 'phone'));
     }
 
     /**
@@ -209,4 +204,5 @@ class PatientController extends Controller
         }
         return redirect()->route('patient.import');
     }
+
 }
