@@ -81,5 +81,5 @@
 @push('scripts')
     <script src="{{ asset('js/jquery.dataTables.min.js') }}"></script>
     <script src="{{ asset('js/dataTables.bootstrap.min.js') }}"></script>
-    <script src="{{ asset('js/general/table.js') }}"></script>
+    <script src="{{ asset('js/authorization/open.js') }}"></script>
 @endpush

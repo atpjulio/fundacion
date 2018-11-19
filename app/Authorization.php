@@ -230,12 +230,14 @@ class Authorization extends Model
     protected function incomplete()
     {
         return $this->where('code', 'like', config('constants.unathorized.prefix').'%')
+            ->orderBy('created_at', 'desc')
             ->get();
     }
 
     protected function open()
     {
         return $this->where('invoice_id', 0)
+            ->orderBy('created_at', 'desc')
             ->get();
     }
 

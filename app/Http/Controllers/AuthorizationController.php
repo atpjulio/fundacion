@@ -111,7 +111,8 @@ class AuthorizationController extends Controller
         Authorization::updateRecord($request);
 
         Session::flash('message', 'Autorización actualizada exitosamente');
-        return redirect()->route('authorization.index');
+        return redirect()->back();
+        // return redirect()->route('authorization.index');
     }
 
     /**
