@@ -101,4 +101,31 @@ class AjaxController extends Controller
         return view('partials._close_authorizations', compact('authorizations'));
     }
 
+    public function checkPatient($dni)
+    {
+        $patient = Patient::checkIfExists($dni);
+
+        $result = [
+            'exists' => false
+        ];
+
+        if ($patient) {
+            $result['exists'] = true;
+        }
+        return $result;
+    }
+
+    public function checkAuthorization($code)
+    {
+        $authorization = Authorization::checkIfExists($code);
+
+        $result = [
+            'exists' => false
+        ];
+
+        if ($authorization) {
+            $result['exists'] = true;
+        }
+        return $result;
+    }
 }

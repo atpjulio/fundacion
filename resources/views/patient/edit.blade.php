@@ -43,17 +43,5 @@
 @endsection
 
 @push('scripts')
-    <script language="javascript" type="text/javascript">
-        $(document).ready(function() {
-            $('#birth_year').on('change', function (e) {
-                fillDays($('#birth_year').val() + "-" + $('#birth_month').val());
-            });
-            $('#birth_month').on('change', function (e) {
-                fillDays($('#birth_year').val() + "-" + $('#birth_month').val());
-            });
-            $('#state').on('change', function (e) {
-                fillCities($('#state').val());
-            });            
-        });
-    </script>
+    <script src="{{ asset('js/patient/edit.js') }}"></script>
 @endpush

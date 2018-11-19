@@ -93,6 +93,8 @@ Route::middleware(['auth', 'both'])->group(function () {
     Route::get('/get-services/{id}', 'AjaxController@getServices');
     Route::get('/get-cities/{id}', 'AjaxController@getCities');
     Route::get('/get-entity/{id}', 'AjaxController@getEntity');
+    Route::get('/check-patient/{dni}', 'AjaxController@checkPatient');
+    Route::get('/check-authorization/{code}', 'AjaxController@checkAuthorization');
 });
 
 Auth::routes();

@@ -119,3 +119,23 @@ function fullAuthorizations(search)
         });
     });
 }
+
+function checkPatient(dni)
+{
+    $.get("/check-patient/" + dni, function (data, status) {
+        $('#check-patient').html("");
+        if (data.exists) {
+            $('#check-patient').html("<em>Documento ya existe en el sistema</em>");
+        }
+    });
+}
+
+function checkAuthorization(code)
+{
+    $.get("/check-authorization/" + code, function (data, status) {
+        $('#check-authorization').html("");
+        if (data.exists) {
+            $('#check-authorization').html("<em>Autorización ya existe en el sistema</em>");
+        }
+    });
+}

@@ -1,6 +1,10 @@
 <div class="form-group  @if($errors->has('code')) has-error @endif">
     {!! Form::label('code', 'Código', ['class' => 'control-label']) !!}
-    {!! Form::text('code', old('code', isset($code) ? $code : ''), ['class' => 'form-control underlined', 'placeholder' => 'Código de la autorización (puede estar vacío)', isset($show) ? 'readonly' : '']) !!}
+    {!! Form::text('code', old('code', isset($code) ? $code : ''), ['class' => 'form-control underlined', 'placeholder' => 'Código de la autorización (puede estar vacío)', isset($show) ? 'readonly' : '', 'id' => 'code']) !!}
+    @if (isset($code))
+        {!! Form::hidden('old_code', $code, ['id' => 'old_code']) !!}
+    @endif
+    <span class="text-danger" role="alert" id="check-authorization"><em></em></span>
 </div>
 @if (isset($show))
     <div class="form-group  @if($errors->has('eps_name')) has-error @endif">

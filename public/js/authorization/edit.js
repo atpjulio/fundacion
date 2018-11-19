@@ -1,28 +1,10 @@
 $(document).ready(function() {
-    /*
-    $('#myTable').DataTable({
-        "language": {
-            "lengthMenu": "Mostrando _MENU_ registros por página",
-            "zeroRecords": "No se encontró ningún resultado",
-            "info": "Mostrando página _PAGE_ de _PAGES_",
-            "infoEmpty": "No hay información disponible",
-            "infoFiltered": "(filtrando de un total de _MAX_ registros)",
-            "search":         "Buscar:",
-            "paginate": {
-                "first":      "Primera",
-                "last":       "Última",
-                "next":       "Siguiente",
-                "previous":   "Anterior"
-            }
-        }
-    });
-    */
     $('#searching').on('change', function (e) {
         fillFilteredEpsPatients($('#searching').val());
     });
 
     $('#code').on('change keyup', function (e) {
-        if ($('#code').val().length > 4) {
+        if ($('#code').val().length > 4 && $('#code').val() !== $('#old_code').val()) {
             checkAuthorization($('#code').val());        
         }
     });

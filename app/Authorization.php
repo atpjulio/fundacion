@@ -233,4 +233,10 @@ class Authorization extends Model
             ->count();
     }
 
+    protected function checkIfExists($code)
+    {
+        return $this->where("code", $code)
+            ->first();
+    }
+
 }

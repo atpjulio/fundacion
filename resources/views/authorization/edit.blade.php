@@ -30,38 +30,6 @@
                         <div class="col-12" id="dynamic-patients">
                             @include('partials._eps_patients_edit')
                         </div>
-                        {{--  
-                        <div class="col-12">
-                            <div class="table-responsive">
-                                <table class="table table-striped table-bordered table-condensed table-hover" id="myTable">
-                                    <thead>
-                                    <th>Tipo Doc.</th>
-                                    <th>Documento</th>
-                                    <th>Nombre Completo</th>
-                                    <th>Fecha Nac.</th>
-                                    <th>Edad</th>
-                                    <th>Opciones</th>
-                                    </thead>
-                                    <tbody>
-                                    @foreach($patients as $patient)
-                                        <tr>
-                                            <td>{!! $patient->dni_type !!}</td>
-                                            <td>{!! $patient->dni !!}</td>
-                                            <td>{!! $patient->full_name !!}</td>
-                                            <td>{!! \Carbon\Carbon::parse($patient->birth_date)->format("d/m/Y") !!}</td>
-                                            <td>{!! $patient->age !!}</td>
-                                            <td>
-                                                <button type="button" class="btn btn-oval btn-warning btn-sm" onclick="sendInfo({{ $patient->id }})">
-                                                    Actualizar
-                                                </button>
-                                            </td>
-                                        </tr>
-                                    @endforeach
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                        --}}
                     </div>
                 </div>
             </div>
@@ -116,85 +84,5 @@
 @push('scripts')
     <script src="{{ asset('js/jquery.dataTables.min.js') }}"></script>
     <script src="{{ asset('js/dataTables.bootstrap.min.js') }}"></script>
-    <script src="{{ asset('js/authorization/index.js') }}"></script>
-    <script>
-        /*
-        $(document).ready(function() {
-            $('#myTable').DataTable({
-                "language": {
-                    "lengthMenu": "Mostrando _MENU_ registros por página",
-                    "zeroRecords": "No se encontró ningún resultado",
-                    "info": "Mostrando página _PAGE_ de _PAGES_",
-                    "infoEmpty": "No hay información disponible",
-                    "infoFiltered": "(filtrando de un total de _MAX_ registros)",
-                    "search":         "Buscar:",
-                    "paginate": {
-                        "first":      "Primera",
-                        "last":       "Última",
-                        "next":       "Siguiente",
-                        "previous":   "Anterior"
-                    }
-                },
-                "oSearch": {"sSearch": "{{ $authorization->patient->dni }}"}
-            });
-            $('#companion').on('change', function (e) {
-                if ($('#companion').val() == 1) {
-                    $('#companionsDiv').css('display', 'block');
-                    $('#companionsDiv').addClass('animated fadeIn');
-                } else {
-                    $('#companionsDiv').css('display', 'none');
-                }
-            });
-            $('#epsSelect').on('change', function (e) {
-                $('#serviceLink').attr("href", "/eps-services/" + $('#epsSelect').val() + "/create-from-authorization");
-                fillServices($('#epsSelect').val());
-                fillPatients($('#epsSelect').val());
-                fillCompanionServices($('#epsSelect').val());
-            });
-            $('#companion_eps_service_id').on('change', function (e) {
-                if ($(this).val() > 0) {             
-                    $('#companion_service').val($(this).children('option').filter(":selected").text());
-                    $('#companion_service_id').val($(this).val());
-                    $('#alertTable').css('display', 'none');
-                    $('#tableMessage').html('');              
-
-                } else {
-                    $('#companion_service').val('');
-                    $('#companion_service_id').val('');
-                    $('#tableMessage').html('Por favor seleccione un servicio válido');              
-                    $('#alertTable').css('display', 'block');
-                }
-            });
-            $(".addRow").click( function() {
-
-                if ($('#companion_service').val().length > 0 && $('#companion_service_id').val().length > 0 && $('#companion_document').val().length > 0) {
-                    $("#companionsTable").append('<tr><td><input type="text" id="companionDni" name="companionDni[]" value="' + $('#companion_document').val() + '" class="form-control" placeholder="Número de Documento"/></td><td><input type="text" id="companionService" value="' + $('#companion_service').val() + '" name="companionService[]" class="form-control" placeholder="Servicio para el acompañante" readonly /><input type="hidden" name="companionServiceId[]" id="companionServiceId" value="' + $('#companion_service_id').val() + '"></td><td><a href="javascript:void(0);" class="removeRow btn btn-oval btn-danger">Quitar</a></td><tr>');
-
-                    $('#companion_document').val('');
-                    $('#companion_service').val('');
-                    $('#companion_service_id').val('');                    
-                    $('#alertTable').css('display', 'none');
-                    $('#tableMessage').html('');              
-                } else {
-                    if ($('#companion_service').val().length == 0) {
-                        $('#tableMessage').html('Por favor seleccione un servicio válido');              
-                        $('#alertTable').css('display', 'block');
-
-                    } else {
-                        $('#tableMessage').html('Por favor ingrese un número de documento');              
-                        $('#alertTable').css('display', 'block');                        
-                    }
-                }
-
-            });
-            $("#companionsTable").on('click','.removeRow', function() {
-                $(this).parent().parent().remove();
-            });
-        } );
-        function sendInfo(id) {
-            $('#patient_id').val(id);
-            $('#myForm').submit();
-        }
-        */
-    </script>
+    <script src="{{ asset('js/authorization/edit.js') }}"></script>
 @endpush

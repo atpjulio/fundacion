@@ -10,7 +10,11 @@
 </div>
 <div class="form-group @if($errors->has('dni')) has-error @endif">
     {!! Form::label('dni', 'Número de documento', ['class' => 'control-label']) !!}
-    {!! Form::text('dni', old('dni', isset($patient) ? $patient->dni : ''), ['class' => 'form-control underlined', 'placeholder' => 'Número de documento', isset($show) ? 'readonly' : '']) !!}
+    {!! Form::text('dni', old('dni', isset($patient) ? $patient->dni : ''), ['class' => 'form-control underlined', 'placeholder' => 'Número de documento', isset($show) ? 'readonly' : '', 'id' => 'dni']) !!}
+    @if (isset($patient))
+        {!! Form::hidden('old_dni', $patient->dni, ['id' => 'old_dni']) !!}
+    @endif    
+    <span class="text-danger" role="alert" id="check-patient"><em></em></span>
 </div>
 <div class="form-group @if($errors->has('first_name')) has-error @endif">
     {!! Form::label('first_name', 'Nombre(s)', ['class' => 'control-label']) !!}
