@@ -58,3 +58,7 @@
     {!! Form::label('location', 'Ubicación del paciente', ['class' => 'control-label']) !!}
     {!! Form::select('location', config('constants.patient.location'), old('location', isset($authorization) ? $authorization->location : ''), ['class' => 'form-control', isset($show) ? 'disabled' : '']) !!}
 </div>
+<div class="form-group  @if($errors->has('patient_phone')) has-error @endif">
+    {!! Form::label('patient_phone', 'Número de contacto', ['class' => 'control-label']) !!}
+    {!! Form::text('patient_phone', old('patient_phone', (isset($authorization) and $authorization->patient->phone) ? $authorization->patient->phone->phone : ''), ['class' => 'form-control underlined', 'placeholder' => 'Número de contacto (opcional)', 'maxlength' => 15]) !!}
+</div>

@@ -270,6 +270,9 @@ class AuthorizationController extends Controller
                     $sheet->cell('K2', function($cell) use ($authorization) {
                         $cell->setValue($authorization->codec ?: '');
                     });
+                    $sheet->cell('G14', function($cell) use ($authorization) {
+                        $cell->setValue($authorization->patient->phone ? $authorization->patient->phone->phone : '');
+                    });
                     $sheet->cell('J14', function($cell) use ($authorization) {
                         $cell->setValue($authorization->location === 'Hospedaje' ? 'Si' : '');
                     });

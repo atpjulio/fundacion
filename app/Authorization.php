@@ -126,6 +126,21 @@ class Authorization extends Model
 
         $authorization->save();
 
+        $patient = Patient::find($authorization->patient_id);
+        if ($patient and $request->get('patient_phone')) {
+            if ($patient->phone) {
+                $patient->phone->update([
+                    'phone' => $request->get('patient_phone'),                    
+                ]);
+            } else {
+                Phone::create([
+                    'model_id' => $patient->id,
+                    'model_type' => config('constants.modelType.patient'),
+                    'phone' => $request->get('patient_phone'),
+                ]);                
+            }
+        }
+
         return $authorization;
     }
 
@@ -156,6 +171,21 @@ class Authorization extends Model
             }
 
             $authorization->save();
+
+            $patient = Patient::find($authorization->patient_id);
+            if ($patient and $request->get('patient_phone')) {
+                if ($patient->phone) {
+                    $patient->phone->update([
+                        'phone' => $request->get('patient_phone'),                    
+                    ]);
+                } else {
+                    Phone::create([
+                        'model_id' => $patient->id,
+                        'model_type' => config('constants.modelType.patient'),
+                        'phone' => $request->get('patient_phone'),
+                    ]);                
+                }
+            }
 
             $invoice = Invoice::getInvoiceByAuthorizationCode($authorization->code);
             if ($invoice) {
