@@ -251,7 +251,7 @@ class ReceiptController extends Controller
         if ($fileResource) {
             while (($line = fgets($fileResource)) !== false) {
                 if (strpos($line, "Factura") === false) {
-                    if (Receipt::storeRecordFromTxt($line, $eps->id)) {
+                    if (Receipt::storeRecordFromTxt($line)) {
                         $counter++;
                     }
                 }

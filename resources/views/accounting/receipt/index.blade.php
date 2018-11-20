@@ -16,14 +16,12 @@
                 Nuevo Recibo
             </a>            
         </div>
-        {{-- 
         <div class="float-right animated fadeInRight">
             <a href="{{ route('receipt.import') }}" class="btn btn-pill-left btn-secondary btn-lg">
                 <i class="fas fa-file-import"></i>
                 Importar Recibos
             </a>
         </div> 
-         --}}
     </div>
 
     <section class="section">
@@ -38,11 +36,11 @@
                             <div class="table-responsive">
                                 <table class="table table-striped table-bordered table-condensed table-hover" id="myTable">
                                     <thead>
-                                    <th style="width: 100px;"># Recibo</th>
+                                    <th style="width: 150px;"># Recibo</th>
                                     <th>Recibido de</th>
-                                    <th style="width: 110px;">Monto del recibo</th>
+                                    <th style="width: 160px;">Monto del recibo</th>
                                     <th>Fecha</th>
-                                    <th style="width: 200px;">Opciones</th>
+                                    <th style="width: 240px;">Opciones</th>
                                     </thead>
                                     <tbody>
                                     @foreach($receipts as $receipt)
@@ -79,5 +77,5 @@
 @push('scripts')
     <script src="{{ asset('js/jquery.dataTables.min.js') }}"></script>
     <script src="{{ asset('js/dataTables.bootstrap.min.js') }}"></script>
-    <script src="{{ asset('js/general/table.js') }}"></script>
+    <script src="{{ asset('js/receipt/index.js') }}"></script>
 @endpush

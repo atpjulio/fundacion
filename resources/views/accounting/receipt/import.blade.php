@@ -21,9 +21,8 @@
                 <div class="card">
                     <div class="card-block">
                         <div class="card-title-block">
-                            <h3 class="title"> Importar Recibos </h3>
+                            <h3 class="title"> Importar Recibos de Facturas de EPS</h3>
                         </div>
-
                         <p>
                             Paso 1: Seleccionar el archivo TXT
                             <br>

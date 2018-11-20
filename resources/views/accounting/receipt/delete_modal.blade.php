@@ -11,7 +11,7 @@
             <div class="modal-body">
                 <p>Confirma que deseas borrar el recibo: </p>
                 <div class="text-center">
-                    Número {!! $receipt->id !!}
+                    Número {!! $receipt->number !!}
                 </div>
             </div>
             <div class="modal-footer">

@@ -90,9 +90,9 @@ class Receipt extends Model
     {
         $data = explode(",", $line);
         $epsCode = $data[0];
-        $createdAt = $data[1];
-        $number = $data[2];
-        $total = $data[3];
+        $createdAt = isset($data[1]) ? \Carbon\Carbon::parse($data[1])->format("Y-m-d") : '';
+        $number = isset($data[2]) ? $data[2] : '';
+        $amount = isset($data[3]) ? $data[3] : '';
 
         $eps = Eps::checkIfExists($epsCode);
         if (!$eps) {
@@ -103,16 +103,31 @@ class Receipt extends Model
         if (!$entity) {
             return null;
         }
-
         $receipt = $this->create([
-            'entity_id' => $entity->id
-            'concept' => $request->get('concept'),
-            'amount' => $amount,
-            'created_at' => $request->get('created_at'),
+            'entity_id' => $entity->id,
+            'concept' => 'Pago de factura '.$number.' de '.$eps->name,
+            'amount' => floatval($amount),
+            'created_at' => $createdAt,
         ]);
+
+        $pucs = [
+            [
+                'code' => '111005',
+                'type' => 0,
+                'description' => 'Bancoomeva',
+                'amount' => $amount,
+            ],
+            [
+                'code' => '130505',
+                'type' => 1,
+                'description' => $eps->alias,
+                'amount' => $amount,
+            ],
+        ];
 
         ReceiptPuc::storeRecord($receipt, $pucs);
 
+        return $receipt;
     }
 
 }
