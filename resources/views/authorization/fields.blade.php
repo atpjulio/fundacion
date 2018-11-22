@@ -26,17 +26,17 @@
         {!! Form::hidden('eps_service_id', $service->id) !!}
     </div>
 @else
+    @php
+        $services = \App\EpsService::getServices(old('eps_id') ?: $initialEpsId);
+        if (count($services) < 1) {
+            $services = [
+                "0" => 'Sin servicios registrados'
+            ];
+        }
+    @endphp
     <div class="form-group  @if($errors->has('eps_service_id')) has-error @endif">
         {!! Form::label('eps_service_id', 'Seleccione Servicio de EPS', ['class' => 'control-label']) !!}
         <div class="row">
-            @php
-                $services = \App\EpsService::getServices(old('eps_id') ?: $initialEpsId);
-                if (count($services) < 1) {
-                    $services = [
-                        "0" => 'Sin servicios registrados'
-                    ];
-                }
-            @endphp
             <div class="col-md-9">
                 <div id="dynamic-services">
                     @include('partials._services')
@@ -49,6 +49,12 @@
             @endif
         </div>
     </div>
+    <div class="form-group  @if($errors->has('multiple_services')) has-error @endif">
+        {!! Form::label('multiple_services', 'Servicio Adicional de EPS (Opcional)', ['class' => 'control-label']) !!}
+        <div id="dynamic-multiple-services">
+            @include('partials._services_multiple')
+        </div>
+    </div>    
 @endif
 <div class="form-group  @if($errors->has('diagnosis')) has-error @endif">
     {!! Form::label('diagnosis', 'Diagnóstico', ['class' => 'control-label']) !!}

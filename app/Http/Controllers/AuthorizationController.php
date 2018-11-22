@@ -64,7 +64,7 @@ class AuthorizationController extends Controller
         Authorization::storeRecord($request);
 
         Session::flash('message', 'Autorización guardada exitosamente');
-        return redirect()->route('authorization.index');
+        return redirect()->route('authorization.open');
     }
 
     /**
@@ -108,10 +108,14 @@ class AuthorizationController extends Controller
      */
     public function update(UpdateAuthorizationRequest $request, $id)
     {
-        Authorization::updateRecord($request);
+        $authorization = Authorization::updateRecord($request);
 
         Session::flash('message', 'Autorización actualizada exitosamente');
-        return redirect()->route('authorization.index');
+
+        if ($authorization->invoice_id > 0) {
+            return redirect()->route('authorization.index');    
+        }
+        return redirect()->route('authorization.open');
     }
 
     /**
@@ -272,6 +276,9 @@ class AuthorizationController extends Controller
                     });
                     $sheet->cell('G14', function($cell) use ($authorization) {
                         $cell->setValue($authorization->patient->phone ? $authorization->patient->phone->phone : '');
+                    });
+                    $sheet->cell('G16', function($cell) use ($authorization) {
+                        $cell->setValue($authorization->companion_phone ?: '');
                     });
                     $sheet->cell('J14', function($cell) use ($authorization) {
                         $cell->setValue($authorization->location === 'Hospedaje' ? 'Si' : '');

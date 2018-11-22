@@ -38,6 +38,7 @@ $(document).ready(function() {
     $('#epsSelect').on('change', function (e) {
         $('#serviceLink').attr("href", "/eps-services/" + $('#epsSelect').val() + "/create-from-authorization");
         fillServices($('#epsSelect').val());
+        fillMultipleServices($('#epsSelect').val());
         // fillPatients($('#epsSelect').val());
         // fillCompanionServices($('#epsSelect').val());
     });
@@ -96,6 +97,7 @@ function sendInfo(id, eps_id, name) {
         });
     $('#epsSelect').val(eps_id);
     fillServices($('#epsSelect').val());
+    fillMultipleServices($('#epsSelect').val());
     // fillPatients($('#epsSelect').val());
     // fillCompanionServices($('#epsSelect').val());
 }

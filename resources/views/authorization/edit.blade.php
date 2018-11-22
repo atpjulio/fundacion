@@ -11,7 +11,7 @@
             <p class="title-description"> Actualizando una autorización del sistema </p>
         </div>
         <div class="float-right animated fadeInRight">
-            <a href="{{ route('authorization.index') }}" class="btn btn-pill-left btn-secondary btn-lg">
+            <a href="{{ $authorization->invoice_id > 0 ? route('authorization.index') : route('authorization.open') }}" class="btn btn-pill-left btn-secondary btn-lg">
                 <i class="fas fa-list"></i>
                 Regresar
             </a>
@@ -64,7 +64,7 @@
                             <h3 class="title"> Fecha de validez </h3>
                         </div>
                         @include('authorization.fields2')
-                        <div id="companionsDiv" @if (old('companion')) style="display: block;" @else style="display: none;" @endif>
+                        <div id="companionsDiv" @if (old('companion') or $authorization->companion) style="display: block;" @else style="display: none;" @endif>
                             @include('authorization.companion')
                         </div>
                     </div>

@@ -19,6 +19,7 @@ class Authorization extends Model
         'total',
         'companion',
         'companion_dni',
+        'companion_phone',
         'companion_eps_service_id',
         'guardianship',
         'guardianship_file',
@@ -29,6 +30,8 @@ class Authorization extends Model
         'user_id',
         'companion_name',
         'invoice_id',
+        'multiple',
+        'multiple_services'
     ];
 
     /**
@@ -122,6 +125,13 @@ class Authorization extends Model
         if ($authorization->companion) {
             $authorization->companion_dni = $request->get('companion_dni');
             $authorization->companion_name = ucwords(mb_strtolower($request->get('companion_name')));
+            $authorization->companion_phone = $request->get('companion_phone');
+        }
+
+        $authorization->multiple = 0;
+        if ($request->get('multiple_services')) {
+            $authorization->multiple = config('constants.status.active');
+            $authorization->multiple_services = $request->get('multiple_services');
         }
 
         $authorization->save();
@@ -168,6 +178,13 @@ class Authorization extends Model
             if ($authorization->companion) {
                 $authorization->companion_dni = $request->get('companion_dni');
                 $authorization->companion_name = ucwords(mb_strtolower($request->get('companion_name')));
+                $authorization->companion_phone = $request->get('companion_phone');
+            }
+
+            $authorization->multiple = 0;
+            if ($request->get('multiple_services')) {
+                $authorization->multiple = config('constants.status.active');
+                $authorization->multiple_services = $request->get('multiple_services');
             }
 
             $authorization->save();

@@ -12,6 +12,13 @@ function fillServices(id)
     });
 }
 
+function fillMultipleServices(id)
+{
+    $.get("/get-multiple-services/" + id, function (data, status) {
+        $('#dynamic-multiple-services').html(data);
+    });
+}
+
 function fillCompanionServices(id)
 {
     $.get("/get-companion-services/" + id, function (data, status) {

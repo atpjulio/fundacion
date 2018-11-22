@@ -1,3 +1,7 @@
+<div class="form-group  @if($errors->has('phone')) has-error @endif">
+    {!! Form::label('phone', 'Número de contacto', ['class' => 'control-label']) !!}
+    {!! Form::text('phone', old('phone', (isset($patient) and $patient->phone) ? $patient->phone->phone : ''), ['class' => 'form-control underlined', 'placeholder' => 'Número de contacto (opcional)', 'maxlength' => 15]) !!}
+</div>
 <div class="form-group @if($errors->has('gender')) has-error @endif">
     {!! Form::label('gender', 'Sexo', ['class' => 'control-label']) !!}
     {!! Form::select('gender', config('constants.gender'), old('gender', isset($patient) ? $patient->gender : ''), ['class' => 'form-control underlined', isset($show) ? 'readonly' : '']) !!}

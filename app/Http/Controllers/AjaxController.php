@@ -33,6 +33,17 @@ class AjaxController extends Controller
         return view('partials._services', compact('services'));
     }
 
+    public function getMultipleServices($id)
+    {
+        $services = EpsService::getServices($id);
+        if (count($services) < 1) {
+            $services = [
+                "0" => 'Sin servicios registrados'
+            ];
+        }
+        return view('partials._services_multiple', compact('services'));
+    }
+
     public function getCompanionServices($id)
     {
         $companionServices = EpsService::getServices($id)->pluck('name', 'id');

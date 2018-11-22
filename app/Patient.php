@@ -81,6 +81,14 @@ class Patient extends Model
             'zone' => $request->get('zone'),
         ]);
 
+        if ($request->get('phone')) {
+            Phone::create([
+                'model_id' => $patient->id,
+                'model_type' => config('constants.modelType.patient'),
+                'phone' => $request->get('phone'),
+            ]);                
+        }
+
         return $patient;
     }
 
@@ -106,6 +114,20 @@ class Patient extends Model
                 'city' => $request->get('city'),
                 'zone' => $request->get('zone'),
             ]);
+
+            if ($patient and $request->get('phone')) {
+                if ($patient->phone) {
+                    $patient->phone->update([
+                        'phone' => $request->get('phone'),                    
+                    ]);
+                } else {
+                    Phone::create([
+                        'model_id' => $patient->id,
+                        'model_type' => config('constants.modelType.patient'),
+                        'phone' => $request->get('phone'),
+                    ]);                
+                }
+            }
         }
 
         return $patient;
