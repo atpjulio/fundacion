@@ -56,7 +56,11 @@ class Invoice extends Model
      */
     public function getDaysAttribute()
     {
-        return intval($this->total / $this->eps->daily_price);        
+        if ($this->authorization->multiple) {
+            return intval($this->total / ($this->eps->daily_price * (1 + count(explode(',', $this->authorization->multiple_services)))));
+        }
+
+        return intval($this->total / $this->eps->daily_price);
     }
 
     public function getFormatNumberAttribute()
@@ -295,4 +299,12 @@ class Invoice extends Model
         }
     }
 
+    protected function getLastNumber()
+    {
+        $result = $this::withTrashed()
+            ->get()
+            ->last();
+
+        return $result ? $result->number : 0;
+    }
 }

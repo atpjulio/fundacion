@@ -166,23 +166,36 @@ mpdf-->
             @endphp
             @foreach (json_decode($invoice->multiple_codes, true) as $k => $authorizationCode)
                 @php
-                    $a = \App\Authorization::findByCode($authorizationCode);
-                    $total += json_decode($invoice->multiple_totals, true)[$k];
+                    $currentAuthorization = \App\Authorization::findByCode($authorizationCode);
+                    // $total += json_decode($invoice->multiple_totals, true)[$k];
+                    $services = $currentAuthorization->eps_service_id;
+                    $companionService = $currentAuthorization->multiple_services;
+
+                    if ($companionService) {
+                        $services .= ",".$companionService;
+                    }            
                 @endphp
-                <tr>
-                    <td align="center">{{ $a->service->code }}</td>
-                    <td>{{ $a->service->name }}</td>
-                    <td>{{ $a->codec }}</td>
-                    <td align="center">{!! json_decode($invoice->multiple_days, true)[$k] !!}</td>
-                    <td class="cost">$ {{ number_format($invoice->eps->daily_price, 0, ",", ".") }}</td>
-                    <td class="">$ {!! number_format(json_decode($invoice->multiple_totals, true)[$k], 0, ",", ".") !!}</td>
-                </tr>            
+                @foreach(explode(",", $services) as $serviceId)    
+                    @php
+                        $service = \App\EpsService::find($serviceId);
+                        $currentTotal = json_decode($invoice->multiple_totals, true)[$k] / count(explode(",", $services));
+                        $total += $currentTotal;
+                    @endphp
+                    <tr>
+                        <td align="center">{{ $service->code }}</td>
+                        <td>{{ $service->name }}</td>
+                        <td>{{ $currentAuthorization->codec }}</td>
+                        <td align="center">{!! json_decode($invoice->multiple_days, true)[$k] !!}</td>
+                        <td class="cost">$ {{ number_format($invoice->eps->daily_price, 0, ",", ".") }}</td>
+                        <td class="">$ {!! number_format($currentTotal, 0, ",", ".") !!}</td>
+                    </tr>
+                @endforeach
             @endforeach            
         @else
             @php
                 $total = 0;
                 $services = $invoice->authorization->eps_service_id;
-                $companionService = $invoice->authorization->companion_eps_service_id;
+                $companionService = $invoice->authorization->multiple_services;
 
                 if ($companionService) {
                     $services .= ",".$companionService;
@@ -191,7 +204,7 @@ mpdf-->
             @foreach(explode(",", $services) as $serviceId)    
                 @php
                     $service = \App\EpsService::find($serviceId);
-                    $total += $invoice->total;
+                    $total += $invoice->total / count(explode(",", $services));
                 @endphp
                 <tr>
                     <td align="center">{{ $service->code }}</td>
@@ -199,7 +212,7 @@ mpdf-->
                     <td>{{ $invoice->authorization->codec }}</td>
                     <td align="center">{!! $invoice->days !!}</td>
                     <td class="cost">$ {{ number_format($invoice->eps->daily_price, 0, ",", ".") }}</td>
-                    <td class="cost">$ {!! number_format($invoice->total, 0, ",", ".") !!}</td>
+                    <td class="cost">$ {!! number_format($invoice->total / count(explode(",", $services)), 0, ",", ".") !!}</td>
                 </tr>
             @endforeach
         @endif

@@ -35,7 +35,7 @@ class InvoiceController extends Controller
     {
         $companies = Company::all()->pluck('name', 'id');
         $invoices = Invoice::all();
-        $lastNumber = count($invoices) > 0 ? $invoices->last()->number : 0;
+        $lastNumber = Invoice::getLastNumber();
         $authorizations = Authorization::openForInvoices();
 
         return view('invoice.create', compact('companies', 'lastNumber', 'authorizations'));

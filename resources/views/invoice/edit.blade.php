@@ -28,7 +28,7 @@
             </div>
         </div>
     </section>
-    {!! Form::hidden('selected_price', $invoice->eps->daily_price, ['id' => 'selected_price']) !!}
+    {!! Form::hidden('selected_price', $invoice->multiple ? $invoice->eps->daily_price : $invoice->authorization->daily_price, ['id' => 'selected_price']) !!}
     {!! Form::hidden('id', $invoice->id) !!}
     {!! Form::close() !!}
 @endsection
@@ -100,7 +100,7 @@
                     });            
                 }
             });
-            $('#total_days').on('change', function (e) {
+            $('#total_days').on('change keyup', function (e) {
                 $('#total').val($('#selected_price').val() * $('#total_days').val());
             });
             $('#multiple').on('change', function (e) {

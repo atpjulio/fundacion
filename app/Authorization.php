@@ -93,6 +93,16 @@ class Authorization extends Model
         return '';
     }
 
+    public function getDailyPriceAttribute()
+    {
+        $dailyPrice = $this->eps->daily_price;
+        if ($this->multiple) {
+            $dailyPrice += count(explode(',', $this->multiple_services)) * $this->eps->daily_price;
+        }
+
+        return $dailyPrice;
+    }
+
     /**
      * Methods
      */

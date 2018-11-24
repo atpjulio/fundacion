@@ -136,13 +136,19 @@ mpdf-->
             @php
                 $subTotal = 0;
             @endphp
-            @foreach (json_decode($invoice->multiple_codes) as $k => $authorizationCode)
+            @foreach (json_decode($invoice->multiple_codes, true) as $k => $authorizationCode)
                 <tr>
                     @php
                         $a = \App\Authorization::findByCode($authorizationCode);
                         if (!$a) {
                             continue;
                         }
+                        $services = $a->eps_service_id;
+                        $companionService = $a->multiple_services;
+
+                        if ($companionService) {
+                            $services .= ",".$companionService;
+                        }            
                     @endphp
                     <td align="center">{{ $invoice->format_number }}</td>            
                     <td width="14%" class="noleft">{!! $a->patient->dni !!}</td>
@@ -152,17 +158,23 @@ mpdf-->
                     <td class="noleft"></td>
                     <td class="noleft"></td>
                 </tr>
-                <tr>
-                    <td align="right">&#8250; {!! $a->service->code !!}</td>
-                    <td colspan="2" class="noleft">{{ mb_strtoupper($a->service->name) }}</td>
-                    <td style="width: 18%;" class="noleft">{{ mb_strtoupper($a->codec) }}</td>
-                    <td align="center" class="noleft">
-                        {!! json_decode($invoice->multiple_days, true)[$k] !!}
-                    </td>
-                    <td class="cost noleft">
-                        $ {!! number_format(json_decode($invoice->multiple_totals, true)[$k], 0, ",", ".") !!}
-                    </td>
-                </tr>
+                @foreach(explode(",", $services) as $serviceId)    
+                    @php
+                        $service = \App\EpsService::find($serviceId);
+                        $currentTotal = json_decode($invoice->multiple_totals, true)[$k] / count(explode(",", $services));
+                    @endphp
+                    <tr>
+                        <td align="right">&#8250; {!! $service->code !!}</td>
+                        <td colspan="2" class="noleft">{{ mb_strtoupper($service->name) }}</td>
+                        <td style="width: 18%;" class="noleft">{{ mb_strtoupper($a->codec) }}</td>
+                        <td align="center" class="noleft">
+                            {!! json_decode($invoice->multiple_days, true)[$k] !!}
+                        </td>
+                        <td class="cost noleft">
+                            $ {!! number_format($currentTotal, 0, ",", ".") !!}
+                        </td>
+                    </tr>
+                @endforeach
                 @php
                     $subTotal += json_decode($invoice->multiple_totals, true)[$k];
                 @endphp
@@ -182,7 +194,7 @@ mpdf-->
             @php
                 $subTotal = 0;
                 $services = $invoice->authorization->eps_service_id;
-                $companionService = $invoice->authorization->companion_eps_service_id;
+                $companionService = $invoice->authorization->multiple_services;
 
                 if ($companionService) {
                     $services .= ",".$companionService;
@@ -191,18 +203,19 @@ mpdf-->
             @foreach(explode(",", $services) as $serviceId)    
                 @php
                     $service = \App\EpsService::find($serviceId);
+                    $currentTotal = $invoice->total / count(explode(",", $services));
                 @endphp
                 <tr>
                     <td align="right"> &#8250; {{ $service->code }}</td>
                     <td colspan="2" class="noleft">{{ mb_strtoupper($service->name) }}</td>
                     <td style="width: 18%;" class="noleft">{!! $invoice->authorization->codec !!}</td>
                     <td align="center" class="noleft">{!! $invoice->days !!}</td>
-                    <td class="cost noleft">$ {!! number_format($invoice->total, 0, ",", ".") !!}</td>
+                    <td class="cost noleft">$ {!! number_format($currentTotal, 0, ",", ".") !!}</td>
                 </tr>
-                @php
-                    $subTotal += $invoice->total;
-                @endphp
             @endforeach
+            @php
+                $subTotal += $invoice->total;
+            @endphp
         @endif
             <tr style="background-color: #EEEEEE;">
                 <td colspan="5" style="font-variant: small-caps;"> 

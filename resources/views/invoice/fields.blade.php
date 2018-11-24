@@ -27,7 +27,7 @@
                                 <td>{!! $authorization->days !!}</td>
                                 <td>
                                     {!! Form::button('Seleccionar', ['class' => 'btn btn-oval btn-success', 'id' => 'button'.$key ]) !!}
-                                    {!! Form::hidden('daily_price', $authorization->eps->daily_price, ['id' => 'daily_price']) !!}
+                                    {!! Form::hidden('daily_price', $authorization->daily_price, ['id' => 'daily_price']) !!}
                                 </td>
                             </tr>
                         @endforeach
@@ -91,8 +91,7 @@
         </div>
     </div>
 </div>
-<div class="col-md-12" style="@if(old('multiple') == "1" or (isset($invoice) and $invoice->multiple)) display: block; @else display: none; @endif" 
-id="multiple_card">
+<div class="col-md-12" style="@if(old('multiple') == "1" or (isset($invoice) and $invoice->multiple)) display: block; @else display: none; @endif" id="multiple_card">
     <div class="card">
         <div class="card-block">
             <div class="form-group">
@@ -107,24 +106,23 @@ id="multiple_card">
                         </tr>
                         </thead>
                         <tbody>
-                        @if (empty(old('multiple_codes')) and !isset($invoice))
-                        <tr>
-                            <td>
-                                <input type="text" id="multiple_codes" name="multiple_codes[]" class="form-control" placeholder="Número de autorización" value="" readonly />
-                            </td>
-                            <td>
-                                <input type="number" id="multiple_days" name="multiple_days[]" class="form-control multipleDays" placeholder="Total de días" min="0"/>
-                            </td>
-                            <td>
-                                <input type="number" id="multiple_totals" name="multiple_totals[]" class="form-control" placeholder="Valor total" min="0"/>
-                            </td>
-                            <td>
-                                <a href="javascript:void(0);" class="addRow btn btn-oval btn-success">Añadir</a>
-                            </td>
-                        </tr>
-                        @else
-
-                            @if (empty(old('multiple_codes')) and !isset($invoice))
+                        @if (!isset($invoice))
+                            @if (empty(old('multiple_codes')))
+                                <tr>
+                                    <td>
+                                        <input type="text" id="multiple_codes" name="multiple_codes[]" class="form-control" placeholder="Número de autorización" value="" readonly />
+                                    </td>
+                                    <td>
+                                        <input type="number" id="multiple_days" name="multiple_days[]" class="form-control multipleDays" placeholder="Total de días" min="0"/>
+                                    </td>
+                                    <td>
+                                        <input type="number" id="multiple_totals" name="multiple_totals[]" class="form-control" placeholder="Valor total" min="0"/>
+                                    </td>
+                                    <td>
+                                        <a href="javascript:void(0);" class="addRow btn btn-oval btn-success">Añadir</a>
+                                    </td>
+                                </tr>
+                            @else
                                 @foreach(old('multiple_codes') as $k => $val)
                                     <tr>
                                         <td>
@@ -144,25 +142,25 @@ id="multiple_card">
                                             @endif
                                         </td>
                                     </tr>
-                                @endforeach
-                            @elseif (isset($invoie) and $invoice->multiple)
-                                @foreach(json_decode($invoice->multiple_codes, true) as $k => $val)
-                                    <tr>
-                                        <td>
-                                            <input type="text" id="multiple_codes" name="multiple_codes[]" class="form-control" placeholder="Número de autorización" value="{{ $val }}" readonly/>
-                                        </td>
-                                        <td>
-                                            <input type="number" id="multiple_days" name="multiple_days[]" class="form-control multipleDays" placeholder="Total de días" min="0" value="{{ json_decode($invoice->multiple_days, true)[$k] }}" />
-                                        </td>
-                                        <td>
-                                            <input type="number" id="multiple_totals" name="multiple_totals[]" class="form-control" placeholder="Valor total" min="0" value="{{ json_decode($invoice->multiple_totals, true)[$k] }}" />
-                                        </td>
-                                        <td>
-                                            <a href="javascript:void(0);" class="removeRow btn btn-oval btn-danger">Quitar</a>
-                                        </td>
-                                    </tr>
-                                @endforeach
-                            @endif
+                                @endforeach                            
+                            @endif                                
+                        @else
+                            @foreach(old('multiple_codes', json_decode($invoice->multiple_codes, true)) as $k => $val)
+                                <tr>
+                                    <td>
+                                        <input type="text" id="multiple_codes" name="multiple_codes[]" class="form-control" placeholder="Número de autorización" value="{{ $val }}" readonly/>
+                                    </td>
+                                    <td>
+                                        <input type="number" id="multiple_days" name="multiple_days[]" class="form-control multipleDays" placeholder="Total de días" min="0" value="{{ old('multiple_days', json_decode($invoice->multiple_days, true))[$k] }}" />
+                                    </td>
+                                    <td>
+                                        <input type="number" id="multiple_totals" name="multiple_totals[]" class="form-control" placeholder="Valor total" min="0" value="{{ old('multiple_totals',json_decode($invoice->multiple_totals, true))[$k] }}" />
+                                    </td>
+                                    <td>
+                                        <a href="javascript:void(0);" class="removeRow btn btn-oval btn-danger">Quitar</a>
+                                    </td>
+                                </tr>
+                            @endforeach
                         @endif                        
                         </tbody>
                     </table>                
