@@ -145,6 +145,7 @@
                                 @endforeach                            
                             @endif                                
                         @else
+                            @if($invoice->multiple)
                             @foreach(old('multiple_codes', json_decode($invoice->multiple_codes, true)) as $k => $val)
                                 <tr>
                                     <td>
@@ -161,6 +162,7 @@
                                     </td>
                                 </tr>
                             @endforeach
+                            @endif
                         @endif                        
                         </tbody>
                     </table>                
