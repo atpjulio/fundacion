@@ -101,6 +101,11 @@ class InvoiceController extends Controller
         $lastNumber = $invoice->number;
         $authorizations = Authorization::openForInvoices();
 
+        $extra = Authorization::checkIfExists($invoice->authorization_code);
+        if ($extra) {
+            $authorizations->push($extra);
+        }
+
         return view('invoice.edit', compact('companies', 'lastNumber', 'authorizations', 'invoice'));
     }
 
