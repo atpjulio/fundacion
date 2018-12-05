@@ -106,7 +106,7 @@
                         </tr>
                         </thead>
                         <tbody>
-                        @if (!isset($invoice))
+                        @if (!isset($invoice) or !$invoice->multiple)
                             @if (empty(old('multiple_codes')))
                                 <tr>
                                     <td>
