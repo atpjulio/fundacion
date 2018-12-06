@@ -162,6 +162,9 @@ class Invoice extends Model
         $invoice = $this->find($request->get('id'));
 
         if ($invoice) {
+            $oldAuthorizationCode = $invoice->authorization_code;
+            $oldAuthorizationCodes = $invoice->multiple_codes;
+
             $invoice->number = $request->get('number');
             $invoice->company_id = $request->get('company_id');
             $invoice->authorization_code = $request->get('authorization_code') ?: '';
@@ -184,6 +187,13 @@ class Invoice extends Model
             $invoice->save();
 
             if ($invoice->multiple) {
+                foreach (json_decode($oldAuthorizationCodes, true) as $oldAuthorizationCode) {
+                    $oldAuthorization = Authorization::findByCode($oldAuthorizationCode);
+                    if ($oldAuthorization) {
+                        $oldAuthorization->update(['invoice_id' => 0]);
+                    }
+                }                
+
                 $notes = "Factura para las autorizaciones ".join(",", $request->get('multiple_codes'))." de la EPS: ".$invoice->eps->code." - ".$invoice->eps->alias;
 
                 $pucs = [];
@@ -209,6 +219,11 @@ class Invoice extends Model
                 }
                 AccountingNote::updateRecord($invoice, $pucs, $notes, $invoice->total);
             } else {
+                $oldAuthorization = Authorization::findByCode($oldAuthorizationCode);
+                if ($oldAuthorization) {
+                    $oldAuthorization->update(['invoice_id' => 0]);
+                }
+
                 $authorization->update(['invoice_id' => $invoice->id]);
                 $notes = "Factura para autorización ".$invoice->authorization_code." de la EPS: ".$invoice->eps->code
                     ." - ".$invoice->eps->alias;
