@@ -48,11 +48,6 @@ class AjaxController extends Controller
     {
         $companionServices = EpsService::getServices($id)->pluck('name', 'id');
         if (count($companionServices) < 1) {
-/*
-            $companionServices = [
-                "0" => 'Sin servicios registrados'
-            ];
-*/            
         }
         return view('partials._companion_services', compact('companionServices'));
     }
@@ -104,6 +99,12 @@ class AjaxController extends Controller
     {
         $authorizations = Authorization::full($search);
         return view('partials._authorizations', compact('authorizations'));
+    }
+
+    public function getGlobalAuthorizations($search)
+    {
+        $authorizations = Authorization::global($search);
+        return view('partials._authorizations_global', compact('authorizations'));
     }
 
     public function getClosedAuthorizations($search)

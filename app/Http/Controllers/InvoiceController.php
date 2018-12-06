@@ -354,4 +354,5 @@ class InvoiceController extends Controller
         }
         return redirect()->route('invoice.import');
     }
+
 }

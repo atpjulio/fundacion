@@ -298,4 +298,10 @@ class Authorization extends Model
             ->first();
     }
 
+    protected function global($search = '')
+    {
+        return $this::where('authorizations.code', 'not like', config('constants.unathorized.prefix').'%')->where('authorizations.code', 'like', '%'.$search.'%')
+            ->paginate(config('constants.pagination'));
+    }
+
 }

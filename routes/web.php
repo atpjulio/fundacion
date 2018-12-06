@@ -64,10 +64,12 @@ Route::middleware(['auth', 'both'])->group(function () {
     Route::get('authorization-incomplete', 'AuthorizationController@incomplete')->name('authorization.incomplete');
     Route::get('authorization-open', 'AuthorizationController@open')->name('authorization.open');
     Route::get('authorization-close', 'AuthorizationController@close')->name('authorization.close');
+    Route::post('authorization-global', 'AuthorizationController@global')->name('authorization.global');
     Route::post('authorization/create-back', 'AuthorizationController@createBack')->name('authorization.create.back');
 
     Route::resource('patient', 'PatientController');
     Route::get('patient-create-from-authorization', 'PatientController@createAuthorization')->name('patient.create.authorization');
+    Route::post('patient-global', 'PatientController@global')->name('patient.global');
     Route::get('patient-import', 'PatientController@import')->name('patient.import');
     Route::post('patient-import-process', 'PatientController@importProcess')->name('patient.import.process');
     Route::post('patient-import-process-txt', 'PatientController@importProcessTxt')->name('patient.import.process.txt');
@@ -78,6 +80,7 @@ Route::middleware(['auth', 'both'])->group(function () {
     Route::get('authorization/excel/{id}', 'AuthorizationController@excel')->name('authorization.excel');
 
     Route::get('/get-eps-patients-filtered/{search}', 'AjaxController@getEpsPatientsFiltered');
+    Route::get('/get-global-authorizations/{search}', 'AjaxController@getGlobalAuthorizations');
     Route::get('/get-full-authorizations/{search}', 'AjaxController@getFullAuthorizations');
     Route::get('/get-companion-services/{id}', 'AjaxController@getCompanionServices');
     Route::get('/get-multiple-services/{id}', 'AjaxController@getMultipleServices');

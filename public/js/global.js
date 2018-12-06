@@ -76,7 +76,7 @@ function fillFilteredEpsPatients(search)
     $.get("/get-eps-patients-filtered/" + search, function (data, status) {
         $('#dynamic-patients').html(data);
         $('#searching').val(search);
-        $('#searching').on('change', function (e) {
+        $('#searching').on('change keyup', function (e) {
             fillFilteredEpsPatients($('#searching').val());
         });
     });
@@ -123,6 +123,18 @@ function fullAuthorizations(search)
         $('#searching').val(search);
         $('#searching').on('change', function (e) {
             fullAuthorizations($('#searching').val());
+        });
+    });
+}
+
+function globalAuthorizations(search)
+{
+    $.get("/get-global-authorizations/" + search, function (data, status) {
+        console.log(data);
+        $('#dynamic-authorizations').html(data);
+        $('#searching').val(search);
+        $('#searching').on('change', function (e) {
+            globalAuthorizations($('#searching').val());
         });
     });
 }

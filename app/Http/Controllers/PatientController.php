@@ -205,4 +205,10 @@ class PatientController extends Controller
         return redirect()->route('patient.import');
     }
 
+    public function global(Request $request)
+    {
+        $patients = Patient::searchRecords($request->get('patient'));
+
+        return view('patient.global', compact('patients'));
+    }
 }

@@ -331,4 +331,10 @@ class AuthorizationController extends Controller
         return view('authorization.close', compact('total', 'authorizations'));
     }
 
+    public function global(Request $request) 
+    {
+        $authorizations = Authorization::global($request->get('authorization_code'));
+
+        return view('authorization.global', compact('authorizations'));
+    }
 }

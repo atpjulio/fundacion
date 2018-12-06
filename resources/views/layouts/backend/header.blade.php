@@ -5,17 +5,24 @@
             <i class="fa fa-bars"></i>
         </button>
     </div>
-    {{--
     <div class="header-block header-block-search">
-        <form role="search">
+        {!! Form::open(['route' => 'authorization.global', 'role' => 'search', 'method' => 'POST']) !!}
             <div class="input-container">
                 <i class="fa fa-search"></i>
-                <input type="search" placeholder="Search">
+                <input type="search" name="authorization_code" placeholder="Autorización">
                 <div class="underline"></div>
             </div>
-        </form>
+        {!! Form::close() !!}
     </div>
-    --}}
+    <div class="header-block header-block-search">
+        {!! Form::open(['route' => 'patient.global', 'role' => 'search', 'method' => 'POST']) !!}
+            <div class="input-container">
+                <i class="fa fa-search"></i>
+                <input type="search" name="patient" placeholder="Usuario">
+                <div class="underline"></div>
+            </div>
+        {!! Form::close() !!}
+    </div>
     {{--
     <div class="header-block header-block-buttons" >
         <a href="https://github.com/modularcode/modular-admin-html"
