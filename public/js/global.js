@@ -76,10 +76,8 @@ function fillFilteredEpsPatients(search)
     $.get("/get-eps-patients-filtered/" + search, function (data, status) {
         $('#dynamic-patients').html(data);
         $('#searching').val(search);
-        $('#searching').on('change keyup', function (e) {
-            if ($('#searching').val().length > 4) {
-                fillFilteredEpsPatients($('#searching').val());
-            }
+        $('#searching').on('change', function (e) {
+            fillFilteredEpsPatients($('#searching').val());
         });
     });
 }
