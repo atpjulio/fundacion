@@ -77,7 +77,9 @@ function fillFilteredEpsPatients(search)
         $('#dynamic-patients').html(data);
         $('#searching').val(search);
         $('#searching').on('change keyup', function (e) {
-            fillFilteredEpsPatients($('#searching').val());
+            if ($('#searching').val().length > 4) {
+                fillFilteredEpsPatients($('#searching').val());
+            }
         });
     });
 }

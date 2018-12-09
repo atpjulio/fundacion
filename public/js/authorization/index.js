@@ -1,6 +1,8 @@
 $(document).ready(function() {
     $('#searching').on('change keyup', function (e) {
-        fillFilteredEpsPatients($('#searching').val());
+        if ($('#searching').val().length > 4) {
+            fillFilteredEpsPatients($('#searching').val());
+        }
     });
 
     $('#code').on('change keyup', function (e) {
