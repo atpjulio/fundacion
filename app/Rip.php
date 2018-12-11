@@ -647,7 +647,6 @@ class Rip extends Model
                     });
                     $counter++;
                     $counterAF++;
-                    }                    
                 }
             });
 
@@ -690,7 +689,7 @@ class Rip extends Model
                     $cell->setAlignment('center');
                 });
 
-                $sheet->setWidth('F', 9);
+                    $sheet->setWidth('F', 9);
                 $sheet->cell('F1', function($cell) {
                     $cell->setValue('Tipo de servicio');   
                     $cell->setFontColor('#0000FF');
