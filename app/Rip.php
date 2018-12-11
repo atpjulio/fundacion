@@ -366,11 +366,13 @@ class Rip extends Model
                     $cell->setAlignment('center');
                 });
                 $counter = 2;
+                $arrPatients = [];
+
                 foreach ($invoices as $invoice) {
                     if ($invoice->multiple) {
                         foreach (json_decode($invoice->multiple_codes, true) as $key => $value) {
                             $currentAuthorization = Authorization::findByCode($value);
-                            if ($currentAuthorization) {
+                            if ($currentAuthorization and !in_array($currentAuthorization->patient->id, $arrPatients)) {
                                 $arrayFirstName = explode(" ", $currentAuthorization->patient->first_name);
                                 $arrayLastName = explode(" ", $currentAuthorization->patient->last_name);
 
@@ -416,11 +418,12 @@ class Rip extends Model
                                 $sheet->cell('N'.$counter, function($cell) use ($currentAuthorization) {
                                     $cell->setValue($currentAuthorization->patient->zone);   
                                 });
+                                array_push($arrPatients, $currentAuthorization->patient->id);
                                 $counter++;
                                 $counterUS++;                        
                             }
                         }
-                    } else {
+                    } elseif (!in_array($invoice->authorization->patient->id, $arrPatients)) {
                         $arrayFirstName = explode(" ", $invoice->authorization->patient->first_name);
                         $arrayLastName = explode(" ", $invoice->authorization->patient->last_name);
 
@@ -466,6 +469,7 @@ class Rip extends Model
                         $sheet->cell('N'.$counter, function($cell) use ($invoice) {
                             $cell->setValue($invoice->authorization->patient->zone);   
                         });
+                        array_push($arrPatients, $invoice->authorization->patient->id);
                         $counter++;
                         $counterUS++;                        
                     }
@@ -593,124 +597,56 @@ class Rip extends Model
 
                 $counter = 2;
                 foreach ($invoices as $invoice) {
-                    if ($invoice->multiple) {
-                        foreach (json_decode($invoice->multiple_totals, true) as $total) {
-                            $createdAt = \Carbon\Carbon::parse($invoice->created_at)->format("d/m/Y");
+                    $createdAt = \Carbon\Carbon::parse($invoice->created_at)->format("d/m/Y");
+                    $total = $invoice->multiple ? array_sum(json_decode($invoice->multiple_totals, true)) : $invoice->total;
 
-                            $sheet->cell('A'.$counter, function($cell) use ($invoice) {
-                                $cell->setValue(sprintf("%12d", substr($invoice->company->doc, 0, 9)));   
-                            });
-                            $sheet->cell('B'.$counter, function($cell) use ($invoice) {
-                                $cell->setValue(mb_strtoupper($invoice->company->name));   
-                            });
-                            $sheet->cell('C'.$counter, function($cell) use ($invoice) {
-                                $cell->setValue($invoice->company->doc_type);   
-                            });
-                            $sheet->cell('D'.$counter, function($cell) use ($invoice) {
-                                $cell->setValue(substr($invoice->company->doc, 0, 9));   
-                            });
-                            $sheet->cell('E'.$counter, function($cell) use ($invoice) {
-                                $cell->setValue($invoice->number);   
-                            });
-                            $sheet->cell('F'.$counter, function($cell) use ($createdAt) {
-                                $cell->setValue($createdAt);   
-                            });
-                            $sheet->cell('G'.$counter, function($cell) use ($createdAt) {
-                                $cell->setValue($createdAt);   
-                            });
-                            $sheet->cell('H'.$counter, function($cell) use ($createdAt) {
-                                $cell->setValue($createdAt);   
-                            });
-                            $sheet->cell('I'.$counter, function($cell) use ($invoice) {
-                                $cell->setValue($invoice->eps->code);   
-                            });
-                            $sheet->cell('J'.$counter, function($cell) use ($invoice) {
-                                $cell->setValue(substr(mb_strtoupper($invoice->eps->name), 0, 30));   
-                            });
-                            $sheet->cell('K'.$counter, function($cell) {
-                                $cell->setValue('EPS');   
-                            });
-                            /*
-                            $sheet->cell('L'.$counter, function($cell) {
-                                $cell->setValue($invoice->authorization->patient->state);   
-                            });
-                            $sheet->cell('M'.$counter, function($cell) {
-                                $cell->setValue($invoice->authorization->patient->city);   
-                            });
-                            */
-                            $sheet->cell('N'.$counter, function($cell) {
-                                $cell->setValue('0');   
-                            });
-                            $sheet->cell('O'.$counter, function($cell) {
-                                $cell->setValue('0');   
-                            });
-                            $sheet->cell('P'.$counter, function($cell) {
-                                $cell->setValue('0');   
-                            });
-                            $sheet->cell('Q'.$counter, function($cell) use ($total) {
-                                $cell->setValue($total);   
-                            });
-                            $counter++;
-                            $counterAF++;
-                        }
-                    } else {
-                        $createdAt = \Carbon\Carbon::parse($invoice->created_at)->format("d/m/Y");
-
-                        $sheet->cell('A'.$counter, function($cell) use ($invoice) {
-                            $cell->setValue(sprintf("%12d", substr($invoice->company->doc, 0, 9)));   
-                        });
-                        $sheet->cell('B'.$counter, function($cell) use ($invoice) {
-                            $cell->setValue(mb_strtoupper($invoice->company->name));   
-                        });
-                        $sheet->cell('C'.$counter, function($cell) use ($invoice) {
-                            $cell->setValue($invoice->company->doc_type);   
-                        });
-                        $sheet->cell('D'.$counter, function($cell) use ($invoice) {
-                            $cell->setValue(substr($invoice->company->doc, 0, 9));   
-                        });
-                        $sheet->cell('E'.$counter, function($cell) use ($invoice) {
-                            $cell->setValue($invoice->number);   
-                        });
-                        $sheet->cell('F'.$counter, function($cell) use ($createdAt) {
-                            $cell->setValue($createdAt);   
-                        });
-                        $sheet->cell('G'.$counter, function($cell) use ($createdAt) {
-                            $cell->setValue($createdAt);   
-                        });
-                        $sheet->cell('H'.$counter, function($cell) use ($createdAt) {
-                            $cell->setValue($createdAt);   
-                        });
-                        $sheet->cell('I'.$counter, function($cell) use ($invoice) {
-                            $cell->setValue($invoice->eps->code);   
-                        });
-                        $sheet->cell('J'.$counter, function($cell) use ($invoice) {
-                            $cell->setValue(substr(mb_strtoupper($invoice->eps->name), 0, 30));   
-                        });
-                        $sheet->cell('K'.$counter, function($cell) {
-                            $cell->setValue('EPS');   
-                        });
-                        /*
-                        $sheet->cell('L'.$counter, function($cell) {
-                            $cell->setValue($invoice->authorization->patient->state);   
-                        });
-                        $sheet->cell('M'.$counter, function($cell) {
-                            $cell->setValue($invoice->authorization->patient->city);   
-                        });
-                        */
-                        $sheet->cell('N'.$counter, function($cell) {
-                            $cell->setValue('0');   
-                        });
-                        $sheet->cell('O'.$counter, function($cell) {
-                            $cell->setValue('0');   
-                        });
-                        $sheet->cell('P'.$counter, function($cell) {
-                            $cell->setValue('0');   
-                        });
-                        $sheet->cell('Q'.$counter, function($cell) use ($invoice) {                        
-                            $cell->setValue($invoice->total);   
-                        });
-                        $counter++;
-                        $counterAF++;                        
+                    $sheet->cell('A'.$counter, function($cell) use ($invoice) {
+                        $cell->setValue(sprintf("%12d", substr($invoice->company->doc, 0, 9)));   
+                    });
+                    $sheet->cell('B'.$counter, function($cell) use ($invoice) {
+                        $cell->setValue(mb_strtoupper($invoice->company->name));   
+                    });
+                    $sheet->cell('C'.$counter, function($cell) use ($invoice) {
+                        $cell->setValue($invoice->company->doc_type);   
+                    });
+                    $sheet->cell('D'.$counter, function($cell) use ($invoice) {
+                        $cell->setValue(substr($invoice->company->doc, 0, 9));   
+                    });
+                    $sheet->cell('E'.$counter, function($cell) use ($invoice) {
+                        $cell->setValue($invoice->number);   
+                    });
+                    $sheet->cell('F'.$counter, function($cell) use ($createdAt) {
+                        $cell->setValue($createdAt);   
+                    });
+                    $sheet->cell('G'.$counter, function($cell) use ($createdAt) {
+                        $cell->setValue($createdAt);   
+                    });
+                    $sheet->cell('H'.$counter, function($cell) use ($createdAt) {
+                        $cell->setValue($createdAt);   
+                    });
+                    $sheet->cell('I'.$counter, function($cell) use ($invoice) {
+                        $cell->setValue($invoice->eps->code);   
+                    });
+                    $sheet->cell('J'.$counter, function($cell) use ($invoice) {
+                        $cell->setValue(substr(mb_strtoupper($invoice->eps->name), 0, 30));   
+                    });
+                    $sheet->cell('K'.$counter, function($cell) {
+                        $cell->setValue('EPS');   
+                    });
+                    $sheet->cell('N'.$counter, function($cell) {
+                        $cell->setValue('0');   
+                    });
+                    $sheet->cell('O'.$counter, function($cell) {
+                        $cell->setValue('0');   
+                    });
+                    $sheet->cell('P'.$counter, function($cell) {
+                        $cell->setValue('0');   
+                    });
+                    $sheet->cell('Q'.$counter, function($cell) use ($total) {
+                        $cell->setValue($total);   
+                    });
+                    $counter++;
+                    $counterAF++;
                     }                    
                 }
             });
