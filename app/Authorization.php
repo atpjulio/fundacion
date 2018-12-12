@@ -4,6 +4,9 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use App\AuthorizationDate;
+use App\AuthorizationService;
+use App\AuthorizationCompanion;
 
 class Authorization extends Model
 {
@@ -69,12 +72,26 @@ class Authorization extends Model
         return $this->belongsTo(Invoice::class);
     }
 
+    public function services()
+    {
+      return $this->hasMany(AuthorizationService::class);
+    }
+
+    public function dates()
+    {
+      return $this->hasMany(AuthorizationDate::class);
+    }
+
+    public function companions()
+    {
+      return $this->hasMany(AuthorizationCompanion::class);
+    }
     /**
      * Attributes
      */
     public function getDaysAttribute()
     {
-        return \Carbon\Carbon::parse($this->date_to)->diffInDays(\Carbon\Carbon::parse($this->date_from));        
+        return \Carbon\Carbon::parse($this->date_to)->diffInDays(\Carbon\Carbon::parse($this->date_from));
     }
 
     public function getPersonsAttribute()
@@ -150,14 +167,14 @@ class Authorization extends Model
         if ($patient and $request->get('patient_phone')) {
             if ($patient->phone) {
                 $patient->phone->update([
-                    'phone' => $request->get('patient_phone'),                    
+                    'phone' => $request->get('patient_phone'),
                 ]);
             } else {
                 Phone::create([
                     'model_id' => $patient->id,
                     'model_type' => config('constants.modelType.patient'),
                     'phone' => $request->get('patient_phone'),
-                ]);                
+                ]);
             }
         }
 
@@ -203,14 +220,14 @@ class Authorization extends Model
             if ($patient and $request->get('patient_phone')) {
                 if ($patient->phone) {
                     $patient->phone->update([
-                        'phone' => $request->get('patient_phone'),                    
+                        'phone' => $request->get('patient_phone'),
                     ]);
                 } else {
                     Phone::create([
                         'model_id' => $patient->id,
                         'model_type' => config('constants.modelType.patient'),
                         'phone' => $request->get('patient_phone'),
-                    ]);                
+                    ]);
                 }
             }
 
@@ -230,7 +247,7 @@ class Authorization extends Model
         return $this->where('code', $code)->first();
     }
 
-    protected function findDepartures() 
+    protected function findDepartures()
     {
         return $this->where('date_to', \Carbon\Carbon::now()->format('Y-m-d'))
             ->where('status', config('constants.status.active'))
@@ -251,7 +268,7 @@ class Authorization extends Model
     protected function fullCount()
     {
         return $this->where('code', 'not like', config('constants.unathorized.prefix').'%')
-            ->count();        
+            ->count();
     }
 
     protected function incomplete()

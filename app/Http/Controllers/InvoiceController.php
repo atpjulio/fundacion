@@ -95,7 +95,7 @@ class InvoiceController extends Controller
 
         if (!$invoice) {
             Session::flash('message_danger', 'Factura no encontrada');
-            return redirect()->back()->withInput();            
+            return redirect()->back()->withInput();
         }
 
         $lastNumber = $invoice->number;
@@ -121,7 +121,7 @@ class InvoiceController extends Controller
         if ($request->get('multiple') == "1") {
             if ($request->get('multiple_codes') == null) {
                 Session::flash('message_danger', 'Falta al menos un código de autorización por llenar');
-                return redirect()->back()->withInput();                
+                return redirect()->back()->withInput();
             }
 
             foreach ($request->get('multiple_codes') as $key => $value) {
@@ -176,7 +176,7 @@ class InvoiceController extends Controller
 
             if (!$invoice) {
                 Session::flash('message_danger', 'Factura no encontrada');
-                return redirect()->back()->withInput();            
+                return redirect()->back()->withInput();
             }
 
             $note = AccountingNote::where('invoice_id', $invoice->id)->first();
@@ -193,12 +193,12 @@ class InvoiceController extends Controller
         return redirect()->route('invoice.index');
     }
 
-    public function pdf($id) 
+    public function pdf($id)
     {
         $invoice = Invoice::find($id);
         if (!$invoice) {
             Session::flash('message_danger', 'Factura no encontrada');
-            return redirect()->back()->withInput();            
+            return redirect()->back()->withInput();
         }
 
         $html = \View::make('invoice.pdf', compact('invoice'));
@@ -225,7 +225,7 @@ class InvoiceController extends Controller
 
         if (!$epss) {
             Session::flash('message_danger', 'No se encontró el listado de EPS');
-            return redirect()->back()->withInput();            
+            return redirect()->back()->withInput();
         }
 
         $invoicesAmount = count(Invoice::getInvoicesByEpsId($epss->toArray()[0]['id'], date("Y-m-d"), date("Y-m-d")));
@@ -235,7 +235,7 @@ class InvoiceController extends Controller
         return view('invoice.relation', compact('epss', 'companies', 'invoicesAmount'));
     }
 
-    public function relationPDF(Request $request) 
+    public function relationPDF(Request $request)
     {
         $epsId = $request->get('eps_id');
         $initialDate = $request->get('initial_date');
@@ -280,7 +280,7 @@ class InvoiceController extends Controller
 
         if (!$epss) {
             Session::flash('message_danger', 'No se encontró el listado de EPS');
-            return redirect()->back()->withInput();            
+            return redirect()->back()->withInput();
         }
 
         $invoicesAmount = count(Invoice::getInvoicesByEpsId($epss->toArray()[0]['id'], date("Y-m-d"), date("Y-m-d")));
@@ -290,7 +290,7 @@ class InvoiceController extends Controller
         return view('invoice.volume', compact('epss', 'companies', 'invoicesAmount'));
     }
 
-    public function volumePDF(Request $request) 
+    public function volumePDF(Request $request)
     {
         $epsId = $request->get('eps_id');
         $initialDate = $request->get('initial_date');
@@ -345,7 +345,7 @@ class InvoiceController extends Controller
                 }
             }
             fclose($fileResource);
-        }         
+        }
 
         if ($counter > 0) {
             Session::flash("message", "Se guardaron $counter facturas exitosamente!");

@@ -51,7 +51,7 @@
                 <br>
                 <strong>
                 {{ config('constants.companiesDocumentTypes')[$invoice->company->doc_type] }}:
-                </strong> 
+                </strong>
                 {{ $invoice->company->doc }}
                 <br><strong>Dirección:</strong> Carrera 60 No. 46 - 76
                 <br><strong>Tel:</strong> 3126214231 - 3157098010
@@ -66,7 +66,7 @@
                 <br>
                 Resolución de Facturación No.
                 <br>
-                {{ $invoice->company->billing_resolution }} de 
+                {{ $invoice->company->billing_resolution }} de
                 {{ \Carbon\Carbon::parse($invoice->company->billing_date)->format("d/m/Y") }}
                 <br>
                 Desde {{ $invoice->company->billing_start }} hasta el {{ $invoice->company->billing_end }}
@@ -86,28 +86,44 @@ mpdf-->
     <table width="100%" style="font-family: serif;" cellpadding="10">
         <tr>
             @if ($invoice->multiple)
-            <td width="69%" style="border: 0.1mm solid #888888;">
-                <span style="font-size: 9pt; color: #555555; font-family: sans;">
-                    DATOS DE LA EMPRESA:
-                </span>
-                <br><br>
-                {{ $invoice->eps->code }} - {{ $invoice->eps->name }}
-                 - 
-                NIT: {{ $invoice->eps->nit }}
-                <br>
-                Dirección: {{ $invoice->eps->address->address }}
-                 - 
-                Tel: {{ $invoice->eps->phone->phone }}
-            </td>
-            <td width="1%">&nbsp;</td>
-            <td width="30%" style="border: 0.1mm solid #888888; ">
-                <span style="font-size: 9pt; color: #555555; font-family: sans;">
-                    SON:
-                </span>
-                <br><br>
-                {{ ucfirst(\App\NumberToLetter::convertirEurosEnLetras(number_format(array_sum(json_decode($invoice->multiple_totals, true)), 0, ",", "."), 0)) }} M/L
-            </td>                        
-
+              @php
+                $firstAuthorizationCode = json_decode($invoice->multiple_codes, true)[0];
+                $firstAuthorization = \App\Authorization::findByCode($firstAuthorizationCode);
+              @endphp
+              <td width="34%" style="border: 0.1mm solid #888888; ">
+                  <span style="font-size: 9pt; color: #555555; font-family: sans;">
+                      DATOS DEL PACIENTE:
+                  </span>
+                  <br><br>
+                  Tipo de Documento: {{ $firstAuthorization->patient->dni_type}}
+                  <br>
+                  Número de Documento: {{ $firstAuthorization->patient->dni}}
+                  <br>
+                  {{ $firstAuthorization->patient->full_name}}
+                  <br>
+              </td>
+              <td width="1%">&nbsp;</td>
+              <td width="34%" style="border: 0.1mm solid #888888;">
+                  <span style="font-size: 9pt; color: #555555; font-family: sans;">
+                      DATOS DE LA EMPRESA:
+                  </span>
+                  <br><br>
+                  {{ $invoice->eps->code }} - {{ $invoice->eps->name }}
+                   -
+                  NIT: {{ $invoice->eps->nit }}
+                  <br>
+                  Dirección: {{ $invoice->eps->address->address }}
+                   -
+                  Tel: {{ $invoice->eps->phone->phone }}
+              </td>
+              <td width="1%">&nbsp;</td>
+              <td width="30%" style="border: 0.1mm solid #888888; ">
+                  <span style="font-size: 9pt; color: #555555; font-family: sans;">
+                      SON:
+                  </span>
+                  <br><br>
+                  {{ ucfirst(\App\NumberToLetter::convertirEurosEnLetras(number_format(array_sum(json_decode($invoice->multiple_totals, true)), 0, ",", "."), 0)) }} M/L
+              </td>
             @else
             <td width="34%" style="border: 0.1mm solid #888888; ">
                 <span style="font-size: 9pt; color: #555555; font-family: sans;">
@@ -119,7 +135,7 @@ mpdf-->
                 Número de Documento: {{ $invoice->authorization->patient->dni}}
                 <br>
                 {{ $invoice->authorization->patient->full_name}}
-                <br>                
+                <br>
             </td>
             <td width="1%">&nbsp;</td>
             <td width="34%" style="border: 0.1mm solid #888888;">
@@ -142,7 +158,7 @@ mpdf-->
                 </span>
                 <br><br>
                 {{ ucfirst(\App\NumberToLetter::convertirEurosEnLetras(number_format($invoice->total, 0, ",", "."), 0)) }} M/L
-            </td>                        
+            </td>
             @endif
         </tr>
     </table>
@@ -173,9 +189,9 @@ mpdf-->
 
                     if ($companionService) {
                         $services .= ",".$companionService;
-                    }            
+                    }
                 @endphp
-                @foreach(explode(",", $services) as $serviceId)    
+                @foreach(explode(",", $services) as $serviceId)
                     @php
                         $service = \App\EpsService::find($serviceId);
                         $currentTotal = json_decode($invoice->multiple_totals, true)[$k] / count(explode(",", $services));
@@ -190,7 +206,7 @@ mpdf-->
                         <td class="">$ {!! number_format($currentTotal, 0, ",", ".") !!}</td>
                     </tr>
                 @endforeach
-            @endforeach            
+            @endforeach
         @else
             @php
                 $total = 0;
@@ -199,9 +215,9 @@ mpdf-->
 
                 if ($companionService) {
                     $services .= ",".$companionService;
-                }            
+                }
             @endphp
-            @foreach(explode(",", $services) as $serviceId)    
+            @foreach(explode(",", $services) as $serviceId)
                 @php
                     $service = \App\EpsService::find($serviceId);
                     $total += $invoice->total / count(explode(",", $services));
@@ -245,7 +261,7 @@ mpdf-->
                 C.C.: _______________________________
                 <br>
                 Fecha: ________/__________/__________
-                <br>            
+                <br>
                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                 &nbsp;&nbsp;DIA
                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;MES
@@ -256,7 +272,7 @@ mpdf-->
     <br>
     <hr>
     <div style="text-align: center; font-style: italic;">
-        Esta factura de venta se asimila en todos sus efectos legales a una letra de cambio. 
+        Esta factura de venta se asimila en todos sus efectos legales a una letra de cambio.
         <br>
         Art. 774 del código de comercio
     </div>

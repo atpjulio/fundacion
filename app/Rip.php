@@ -17,7 +17,7 @@ class Rip extends Model
         'initial_date',
         'final_date',
         'created_at'
-	];    
+	];   
     /**
      * The attributes that should be mutated to dates.
      *

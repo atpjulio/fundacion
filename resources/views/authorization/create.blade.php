@@ -44,7 +44,7 @@
                             <div class="card-title-block">
                                 <h3 class="title" id="authFields"> Paciente seleccionado </h3>
                             </div>
-                            <p id="selected_patient"></p>
+                            <h2 id="selected_patient"></h2>
                         </div>
                     </div>
                 </div>
@@ -75,7 +75,7 @@
                     <div class="text-center">
                         {!! Form::submit('Guardar', ['class' => 'btn btn-oval btn-primary']) !!}
                     </div>
-                </div>                
+                </div>
             </div>
         </div>
         {!! Form::hidden('patient_id', null, ['id' => 'patient_id']) !!}

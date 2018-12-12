@@ -40,13 +40,16 @@ class Eps extends Model
         return $this->hasOne(Phone::class, 'model_id')
             ->where('model_type', config('constants.modelType.eps'));
     }
-    
 
-    public function getTotalPatientsAttribute() 
+    public function getTotalPatientsAttribute()
     {
         return count(Patient::getPatientsForEps($this->id));
     }
 
+    public function price()
+    {
+      return $this->hasMany(EpsPrice::class);
+    }
     /**
      * Methods
      */
