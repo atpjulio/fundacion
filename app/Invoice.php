@@ -65,7 +65,7 @@ class Invoice extends Model
 
     public function getFormatNumberAttribute()
     {
-        return $this->number;        
+        return $this->number;
     }
 
     public function getMultipleTotalsFormatedAttribute()
@@ -75,7 +75,7 @@ class Invoice extends Model
             $totals[$key] = number_format($value, 2, ",", ".");
         }
 
-        return $totals;        
+        return $totals;
     }
 
     /**
@@ -124,11 +124,11 @@ class Invoice extends Model
                     'type' => 0,
                     'description' => 'Cuentas por pagar para EPS '.$invoice->eps->code .' - '.$invoice->eps->alias,
                     'amount' => $total,
-                ]);       
+                ]);
                 $pucTotal += $total;
                 $currentAuthorization = Authorization::findByCode($request->get('multiple_codes')[$key]);
                 if ($currentAuthorization) {
-                    $currentAuthorization->update(['invoice_id' => $invoice->id]);        
+                    $currentAuthorization->update(['invoice_id' => $invoice->id]);
                 }
             }
             AccountingNote::storeRecord($invoice, $pucs, $notes, $pucTotal);
@@ -151,7 +151,7 @@ class Invoice extends Model
                     'amount' => $invoice->total,
                 ],
             ];
-            AccountingNote::storeRecord($invoice, $pucs, $notes, $invoice->total);            
+            AccountingNote::storeRecord($invoice, $pucs, $notes, $invoice->total);
         }
 
         return $invoice;
@@ -184,15 +184,15 @@ class Invoice extends Model
             if ($authorization) {
                 $invoice->eps_id = $authorization->eps_id;
             }
-            $invoice->save();
 
-            if ($invoice->multiple) {
-                foreach (json_decode($oldAuthorizationCodes, true) as $oldAuthorizationCode) {
-                    $oldAuthorization = Authorization::findByCode($oldAuthorizationCode);
+            if ($invoice->multiple and $oldAuthorizationCodes) {
+                foreach (json_decode($oldAuthorizationCodes, true) as $oldCode) {
+                    $oldAuthorization = Authorization::findByCode($oldCode);
                     if ($oldAuthorization) {
                         $oldAuthorization->update(['invoice_id' => 0]);
                     }
-                }                
+                }
+                $invoice->save();
 
                 $notes = "Factura para las autorizaciones ".join(",", $request->get('multiple_codes'))." de la EPS: ".$invoice->eps->code." - ".$invoice->eps->alias;
 
@@ -210,11 +210,11 @@ class Invoice extends Model
                         'type' => 0,
                         'description' => 'Cuentas por pagar para EPS '.$invoice->eps->code .' - '.$invoice->eps->alias,
                         'amount' => $total,
-                    ]);       
-                    $pucTotal += $total;         
+                    ]);
+                    $pucTotal += $total;
                     $currentAuthorization = Authorization::findByCode($request->get('multiple_codes')[$key]);
                     if ($currentAuthorization) {
-                        $currentAuthorization->update(['invoice_id' => $invoice->id]);        
+                        $currentAuthorization->update(['invoice_id' => $invoice->id]);
                     }
                 }
                 AccountingNote::updateRecord($invoice, $pucs, $notes, $invoice->total);
@@ -222,6 +222,7 @@ class Invoice extends Model
                 $oldAuthorization = Authorization::findByCode($oldAuthorizationCode);
                 if ($oldAuthorization) {
                     $oldAuthorization->update(['invoice_id' => 0]);
+                    $invoice->save();
                 }
 
                 $authorization->update(['invoice_id' => $invoice->id]);
@@ -269,20 +270,20 @@ class Invoice extends Model
         if ($initialDate and $finalDate) {
             return $this->where('eps_id', $epsId)
                 ->whereBetween('created_at', [$initialDate, $finalDate])
-                ->get();            
+                ->get();
         }
 
         return $this->where('eps_id', $epsId)
             ->get();
     }
 
-    protected function getInvoiceByNumber($number) 
+    protected function getInvoiceByNumber($number)
     {
         return $this->where('number', $number)
             ->first();
     }
 
-    protected function getInvoiceByAuthorizationCode($code) 
+    protected function getInvoiceByAuthorizationCode($code)
     {
         return $this->where('authorization_code', $code)
             ->first();
@@ -300,7 +301,7 @@ class Invoice extends Model
                     echo "\nMultiple, processing code: ".$code;
                     if ($currentAuthorization and $currentAuthorization->invoice_id == 0) {
                         echo "\n[ <<< TRUE >>> ]";
-                        $currentAuthorization->update(['invoice_id' => $invoice->id]);        
+                        $currentAuthorization->update(['invoice_id' => $invoice->id]);
                     }
                 }
             } else {
@@ -308,7 +309,7 @@ class Invoice extends Model
                 $currentAuthorization = Authorization::findByCode($invoice->authorization_code);
                 if ($currentAuthorization and $currentAuthorization->invoice_id == 0) {
                     echo "\n[ <<< TRUE >>> ]";
-                    $currentAuthorization->update(['invoice_id' => $invoice->id]);        
+                    $currentAuthorization->update(['invoice_id' => $invoice->id]);
                 }
             }
         }
