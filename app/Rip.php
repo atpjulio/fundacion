@@ -17,7 +17,7 @@ class Rip extends Model
         'initial_date',
         'final_date',
         'created_at'
-	];   
+	];
     /**
      * The attributes that should be mutated to dates.
      *
@@ -32,7 +32,7 @@ class Rip extends Model
     {
         return $this->hasOne(Eps::class, 'id', 'eps_id');
     }
-    
+
     /**
      * Methods
      */
@@ -40,8 +40,7 @@ class Rip extends Model
     {
         $filePrefix = ['AT', 'US', 'AF', 'CT', 'RIPS'];
         $prefixCounter = 0;
-
-        $invoices = Invoice::getInvoicesByEpsId($request->get('eps_id'));
+        $invoices = Invoice::getInvoicesByEpsId($request->get('eps_id'), $request->get('initial_date'), $request->get('final_date'));
         $rip = null;
 
         if (count($invoices) <= 0) {
@@ -51,17 +50,17 @@ class Rip extends Model
         $lastRip = $this->all()
             ->last();
         // Creating AT file
-        $counterAT = $this->produceAT($invoices, $lastRip ? $lastRip->id + 1 : 1);   
+        $counterAT = $this->produceAT($invoices, $lastRip ? $lastRip->id + 1 : 1);
 
         // Creating US file
-        $counterUS = $this->produceUS($invoices, $lastRip ? $lastRip->id + 1 : 1);   
+        $counterUS = $this->produceUS($invoices, $lastRip ? $lastRip->id + 1 : 1);
 
         // Creating AF file
-        $counterAF = $this->produceAF($invoices, $lastRip ? $lastRip->id + 1 : 1);   
+        $counterAF = $this->produceAF($invoices, $lastRip ? $lastRip->id + 1 : 1);
 
         // Creating CT file
-        $this->produceCT($invoices[0], $lastRip ? $lastRip->id + 1 : 1, $counterUS, $counterAT, 
-            $counterAF);   
+        $this->produceCT($invoices[0], $lastRip ? $lastRip->id + 1 : 1, $counterUS, $counterAT,
+            $counterAF);
 
         // Creating Excel file
         $this->produceExcel($invoices, $lastRip ? $lastRip->id + 1 : 1, $request);
@@ -71,7 +70,7 @@ class Rip extends Model
             $fileName = ($currentPrefix == 'RIPS') ? $currentPrefix.sprintf("%06d", $lastRip ? $lastRip->id + 1 : 1).".xls" : $currentPrefix.sprintf("%06d", $lastRip ? $lastRip->id + 1 : 1).".TXT";
             \Zipper::make(storage_path('app/public/rips/'.$ripPackage))
                 ->add(storage_path('app/public/rips/'.$fileName))
-                ->close();        
+                ->close();
         }
 
         $rip = new Rip();
@@ -145,7 +144,7 @@ class Rip extends Model
                         $counter++;
                     }
                 }
-            } else {            
+            } else {
                 $days = $invoice->days;
                 $line .= $invoice->number.",".substr($invoice->company->doc, 0, 9).","
                     .$invoice->authorization->patient->dni_type.",".$invoice->authorization->patient->dni.","
@@ -231,12 +230,12 @@ class Rip extends Model
                 .$invoice->number.",".$createdAt.",".$createdAt.",".$createdAt.","
                 .$invoice->eps->code.",".substr(mb_strtoupper($invoice->eps->name), 0, 30).",,,,"
                 ."0.00,0.00,0.00,".$total."\r";
-            $counter++;                
+            $counter++;
         }
 
         $fileName = "AF".sprintf("%06d", $id).".TXT";
 
-        Storage::put(config('constants.ripsFiles').$fileName, $line);        
+        Storage::put(config('constants.ripsFiles').$fileName, $line);
 
         return $counter;
     }
@@ -255,7 +254,7 @@ class Rip extends Model
 
         $fileName = "CT".sprintf("%06d", $id).".TXT";
 
-        Storage::put(config('constants.ripsFiles').$fileName, $line);        
+        Storage::put(config('constants.ripsFiles').$fileName, $line);
     }
 
     protected function produceExcel($invoices, $id, $request, $update = false)
@@ -263,7 +262,7 @@ class Rip extends Model
         $ripDate = $request->get('created_at');
         $fileName = "RIPS".sprintf("%06d", $id);
         Excel::create($fileName, function($excel) use ($invoices, $ripDate, $id) {
- 
+
             $counterUS = 0;
             $counterAF = 0;
             $counterAT = 0;
@@ -282,86 +281,86 @@ class Rip extends Model
 
                 $sheet->setWidth('B', 13);
                 $sheet->cell('B1', function($cell) {
-                    $cell->setValue('Número de Identificación del Usuario en el Sistema');   
+                    $cell->setValue('Número de Identificación del Usuario en el Sistema');
                     $cell->setFontColor('#0000FF');
                     $cell->setAlignment('center');
                 });
 
                 $sheet->setWidth('C', 13);
                 $sheet->cell('C1', function($cell) {
-                    $cell->setValue('Código Entidad Administradora');   
+                    $cell->setValue('Código Entidad Administradora');
                     $cell->setFontColor('#0000FF');
                     $cell->setAlignment('center');
                 });
                 $sheet->setWidth('D', 8);
                 $sheet->cell('D1', function($cell) {
-                    $cell->setValue('Tipo de usuario');   
+                    $cell->setValue('Tipo de usuario');
                     $cell->setFontColor('#0000FF');
                     $cell->setAlignment('center');
                 });
 
                 $sheet->setWidth('E', 9);
                 $sheet->cell('E1', function($cell) {
-                    $cell->setValue('Primer apellido del usuario');   
+                    $cell->setValue('Primer apellido del usuario');
                     $cell->setFontColor('#0000FF');
                     $cell->setAlignment('center');
                 });
 
                 $sheet->setWidth('F', 9);
                 $sheet->cell('F1', function($cell) {
-                    $cell->setValue('Segundo apellido del usuario');   
+                    $cell->setValue('Segundo apellido del usuario');
                     $cell->setFontColor('#0000FF');
                     $cell->setAlignment('center');
                 });
                 $sheet->setWidth('G', 9);
                 $sheet->cell('G1', function($cell) {
-                    $cell->setValue('Primer nombre del usuario');   
+                    $cell->setValue('Primer nombre del usuario');
                     $cell->setFontColor('#0000FF');
                     $cell->setAlignment('center');
                 });
 
                 $sheet->setWidth('H', 9);
                 $sheet->cell('H1', function($cell) {
-                    $cell->setValue('Segundo nombre del usuario');   
+                    $cell->setValue('Segundo nombre del usuario');
                     $cell->setFontColor('#0000FF');
                     $cell->setAlignment('center');
                 });
                 $sheet->setWidth('I', 8);
                 $sheet->cell('I1', function($cell) {
-                    $cell->setValue('Edad');   
+                    $cell->setValue('Edad');
                     $cell->setFontColor('#0000FF');
                     $cell->setAlignment('center');
                 });
 
                 $sheet->setWidth('J', 11);
                 $sheet->cell('J1', function($cell) {
-                    $cell->setValue('Unidad de medida de la Edad');   
+                    $cell->setValue('Unidad de medida de la Edad');
                     $cell->setFontColor('#0000FF');
                     $cell->setAlignment('center');
                 });
                 $sheet->setWidth('K', 8);
                 $sheet->cell('K1', function($cell) {
-                    $cell->setValue('Sexo');   
+                    $cell->setValue('Sexo');
                     $cell->setFontColor('#0000FF');
                     $cell->setAlignment('center');
                 });
 
                 $sheet->setWidth('L', 14);
                 $sheet->cell('L1', function($cell) {
-                    $cell->setValue('Código del departamento de residencia habitual');   
+                    $cell->setValue('Código del departamento de residencia habitual');
                     $cell->setFontColor('#0000FF');
                     $cell->setAlignment('center');
                 });
                 $sheet->setWidth('M', 14);
                 $sheet->cell('M1', function($cell) {
-                    $cell->setValue('Código de municipios de residencia habitual');   
+                    $cell->setValue('Código de municipios de residencia habitual');
                     $cell->setFontColor('#0000FF');
                     $cell->setAlignment('center');
                 });
 
                 $sheet->setWidth('N', 14);
                 $sheet->cell('N1', function($cell) {
-                    $cell->setValue('Zona de residencia habitual');   
+                    $cell->setValue('Zona de residencia habitual');
                     $cell->setFontColor('#0000FF');
                     $cell->setAlignment('center');
                 });
@@ -377,50 +376,50 @@ class Rip extends Model
                                 $arrayLastName = explode(" ", $currentAuthorization->patient->last_name);
 
                                 $sheet->cell('A'.$counter, function($cell) use ($currentAuthorization) {
-                                    $cell->setValue($currentAuthorization->patient->dni_type);   
+                                    $cell->setValue($currentAuthorization->patient->dni_type);
                                 });
                                 $sheet->cell('B'.$counter, function($cell) use ($currentAuthorization) {
-                                    $cell->setValue($currentAuthorization->patient->dni);   
+                                    $cell->setValue($currentAuthorization->patient->dni);
                                 });
                                 $sheet->cell('C'.$counter, function($cell) use ($invoice) {
-                                    $cell->setValue($invoice->eps->code);   
+                                    $cell->setValue($invoice->eps->code);
                                 });
                                 $sheet->cell('D'.$counter, function($cell) use ($currentAuthorization) {
-                                    $cell->setValue($currentAuthorization->patient->type);   
+                                    $cell->setValue($currentAuthorization->patient->type);
                                 });
                                 $sheet->cell('E'.$counter, function($cell) use ($arrayLastName) {
-                                    $cell->setValue(mb_strtoupper($arrayLastName[0]));   
+                                    $cell->setValue(mb_strtoupper($arrayLastName[0]));
                                 });
                                 $sheet->cell('F'.$counter, function($cell) use ($arrayLastName) {
-                                    $cell->setValue(isset($arrayLastName[1]) ? mb_strtoupper($arrayLastName[1]) : '');   
+                                    $cell->setValue(isset($arrayLastName[1]) ? mb_strtoupper($arrayLastName[1]) : '');
                                 });
                                 $sheet->cell('G'.$counter, function($cell) use ($arrayFirstName) {
-                                    $cell->setValue(mb_strtoupper($arrayFirstName[0]));   
+                                    $cell->setValue(mb_strtoupper($arrayFirstName[0]));
                                 });
                                 $sheet->cell('H'.$counter, function($cell) use ($arrayFirstName) {
-                                    $cell->setValue(isset($arrayFirstName[1]) ? mb_strtoupper($arrayFirstName[1]) : '');   
+                                    $cell->setValue(isset($arrayFirstName[1]) ? mb_strtoupper($arrayFirstName[1]) : '');
                                 });
                                 $sheet->cell('I'.$counter, function($cell) use ($currentAuthorization) {
-                                    $cell->setValue($currentAuthorization->patient->age);   
+                                    $cell->setValue($currentAuthorization->patient->age);
                                 });
                                 $sheet->cell('J'.$counter, function($cell) {
-                                    $cell->setValue("1");   
+                                    $cell->setValue("1");
                                 });
                                 $sheet->cell('K'.$counter, function($cell) use ($currentAuthorization) {
-                                    $cell->setValue(config('constants.genderShort.'.$currentAuthorization->patient->gender));   
+                                    $cell->setValue(config('constants.genderShort.'.$currentAuthorization->patient->gender));
                                 });
                                 $sheet->cell('L'.$counter, function($cell) use ($currentAuthorization) {
-                                    $cell->setValue($currentAuthorization->patient->state);   
+                                    $cell->setValue($currentAuthorization->patient->state);
                                 });
                                 $sheet->cell('M'.$counter, function($cell) use ($currentAuthorization) {
-                                    $cell->setValue($currentAuthorization->patient->city);   
+                                    $cell->setValue($currentAuthorization->patient->city);
                                 });
                                 $sheet->cell('N'.$counter, function($cell) use ($currentAuthorization) {
-                                    $cell->setValue($currentAuthorization->patient->zone);   
+                                    $cell->setValue($currentAuthorization->patient->zone);
                                 });
                                 array_push($arrPatients, $currentAuthorization->patient->id);
                                 $counter++;
-                                $counterUS++;                        
+                                $counterUS++;
                             }
                         }
                     } elseif (!in_array($invoice->authorization->patient->id, $arrPatients)) {
@@ -428,58 +427,58 @@ class Rip extends Model
                         $arrayLastName = explode(" ", $invoice->authorization->patient->last_name);
 
                         $sheet->cell('A'.$counter, function($cell) use ($invoice) {
-                            $cell->setValue($invoice->authorization->patient->dni_type);   
+                            $cell->setValue($invoice->authorization->patient->dni_type);
                         });
                         $sheet->cell('B'.$counter, function($cell) use ($invoice) {
-                            $cell->setValue($invoice->authorization->patient->dni);   
+                            $cell->setValue($invoice->authorization->patient->dni);
                         });
                         $sheet->cell('C'.$counter, function($cell) use ($invoice) {
-                            $cell->setValue($invoice->eps->code);   
+                            $cell->setValue($invoice->eps->code);
                         });
                         $sheet->cell('D'.$counter, function($cell) use ($invoice) {
-                            $cell->setValue($invoice->authorization->patient->type);   
+                            $cell->setValue($invoice->authorization->patient->type);
                         });
                         $sheet->cell('E'.$counter, function($cell) use ($arrayLastName) {
-                            $cell->setValue(mb_strtoupper($arrayLastName[0]));   
+                            $cell->setValue(mb_strtoupper($arrayLastName[0]));
                         });
                         $sheet->cell('F'.$counter, function($cell) use ($arrayLastName) {
-                            $cell->setValue(isset($arrayLastName[1]) ? mb_strtoupper($arrayLastName[1]) : '');   
+                            $cell->setValue(isset($arrayLastName[1]) ? mb_strtoupper($arrayLastName[1]) : '');
                         });
                         $sheet->cell('G'.$counter, function($cell) use ($arrayFirstName) {
-                            $cell->setValue(mb_strtoupper($arrayFirstName[0]));   
+                            $cell->setValue(mb_strtoupper($arrayFirstName[0]));
                         });
                         $sheet->cell('H'.$counter, function($cell) use ($arrayFirstName) {
-                            $cell->setValue(isset($arrayFirstName[1]) ? mb_strtoupper($arrayFirstName[1]) : '');   
+                            $cell->setValue(isset($arrayFirstName[1]) ? mb_strtoupper($arrayFirstName[1]) : '');
                         });
                         $sheet->cell('I'.$counter, function($cell) use ($invoice) {
-                            $cell->setValue($invoice->authorization->patient->age);   
+                            $cell->setValue($invoice->authorization->patient->age);
                         });
                         $sheet->cell('J'.$counter, function($cell) {
-                            $cell->setValue("1");   
+                            $cell->setValue("1");
                         });
                         $sheet->cell('K'.$counter, function($cell) use ($invoice) {
-                            $cell->setValue(config('constants.genderShort.'.$invoice->authorization->patient->gender));   
+                            $cell->setValue(config('constants.genderShort.'.$invoice->authorization->patient->gender));
                         });
                         $sheet->cell('L'.$counter, function($cell) use ($invoice) {
-                            $cell->setValue($invoice->authorization->patient->state);   
+                            $cell->setValue($invoice->authorization->patient->state);
                         });
                         $sheet->cell('M'.$counter, function($cell) use ($invoice) {
-                            $cell->setValue($invoice->authorization->patient->city);   
+                            $cell->setValue($invoice->authorization->patient->city);
                         });
                         $sheet->cell('N'.$counter, function($cell) use ($invoice) {
-                            $cell->setValue($invoice->authorization->patient->zone);   
+                            $cell->setValue($invoice->authorization->patient->zone);
                         });
                         array_push($arrPatients, $invoice->authorization->patient->id);
                         $counter++;
-                        $counterUS++;                        
+                        $counterUS++;
                     }
-                }                
+                }
             });
 
             $excel->sheet('AF', function($sheet) use ($invoices, &$counterAF) {
                 $sheet->setHeight(1, 50);
                 $sheet->getStyle('A1:Q1')->getAlignment()->setWrapText(true);
-                $sheet->getStyle('A1:Q'.count($invoices))->getFont()->setSize(10);                
+                $sheet->getStyle('A1:Q'.count($invoices))->getFont()->setSize(10);
 
                 $sheet->setWidth('A', 11);
                 $sheet->cell('A1', function($cell) {
@@ -490,107 +489,107 @@ class Rip extends Model
 
                 $sheet->setWidth('B', 45);
                 $sheet->cell('B1', function($cell) {
-                    $cell->setValue('Razón Social o Apellidos y Nombres del prestador');   
+                    $cell->setValue('Razón Social o Apellidos y Nombres del prestador');
                     $cell->setFontColor('#0000FF');
                     $cell->setAlignment('center');
                 });
 
                 $sheet->setWidth('C', 12);
                 $sheet->cell('C1', function($cell) {
-                    $cell->setValue('Tipo de Identificación');   
+                    $cell->setValue('Tipo de Identificación');
                     $cell->setFontColor('#0000FF');
                     $cell->setAlignment('center');
                 });
                 $sheet->setWidth('D', 12);
                 $sheet->cell('D1', function($cell) {
-                    $cell->setValue('Número de Identificación');   
+                    $cell->setValue('Número de Identificación');
                     $cell->setFontColor('#0000FF');
                     $cell->setAlignment('center');
                 });
 
                 $sheet->setWidth('E', 10);
                 $sheet->cell('E1', function($cell) {
-                    $cell->setValue('Número de la factura');   
+                    $cell->setValue('Número de la factura');
                     $cell->setFontColor('#0000FF');
                     $cell->setAlignment('center');
                 });
 
                 $sheet->setWidth('F', 10);
                 $sheet->cell('F1', function($cell) {
-                    $cell->setValue('Fecha de expedición de la factura');   
+                    $cell->setValue('Fecha de expedición de la factura');
                     $cell->setFontColor('#0000FF');
                     $cell->setAlignment('center');
                 });
                 $sheet->setWidth('G', 10);
                 $sheet->cell('G1', function($cell) {
-                    $cell->setValue('Fecha de Inicio');   
+                    $cell->setValue('Fecha de Inicio');
                     $cell->setFontColor('#0000FF');
                     $cell->setAlignment('center');
                 });
 
                 $sheet->setWidth('H', 10);
                 $sheet->cell('H1', function($cell) {
-                    $cell->setValue('Fecha final');   
+                    $cell->setValue('Fecha final');
                     $cell->setFontColor('#0000FF');
                     $cell->setAlignment('center');
                 });
                 $sheet->setWidth('I', 10);
                 $sheet->cell('I1', function($cell) {
-                    $cell->setValue('Código entidad Administradora');   
+                    $cell->setValue('Código entidad Administradora');
                     $cell->setFontColor('#0000FF');
                     $cell->setAlignment('center');
                 });
 
                 $sheet->setWidth('J', 15);
                 $sheet->cell('J1', function($cell) {
-                    $cell->setValue('Nombre entidad administradora');   
+                    $cell->setValue('Nombre entidad administradora');
                     $cell->setFontColor('#0000FF');
                     $cell->setAlignment('center');
                 });
                 $sheet->setWidth('K', 10);
                 $sheet->cell('K1', function($cell) {
-                    $cell->setValue('Número del Contrato');   
+                    $cell->setValue('Número del Contrato');
                     $cell->setFontColor('#0000FF');
                     $cell->setAlignment('center');
                 });
 
                 $sheet->setWidth('L', 10);
                 $sheet->cell('L1', function($cell) {
-                    $cell->setValue('Plan de Beneficios');   
+                    $cell->setValue('Plan de Beneficios');
                     $cell->setFontColor('#0000FF');
                     $cell->setAlignment('center');
                 });
                 $sheet->setWidth('M', 10);
                 $sheet->cell('M1', function($cell) {
-                    $cell->setValue('Número de la póliza');   
+                    $cell->setValue('Número de la póliza');
                     $cell->setFontColor('#0000FF');
                     $cell->setAlignment('center');
                 });
 
                 $sheet->setWidth('N', 10);
                 $sheet->cell('N1', function($cell) {
-                    $cell->setValue('Valor total del pago compartido COPAGO');   
+                    $cell->setValue('Valor total del pago compartido COPAGO');
                     $cell->setFontColor('#0000FF');
                     $cell->setAlignment('center');
                 });
 
                 $sheet->setWidth('O', 10);
                 $sheet->cell('O1', function($cell) {
-                    $cell->setValue('Valor de la comisión');   
+                    $cell->setValue('Valor de la comisión');
                     $cell->setFontColor('#0000FF');
                     $cell->setAlignment('center');
                 });
 
                 $sheet->setWidth('P', 10);
                 $sheet->cell('P1', function($cell) {
-                    $cell->setValue('Valor total de Descuentos');   
+                    $cell->setValue('Valor total de Descuentos');
                     $cell->setFontColor('#0000FF');
                     $cell->setAlignment('center');
                 });
 
                 $sheet->setWidth('Q', 14);
                 $sheet->cell('Q1', function($cell) {
-                    $cell->setValue('Valor Neto a Pagar por la entidad Contratante');   
+                    $cell->setValue('Valor Neto a Pagar por la entidad Contratante');
                     $cell->setFontColor('#0000FF');
                     $cell->setAlignment('center');
                 });
@@ -601,49 +600,49 @@ class Rip extends Model
                     $total = $invoice->multiple ? array_sum(json_decode($invoice->multiple_totals, true)) : $invoice->total;
 
                     $sheet->cell('A'.$counter, function($cell) use ($invoice) {
-                        $cell->setValue(sprintf("%12d", substr($invoice->company->doc, 0, 9)));   
+                        $cell->setValue(sprintf("%12d", substr($invoice->company->doc, 0, 9)));
                     });
                     $sheet->cell('B'.$counter, function($cell) use ($invoice) {
-                        $cell->setValue(mb_strtoupper($invoice->company->name));   
+                        $cell->setValue(mb_strtoupper($invoice->company->name));
                     });
                     $sheet->cell('C'.$counter, function($cell) use ($invoice) {
-                        $cell->setValue($invoice->company->doc_type);   
+                        $cell->setValue($invoice->company->doc_type);
                     });
                     $sheet->cell('D'.$counter, function($cell) use ($invoice) {
-                        $cell->setValue(substr($invoice->company->doc, 0, 9));   
+                        $cell->setValue(substr($invoice->company->doc, 0, 9));
                     });
                     $sheet->cell('E'.$counter, function($cell) use ($invoice) {
-                        $cell->setValue($invoice->number);   
+                        $cell->setValue($invoice->number);
                     });
                     $sheet->cell('F'.$counter, function($cell) use ($createdAt) {
-                        $cell->setValue($createdAt);   
+                        $cell->setValue($createdAt);
                     });
                     $sheet->cell('G'.$counter, function($cell) use ($createdAt) {
-                        $cell->setValue($createdAt);   
+                        $cell->setValue($createdAt);
                     });
                     $sheet->cell('H'.$counter, function($cell) use ($createdAt) {
-                        $cell->setValue($createdAt);   
+                        $cell->setValue($createdAt);
                     });
                     $sheet->cell('I'.$counter, function($cell) use ($invoice) {
-                        $cell->setValue($invoice->eps->code);   
+                        $cell->setValue($invoice->eps->code);
                     });
                     $sheet->cell('J'.$counter, function($cell) use ($invoice) {
-                        $cell->setValue(substr(mb_strtoupper($invoice->eps->name), 0, 30));   
+                        $cell->setValue(substr(mb_strtoupper($invoice->eps->name), 0, 30));
                     });
                     $sheet->cell('K'.$counter, function($cell) {
-                        $cell->setValue('EPS');   
+                        $cell->setValue('EPS');
                     });
                     $sheet->cell('N'.$counter, function($cell) {
-                        $cell->setValue('0');   
+                        $cell->setValue('0');
                     });
                     $sheet->cell('O'.$counter, function($cell) {
-                        $cell->setValue('0');   
+                        $cell->setValue('0');
                     });
                     $sheet->cell('P'.$counter, function($cell) {
-                        $cell->setValue('0');   
+                        $cell->setValue('0');
                     });
                     $sheet->cell('Q'.$counter, function($cell) use ($total) {
-                        $cell->setValue($total);   
+                        $cell->setValue($total);
                     });
                     $counter++;
                     $counterAF++;
@@ -653,7 +652,7 @@ class Rip extends Model
             $excel->sheet('AT', function($sheet) use ($invoices, &$counterAT) {
                 $sheet->setHeight(1, 50);
                 $sheet->getStyle('A1:K1')->getAlignment()->setWrapText(true);
-                $sheet->getStyle('A1:K'.count($invoices))->getFont()->setSize(10);                
+                $sheet->getStyle('A1:K'.count($invoices))->getFont()->setSize(10);
 
                 $sheet->setWidth('A', 8);
                 $sheet->cell('A1', function($cell) {
@@ -664,66 +663,66 @@ class Rip extends Model
 
                 $sheet->setWidth('B', 12);
                 $sheet->cell('B1', function($cell) {
-                    $cell->setValue('Código del prestador de servicios de salud');   
+                    $cell->setValue('Código del prestador de servicios de salud');
                     $cell->setFontColor('#0000FF');
                     $cell->setAlignment('center');
                 });
 
                 $sheet->setWidth('C', 10);
                 $sheet->cell('C1', function($cell) {
-                    $cell->setValue('Tipo de Identificación del Usuario');   
+                    $cell->setValue('Tipo de Identificación del Usuario');
                     $cell->setFontColor('#0000FF');
                     $cell->setAlignment('center');
                 });
                 $sheet->setWidth('D', 12);
                 $sheet->cell('D1', function($cell) {
-                    $cell->setValue('Número de identificación del usuario en el sistema');   
+                    $cell->setValue('Número de identificación del usuario en el sistema');
                     $cell->setFontColor('#0000FF');
                     $cell->setAlignment('center');
                 });
 
                 $sheet->setWidth('E', 17);
                 $sheet->cell('E1', function($cell) {
-                    $cell->setValue('Número de autorización');   
+                    $cell->setValue('Número de autorización');
                     $cell->setFontColor('#0000FF');
                     $cell->setAlignment('center');
                 });
 
                     $sheet->setWidth('F', 9);
                 $sheet->cell('F1', function($cell) {
-                    $cell->setValue('Tipo de servicio');   
+                    $cell->setValue('Tipo de servicio');
                     $cell->setFontColor('#0000FF');
                     $cell->setAlignment('center');
                 });
                 $sheet->setWidth('G', 9);
                 $sheet->cell('G1', function($cell) {
-                    $cell->setValue('Código del servicio');   
+                    $cell->setValue('Código del servicio');
                     $cell->setFontColor('#0000FF');
                     $cell->setAlignment('center');
                 });
 
                 $sheet->setWidth('H', 30);
                 $sheet->cell('H1', function($cell) {
-                    $cell->setValue('Nombre del servicio');   
+                    $cell->setValue('Nombre del servicio');
                     $cell->setFontColor('#0000FF');
                     $cell->setAlignment('center');
                 });
                 $sheet->setWidth('I', 8);
                 $sheet->cell('I1', function($cell) {
-                    $cell->setValue('Cantidad');   
+                    $cell->setValue('Cantidad');
                     $cell->setFontColor('#0000FF');
                     $cell->setAlignment('center');
                 });
 
                 $sheet->setWidth('J', 12);
                 $sheet->cell('J1', function($cell) {
-                    $cell->setValue('Valor unitario del material e insumo');   
+                    $cell->setValue('Valor unitario del material e insumo');
                     $cell->setFontColor('#0000FF');
                     $cell->setAlignment('center');
                 });
                 $sheet->setWidth('K', 12);
                 $sheet->cell('K1', function($cell) {
-                    $cell->setValue('Valor total del material e insumo');   
+                    $cell->setValue('Valor total del material e insumo');
                     $cell->setFontColor('#0000FF');
                     $cell->setAlignment('center');
                 });
@@ -737,37 +736,37 @@ class Rip extends Model
                                 $days = \Carbon\Carbon::parse($currentAuthorization->date_to)->diffInDays(\Carbon\Carbon::parse($currentAuthorization->date_from));
 
                                 $sheet->cell('A'.$counter, function($cell) use ($invoice) {
-                                    $cell->setValue($invoice->number);   
+                                    $cell->setValue($invoice->number);
                                 });
                                 $sheet->cell('B'.$counter, function($cell) use ($invoice) {
-                                    $cell->setValue(substr($invoice->company->doc, 0, 9));   
+                                    $cell->setValue(substr($invoice->company->doc, 0, 9));
                                 });
                                 $sheet->cell('C'.$counter, function($cell) use ($currentAuthorization) {
-                                    $cell->setValue($currentAuthorization->patient->dni_type);   
+                                    $cell->setValue($currentAuthorization->patient->dni_type);
                                 });
                                 $sheet->cell('D'.$counter, function($cell) use ($currentAuthorization) {
-                                    $cell->setValue($currentAuthorization->patient->dni);   
+                                    $cell->setValue($currentAuthorization->patient->dni);
                                 });
                                 $sheet->cell('E'.$counter, function($cell) use ($currentAuthorization) {
-                                    $cell->setValue($currentAuthorization->code);   
+                                    $cell->setValue($currentAuthorization->code);
                                 });
                                 $sheet->cell('F'.$counter, function($cell) use ($invoice) {
-                                    $cell->setValue("1");   
+                                    $cell->setValue("1");
                                 });
                                 $sheet->cell('G'.$counter, function($cell) use ($currentAuthorization) {
-                                    $cell->setValue($currentAuthorization->service->code);   
+                                    $cell->setValue($currentAuthorization->service->code);
                                 });
                                 $sheet->cell('H'.$counter, function($cell) use ($currentAuthorization) {
-                                    $cell->setValue(mb_strtoupper($currentAuthorization->service->name));   
+                                    $cell->setValue(mb_strtoupper($currentAuthorization->service->name));
                                 });
                                 $sheet->cell('I'.$counter, function($cell) use ($days) {
-                                    $cell->setValue($days);   
+                                    $cell->setValue($days);
                                 });
                                 $sheet->cell('J'.$counter, function($cell) use ($invoice) {
-                                    $cell->setValue($invoice->eps->daily_price);   
+                                    $cell->setValue($invoice->eps->daily_price);
                                 });
                                 $sheet->cell('K'.$counter, function($cell) use ($invoice, $days) {
-                                    $cell->setValue(floatval($days * $invoice->eps->daily_price));   
+                                    $cell->setValue(floatval($days * $invoice->eps->daily_price));
                                 });
                                 $counter++;
                                 $counterAT++;
@@ -777,53 +776,53 @@ class Rip extends Model
                         $days = \Carbon\Carbon::parse($invoice->authorization->date_to)->diffInDays(\Carbon\Carbon::parse($invoice->authorization->date_from));
 
                         $sheet->cell('A'.$counter, function($cell) use ($invoice) {
-                            $cell->setValue($invoice->number);   
+                            $cell->setValue($invoice->number);
                         });
                         $sheet->cell('B'.$counter, function($cell) use ($invoice) {
-                            $cell->setValue(substr($invoice->company->doc, 0, 9));   
+                            $cell->setValue(substr($invoice->company->doc, 0, 9));
                         });
                         $sheet->cell('C'.$counter, function($cell) use ($invoice) {
-                            $cell->setValue($invoice->authorization->patient->dni_type);   
+                            $cell->setValue($invoice->authorization->patient->dni_type);
                         });
                         $sheet->cell('D'.$counter, function($cell) use ($invoice) {
-                            $cell->setValue($invoice->authorization->patient->dni);   
+                            $cell->setValue($invoice->authorization->patient->dni);
                         });
                         $sheet->cell('E'.$counter, function($cell) use ($invoice) {
-                            $cell->setValue($invoice->authorization->code);   
+                            $cell->setValue($invoice->authorization->code);
                         });
                         $sheet->cell('F'.$counter, function($cell) use ($invoice) {
-                            $cell->setValue("1");   
+                            $cell->setValue("1");
                         });
                         $sheet->cell('G'.$counter, function($cell) use ($invoice) {
-                            $cell->setValue($invoice->authorization->service->code);   
+                            $cell->setValue($invoice->authorization->service->code);
                         });
                         $sheet->cell('H'.$counter, function($cell) use ($invoice) {
-                            $cell->setValue(mb_strtoupper($invoice->authorization->service->name));   
+                            $cell->setValue(mb_strtoupper($invoice->authorization->service->name));
                         });
                         $sheet->cell('I'.$counter, function($cell) use ($days) {
-                            $cell->setValue($days);   
+                            $cell->setValue($days);
                         });
                         $sheet->cell('J'.$counter, function($cell) use ($invoice) {
-                            $cell->setValue($invoice->eps->daily_price);   
+                            $cell->setValue($invoice->eps->daily_price);
                         });
                         $sheet->cell('K'.$counter, function($cell) use ($invoice, $days) {
-                            $cell->setValue(floatval($days * $invoice->eps->daily_price));   
+                            $cell->setValue(floatval($days * $invoice->eps->daily_price));
                         });
                         $counter++;
                         $counterAT++;
 
-                    }                                                
+                    }
                 }
             });
 
             $excel->sheet('CT', function($sheet) use ($ripDate, $invoices, $id, $counterUS, $counterAT, $counterAF) {
                 $sheet->setHeight(1, 50);
                 $sheet->getStyle('A1:D1')->getAlignment()->setWrapText(true);
-                $sheet->getStyle('A1:D5')->getFont()->setSize(10);                
+                $sheet->getStyle('A1:D5')->getFont()->setSize(10);
 
                 $sheet->setWidth('A', 12);
                 $sheet->cell('A1', function($cell) {
-                    $cell->setValue('Código del prestador de servicios de salud');   
+                    $cell->setValue('Código del prestador de servicios de salud');
                     $cell->setFontColor('#0000FF');
                     $cell->setAlignment('center');
                 });
@@ -837,64 +836,64 @@ class Rip extends Model
 
                 $sheet->setWidth('C', 11);
                 $sheet->cell('C1', function($cell) {
-                    $cell->setValue('Código del archivo');   
+                    $cell->setValue('Código del archivo');
                     $cell->setFontColor('#0000FF');
                     $cell->setAlignment('center');
                 });
 
                 $sheet->setWidth('D', 9);
                 $sheet->cell('D1', function($cell) {
-                    $cell->setValue('Total de registros');   
+                    $cell->setValue('Total de registros');
                     $cell->setFontColor('#0000FF');
                     $cell->setAlignment('center');
                 });
 
                 $sheet->cell('A3', function($cell) use ($invoices) {
-                    $cell->setValue(''.sprintf("%12d", substr($invoices[0]->company->doc, 0, 9)));   
+                    $cell->setValue(''.sprintf("%12d", substr($invoices[0]->company->doc, 0, 9)));
                 });
                 $sheet->cell('A4', function($cell) use ($invoices) {
-                    $cell->setValue(''.sprintf("%12d", substr($invoices[0]->company->doc, 0, 9)));   
+                    $cell->setValue(''.sprintf("%12d", substr($invoices[0]->company->doc, 0, 9)));
                 });
                 $sheet->cell('A5', function($cell) use ($invoices) {
-                    $cell->setValue(''.sprintf("%12d", substr($invoices[0]->company->doc, 0, 9)));   
+                    $cell->setValue(''.sprintf("%12d", substr($invoices[0]->company->doc, 0, 9)));
                 });
 
                 $createdAt = \Carbon\Carbon::parse($ripDate)->format("d/m/Y");
                 $sheet->cell('B3', function($cell) use ($createdAt) {
-                    $cell->setValue($createdAt);   
+                    $cell->setValue($createdAt);
                 });
                 $sheet->cell('B4', function($cell) use ($createdAt) {
-                    $cell->setValue($createdAt);   
+                    $cell->setValue($createdAt);
                 });
                 $sheet->cell('B5', function($cell) use ($createdAt) {
-                    $cell->setValue($createdAt);   
+                    $cell->setValue($createdAt);
                 });
 
                 $fileId = sprintf("%06d", $id);
                 $sheet->cell('C3', function($cell) use ($fileId) {
-                    $cell->setValue('AF'.$fileId);   
+                    $cell->setValue('AF'.$fileId);
                 });
                 $sheet->cell('C4', function($cell) use ($fileId) {
-                    $cell->setValue('US'.$fileId);   
+                    $cell->setValue('US'.$fileId);
                 });
                 $sheet->cell('C5', function($cell) use ($fileId) {
-                    $cell->setValue('AT'.$fileId);   
+                    $cell->setValue('AT'.$fileId);
                 });
                 $sheet->cell('D3', function($cell) use ($counterAF) {
-                    $cell->setValue($counterAF);   
+                    $cell->setValue($counterAF);
                 });
                 $sheet->cell('D4', function($cell) use ($counterUS) {
-                    $cell->setValue($counterUS);   
+                    $cell->setValue($counterUS);
                 });
                 $sheet->cell('D5', function($cell) use ($counterAT) {
-                    $cell->setValue($counterAT);   
+                    $cell->setValue($counterAT);
                 });
-                
+
             });
             $excel->sheet('CONSULTA', function($sheet) {
                 $sheet->setHeight(1, 50);
                 $sheet->getStyle('A1:Q1')->getAlignment()->setWrapText(true);
-                $sheet->getStyle('A1:Q1')->getFont()->setSize(10);                
+                $sheet->getStyle('A1:Q1')->getFont()->setSize(10);
 
                 $sheet->setWidth('A', 11);
                 $sheet->cell('A1', function($cell) {
@@ -905,108 +904,108 @@ class Rip extends Model
 
                 $sheet->setWidth('B', 15);
                 $sheet->cell('B1', function($cell) {
-                    $cell->setValue('Código del prestador de servicios de salud');   
+                    $cell->setValue('Código del prestador de servicios de salud');
                     $cell->setFontColor('#0000FF');
                     $cell->setAlignment('center');
                 });
 
                 $sheet->setWidth('C', 10);
                 $sheet->cell('C1', function($cell) {
-                    $cell->setValue('Tipo de Identificación del Usuario');   
+                    $cell->setValue('Tipo de Identificación del Usuario');
                     $cell->setFontColor('#0000FF');
                     $cell->setAlignment('center');
                 });
 
                 $sheet->setWidth('D', 10);
                 $sheet->cell('D1', function($cell) {
-                    $cell->setValue('Número de identificación del usuario en el sistema');   
+                    $cell->setValue('Número de identificación del usuario en el sistema');
                     $cell->setFontColor('#0000FF');
                     $cell->setAlignment('center');
                 });
 
                 $sheet->setWidth('E', 10);
                 $sheet->cell('E1', function($cell) {
-                    $cell->setValue('Fecha de la consulta');   
+                    $cell->setValue('Fecha de la consulta');
                     $cell->setFontColor('#0000FF');
                     $cell->setAlignment('center');
                 });
 
                 $sheet->setWidth('F', 10);
                 $sheet->cell('F1', function($cell) {
-                    $cell->setValue('Número de Autorización');   
+                    $cell->setValue('Número de Autorización');
                     $cell->setFontColor('#0000FF');
                     $cell->setAlignment('center');
                 });
                 $sheet->setWidth('G', 10);
                 $sheet->cell('G1', function($cell) {
-                    $cell->setValue('Código de consulta');   
+                    $cell->setValue('Código de consulta');
                     $cell->setFontColor('#0000FF');
                     $cell->setAlignment('center');
                 });
 
                 $sheet->setWidth('H', 10);
                 $sheet->cell('H1', function($cell) {
-                    $cell->setValue('Finalidad de la consulta');   
+                    $cell->setValue('Finalidad de la consulta');
                     $cell->setFontColor('#0000FF');
                     $cell->setAlignment('center');
                 });
                 $sheet->setWidth('I', 10);
                 $sheet->cell('I1', function($cell) {
-                    $cell->setValue('Causa externa');   
+                    $cell->setValue('Causa externa');
                     $cell->setFontColor('#0000FF');
                     $cell->setAlignment('center');
                 });
 
                 $sheet->setWidth('J', 10);
                 $sheet->cell('J1', function($cell) {
-                    $cell->setValue('Código del Diagnóstico principal');   
+                    $cell->setValue('Código del Diagnóstico principal');
                     $cell->setFontColor('#0000FF');
                     $cell->setAlignment('center');
                 });
                 $sheet->setWidth('K', 10);
                 $sheet->cell('K1', function($cell) {
-                    $cell->setValue('Código del diagnóstico relacionado N° 1');   
+                    $cell->setValue('Código del diagnóstico relacionado N° 1');
                     $cell->setFontColor('#0000FF');
                     $cell->setAlignment('center');
                 });
 
                 $sheet->setWidth('L', 10);
                 $sheet->cell('L1', function($cell) {
-                    $cell->setValue('Código del diagnóstico relacionado N° 2');   
+                    $cell->setValue('Código del diagnóstico relacionado N° 2');
                     $cell->setFontColor('#0000FF');
                     $cell->setAlignment('center');
                 });
                 $sheet->setWidth('M', 10);
                 $sheet->cell('M1', function($cell) {
-                    $cell->setValue('Código del diagnóstico relacionado N° 3');   
+                    $cell->setValue('Código del diagnóstico relacionado N° 3');
                     $cell->setFontColor('#0000FF');
                     $cell->setAlignment('center');
                 });
 
                 $sheet->setWidth('N', 10);
                 $sheet->cell('N1', function($cell) {
-                    $cell->setValue('Tipo de diagnóstico principal');   
+                    $cell->setValue('Tipo de diagnóstico principal');
                     $cell->setFontColor('#0000FF');
                     $cell->setAlignment('center');
                 });
 
                 $sheet->setWidth('O', 10);
                 $sheet->cell('O1', function($cell) {
-                    $cell->setValue('Valor de la consulta');   
+                    $cell->setValue('Valor de la consulta');
                     $cell->setFontColor('#0000FF');
                     $cell->setAlignment('center');
                 });
 
                 $sheet->setWidth('P', 10);
                 $sheet->cell('P1', function($cell) {
-                    $cell->setValue('Valor de la cuota moderadora');   
+                    $cell->setValue('Valor de la cuota moderadora');
                     $cell->setFontColor('#0000FF');
                     $cell->setAlignment('center');
                 });
 
                 $sheet->setWidth('Q', 10);
                 $sheet->cell('Q1', function($cell) {
-                    $cell->setValue('Valor Neto a Pagar');   
+                    $cell->setValue('Valor Neto a Pagar');
                     $cell->setFontColor('#0000FF');
                     $cell->setAlignment('center');
                 });
@@ -1014,7 +1013,7 @@ class Rip extends Model
             $excel->sheet('PROCEDIMIENTOS', function($sheet) {
                 $sheet->setHeight(1, 50);
                 $sheet->getStyle('A1:O1')->getAlignment()->setWrapText(true);
-                $sheet->getStyle('A1:O1')->getFont()->setSize(10);                
+                $sheet->getStyle('A1:O1')->getFont()->setSize(10);
 
                 $sheet->setWidth('A', 11);
                 $sheet->cell('A1', function($cell) {
@@ -1025,93 +1024,93 @@ class Rip extends Model
 
                 $sheet->setWidth('B', 15);
                 $sheet->cell('B1', function($cell) {
-                    $cell->setValue('Código del prestador de servicios de salud');   
+                    $cell->setValue('Código del prestador de servicios de salud');
                     $cell->setFontColor('#0000FF');
                     $cell->setAlignment('center');
                 });
 
                 $sheet->setWidth('C', 10);
                 $sheet->cell('C1', function($cell) {
-                    $cell->setValue('Tipo de Identificación del Usuario');   
+                    $cell->setValue('Tipo de Identificación del Usuario');
                     $cell->setFontColor('#0000FF');
                     $cell->setAlignment('center');
                 });
                 $sheet->setWidth('D', 10);
                 $sheet->cell('D1', function($cell) {
-                    $cell->setValue('Número de identificación del usuario en el sistema');   
+                    $cell->setValue('Número de identificación del usuario en el sistema');
                     $cell->setFontColor('#0000FF');
                     $cell->setAlignment('center');
                 });
 
                 $sheet->setWidth('E', 10);
                 $sheet->cell('E1', function($cell) {
-                    $cell->setValue('Fecha de procedmiento');   
+                    $cell->setValue('Fecha de procedmiento');
                     $cell->setFontColor('#0000FF');
                     $cell->setAlignment('center');
                 });
 
                 $sheet->setWidth('F', 10);
                 $sheet->cell('F1', function($cell) {
-                    $cell->setValue('Número de Autorización');   
+                    $cell->setValue('Número de Autorización');
                     $cell->setFontColor('#0000FF');
                     $cell->setAlignment('center');
                 });
                 $sheet->setWidth('G', 10);
                 $sheet->cell('G1', function($cell) {
-                    $cell->setValue('Código del procedimiento');   
+                    $cell->setValue('Código del procedimiento');
                     $cell->setFontColor('#0000FF');
                     $cell->setAlignment('center');
                 });
 
                 $sheet->setWidth('H', 10);
                 $sheet->cell('H1', function($cell) {
-                    $cell->setValue('Ambito de realización del procedimiento');   
+                    $cell->setValue('Ambito de realización del procedimiento');
                     $cell->setFontColor('#0000FF');
                     $cell->setAlignment('center');
                 });
                 $sheet->setWidth('I', 10);
                 $sheet->cell('I1', function($cell) {
-                    $cell->setValue('Finalidad del procedimiento');   
+                    $cell->setValue('Finalidad del procedimiento');
                     $cell->setFontColor('#0000FF');
                     $cell->setAlignment('center');
                 });
 
                 $sheet->setWidth('J', 10);
                 $sheet->cell('J1', function($cell) {
-                    $cell->setValue('Personal que atiende');   
+                    $cell->setValue('Personal que atiende');
                     $cell->setFontColor('#0000FF');
                     $cell->setAlignment('center');
                 });
                 $sheet->setWidth('K', 10);
                 $sheet->cell('K1', function($cell) {
-                    $cell->setValue('Diagnóstico principal');   
+                    $cell->setValue('Diagnóstico principal');
                     $cell->setFontColor('#0000FF');
                     $cell->setAlignment('center');
                 });
 
                 $sheet->setWidth('L', 10);
                 $sheet->cell('L1', function($cell) {
-                    $cell->setValue('Código del diagnóstico relacionado');   
+                    $cell->setValue('Código del diagnóstico relacionado');
                     $cell->setFontColor('#0000FF');
                     $cell->setAlignment('center');
                 });
                 $sheet->setWidth('M', 10);
                 $sheet->cell('M1', function($cell) {
-                    $cell->setValue('Código del diagnóstico de la Complicación');   
+                    $cell->setValue('Código del diagnóstico de la Complicación');
                     $cell->setFontColor('#0000FF');
                     $cell->setAlignment('center');
                 });
 
                 $sheet->setWidth('N', 10);
                 $sheet->cell('N1', function($cell) {
-                    $cell->setValue('Forma de realización del acto quirúrgico');   
+                    $cell->setValue('Forma de realización del acto quirúrgico');
                     $cell->setFontColor('#0000FF');
                     $cell->setAlignment('center');
                 });
 
                 $sheet->setWidth('O', 10);
                 $sheet->cell('O1', function($cell) {
-                    $cell->setValue('Valor del procedimiento');   
+                    $cell->setValue('Valor del procedimiento');
                     $cell->setFontColor('#0000FF');
                     $cell->setAlignment('center');
                 });
@@ -1119,7 +1118,7 @@ class Rip extends Model
             $excel->sheet('URGENCIAS', function($sheet) {
                 $sheet->setHeight(1, 50);
                 $sheet->getStyle('A1:Q1')->getAlignment()->setWrapText(true);
-                $sheet->getStyle('A1:Q1')->getFont()->setSize(10);                
+                $sheet->getStyle('A1:Q1')->getFont()->setSize(10);
 
                 $sheet->setWidth('A', 11);
                 $sheet->cell('A1', function($cell) {
@@ -1130,107 +1129,107 @@ class Rip extends Model
 
                 $sheet->setWidth('B', 15);
                 $sheet->cell('B1', function($cell) {
-                    $cell->setValue('Código del prestador de servicios de salud');   
+                    $cell->setValue('Código del prestador de servicios de salud');
                     $cell->setFontColor('#0000FF');
                     $cell->setAlignment('center');
                 });
 
                 $sheet->setWidth('C', 10);
                 $sheet->cell('C1', function($cell) {
-                    $cell->setValue('Tipo de Identificación del Usuario');   
+                    $cell->setValue('Tipo de Identificación del Usuario');
                     $cell->setFontColor('#0000FF');
                     $cell->setAlignment('center');
                 });
                 $sheet->setWidth('D', 10);
                 $sheet->cell('D1', function($cell) {
-                    $cell->setValue('Número de identificación del usuario en el sistema');   
+                    $cell->setValue('Número de identificación del usuario en el sistema');
                     $cell->setFontColor('#0000FF');
                     $cell->setAlignment('center');
                 });
 
                 $sheet->setWidth('E', 10);
                 $sheet->cell('E1', function($cell) {
-                    $cell->setValue('Fecha de ingreso del usuario a observación');   
+                    $cell->setValue('Fecha de ingreso del usuario a observación');
                     $cell->setFontColor('#0000FF');
                     $cell->setAlignment('center');
                 });
 
                 $sheet->setWidth('F', 10);
                 $sheet->cell('F1', function($cell) {
-                    $cell->setValue('Hora de ingreso del usuario a observación');   
+                    $cell->setValue('Hora de ingreso del usuario a observación');
                     $cell->setFontColor('#0000FF');
                     $cell->setAlignment('center');
                 });
                 $sheet->setWidth('G', 10);
                 $sheet->cell('G1', function($cell) {
-                    $cell->setValue('Número de autorización');   
+                    $cell->setValue('Número de autorización');
                     $cell->setFontColor('#0000FF');
                     $cell->setAlignment('center');
                 });
 
                 $sheet->setWidth('H', 10);
                 $sheet->cell('H1', function($cell) {
-                    $cell->setValue('Causa externa');   
+                    $cell->setValue('Causa externa');
                     $cell->setFontColor('#0000FF');
                     $cell->setAlignment('center');
                 });
                 $sheet->setWidth('I', 10);
                 $sheet->cell('I1', function($cell) {
-                    $cell->setValue('Código del Diagnóstico a la salida');   
+                    $cell->setValue('Código del Diagnóstico a la salida');
                     $cell->setFontColor('#0000FF');
                     $cell->setAlignment('center');
                 });
 
                 $sheet->setWidth('J', 10);
                 $sheet->cell('J1', function($cell) {
-                    $cell->setValue('Código del diagnóstico relacionado N° 1 a la salida');   
+                    $cell->setValue('Código del diagnóstico relacionado N° 1 a la salida');
                     $cell->setFontColor('#0000FF');
                     $cell->setAlignment('center');
                 });
                 $sheet->setWidth('K', 10);
                 $sheet->cell('K1', function($cell) {
-                    $cell->setValue('Código del diagnóstico relacionado N° 2 a la salida');   
+                    $cell->setValue('Código del diagnóstico relacionado N° 2 a la salida');
                     $cell->setFontColor('#0000FF');
                     $cell->setAlignment('center');
                 });
 
                 $sheet->setWidth('L', 10);
                 $sheet->cell('L1', function($cell) {
-                    $cell->setValue('Código del diagnóstico relacionado N° 3 a la salida');   
+                    $cell->setValue('Código del diagnóstico relacionado N° 3 a la salida');
                     $cell->setFontColor('#0000FF');
                     $cell->setAlignment('center');
                 });
                 $sheet->setWidth('M', 10);
                 $sheet->cell('M1', function($cell) {
-                    $cell->setValue('Destino del usuario a la salida de observación');   
+                    $cell->setValue('Destino del usuario a la salida de observación');
                     $cell->setFontColor('#0000FF');
                     $cell->setAlignment('center');
                 });
 
                 $sheet->setWidth('N', 10);
                 $sheet->cell('N1', function($cell) {
-                    $cell->setValue('Estado a la salida');   
+                    $cell->setValue('Estado a la salida');
                     $cell->setFontColor('#0000FF');
                     $cell->setAlignment('center');
                 });
 
                 $sheet->setWidth('O', 10);
                 $sheet->cell('O1', function($cell) {
-                    $cell->setValue('Causa básica de muerte en urgencias');   
+                    $cell->setValue('Causa básica de muerte en urgencias');
                     $cell->setFontColor('#0000FF');
                     $cell->setAlignment('center');
                 });
 
                 $sheet->setWidth('P', 10);
                 $sheet->cell('P1', function($cell) {
-                    $cell->setValue('Fecha de salida del usuario de observación');   
+                    $cell->setValue('Fecha de salida del usuario de observación');
                     $cell->setFontColor('#0000FF');
                     $cell->setAlignment('center');
                 });
 
                 $sheet->setWidth('Q', 10);
                 $sheet->cell('Q1', function($cell) {
-                    $cell->setValue('Hora de salida del usuario de observación');   
+                    $cell->setValue('Hora de salida del usuario de observación');
                     $cell->setFontColor('#0000FF');
                     $cell->setAlignment('center');
                 });
@@ -1238,7 +1237,7 @@ class Rip extends Model
             $excel->sheet('MEDICAMENTOS', function($sheet) {
                 $sheet->setHeight(1, 50);
                 $sheet->getStyle('A1:N1')->getAlignment()->setWrapText(true);
-                $sheet->getStyle('A1:N1')->getFont()->setSize(10);                
+                $sheet->getStyle('A1:N1')->getFont()->setSize(10);
 
                 $sheet->setWidth('A', 11);
                 $sheet->cell('A1', function($cell) {
@@ -1249,86 +1248,86 @@ class Rip extends Model
 
                 $sheet->setWidth('B', 15);
                 $sheet->cell('B1', function($cell) {
-                    $cell->setValue('Código del prestador de servicios de salud');   
+                    $cell->setValue('Código del prestador de servicios de salud');
                     $cell->setFontColor('#0000FF');
                     $cell->setAlignment('center');
                 });
 
                 $sheet->setWidth('C', 10);
                 $sheet->cell('C1', function($cell) {
-                    $cell->setValue('Tipo de Identificación del Usuario');   
+                    $cell->setValue('Tipo de Identificación del Usuario');
                     $cell->setFontColor('#0000FF');
                     $cell->setAlignment('center');
                 });
                 $sheet->setWidth('D', 10);
                 $sheet->cell('D1', function($cell) {
-                    $cell->setValue('Número de identificación del usuario en el sistema');   
+                    $cell->setValue('Número de identificación del usuario en el sistema');
                     $cell->setFontColor('#0000FF');
                     $cell->setAlignment('center');
                 });
 
                 $sheet->setWidth('E', 10);
                 $sheet->cell('E1', function($cell) {
-                    $cell->setValue('Número de autorización');   
+                    $cell->setValue('Número de autorización');
                     $cell->setFontColor('#0000FF');
                     $cell->setAlignment('center');
                 });
 
                 $sheet->setWidth('F', 10);
                 $sheet->cell('F1', function($cell) {
-                    $cell->setValue('Código del medicamento');   
+                    $cell->setValue('Código del medicamento');
                     $cell->setFontColor('#0000FF');
                     $cell->setAlignment('center');
                 });
                 $sheet->setWidth('G', 10);
                 $sheet->cell('G1', function($cell) {
-                    $cell->setValue('Tipo de medicamento');   
+                    $cell->setValue('Tipo de medicamento');
                     $cell->setFontColor('#0000FF');
                     $cell->setAlignment('center');
                 });
 
                 $sheet->setWidth('H', 10);
                 $sheet->cell('H1', function($cell) {
-                    $cell->setValue('Nombre genérico del medicamento');   
+                    $cell->setValue('Nombre genérico del medicamento');
                     $cell->setFontColor('#0000FF');
                     $cell->setAlignment('center');
                 });
                 $sheet->setWidth('I', 10);
                 $sheet->cell('I1', function($cell) {
-                    $cell->setValue('Forma farmaceútica');   
+                    $cell->setValue('Forma farmaceútica');
                     $cell->setFontColor('#0000FF');
                     $cell->setAlignment('center');
                 });
 
                 $sheet->setWidth('J', 10);
                 $sheet->cell('J1', function($cell) {
-                    $cell->setValue('Concentración del medicamento');   
+                    $cell->setValue('Concentración del medicamento');
                     $cell->setFontColor('#0000FF');
                     $cell->setAlignment('center');
                 });
                 $sheet->setWidth('K', 10);
                 $sheet->cell('K1', function($cell) {
-                    $cell->setValue('Unidad de medida del medicamento');   
+                    $cell->setValue('Unidad de medida del medicamento');
                     $cell->setFontColor('#0000FF');
                     $cell->setAlignment('center');
                 });
 
                 $sheet->setWidth('L', 10);
                 $sheet->cell('L1', function($cell) {
-                    $cell->setValue('Número de unidades');   
+                    $cell->setValue('Número de unidades');
                     $cell->setFontColor('#0000FF');
                     $cell->setAlignment('center');
                 });
                 $sheet->setWidth('M', 10);
                 $sheet->cell('M1', function($cell) {
-                    $cell->setValue('Valor unitario del medicamento');   
+                    $cell->setValue('Valor unitario del medicamento');
                     $cell->setFontColor('#0000FF');
                     $cell->setAlignment('center');
                 });
 
                 $sheet->setWidth('N', 10);
                 $sheet->cell('N1', function($cell) {
-                    $cell->setValue('Valor total del medicamento');   
+                    $cell->setValue('Valor total del medicamento');
                     $cell->setFontColor('#0000FF');
                     $cell->setAlignment('center');
                 });
@@ -1336,7 +1335,7 @@ class Rip extends Model
             $excel->sheet('RECIEN NACIDO', function($sheet) {
                 $sheet->setHeight(1, 50);
                 $sheet->getStyle('A1:N1')->getAlignment()->setWrapText(true);
-                $sheet->getStyle('A1:N1')->getFont()->setSize(10);                
+                $sheet->getStyle('A1:N1')->getFont()->setSize(10);
 
                 $sheet->setWidth('A', 11);
                 $sheet->cell('A1', function($cell) {
@@ -1347,86 +1346,86 @@ class Rip extends Model
 
                 $sheet->setWidth('B', 15);
                 $sheet->cell('B1', function($cell) {
-                    $cell->setValue('Código del prestador de servicios de salud');   
+                    $cell->setValue('Código del prestador de servicios de salud');
                     $cell->setFontColor('#0000FF');
                     $cell->setAlignment('center');
                 });
 
                 $sheet->setWidth('C', 10);
                 $sheet->cell('C1', function($cell) {
-                    $cell->setValue('Tipo de Identificación del Usuario');   
+                    $cell->setValue('Tipo de Identificación del Usuario');
                     $cell->setFontColor('#0000FF');
                     $cell->setAlignment('center');
                 });
                 $sheet->setWidth('D', 10);
                 $sheet->cell('D1', function($cell) {
-                    $cell->setValue('Número de identificación del usuario en el sistema');   
+                    $cell->setValue('Número de identificación del usuario en el sistema');
                     $cell->setFontColor('#0000FF');
                     $cell->setAlignment('center');
                 });
 
                 $sheet->setWidth('E', 10);
                 $sheet->cell('E1', function($cell) {
-                    $cell->setValue('Fecha de nacimiento del recién nacido');   
+                    $cell->setValue('Fecha de nacimiento del recién nacido');
                     $cell->setFontColor('#0000FF');
                     $cell->setAlignment('center');
                 });
 
                 $sheet->setWidth('F', 10);
                 $sheet->cell('F1', function($cell) {
-                    $cell->setValue('Hora de nacimiento');   
+                    $cell->setValue('Hora de nacimiento');
                     $cell->setFontColor('#0000FF');
                     $cell->setAlignment('center');
                 });
                 $sheet->setWidth('G', 10);
                 $sheet->cell('G1', function($cell) {
-                    $cell->setValue('Edad gestacional');   
+                    $cell->setValue('Edad gestacional');
                     $cell->setFontColor('#0000FF');
                     $cell->setAlignment('center');
                 });
 
                 $sheet->setWidth('H', 10);
                 $sheet->cell('H1', function($cell) {
-                    $cell->setValue('Control prenatal');   
+                    $cell->setValue('Control prenatal');
                     $cell->setFontColor('#0000FF');
                     $cell->setAlignment('center');
                 });
                 $sheet->setWidth('I', 10);
                 $sheet->cell('I1', function($cell) {
-                    $cell->setValue('Sexo');   
+                    $cell->setValue('Sexo');
                     $cell->setFontColor('#0000FF');
                     $cell->setAlignment('center');
                 });
 
                 $sheet->setWidth('J', 10);
                 $sheet->cell('J1', function($cell) {
-                    $cell->setValue('Peso');   
+                    $cell->setValue('Peso');
                     $cell->setFontColor('#0000FF');
                     $cell->setAlignment('center');
                 });
                 $sheet->setWidth('K', 10);
                 $sheet->cell('K1', function($cell) {
-                    $cell->setValue('Código del diagnóstico del Recién nacido');   
+                    $cell->setValue('Código del diagnóstico del Recién nacido');
                     $cell->setFontColor('#0000FF');
                     $cell->setAlignment('center');
                 });
 
                 $sheet->setWidth('L', 10);
                 $sheet->cell('L1', function($cell) {
-                    $cell->setValue('Causa básica de muerte');   
+                    $cell->setValue('Causa básica de muerte');
                     $cell->setFontColor('#0000FF');
                     $cell->setAlignment('center');
                 });
                 $sheet->setWidth('M', 10);
                 $sheet->cell('M1', function($cell) {
-                    $cell->setValue('Fecha de muerte del recién nacido');   
+                    $cell->setValue('Fecha de muerte del recién nacido');
                     $cell->setFontColor('#0000FF');
                     $cell->setAlignment('center');
                 });
 
                 $sheet->setWidth('N', 10);
                 $sheet->cell('N1', function($cell) {
-                    $cell->setValue('Hora de muerte del recién nacido');   
+                    $cell->setValue('Hora de muerte del recién nacido');
                     $cell->setFontColor('#0000FF');
                     $cell->setAlignment('center');
                 });
@@ -1434,7 +1433,7 @@ class Rip extends Model
             $excel->sheet('HOSPITALIZACION', function($sheet) {
                 $sheet->setHeight(1, 50);
                 $sheet->getStyle('A1:S1')->getAlignment()->setWrapText(true);
-                $sheet->getStyle('A1:S1')->getFont()->setSize(10);                
+                $sheet->getStyle('A1:S1')->getFont()->setSize(10);
 
                 $sheet->setWidth('A', 11);
                 $sheet->cell('A1', function($cell) {
@@ -1445,121 +1444,121 @@ class Rip extends Model
 
                 $sheet->setWidth('B', 15);
                 $sheet->cell('B1', function($cell) {
-                    $cell->setValue('Código del prestador de servicios de salud');   
+                    $cell->setValue('Código del prestador de servicios de salud');
                     $cell->setFontColor('#0000FF');
                     $cell->setAlignment('center');
                 });
 
                 $sheet->setWidth('C', 10);
                 $sheet->cell('C1', function($cell) {
-                    $cell->setValue('Tipo de Identificación del Usuario');   
+                    $cell->setValue('Tipo de Identificación del Usuario');
                     $cell->setFontColor('#0000FF');
                     $cell->setAlignment('center');
                 });
                 $sheet->setWidth('D', 10);
                 $sheet->cell('D1', function($cell) {
-                    $cell->setValue('Número de identificación del usuario en el sistema');   
+                    $cell->setValue('Número de identificación del usuario en el sistema');
                     $cell->setFontColor('#0000FF');
                     $cell->setAlignment('center');
                 });
 
                 $sheet->setWidth('E', 10);
                 $sheet->cell('E1', function($cell) {
-                    $cell->setValue('Vía de ingreso a la institución');   
+                    $cell->setValue('Vía de ingreso a la institución');
                     $cell->setFontColor('#0000FF');
                     $cell->setAlignment('center');
                 });
 
                 $sheet->setWidth('F', 10);
                 $sheet->cell('F1', function($cell) {
-                    $cell->setValue('Fecha de ingreso del usuario a la institución');   
+                    $cell->setValue('Fecha de ingreso del usuario a la institución');
                     $cell->setFontColor('#0000FF');
                     $cell->setAlignment('center');
                 });
                 $sheet->setWidth('G', 10);
                 $sheet->cell('G1', function($cell) {
-                    $cell->setValue('Hora de ingreso del usuario a la institución');   
+                    $cell->setValue('Hora de ingreso del usuario a la institución');
                     $cell->setFontColor('#0000FF');
                     $cell->setAlignment('center');
                 });
 
                 $sheet->setWidth('H', 10);
                 $sheet->cell('H1', function($cell) {
-                    $cell->setValue('Número de autorización');   
+                    $cell->setValue('Número de autorización');
                     $cell->setFontColor('#0000FF');
                     $cell->setAlignment('center');
                 });
                 $sheet->setWidth('I', 10);
                 $sheet->cell('I1', function($cell) {
-                    $cell->setValue('Causa externa');   
+                    $cell->setValue('Causa externa');
                     $cell->setFontColor('#0000FF');
                     $cell->setAlignment('center');
                 });
 
                 $sheet->setWidth('J', 10);
                 $sheet->cell('J1', function($cell) {
-                    $cell->setValue('Diagnóstico prinicipal de ingreso');   
+                    $cell->setValue('Diagnóstico prinicipal de ingreso');
                     $cell->setFontColor('#0000FF');
                     $cell->setAlignment('center');
                 });
                 $sheet->setWidth('K', 10);
                 $sheet->cell('K1', function($cell) {
-                    $cell->setValue('Diagnóstico principal de egreso');   
+                    $cell->setValue('Diagnóstico principal de egreso');
                     $cell->setFontColor('#0000FF');
                     $cell->setAlignment('center');
                 });
 
                 $sheet->setWidth('L', 10);
                 $sheet->cell('L1', function($cell) {
-                    $cell->setValue('Código del diagnóstico relacionado N° 1 de egreso');   
+                    $cell->setValue('Código del diagnóstico relacionado N° 1 de egreso');
                     $cell->setFontColor('#0000FF');
                     $cell->setAlignment('center');
                 });
                 $sheet->setWidth('M', 10);
                 $sheet->cell('M1', function($cell) {
-                    $cell->setValue('Código del diagnóstico relacionado N° 2 de egreso');   
+                    $cell->setValue('Código del diagnóstico relacionado N° 2 de egreso');
                     $cell->setFontColor('#0000FF');
                     $cell->setAlignment('center');
                 });
 
                 $sheet->setWidth('N', 10);
                 $sheet->cell('N1', function($cell) {
-                    $cell->setValue('Código del diagnóstico relacionado N° 3 de egreso');   
+                    $cell->setValue('Código del diagnóstico relacionado N° 3 de egreso');
                     $cell->setFontColor('#0000FF');
                     $cell->setAlignment('center');
                 });
 
                 $sheet->setWidth('O', 10);
                 $sheet->cell('O1', function($cell) {
-                    $cell->setValue('Diagnóstico de la complicación');   
+                    $cell->setValue('Diagnóstico de la complicación');
                     $cell->setFontColor('#0000FF');
                     $cell->setAlignment('center');
                 });
 
                 $sheet->setWidth('P', 10);
                 $sheet->cell('P1', function($cell) {
-                    $cell->setValue('Estado a la salida');   
+                    $cell->setValue('Estado a la salida');
                     $cell->setFontColor('#0000FF');
                     $cell->setAlignment('center');
                 });
 
                 $sheet->setWidth('Q', 10);
                 $sheet->cell('Q1', function($cell) {
-                    $cell->setValue('Diagnóstico de la causa básica de muerte');   
+                    $cell->setValue('Diagnóstico de la causa básica de muerte');
                     $cell->setFontColor('#0000FF');
                     $cell->setAlignment('center');
                 });
 
                 $sheet->setWidth('R', 10);
                 $sheet->cell('R1', function($cell) {
-                    $cell->setValue('Fecha de egreso del usuario a la institución');   
+                    $cell->setValue('Fecha de egreso del usuario a la institución');
                     $cell->setFontColor('#0000FF');
                     $cell->setAlignment('center');
                 });
 
                 $sheet->setWidth('S', 10);
                 $sheet->cell('S1', function($cell) {
-                    $cell->setValue('Hora de egreso del usuario a la institución');   
+                    $cell->setValue('Hora de egreso del usuario a la institución');
                     $cell->setFontColor('#0000FF');
                     $cell->setAlignment('center');
                 });

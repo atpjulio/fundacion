@@ -84,13 +84,24 @@ class AjaxController extends Controller
         return view('partials._patients', compact('patients'));
     }
 
-    public function getInvoicesAmount($data) 
+    public function getInvoicesAmount($data)
     {
         $epsId = explode("_", $data)[0];
         $initialDate = explode("_", $data)[1];
         $finalDate = explode("_", $data)[2];
 
         $invoicesAmount = count(Invoice::getInvoicesByEpsId($epsId, $initialDate, $finalDate));
+        return view('partials._invoice_amount', compact('invoicesAmount'));
+
+    }
+
+    public function getInvoicesAmountNumber($data)
+    {
+        $epsId = explode("_", $data)[0];
+        $initialDate = explode("_", $data)[1];
+        $finalDate = explode("_", $data)[2];
+
+        $invoicesAmount = count(Invoice::getInvoicesByEpsIdNumber($epsId, $initialDate, $finalDate));
         return view('partials._invoice_amount', compact('invoicesAmount'));
 
     }

@@ -25,19 +25,19 @@ function fillCompanionServices(id)
         $('#dynamic-companion-services').html(data);
         $('#companion_eps_service_id').on('change', function(e) {
             console.log($(this).val());
-            if ($(this).val() > 0) {             
+            if ($(this).val() > 0) {
                 $('#companion_service').val($(this).children('option').filter(":selected").text());
                 $('#companion_service_id').val($(this).val());
                 $('#alertTable').css('display', 'none');
-                $('#tableMessage').html('');              
+                $('#tableMessage').html('');
 
             } else {
                 $('#companion_service').val('');
                 $('#companion_service_id').val('');
-                $('#tableMessage').html('Por favor seleccione un servicio válido');              
+                $('#tableMessage').html('Por favor seleccione un servicio válido');
                 $('#alertTable').css('display', 'block');
             }
-        });        
+        });
     });
 }
 
@@ -96,6 +96,13 @@ function fillFilteredPatients(search)
 function fillInvoicesByEpsAndDate(id)
 {
     $.get("/get-invoices-amount/" + id, function (data, status) {
+        $('#dynamic-invoice-amount').html(data);
+    });
+}
+
+function fillInvoicesByEpsAndNumber(id)
+{
+    $.get("/get-invoices-amount-number/" + id, function (data, status) {
         $('#dynamic-invoice-amount').html(data);
     });
 }

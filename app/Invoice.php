@@ -277,6 +277,18 @@ class Invoice extends Model
             ->get();
     }
 
+    protected function getInvoicesByEpsIdNumber($epsId, $initialNumber = null, $finalNumber = null)
+    {
+        if ($initialNumber and $finalNumber) {
+            return $this->where('eps_id', $epsId)
+                ->whereBetween('number', [$initialNumber, $finalNumber])
+                ->get();
+        }
+
+        return $this->where('eps_id', $epsId)
+            ->get();
+    }
+
     protected function getInvoiceByNumber($number)
     {
         return $this->where('number', $number)
