@@ -174,9 +174,9 @@ class Rip extends Model
                     $currentAuthorization = Authorization::findByCode($value);
                     if ($currentAuthorization and !in_array($currentAuthorization->patient->id, $arrPatients)) {
                         $arrayFirstName = explode(" ", $currentAuthorization->patient->first_name);
-                        $firstName = $arrayFirstName[0].",".(isset($arrayFirstName[1]) ? $arrayFirstName[1] : '');
+                        $firstName = $arrayFirstName[0].",".(isset($arrayFirstName[1]) ? join(" ", array_slice($arrayFirstName, 1)) : '');
                         $arrayLastName = explode(" ", $currentAuthorization->patient->last_name);
-                        $lastName = $arrayLastName[0].",".(isset($arrayLastName[1]) ? $arrayLastName[1] : '');
+                        $lastName = $arrayLastName[0].",".(isset($arrayLastName[1]) ? join(" ", array_slice($arrayLastName, 1)) : '');
 
                         $line .= $currentAuthorization->patient->dni_type.",".$currentAuthorization->patient->dni
                             .",".$invoice->eps->code.",".$currentAuthorization->patient->type.","
@@ -191,10 +191,15 @@ class Rip extends Model
                     }
                 }
             } elseif (!in_array($invoice->authorization->patient->id, $arrPatients)) {
-                $arrayFirstName = explode(" ", $invoice->authorization->patient->first_name);
-                $firstName = $arrayFirstName[0].",".(isset($arrayFirstName[1]) ? $arrayFirstName[1] : '');
-                $arrayLastName = explode(" ", $invoice->authorization->patient->last_name);
-                $lastName = $arrayLastName[0].",".(isset($arrayLastName[1]) ? $arrayLastName[1] : '');
+								try {
+
+									$arrayFirstName = explode(" ", $invoice->authorization->patient->first_name);
+									$firstName = $arrayFirstName[0].",".(isset($arrayFirstName[1]) ? join(" ", array_slice($arrayFirstName, 1)) : '');
+									$arrayLastName = explode(" ", $invoice->authorization->patient->last_name);
+									$lastName = $arrayLastName[0].",".(isset($arrayLastName[1]) ? join(" ", array_slice($arrayLastName, 1)) : '');
+								} catch (\Exception $e) {
+									dd($arrayFirstName, isset($arrayFirstName[1]), array_slice($arrayFirstName, 1), array_slice($arrayFirstName, 1) , $e);
+								}
 
                 $line .= $invoice->authorization->patient->dni_type.",".$invoice->authorization->patient->dni
                     .",".$invoice->eps->code.",".$invoice->authorization->patient->type.","
@@ -208,7 +213,6 @@ class Rip extends Model
                 $counter++;
             }
         }
-
         $fileName = "US".sprintf("%06d", $id).".TXT";
 
         Storage::put(config('constants.ripsFiles').$fileName, $line);
@@ -391,13 +395,13 @@ class Rip extends Model
                                     $cell->setValue(mb_strtoupper($arrayLastName[0]));
                                 });
                                 $sheet->cell('F'.$counter, function($cell) use ($arrayLastName) {
-                                    $cell->setValue(isset($arrayLastName[1]) ? mb_strtoupper($arrayLastName[1]) : '');
+																	$cell->setValue(mb_strtoupper(join(" ", array_slice($arrayLastName, 1))));
                                 });
                                 $sheet->cell('G'.$counter, function($cell) use ($arrayFirstName) {
                                     $cell->setValue(mb_strtoupper($arrayFirstName[0]));
                                 });
                                 $sheet->cell('H'.$counter, function($cell) use ($arrayFirstName) {
-                                    $cell->setValue(isset($arrayFirstName[1]) ? mb_strtoupper($arrayFirstName[1]) : '');
+																	$cell->setValue(mb_strtoupper(join(" ", array_slice($arrayFirstName, 1))));
                                 });
                                 $sheet->cell('I'.$counter, function($cell) use ($currentAuthorization) {
                                     $cell->setValue($currentAuthorization->patient->age);
@@ -442,13 +446,13 @@ class Rip extends Model
                             $cell->setValue(mb_strtoupper($arrayLastName[0]));
                         });
                         $sheet->cell('F'.$counter, function($cell) use ($arrayLastName) {
-                            $cell->setValue(isset($arrayLastName[1]) ? mb_strtoupper($arrayLastName[1]) : '');
+														$cell->setValue(mb_strtoupper(join(" ", array_slice($arrayLastName, 1))));
                         });
                         $sheet->cell('G'.$counter, function($cell) use ($arrayFirstName) {
                             $cell->setValue(mb_strtoupper($arrayFirstName[0]));
                         });
                         $sheet->cell('H'.$counter, function($cell) use ($arrayFirstName) {
-                            $cell->setValue(isset($arrayFirstName[1]) ? mb_strtoupper($arrayFirstName[1]) : '');
+														$cell->setValue(mb_strtoupper(join(" ", array_slice($arrayFirstName, 1))));
                         });
                         $sheet->cell('I'.$counter, function($cell) use ($invoice) {
                             $cell->setValue($invoice->authorization->patient->age);
@@ -1564,4 +1568,10 @@ class Rip extends Model
         // ->store('xls', storage_path('excel/exports'));
 
     }
+		/*
+		protected function fixNameToRip($name)
+		{
+			$currentAuthorization->patient->first_name
+		}
+		*/
 }
