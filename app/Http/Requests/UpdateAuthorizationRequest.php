@@ -24,12 +24,12 @@ class UpdateAuthorizationRequest extends FormRequest
     public function rules()
     {
         $rules = [
-            'code' => 'unique:authorizations,id,'.$this->request->get('id'),
+            'code' => 'unique:authorizations,code,'.$this->request->get('id'),
             'eps_id' => 'required',
             'eps_service_id' => 'required|numeric|min:1',
             'patient_id' => 'required',
             'date_from' => 'required|date_format:Y-m-d',
-            // 'date_to' => 'required',
+            'total_days' => 'required',
         ];
 
         if ($this->request->get('companion')) {
@@ -46,6 +46,7 @@ class UpdateAuthorizationRequest extends FormRequest
             'date_from.date_format' => 'El campo fecha de inicio tiene un valor inválido',
             'companion_dni.required' => 'Número de documento del acompañante no puede estar vacío',
             'companion_name.required' => 'Nombre del acompañante no puede estar vacío',
+            'total_days.required' => 'El total de días es obligatorio',
         ];
     }
 

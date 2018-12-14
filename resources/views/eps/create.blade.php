@@ -39,6 +39,9 @@
                 </div>
             </div>
             <div class="col-md-12">
+              @include('partials._eps_prices')
+            </div>
+            <div class="col-md-12">
                 <div class="text-center">
                     {!! Form::submit('Guardar', ['class' => 'btn btn-oval btn-primary']) !!}
                 </div>
@@ -49,11 +52,5 @@
 @endsection
 
 @push('scripts')
-    <script language="javascript" type="text/javascript">
-        $(document).ready(function() {
-            $('#state').on('change', function (e) {
-                fillCities($('#state').val());
-            });
-        });
-    </script>
+    <script src="{{asset('js/eps/create.js').'?version='.config('constants.stylesVersion')}}"></script>
 @endpush

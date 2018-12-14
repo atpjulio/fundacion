@@ -19,6 +19,13 @@ function fillMultipleServices(id)
     });
 }
 
+function fillDailyPrices(id)
+{
+  $.get("/get-daily-prices/" + id, function (data, status) {
+    $('#dynamic-daily-prices').html(data);
+  });
+}
+
 function fillCompanionServices(id)
 {
     $.get("/get-companion-services/" + id, function (data, status) {

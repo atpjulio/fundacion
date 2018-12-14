@@ -14,6 +14,7 @@ class EpsService extends Model
         'code',
         'name',
         'notes',
+        'price',
     ];
 
     /**
@@ -26,7 +27,10 @@ class EpsService extends Model
     /**
      * Relations
      */
-
+    protected function eps()
+    {
+      return $this->belongsTo(Eps::class);
+    }
 
     /**
      * Methods
@@ -38,12 +42,20 @@ class EpsService extends Model
             ->get();
     }
 
+    protected function getService($epsId, $code)
+    {
+        return $this->where('eps_id', $epsId)
+            ->where('code', $code)
+            ->first();
+    }
+
     protected function storeRecord($request)
     {
         return $this->create([
             'eps_id' => $request->get('eps_id'),
             'code' => strtoupper($request->get('code')),
             'name' => ucfirst(mb_strtolower($request->get('name'))),
+            'price' => $request->get('price'),
             'notes' => $request->get('notes'),
         ]);
     }
@@ -57,6 +69,7 @@ class EpsService extends Model
                 'eps_id' => $request->get('eps_id'),
                 'code' => strtoupper($request->get('code')),
                 'name' => ucfirst(mb_strtolower($request->get('name'))),
+                'price' => $request->get('price'),
                 'notes' => $request->get('notes'),
             ]);
         }

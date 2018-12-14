@@ -56,11 +56,20 @@ class Invoice extends Model
      */
     public function getDaysAttribute()
     {
-        if ($this->authorization->multiple) {
-            return intval($this->total / ($this->eps->daily_price * (1 + count(explode(',', $this->authorization->multiple_services)))));
+        $dailyPrice = $this->eps->daily_price;
+        if ($dailyPrice == 0) {
+            $dailyPrice = $this->authorization->price ?
+                $this->authorization->price->daily_price :
+                $this->eps->price()->first()->daily_price;
         }
 
-        return intval($this->total / $this->eps->daily_price);
+        if ($this->authorization->multiple) {
+            return count($this->authorization->services) > 0 ?
+                intval($this->authorization->services[0]->days) :
+                intval($this->total / ($dailyPrice * (1 + count(explode(',', $this->authorization->multiple_services)))));
+        }
+
+        return intval($this->total / $dailyPrice);
     }
 
     public function getFormatNumberAttribute()
@@ -334,5 +343,30 @@ class Invoice extends Model
             ->last();
 
         return $result ? $result->number : 0;
+    }
+
+    protected function convertToMultiple()
+    {
+      $invoices = $this::where('multiple', 0)
+            ->get();
+
+      if (!$invoices) {
+        return "No single invoices were found";
+      }
+
+      foreach ($invoices as $key => $invoice) {
+          $invoice->update([
+            'multiple' => config('constants.status.active'),
+            'multiple_codes' => '["'.$invoice->authorization_code.'"]',
+            'multiple_totals' => '["'.$invoice->total.'"]',
+            'multiple_days' => '["'.$invoice->days.'"]',
+          ]);
+          echo "\nProcessing invoice number: ".$invoice->number;
+          if ($key > 3) {
+            break;
+          }
+      }
+
+      return "Invoices processed: ".count($invoices);
     }
 }

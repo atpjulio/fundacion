@@ -38,6 +38,9 @@
                     </div>
                 </div>
             </div>
+            <div class="col-md-12">
+              @include('partials._eps_prices')
+            </div>
             {!! Form::hidden('id', $eps->id) !!}
             <div class="col-md-12">
                 <div class="text-center">
@@ -48,3 +51,7 @@
     </section>
     {!! Form::close() !!}
 @endsection
+
+@push('scripts')
+    <script src="{{asset('js/eps/create.js').'?version='.config('constants.stylesVersion')}}"></script>
+@endpush

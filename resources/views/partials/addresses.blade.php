@@ -13,6 +13,6 @@
 <div class="form-group  @if($errors->has('city')) has-error @endif">
     {!! Form::label('city', 'Municipio', ['class' => 'control-label']) !!}
     <div id="dynamic-cities">
-        {!! Form::select('city', \App\City::getCitiesByStateId(isset($address) ? $address->state : '05'), old('city', isset($address) ? $address->city : ''), ['class' => 'form-control']) !!}
+        {!! Form::select('city', \App\City::getCitiesByStateId(old('state', isset($address) ? $address->state : '05')), old('city', isset($address) ? $address->city : ''), ['class' => 'form-control']) !!}
     </div>
 </div>

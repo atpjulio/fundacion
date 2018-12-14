@@ -55,7 +55,7 @@
                 <br>
                 <strong>
                 {{ config('constants.companiesDocumentTypes')[$company->doc_type] }}:
-                </strong> 
+                </strong>
                 {{ $company->doc }}
                 <br><strong>Dirección:</strong> Carrera 60 No. 46 - 76
                 <br><strong>Tel:</strong> 3126214231 - 3157098010
@@ -68,7 +68,7 @@
                     {{ $eps->alias }}
                 </span>
                 <br><br>
-                Del {{ \Carbon\Carbon::parse($initialDate)->format("d/m/Y") }} al 
+                Del {{ \Carbon\Carbon::parse($initialDate)->format("d/m/Y") }} al
                 {{ \Carbon\Carbon::parse($finalDate)->format("d/m/Y") }}
             </td>
         </tr>
@@ -83,7 +83,7 @@
 <sethtmlpagefooter name="myfooter" value="on" />
 mpdf-->
 <div style="text-align: right">Fecha de elaboración: {{ date("d/m/Y") }}</div>
-{{--  
+{{--
     <table width="100%" style="font-family: serif;" cellpadding="10">
         <tr>
             <td width="45%" style="border: 0.1mm solid #888888; ">
@@ -97,7 +97,7 @@ mpdf-->
                 <br>
                 {{ $invoice->authorization->patient->full_name}}
                 <br>
-                
+
             </td>
             <td width="10%">&nbsp;</td>
             <td width="45%" style="border: 0.1mm solid #888888;">
@@ -116,7 +116,7 @@ mpdf-->
         </tr>
     </table>
     <br>
---}}    
+--}}
     <table class="items" width="100%" style="font-size: 9pt; border-collapse: collapse; border-bottom-width: 0; border-left-width: 0;" cellpadding="8">
         <thead>
         <tr>
@@ -139,45 +139,68 @@ mpdf-->
             @foreach (json_decode($invoice->multiple_codes, true) as $k => $authorizationCode)
                 <tr>
                     @php
-                        $a = \App\Authorization::findByCode($authorizationCode);
-                        if (!$a) {
-                            continue;
-                        }
-                        $services = $a->eps_service_id;
-                        $companionService = $a->multiple_services;
-
+                        $currentAuthorization = \App\Authorization::findByCode($authorizationCode);
+                        $services = $currentAuthorization->eps_service_id;
+                        $companionService = $currentAuthorization->multiple_services;
+                        $flag = false;
                         if ($companionService) {
                             $services .= ",".$companionService;
-                        }            
+                        } elseif (count($currentAuthorization->services) > 0) {
+                            $services = '';
+                            foreach ($currentAuthorization->services as $servicePrice) {
+                                $services .= $servicePrice->eps_service_id.",";
+                            }
+                            $flag = true;
+                            $services = trim($services, ",");
+                        }
                     @endphp
-                    <td align="center">{{ $invoice->format_number }}</td>            
-                    <td width="14%" class="noleft">{!! $a->patient->dni !!}</td>
+                    <td align="center">{{ $invoice->format_number }}</td>
+                    <td width="14%" class="noleft">{!! $currentAuthorization->patient->dni !!}</td>
                     <td colspan="2" class="noleft">
-                        {!! mb_strtoupper($a->patient->last_name.' '.$a->patient->first_name) !!}
+                        {!! mb_strtoupper($currentAuthorization->patient->full_name) !!}
                     </td>
                     <td class="noleft"></td>
                     <td class="noleft"></td>
                 </tr>
-                @foreach(explode(",", $services) as $serviceId)    
-                    @php
-                        $service = \App\EpsService::find($serviceId);
-                        $currentTotal = json_decode($invoice->multiple_totals, true)[$k] / count(explode(",", $services));
-                    @endphp
-                    <tr>
-                        <td align="right">&#8250; {!! $service->code !!}</td>
-                        <td colspan="2" class="noleft">{{ mb_strtoupper($service->name) }}</td>
-                        <td style="width: 18%;" class="noleft">{{ mb_strtoupper($a->codec) }}</td>
-                        <td align="center" class="noleft">
-                            {!! json_decode($invoice->multiple_days, true)[$k] !!}
-                        </td>
-                        <td class="cost noleft">
-                            $ {!! number_format($currentTotal, 0, ",", ".") !!}
-                        </td>
-                    </tr>
-                @endforeach
-                @php
-                    $subTotal += json_decode($invoice->multiple_totals, true)[$k];
-                @endphp
+
+                @if ($flag)
+                    @foreach($currentAuthorization->services as $authorizationService)
+                        @php
+                            $currentTotal = $authorizationService->price * $authorizationService->days;
+                            $subTotal += $currentTotal;
+                        @endphp
+                        <tr>
+                            <td align="right">&#8250; {!!  $authorizationService->service->code !!}</td>
+                            <td colspan="2" class="noleft">{{ mb_strtoupper($authorizationService->service->name) }}</td>
+                            <td style="width: 18%;" class="noleft">{{ mb_strtoupper($currentAuthorization->codec) }}</td>
+                            <td align="center" class="noleft">
+                                {!! $authorizationService->days !!}
+                            </td>
+                            <td class="cost noleft">
+                                $ {!! number_format($currentTotal, 0, ",", ".") !!}
+                            </td>
+                        </tr>
+                    @endforeach
+                @else
+                    @foreach(explode(",", $services) as $serviceId)
+                        @php
+                            $service = \App\EpsService::find($serviceId);
+                            $currentTotal = json_decode($invoice->multiple_totals, true)[$k] / count(explode(",", $services));
+                            $subTotal += $currentTotal;
+                        @endphp
+                        <tr>
+                            <td align="right">&#8250; {!! $service->code !!}</td>
+                            <td colspan="2" class="noleft">{{ mb_strtoupper($service->name) }}</td>
+                            <td style="width: 18%;" class="noleft">{{ mb_strtoupper($currentAuthorization->codec) }}</td>
+                            <td align="center" class="noleft">
+                                {!! json_decode($invoice->multiple_days, true)[$k] !!}
+                            </td>
+                            <td class="cost noleft">
+                                $ {!! number_format($currentTotal, 0, ",", ".") !!}
+                            </td>
+                        </tr>
+                    @endforeach
+                @endif
             @endforeach
         @else
             <tr>
@@ -196,29 +219,56 @@ mpdf-->
                 $services = $invoice->authorization->eps_service_id;
                 $companionService = $invoice->authorization->multiple_services;
 
+                $flag = false;
                 if ($companionService) {
                     $services .= ",".$companionService;
-                }            
+                } elseif (count($invoice->authorization->services) > 0) {
+                    $services = '';
+                    $flag = true;
+                    foreach ($invoice->authorization->services as $servicePrice) {
+                        $services .= $servicePrice->eps_service_id.",";
+                    }
+                    $services = trim($services, ",");
+                }
             @endphp
-            @foreach(explode(",", $services) as $serviceId)    
-                @php
-                    $service = \App\EpsService::find($serviceId);
-                    $currentTotal = $invoice->total / count(explode(",", $services));
-                @endphp
-                <tr>
-                    <td align="right"> &#8250; {{ $service->code }}</td>
-                    <td colspan="2" class="noleft">{{ mb_strtoupper($service->name) }}</td>
-                    <td style="width: 18%;" class="noleft">{!! $invoice->authorization->codec !!}</td>
-                    <td align="center" class="noleft">{!! $invoice->days !!}</td>
-                    <td class="cost noleft">$ {!! number_format($currentTotal, 0, ",", ".") !!}</td>
-                </tr>
-            @endforeach
+            @if ($flag)
+                @foreach($invoice->authorization->services as $authorizationService)
+                    @php
+                        $currentTotal = $authorizationService->price * $authorizationService->days;
+                    @endphp
+                    <tr>
+                        <td align="right">&#8250; {!!  $authorizationService->service->code !!}</td>
+                        <td colspan="2" class="noleft">{{ mb_strtoupper($authorizationService->service->name) }}</td>
+                        <td style="width: 18%;" class="noleft">{{ mb_strtoupper($invoice->authorization->codec) }}</td>
+                        <td align="center" class="noleft">
+                            {!! $authorizationService->days !!}
+                        </td>
+                        <td class="cost noleft">
+                            $ {!! number_format($currentTotal, 0, ",", ".") !!}
+                        </td>
+                    </tr>
+                @endforeach
+            @else
+                @foreach(explode(",", $services) as $serviceId)
+                    @php
+                        $service = \App\EpsService::find($serviceId);
+                        $currentTotal = $invoice->total / count(explode(",", $services));
+                    @endphp
+                    <tr>
+                        <td align="right"> &#8250; {{ $service->code }}</td>
+                        <td colspan="2" class="noleft">{{ mb_strtoupper($service->name) }}</td>
+                        <td style="width: 18%;" class="noleft">{!! $invoice->authorization->codec !!}</td>
+                        <td align="center" class="noleft">{!! $invoice->days !!}</td>
+                        <td class="cost noleft">$ {!! number_format($currentTotal, 0, ",", ".") !!}</td>
+                    </tr>
+                @endforeach
+            @endif
             @php
                 $subTotal += $invoice->total;
             @endphp
         @endif
             <tr style="background-color: #EEEEEE;">
-                <td colspan="5" style="font-variant: small-caps;"> 
+                <td colspan="5" style="font-variant: small-caps;">
                     Subtotal Factura
                 </td>
                 <td class="cost noleft">$ {!! number_format($subTotal, 0, ",", ".") !!}</td>
@@ -243,7 +293,7 @@ mpdf-->
     <table width="100%" style="font-size: 12pt;" cellpadding="10">
         <tr>
             <td width="45%" style="border-width: 0; line-height: 1.9em;" align="center">
-                <br>
+                <img src="{{ asset('img/signature.png') }}" alt="" height="40" style="margin-bottom: -17px;">
                 _____________________________________
                 <br>
                 Firma de la persona autorizada
@@ -256,7 +306,7 @@ mpdf-->
                 C.C.: _______________________________
                 <br>
                 Fecha: ________/__________/__________
-                <br>            
+                <br>
                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                 &nbsp;&nbsp;DIA
                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;MES

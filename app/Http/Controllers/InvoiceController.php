@@ -200,7 +200,32 @@ class InvoiceController extends Controller
             Session::flash('message_danger', 'Factura no encontrada');
             return redirect()->back()->withInput();
         }
+        /*
+        $services = '';
+        foreach (json_decode($invoice->multiple_codes, true) as $k => $authorizationCode) {
+            $currentAuthorization = \App\Authorization::findByCode($authorizationCode);
 
+            if (!$currentAuthorization) {
+                dd($authorizationCode);
+            }
+
+            $services = $currentAuthorization->eps_service_id;
+            $companionService = $currentAuthorization->multiple_services;
+
+            if ($companionService) {
+                $services .= ",".$companionService;
+            } elseif (count($currentAuthorization->services) > 0) {
+                $services = '';
+                dd($currentAuthorization->services);
+                foreach ($currentAuthorization->services as $servicePrice) {
+                    $services .= $servicePrice->eps_service_id.",";
+                }
+                $services = trim($services, ",");
+            }
+            var_dump($services);
+        }
+        dd($services);
+        */
         $html = \View::make('invoice.pdf', compact('invoice'));
         $mpdf = new \Mpdf\Mpdf([
             'margin_left' => 20,

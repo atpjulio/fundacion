@@ -135,23 +135,26 @@ class Rip extends Model
                     $currentAuthorization = Authorization::findByCode($value);
                     if ($currentAuthorization) {
                         $days = json_decode($invoice->multiple_days, true)[$key];
+						$dailyPrice = $currentAuthorization->daily_price;
+						$total = floatval(json_decode($invoice->multiple_totals, true)[$key]);
                         $line .= $invoice->number.",".substr($invoice->company->doc, 0, 9).","
                             .$currentAuthorization->patient->dni_type.",".$currentAuthorization->patient->dni.","
                             .$currentAuthorization->code.",1,".$currentAuthorization->service->code.","
                             .mb_strtoupper($currentAuthorization->service->name).","
-                            .$days.",".$invoice->eps->daily_price.","
-                            .floatval($days * $invoice->eps->daily_price)."\r\n";
+                            .$days.",".number_format($dailyPrice, 2, ".", "").","
+                            .number_format($total, 2, ".", "")."\r\n";
                         $counter++;
                     }
                 }
             } else {
                 $days = $invoice->days;
+				$dailyPrice = $invoice->authorization->daily_price;
                 $line .= $invoice->number.",".substr($invoice->company->doc, 0, 9).","
                     .$invoice->authorization->patient->dni_type.",".$invoice->authorization->patient->dni.","
                     .$invoice->authorization->code.",1,".$invoice->authorization->service->code.","
                     .mb_strtoupper($invoice->authorization->service->name).","
-                    .$days.",".$invoice->eps->daily_price.","
-                    .floatval($days * $invoice->eps->daily_price)."\r\n";
+                    .$days.",".number_format($dailyPrice, 2, ".", "").","
+                    .number_format($invoice->total, 2, ".", "")."\r\n";
                 $counter++;
             }
         }
@@ -221,14 +224,13 @@ class Rip extends Model
         $counter = 0;
         foreach ($invoices as $invoice) {
             $createdAt = \Carbon\Carbon::parse($invoice->created_at)->format("d/m/Y");
-
             $total = $invoice->multiple ? array_sum(json_decode($invoice->multiple_totals, true)) : $invoice->total;
 
             $line .= substr($invoice->company->doc, 0, 9).",".mb_strtoupper($invoice->company->name).","
                 .$invoice->company->doc_type.",".substr($invoice->company->doc, 0, 9).","
                 .$invoice->number.",".$createdAt.",".$createdAt.",".$createdAt.","
                 .$invoice->eps->code.",".substr(mb_strtoupper($invoice->eps->name), 0, 30).",,,,"
-                ."0.00,0.00,0.00,".$total."\r\n";
+                ."0.00,0.00,0.00,".number_format($total, 2, ".", "")."\r\n";
             $counter++;
         }
 
@@ -641,7 +643,7 @@ class Rip extends Model
                         $cell->setValue('0');
                     });
                     $sheet->cell('Q'.$counter, function($cell) use ($total) {
-                        $cell->setValue($total);
+                        $cell->setValue(number_format($total, 2, ".", ""));
                     });
                     $counter++;
                     $counterAF++;
@@ -759,11 +761,11 @@ class Rip extends Model
                                 $sheet->cell('I'.$counter, function($cell) use ($invoice, $key) {
                                     $cell->setValue(json_decode($invoice->multiple_days, true)[$key]);
                                 });
-																$sheet->cell('J'.$counter, function($cell) use ($currentAuthorization) {
-				                            $cell->setValue($currentAuthorization->eps->daily_price);
-				                        });
+								$sheet->cell('J'.$counter, function($cell) use ($currentAuthorization) {
+	                            	$cell->setValue(number_format($currentAuthorization->daily_price, 2, ".", ""));
+		                        });
                                 $sheet->cell('K'.$counter, function($cell) use ($invoice, $key) {
-                                    $cell->setValue(floatval(json_decode($invoice->multiple_totals, true)[$key]));
+                                    $cell->setValue(number_format(floatval(json_decode($invoice->multiple_totals, true)[$key]), 2, ".", ""));
                                 });
                                 $counter++;
                                 $counterAT++;

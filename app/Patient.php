@@ -86,7 +86,7 @@ class Patient extends Model
                 'model_id' => $patient->id,
                 'model_type' => config('constants.modelType.patient'),
                 'phone' => $request->get('phone'),
-            ]);                
+            ]);
         }
 
         return $patient;
@@ -118,14 +118,14 @@ class Patient extends Model
             if ($patient and $request->get('phone')) {
                 if ($patient->phone) {
                     $patient->phone->update([
-                        'phone' => $request->get('phone'),                    
+                        'phone' => $request->get('phone'),
                     ]);
                 } else {
                     Phone::create([
                         'model_id' => $patient->id,
                         'model_type' => config('constants.modelType.patient'),
                         'phone' => $request->get('phone'),
-                    ]);                
+                    ]);
                 }
             }
         }
@@ -238,4 +238,50 @@ class Patient extends Model
             ->paginate(config('constants.pagination'));
     }
 
+    protected function processMassivePatientFile($epsCode, $file)
+    {
+      $eps = Eps::checkIfExists($epsCode);
+      if (!$eps) {
+          return "Información de EPS no encontrada. Por favor inténtalo nuevamente";
+      }
+
+      $fileResource  = fopen($file, "r");
+      $counter = 0;
+      if ($fileResource) {
+          while (($line = fgets($fileResource)) !== false) {
+              if (strpos($line, "SERIAL") === false) {
+                  if (Patient::storeRecordFromTxt($line, $eps->id)) {
+                      $counter++;
+                  }
+              }
+          }
+          fclose($fileResource);
+      }
+
+      if ($counter > 0) {
+          echo "\nSe guardaron $counter usuarios exitosamente!";
+      } else {
+          echo "\nNo se guardó ningún usuario. Es posible que ya estén guardados en el sistema";
+      }
+    }
+
+    protected function createOrUpdatePhone($id, $request)
+    {
+        $patient = Patient::find($id);
+        if ($patient and $request->get('patient_phone')) {
+            if ($patient->phone) {
+                $patient->phone->update([
+                    'phone' => $request->get('patient_phone'),
+                ]);
+            } else {
+                Phone::create([
+                    'model_id' => $patient->id,
+                    'model_type' => config('constants.modelType.patient'),
+                    'phone' => $request->get('patient_phone'),
+                ]);
+            }
+        }
+
+        return $patient;
+    }
 }

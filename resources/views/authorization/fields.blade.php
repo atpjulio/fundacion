@@ -19,6 +19,14 @@
     </div>
 @endif
 
+@php
+    $services = \App\EpsService::getServices(old('eps_id') ?: $initialEpsId);
+    if (count($services) < 1) {
+        $services = [
+            "0" => 'Sin servicios registrados'
+        ];
+    }
+@endphp
 @if (isset($show))
     <div class="form-group  @if($errors->has('service_name')) has-error @endif">
         {!! Form::label('service_name', 'Servicio autorizado', ['class' => 'control-label']) !!}
@@ -26,14 +34,6 @@
         {!! Form::hidden('eps_service_id', $service->id) !!}
     </div>
 @else
-    @php
-        $services = \App\EpsService::getServices(old('eps_id') ?: $initialEpsId);
-        if (count($services) < 1) {
-            $services = [
-                "0" => 'Sin servicios registrados'
-            ];
-        }
-    @endphp
     <div class="form-group  @if($errors->has('eps_service_id')) has-error @endif">
         {!! Form::label('eps_service_id', 'Seleccione Servicio de EPS', ['class' => 'control-label']) !!}
         <div class="row">
@@ -49,22 +49,8 @@
             @endif
         </div>
     </div>
-    <div class="form-group  @if($errors->has('multiple_services')) has-error @endif">
-        {!! Form::label('multiple_services', 'Servicio Adicional de EPS (Opcional)', ['class' => 'control-label']) !!}
-        <div id="dynamic-multiple-services">
-            @include('partials._services_multiple')
-        </div>
-    </div>    
 @endif
 <div class="form-group  @if($errors->has('diagnosis')) has-error @endif">
     {!! Form::label('diagnosis', 'Diagnóstico', ['class' => 'control-label']) !!}
     {!! Form::text('diagnosis', old('diagnosis', isset($authorization) ? $authorization->diagnosis : ''), ['class' => 'form-control underlined', 'placeholder' => 'Diagnóstico (opcional)']) !!}
-</div>
-<div class="form-group  @if($errors->has('location')) has-error @endif">
-    {!! Form::label('location', 'Ubicación del paciente', ['class' => 'control-label']) !!}
-    {!! Form::select('location', config('constants.patient.location'), old('location', isset($authorization) ? $authorization->location : ''), ['class' => 'form-control', isset($show) ? 'disabled' : '']) !!}
-</div>
-<div class="form-group  @if($errors->has('patient_phone')) has-error @endif">
-    {!! Form::label('patient_phone', 'Número de contacto', ['class' => 'control-label']) !!}
-    {!! Form::text('patient_phone', old('patient_phone', (isset($authorization) and $authorization->patient->phone) ? $authorization->patient->phone->phone : ''), ['class' => 'form-control underlined', 'placeholder' => 'Número de contacto (opcional)', 'maxlength' => 15]) !!}
 </div>

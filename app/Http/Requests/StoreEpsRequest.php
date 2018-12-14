@@ -27,11 +27,21 @@ class StoreEpsRequest extends FormRequest
             'code' => 'required|min:6|unique:eps',
             'name' => 'required|min:3',
             'nit' => 'required|min:9|unique:eps',
-            'daily_price' => 'required',
+            // 'daily_price' => 'required',
             'address' => 'required',
             'city' => 'required|min:3',
             'state' => 'required',
             'phone' => 'required|min:7',
+            'names.*' => 'required',
+            'prices.*' => 'required',
         ];
+    }
+
+    public function messages()
+    {
+      return [
+        'names.*' => 'El campo nombre del precio es obligatorio',
+        'prices.*' => 'El precio es obligatorio',        
+      ];
     }
 }

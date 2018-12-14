@@ -88,7 +88,7 @@ class AuthorizationController extends Controller
     {
         $epss = Eps::all();
         $authorization = Authorization::find($id);
-        $services = EpsService::getServices($authorization->eps_id)->pluck('name', 'id');
+        $services = EpsService::getServices($authorization->eps_id);
         $epss = $epss->pluck('name', 'id');
         $patients = Patient::searchRecords($authorization->patient->dni);
         $code = $authorization->codec;
@@ -113,7 +113,7 @@ class AuthorizationController extends Controller
         Session::flash('message', 'Autorización actualizada exitosamente');
 
         if ($authorization->invoice_id > 0) {
-            return redirect()->route('authorization.index');    
+            return redirect()->route('authorization.index');
         }
         return redirect()->route('authorization.open');
     }
@@ -161,7 +161,7 @@ class AuthorizationController extends Controller
         dd("under construction");
     }
 
-    public function excel($id) 
+    public function excel($id)
     {
         $authorization = Authorization::find($id);
         if (!$authorization) {
@@ -170,7 +170,7 @@ class AuthorizationController extends Controller
         }
 
         Excel::load('public/files/hospedaje.xls', function($excel) use ($authorization) {
-            
+
             $monthDiff = intval(substr($authorization->date_to, 5, 2)) - intval(substr($authorization->date_from, 5, 2));
 
             for ($i = 0; $i <= $monthDiff; $i++) {
@@ -193,7 +193,7 @@ class AuthorizationController extends Controller
                     });
 
                     if ($monthDiff > 0) {
-                        if ($i == $monthDiff) {                    
+                        if ($i == $monthDiff) {
                             $sheet->cell('I10', function($cell) use ($authorization) {
                                 $cell->setValue(\Carbon\Carbon::parse($authorization->date_to)
                                     ->startOfMonth()->format("d"));
@@ -296,13 +296,13 @@ class AuthorizationController extends Controller
             }
 
             for ($j = 2; $j > $monthDiff; $j--) {
-                $excel->removeSheetByIndex($j);    
+                $excel->removeSheetByIndex($j);
             }
             $excel->setActiveSheetIndex(0);
 
         })->setFilename('Hospedaje_'.$authorization->eps->alias.'_'.$authorization->code)
         ->export('xls');
-        
+
     }
 
     public function incomplete()
@@ -331,7 +331,7 @@ class AuthorizationController extends Controller
         return view('authorization.close', compact('total', 'authorizations'));
     }
 
-    public function global(Request $request) 
+    public function global(Request $request)
     {
         $authorizations = Authorization::global($request->get('authorization_code'));
 

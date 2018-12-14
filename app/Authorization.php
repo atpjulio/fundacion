@@ -4,7 +4,11 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Facades\DB;
+use App\Patient;
+use App\EpsService;
 use App\AuthorizationDate;
+use App\AuthorizationPrice;
 use App\AuthorizationService;
 use App\AuthorizationCompanion;
 
@@ -86,6 +90,11 @@ class Authorization extends Model
     {
       return $this->hasMany(AuthorizationCompanion::class);
     }
+
+    public function price()
+    {
+      return $this->hasOne(AuthorizationPrice::class);
+    }
     /**
      * Attributes
      */
@@ -112,11 +121,25 @@ class Authorization extends Model
 
     public function getDailyPriceAttribute()
     {
-        $dailyPrice = $this->eps->daily_price;
-        if ($this->multiple) {
-            $dailyPrice += count(explode(',', $this->multiple_services)) * $this->eps->daily_price;
+        $dailyPrice = 0;
+        if ($this->price) {
+            $dailyPrice = $this->price->daily_price;
+        } elseif (count($this->eps->price) > 0) {
+            $dailyPrice = $this->eps->price[0]->daily_price;
+        } elseif ($this->eps->daily_price > 0) {
+            $dailyPrice = $this->eps->daily_price;
         }
 
+        if ($this->multiple) {
+            if (count($this->services) > 0) {
+                $dailyPrice = 0;
+                foreach ($this->services as $service) {
+                    $dailyPrice += $service->price * $service->days / $this->services[0]->days;
+                }
+            } else {
+                $dailyPrice += count(explode(',', $this->multiple_services)) * $this->eps->daily_price;
+            }
+        }
         return $dailyPrice;
     }
 
@@ -125,57 +148,53 @@ class Authorization extends Model
      */
     protected function storeRecord($request)
     {
-        $authorization = new Authorization();
+        try {
+            DB::beginTransaction();
 
-        $authorization->eps_id = $request->get('eps_id');
-        $authorization->eps_service_id = $request->get('eps_service_id');
-        $authorization->patient_id = $request->get('patient_id');
-        $authorization->code = $request->get('code');
-        if (!$request->get('code')) {
-            $lastRecord = $this->orderBy('id', 'desc')
-                ->first();
+            $authorization = new Authorization();
 
-            $authorization->code = 'SA'.sprintf("%05d", 1);
-            if ($lastRecord) {
-                $authorization->code = 'SA'.sprintf("%05d", 1 + $lastRecord->id);
+            $authorization->eps_id = $request->get('eps_id');
+            $authorization->eps_service_id = $request->get('eps_service_id');
+            $authorization->patient_id = $request->get('patient_id');
+            $authorization->notes = $request->get('notes');
+            $authorization->status = config('constants.status.active');
+            $authorization->user_id = auth()->user()->id;
+            $authorization->diagnosis = ucwords(mb_strtolower($request->get('diagnosis')));
+            $authorization->location = config('constants.patient.location')[$request->get('location')];
+            $authorization->code = $request->get('code');
+            if (!$request->get('code')) {
+                $lastRecord = $this->orderBy('id', 'desc')
+                    ->first();
+
+                $authorization->code = 'SA'.sprintf("%05d", 1);
+                if ($lastRecord) {
+                    $authorization->code = 'SA'.sprintf("%05d", 1 + $lastRecord->id);
+                }
             }
-        }
 
-        $authorization->date_from = $request->get('date_from');
-        $authorization->date_to = \Carbon\Carbon::parse($request->get('date_from'))->addDays($request->get('total_days'))->format("Y-m-d");
-        $authorization->notes = $request->get('notes');
-        $authorization->status = config('constants.status.active');
-        $authorization->user_id = auth()->user()->id;
-        $authorization->diagnosis = ucwords(mb_strtolower($request->get('diagnosis')));
-        $authorization->location = config('constants.patient.location')[$request->get('location')];
-        $authorization->companion = ($request->get('companion') == "1");
-        if ($authorization->companion) {
-            $authorization->companion_dni = $request->get('companion_dni');
-            $authorization->companion_name = ucwords(mb_strtolower($request->get('companion_name')));
-            $authorization->companion_phone = $request->get('companion_phone');
-        }
+            $authorization->date_from = $request->get('date_from');
+            $authorization->date_to = \Carbon\Carbon::parse($request->get('date_from'))->addDays($request->get('total_days'))->format("Y-m-d");
+            $authorization->companion = ($request->get('companion') == "1");
 
-        $authorization->multiple = 0;
-        if ($request->get('multiple_services')) {
-            $authorization->multiple = config('constants.status.active');
-            $authorization->multiple_services = $request->get('multiple_services');
-        }
-
-        $authorization->save();
-
-        $patient = Patient::find($authorization->patient_id);
-        if ($patient and $request->get('patient_phone')) {
-            if ($patient->phone) {
-                $patient->phone->update([
-                    'phone' => $request->get('patient_phone'),
-                ]);
-            } else {
-                Phone::create([
-                    'model_id' => $patient->id,
-                    'model_type' => config('constants.modelType.patient'),
-                    'phone' => $request->get('patient_phone'),
-                ]);
+            $authorization->multiple = 0;
+            if ($request->get('multiple_services')) {
+                $authorization->multiple = config('constants.status.active');
             }
+
+            $authorization->save();
+
+            if ($authorization->companion) {
+                AuthorizationCompanion::storeRecord($authorization->id, $request);
+            }
+            AuthorizationPrice::storeRecord($authorization, $request);
+            AuthorizationDate::storeRecord($authorization, $request);
+            AuthorizationService::storeRecord($authorization, $request);
+            Patient::createOrUpdatePhone($authorization->patient_id, $request);
+
+            DB::commit();
+        } catch(\Exception $e) {
+            DB::rollback();
+            dd($e);
         }
 
         return $authorization;
@@ -186,57 +205,55 @@ class Authorization extends Model
         $authorization = $this->find($request->get('id'));
 
         if ($authorization) {
-            $authorization->eps_id = $request->get('eps_id');
-            $authorization->eps_service_id = $request->get('eps_service_id');
-            $authorization->patient_id = $request->get('patient_id');
-            $oldCode = $authorization->code;
-            $authorization->code = $request->get('code');
-            if ($authorization->codec == '' or empty($request->get('code'))) {
-                $authorization->code = $oldCode;
-            }
+            try {
+                DB::beginTransaction();
 
-            $authorization->date_from = $request->get('date_from');
-            $authorization->date_to = \Carbon\Carbon::parse($request->get('date_from'))->addDays($request->get('total_days'))->format("Y-m-d");
-            $authorization->notes = $request->get('notes');
-            $authorization->status = config('constants.status.active');
-            $authorization->diagnosis = ucwords(mb_strtolower($request->get('diagnosis')));
-            $authorization->location = config('constants.patient.location')[$request->get('location')];
-            $authorization->companion = ($request->get('companion') == "1");
-            if ($authorization->companion) {
-                $authorization->companion_dni = $request->get('companion_dni');
-                $authorization->companion_name = ucwords(mb_strtolower($request->get('companion_name')));
-                $authorization->companion_phone = $request->get('companion_phone');
-            }
+                $authorization->eps_id = $request->get('eps_id');
+                $authorization->eps_service_id = $request->get('eps_service_id');
+                $authorization->patient_id = $request->get('patient_id');
+                $oldCode = $authorization->code;
+                $authorization->code = $request->get('code');
+                if ($authorization->codec == '' or empty($request->get('code'))) {
+                    $authorization->code = $oldCode;
+                }
 
-            $authorization->multiple = 0;
-            if ($request->get('multiple_services')) {
-                $authorization->multiple = config('constants.status.active');
-                $authorization->multiple_services = $request->get('multiple_services');
-            }
+                $authorization->date_from = $request->get('date_from');
+                $authorization->date_to = \Carbon\Carbon::parse($request->get('date_from'))->addDays($request->get('total_days'))->format("Y-m-d");
+                $authorization->notes = $request->get('notes');
+                $authorization->status = config('constants.status.active');
+                $authorization->diagnosis = ucwords(mb_strtolower($request->get('diagnosis')));
+                $authorization->location = config('constants.patient.location')[$request->get('location')];
+                $authorization->companion = ($request->get('companion') == "1");
 
-            $authorization->save();
+                $authorization->multiple = 0;
+                if ($request->get('multiple_services')) {
+                    $authorization->multiple = config('constants.status.active');
+                    $authorization->multiple_services = null;
+                }
 
-            $patient = Patient::find($authorization->patient_id);
-            if ($patient and $request->get('patient_phone')) {
-                if ($patient->phone) {
-                    $patient->phone->update([
-                        'phone' => $request->get('patient_phone'),
-                    ]);
-                } else {
-                    Phone::create([
-                        'model_id' => $patient->id,
-                        'model_type' => config('constants.modelType.patient'),
-                        'phone' => $request->get('patient_phone'),
+                $authorization->save();
+
+                if ($authorization->companion) {
+                    AuthorizationCompanion::updateRecord($authorization->id, $request);
+                }
+                AuthorizationPrice::updateRecord($authorization, $request);
+                AuthorizationDate::updateRecord($authorization, $request);
+                AuthorizationService::updateRecord($authorization, $request);
+                Patient::createOrUpdatePhone($authorization->patient_id, $request);
+
+                $invoice = Invoice::getInvoiceByAuthorizationCode($authorization->code);
+                if ($invoice) {
+                    $invoice->update([
+                        'total' => $authorization->eps->daily_price * $authorization->days
                     ]);
                 }
+
+                DB::commit();
+            } catch (\Exception $e) {
+                DB::rollback();
+                dd($e);
             }
 
-            $invoice = Invoice::getInvoiceByAuthorizationCode($authorization->code);
-            if ($invoice) {
-                $invoice->update([
-                    'total' => $authorization->eps->daily_price * $authorization->days
-                ]);
-            }
         }
 
         return $authorization;

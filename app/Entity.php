@@ -31,7 +31,7 @@ class Entity extends Model
 		$entity = new Entity();
 
 		$entity->name = $request->get('name');
-		$entity->doc = $request->get('doc');
+		$entity->doc = $request->get('doc') ?: $request->get('nit');
 		$entity->address = $request->get('address');
 		$entity->phone = $request->get('phone');
 
@@ -40,13 +40,17 @@ class Entity extends Model
 		return $entity;
 	}
 
-	protected function updateRecord($request)
+	protected function updateRecord($request, $doc = null)
 	{
-		$entity = $this->find($request->get('entity_id'));
+    if ($request->get('entity_id')) {
+      $entity = $this->find($request->get('entity_id'));
+    } else {
+      $entity = $this->checkIfExists($doc);
+    }
 
 		if ($entity) {
 			$entity->name = $request->get('name');
-			$entity->doc = $request->get('doc');
+			$entity->doc = $request->get('doc') ?: $request->get('nit');
 			$entity->address = $request->get('address');
 			$entity->phone = $request->get('phone');
 

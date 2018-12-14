@@ -3,11 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Eps;
-use App\EpsService;
 use App\Http\Requests\StoreEpsRequest;
 use App\Http\Requests\StoreEpsServiceRequest;
 use App\Http\Requests\UpdateEpsRequest;
 use App\Http\Requests\UpdateEpsServiceRequest;
+use App\EpsService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
 
@@ -178,7 +178,4 @@ class EpsController extends Controller
         return redirect()->route('eps.services.index', ['id' => $request->get('eps_id') ]);
     }
 
-    public function servicesAuthorizationStore(StoreEpsServiceRequest $request) {
-
-    }
 }

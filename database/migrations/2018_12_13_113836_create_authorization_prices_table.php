@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateAuthorizationServicesTable extends Migration
+class CreateAuthorizationPricesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,13 +13,12 @@ class CreateAuthorizationServicesTable extends Migration
      */
     public function up()
     {
-        Schema::create('authorization_services', function (Blueprint $table) {
+        Schema::create('authorization_prices', function (Blueprint $table) {
             $table->increments('id');
             $table->unsignedInteger('authorization_id');
-            $table->unsignedInteger('eps_service_id');
-            $table->decimal('price', 10, 2)->default("0.00");
-            $table->smallInteger('days')->default(0);            
-            $table->softDeletes();
+            $table->unsignedInteger('eps_id');
+            $table->decimal('daily_price', 10, 2);
+            $table->softDeletes();            
             $table->timestamps();
         });
     }
@@ -31,6 +30,6 @@ class CreateAuthorizationServicesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('authorization_services');
+        Schema::dropIfExists('authorization_prices');
     }
 }

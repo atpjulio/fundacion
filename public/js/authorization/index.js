@@ -1,11 +1,13 @@
 $(document).ready(function() {
+    var code = '';
+    var description = '';
     $('#searching').on('change', function (e) {
         fillFilteredEpsPatients($('#searching').val());
     });
 
     $('#code').on('change keyup', function (e) {
         if ($('#code').val().length > 4) {
-            checkAuthorization($('#code').val());        
+            checkAuthorization($('#code').val());
         }
     });
 
@@ -21,56 +23,93 @@ $(document).ready(function() {
         $('#serviceLink').attr("href", "/eps-services/" + $('#epsSelect').val() + "/create-from-authorization");
         fillServices($('#epsSelect').val());
         fillMultipleServices($('#epsSelect').val());
+        fillDailyPrices($('#epsSelect').val());
+        if (code != '' || description != '') {
+            var totalRows = $("#multipleServicesTable").find('tr').length;
+            if (totalRows > 1) {
+                $("#multipleServicesTable").find('tr').each(function(index, element) {
+                    if (index > 0) {
+                        element.remove();
+                    }
+                });
+            }
+        }
         // fillPatients($('#epsSelect').val());
         // fillCompanionServices($('#epsSelect').val());
     });
     $('#companion_eps_service_id').on('change', function(e) {
-        if ($(this).val() > 0) {             
+        if ($(this).val() > 0) {
             $('#companion_service').val($(this).children('option').filter(":selected").text());
             $('#companion_service_id').val($(this).val());
             $('#alertTable').css('display', 'none');
-            $('#tableMessage').html('');              
-
+            $('#tableMessage').html('');
         } else {
             $('#companion_service').val('');
             $('#companion_service_id').val('');
-            $('#tableMessage').html('Por favor seleccione un servicio válido');              
+            $('#tableMessage').html('Por favor seleccione un servicio válido');
             $('#alertTable').css('display', 'block');
         }
     });
-    $(".addRow").click( function() {
-
-        if ($('#companion_service').val().length > 0 && $('#companion_service_id').val().length > 0 && $('#companion_document').val().length > 0) {
-            $("#companionsTable").append('<tr><td><input type="text" id="companionDni" name="companionDni[]" value="' + $('#companion_document').val() + '" class="form-control" placeholder="Número de Documento"/></td><td><input type="text" id="companionService" value="' + $('#companion_service').val() + '" name="companionService[]" class="form-control" placeholder="Servicio para el acompañante" readonly /><input type="hidden" name="companionServiceId[]" id="companionServiceId" value="' + $('#companion_service_id').val() + '"></td><td><a href="javascript:void(0);" class="removeRow btn btn-oval btn-danger">Quitar</a></td><tr>');
-
-            $('#companion_document').val('');
-            $('#companion_service').val('');
-            $('#companion_service_id').val('');                    
-            $('#alertTable').css('display', 'none');
-            $('#tableMessage').html('');              
-        } else {
-            if ($('#companion_service').val().length == 0) {
-                $('#tableMessage').html('Por favor seleccione un servicio válido');              
-                $('#alertTable').css('display', 'block');
-
-            } else {
-                $('#tableMessage').html('Por favor ingrese un número de documento');              
-                $('#alertTable').css('display', 'block');                        
-            }
-        }
-
+    $("#companionsTable").on('click','.addRow', function() {
+        $("#companionsTable").append(
+          '<tr>' +
+            '<td><input type="text" name="companion_dni[]" value="" maxlength="20" class="form-control"></td>' +
+            '<td><input type="text" name="companion_name[]" value="" maxlength="50" class="form-control"></td>' +
+            '<td><input type="text" name="companion_phone[]" value="" maxlength="15" class="form-control"></td>' +
+            '<td><a href="javascript:void(0);" class="removeRow btn btn-oval btn-danger">Quitar</a></td>' +
+          '</tr>'
+        );
     });
     $("#companionsTable").on('click','.removeRow', function() {
         $(this).parent().parent().remove();
     });
-
+    $("#companionsTable").on('click','.addRow', function() {
+        $("#companionsTable").append(
+          '<tr>' +
+            '<td><input type="text" name="companion_dni[]" value="" maxlength="20" class="form-control"></td>' +
+            '<td><input type="text" name="companion_name[]" value="" maxlength="50" class="form-control"></td>' +
+            '<td><input type="text" name="companion_phone[]" value="" maxlength="15" class="form-control"></td>' +
+            '<td><a href="javascript:void(0);" class="removeRow btn btn-oval btn-danger">Quitar</a></td>' +
+          '</tr>'
+        );
+    });
+    $("#companionsTable").on('click','.removeRow', function() {
+        $(this).parent().parent().remove();
+    });
+    $(".addRowService").on('click', function() {
+        code = $('#multiple_services option:selected').text().split(" - ")[0].trim();
+        description = $('#multiple_services option:selected').text().split(" - ")[1].trim();
+        $("#multipleServicesTable").append(
+          '<tr>' +
+            '<td><input type="text" name="service_code[]" value="' + code + '" class="form-control" readonly></td>' +
+            '<td><input type="text" name="service_description[]" value="' + description + '" class="form-control" readonly></td>' +
+            '<td><input type="number" name="service_days[]" value="' + $("#total_days").val() + '" class="form-control"></td>' +
+            '<td><a href="javascript:void(0);" class="removeRowService btn btn-oval btn-danger">Quitar</a></td>' +
+          '</tr>'
+        );
+    });
+    $("#multipleServicesTable").on('click',' .removeRowService', function() {
+        $(this).parent().parent().remove();
+    });
+    $("#dynamic-multiple-services").on('change', '#multiple_services', function (e) {
+        if ($('#multiple_services').val() == 0) {
+          $('#addRowService').removeClass('btn-success');
+          $('#addRowService').addClass('btn-secondary');
+          $('#multipleServicesDiv').css('display', 'none');
+        } else {
+          $('#multipleServicesDiv').css('display', 'block');
+          $('#multipleServicesDiv').addClass('animated fadeIn');
+          $('#addRowService').removeClass('btn-secondary');
+          $('#addRowService').addClass('btn-success');
+        }
+    });
 } );
 function sendInfo(id, eps_id, name) {
     $('#patient_id').val(id);
     $('#selected_patient').html(name);
     // $('#myForm').submit();
     $('#serviceLink').attr("href", "/eps-services/" + eps_id + "/create-from-authorization");
-    $('#restOfFields').css('display', 'block');            
+    $('#restOfFields').css('display', 'block');
     $('#restOfFields').addClass('animated fadeIn');
     $('html, body').animate({
             scrollTop: $('#authFields').offset().top
@@ -80,6 +119,17 @@ function sendInfo(id, eps_id, name) {
     $('#epsSelect').val(eps_id);
     fillServices($('#epsSelect').val());
     fillMultipleServices($('#epsSelect').val());
+    fillDailyPrices($('#epsSelect').val());
+    if (code != '' || description != '') {
+        var totalRows = $("#multipleServicesTable").find('tr').length;
+        if (totalRows > 1) {
+            $("#multipleServicesTable").find('tr').each(function(index, element) {
+                if (index > 0) {
+                    element.remove();
+                }
+            });
+        }
+    }
     // fillPatients($('#epsSelect').val());
     // fillCompanionServices($('#epsSelect').val());
 }

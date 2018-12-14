@@ -1,4 +1,6 @@
-<select name="multiple_services" class="form-control" @if($errors->has("multiple_services")) style="border: 1px solid red !important;" @endif>
+<select name="multiple_services" class="form-control"
+				@if($errors->has("multiple_services")) style="border: 1px solid red !important;" @endif
+				id="multiple_services">
 	<option value="0">Seleccione adicional</option>
     @foreach($services as $key => $service)
         @if (isset($service->id))

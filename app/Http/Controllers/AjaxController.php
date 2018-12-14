@@ -151,4 +151,9 @@ class AjaxController extends Controller
         }
         return $result;
     }
+
+    public function getDailyPrices($initialEpsId)
+    {
+        return view('partials._daily_prices', compact('initialEpsId'));
+    }
 }

@@ -76,7 +76,7 @@
                     <label class="form-check-label" for="multiple">
                         ¿Varias autorizaciones?
                     </label>
-                    </div>                            
+                    </div>
                 </div>
                 {!! Form::text('authorization_code', old('authorization_code', (isset($invoice) and !$invoice->multiple) ? $invoice->authorization_code : ''), ['class' => 'form-control underlined', 'readonly', 'id' => 'authorization_code']) !!}
             </div>
@@ -142,8 +142,8 @@
                                             @endif
                                         </td>
                                     </tr>
-                                @endforeach                            
-                            @endif                                
+                                @endforeach
+                            @endif
                         @else
                             @if($invoice->multiple)
                             @foreach(old('multiple_codes', json_decode($invoice->multiple_codes, true)) as $k => $val)
@@ -163,14 +163,14 @@
                                 </tr>
                             @endforeach
                             @endif
-                        @endif                        
+                        @endif
                         </tbody>
-                    </table>                
+                    </table>
                 </div>
                 <div class="alert alert-danger alert-dismissible fade show" role="alert" style="background-color: #ffffff !important; color: #dd4b39 !important; display: none;" id="alertTable">
                     <div id="tableMessage">You should check in on some of those fields below.</div>
                 </div>
-            </div>            
+            </div>
         </div>
     </div>
 </div>

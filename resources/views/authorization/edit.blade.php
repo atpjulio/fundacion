@@ -61,14 +61,14 @@
                 <div class="card">
                     <div class="card-block">
                         <div class="card-title-block">
-                            <h3 class="title"> Fecha de validez </h3>
+                            <h3 class="title"> Datos del paciente </h3>
                         </div>
                         @include('authorization.fields2')
-                        <div id="companionsDiv" @if (old('companion') or $authorization->companion) style="display: block;" @else style="display: none;" @endif>
-                            @include('authorization.companion')
-                        </div>
                     </div>
                 </div>
+            </div>
+            <div class="col-md-12">
+              @include('authorization.additionals')
             </div>
             <div class="col-md-12">
                 <div class="text-center">
@@ -84,5 +84,5 @@
 @push('scripts')
     <script src="{{ asset('js/jquery.dataTables.min.js') }}"></script>
     <script src="{{ asset('js/dataTables.bootstrap.min.js') }}"></script>
-    <script src="{{ asset('js/authorization/edit.js') }}"></script>
+    <script src="{{ asset('js/authorization/index.js').'?version='.config('constants.stylesVersion') }}"></script>
 @endpush
