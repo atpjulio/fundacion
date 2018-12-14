@@ -140,7 +140,7 @@ class Rip extends Model
                             .$currentAuthorization->code.",1,".$currentAuthorization->service->code.","
                             .mb_strtoupper($currentAuthorization->service->name).","
                             .$days.",".$invoice->eps->daily_price.","
-                            .floatval($days * $invoice->eps->daily_price)."\n";
+                            .floatval($days * $invoice->eps->daily_price)."\r\n";
                         $counter++;
                     }
                 }
@@ -151,7 +151,7 @@ class Rip extends Model
                     .$invoice->authorization->code.",1,".$invoice->authorization->service->code.","
                     .mb_strtoupper($invoice->authorization->service->name).","
                     .$days.",".$invoice->eps->daily_price.","
-                    .floatval($days * $invoice->eps->daily_price)."\n";
+                    .floatval($days * $invoice->eps->daily_price)."\r\n";
                 $counter++;
             }
         }
@@ -184,22 +184,17 @@ class Rip extends Model
                             .config('constants.genderShort.'.$currentAuthorization->patient->gender).","
                             .$currentAuthorization->patient->state.","
                             .$currentAuthorization->patient->city.","
-                            .$currentAuthorization->patient->zone."\n";
+                            .$currentAuthorization->patient->zone."\r\n";
 
                         array_push($arrPatients, $currentAuthorization->patient->id);
                         $counter++;
                     }
                 }
             } elseif (!in_array($invoice->authorization->patient->id, $arrPatients)) {
-								try {
-
-									$arrayFirstName = explode(" ", $invoice->authorization->patient->first_name);
-									$firstName = $arrayFirstName[0].",".(isset($arrayFirstName[1]) ? join(" ", array_slice($arrayFirstName, 1)) : '');
-									$arrayLastName = explode(" ", $invoice->authorization->patient->last_name);
-									$lastName = $arrayLastName[0].",".(isset($arrayLastName[1]) ? join(" ", array_slice($arrayLastName, 1)) : '');
-								} catch (\Exception $e) {
-									dd($arrayFirstName, isset($arrayFirstName[1]), array_slice($arrayFirstName, 1), array_slice($arrayFirstName, 1) , $e);
-								}
+								$arrayFirstName = explode(" ", $invoice->authorization->patient->first_name);
+								$firstName = $arrayFirstName[0].",".(isset($arrayFirstName[1]) ? join(" ", array_slice($arrayFirstName, 1)) : '');
+								$arrayLastName = explode(" ", $invoice->authorization->patient->last_name);
+								$lastName = $arrayLastName[0].",".(isset($arrayLastName[1]) ? join(" ", array_slice($arrayLastName, 1)) : '');
 
                 $line .= $invoice->authorization->patient->dni_type.",".$invoice->authorization->patient->dni
                     .",".$invoice->eps->code.",".$invoice->authorization->patient->type.","
@@ -207,7 +202,7 @@ class Rip extends Model
                     .config('constants.genderShort.'.$invoice->authorization->patient->gender).","
                     .$invoice->authorization->patient->state.","
                     .$invoice->authorization->patient->city.","
-                    .$invoice->authorization->patient->zone."\n";
+                    .$invoice->authorization->patient->zone."\r\n";
 
                 array_push($arrPatients, $invoice->authorization->patient->id);
                 $counter++;
@@ -233,7 +228,7 @@ class Rip extends Model
                 .$invoice->company->doc_type.",".substr($invoice->company->doc, 0, 9).","
                 .$invoice->number.",".$createdAt.",".$createdAt.",".$createdAt.","
                 .$invoice->eps->code.",".substr(mb_strtoupper($invoice->eps->name), 0, 30).",,,,"
-                ."0.00,0.00,0.00,".$total."\n";
+                ."0.00,0.00,0.00,".$total."\r\n";
             $counter++;
         }
 
@@ -253,7 +248,7 @@ class Rip extends Model
             $createdAt = \Carbon\Carbon::parse($invoice->created_at)->format("d/m/Y");
 
             $line .= substr($invoice->company->doc, 0, 9).",".$createdAt.","
-                .$type.sprintf("%06d", $id).",".$counter."\n";
+                .$type.sprintf("%06d", $id).",".$counter."\r\n";
         }
 
         $fileName = "CT".sprintf("%06d", $id).".TXT";
@@ -1565,13 +1560,6 @@ class Rip extends Model
             });
             $excel->setActiveSheetIndex(0);
         })->store('xls', storage_path('app/'.config('constants.ripsFiles')));
-        // ->store('xls', storage_path('excel/exports'));
-
     }
-		/*
-		protected function fixNameToRip($name)
-		{
-			$currentAuthorization->patient->first_name
-		}
-		*/
+
 }
