@@ -144,10 +144,12 @@ function validateFormService(myUrl, myFormName, epsId) {
         data: values,
 
         success: function(response) {
+            $('#modal-success').html('<h3>Guardado...</h3>')
+            $('#modal-success').addClass('animated bounce pb-3');
             fillServices(epsId);
             fillMultipleServices(epsId);
             fillDailyPrices(epsId);
-            $('#show-modal').modal('hide');
+            setTimeout(function () { $('#show-modal').modal('hide'); }, 1500);
         },
         error: function(errors){
             $.each(jQuery.parseJSON(errors.responseText), function (index, value) {

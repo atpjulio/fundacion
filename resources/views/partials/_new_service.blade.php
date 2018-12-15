@@ -14,6 +14,7 @@
                 <div class="card">
                     <div class="card-block">
                         <div class="text-danger" id="modal-error"></div>
+                        <div class="text-success" id="modal-success"></div>
                         @include('eps.services.fields')
                     </div>
                 </div>
