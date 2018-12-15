@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Authorization;
+use App\Eps;
 use App\City;
 use App\Entity;
 use App\EpsService;
@@ -156,4 +157,11 @@ class AjaxController extends Controller
     {
         return view('partials._daily_prices', compact('initialEpsId'));
     }
+
+    public function newService($epsId)
+    {
+        $eps = Eps::find($epsId);
+        return view('partials._new_service', compact('eps'));
+    }
+
 }

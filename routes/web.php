@@ -56,6 +56,7 @@ Route::middleware(['auth', 'both'])->group(function () {
     Route::get('eps-services/{id}/create-from-authorization', 'EpsController@servicesCreateAuthorization')->name('eps.services.create.authorization');
     Route::get('eps-services/{id}/create', 'EpsController@servicesCreate')->name('eps.services.create');
     Route::post('eps-services/store', 'EpsController@servicesStore')->name('eps.services.store');
+    Route::post('eps-services/new', 'EpsController@servicesNew')->name('eps.services.new');
     Route::get('eps-services/{id}/edit', 'EpsController@servicesEdit')->name('eps.services.edit');
     Route::patch('eps-services/{id}/update', 'EpsController@servicesUpdate')->name('eps.services.update');
 
@@ -93,6 +94,7 @@ Route::middleware(['auth', 'both'])->group(function () {
     Route::get('/get-services/{id}', 'AjaxController@getServices');
     Route::get('/get-cities/{id}', 'AjaxController@getCities');
     Route::get('/get-entity/{id}', 'AjaxController@getEntity');
+    Route::get('/new-service/{id}', 'AjaxController@newService');
     Route::get('/check-patient/{dni}', 'AjaxController@checkPatient');
     Route::get('/check-authorization/{code}', 'AjaxController@checkAuthorization');
 });

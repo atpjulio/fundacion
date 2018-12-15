@@ -74,5 +74,6 @@
     <script src="{{ asset('modular-admin/js/app.js') }}"></script>
     <script src="{{ asset('js/global.js').'?version='.config('constants.stylesVersion') }}"></script>
     @stack('scripts')
+    <input type="hidden" value="{{ csrf_token() }}" name="_tokenBase" id="_tokenBase" /> 
 </body>
 </html>

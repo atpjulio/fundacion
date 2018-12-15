@@ -44,7 +44,10 @@
             </div>
             @if (!isset($authorization))
             <div class="col-md-3 text-right">
-                <a href="/eps-services/{{ $initialEpsId }}/create-from-authorization" class="btn btn-oval btn-success" id="serviceLink">Nuevo</a>
+                {{--<a href="/eps-services/{{ $initialEpsId }}/create-from-authorization" class="btn btn-oval btn-success" id="serviceLink">Nuevo</a>--}}
+                <a href="javascript:showModal('new-service/{{ $initialEpsId }}')" class="btn btn-oval btn-success" id="serviceLink">
+                    Nuevo
+                </a>
             </div>
             @endif
         </div>

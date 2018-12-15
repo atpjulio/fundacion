@@ -97,8 +97,8 @@ $(document).ready(function() {
 function sendInfo(id, eps_id, name) {
     $('#patient_id').val(id);
     $('#selected_patient').html(name);
-    // $('#myForm').submit();
-    $('#serviceLink').attr("href", "/eps-services/" + eps_id + "/create-from-authorization");
+    //$('#serviceLink').attr("href", "/eps-services/" + eps_id + "/create-from-authorization");
+    $('#serviceLink').attr("href", "javascript:showModal('new-service/" + eps_id + "')");
     $('#restOfFields').css('display', 'block');
     $('#restOfFields').addClass('animated fadeIn');
     $('html, body').animate({
@@ -128,4 +128,40 @@ function updateInfo(id, name) {
     $('#patient_id').val(id);
     $('#selected_patient').html(name);
     $('#myForm').submit();
+}
+
+function validateFormService(myUrl, myFormName, epsId) {
+    var values = {};
+    $.each($(myFormName).serializeArray(), function(i, field) {
+        values[field.name] = field.value;
+    });
+
+    $.ajax({
+        method: "POST",
+        headers: { "X-CSRF-TOKEN" : $("#_tokenBase").val() },
+        cache: false,
+        url: myUrl,
+        data: values,
+
+        success: function(response) {
+            fillServices(epsId);
+            fillMultipleServices(epsId);
+            fillDailyPrices(epsId);
+            $('#show-modal').modal('hide');
+        },
+        error: function(errors){
+            $.each(jQuery.parseJSON(errors.responseText), function (index, value) {
+                if (index == 'errors') {
+                    var messages = '';
+                    $('#modal-error').html(messages);
+                    $('#modal-error').removeClass('animated fadeInDown pb-3');
+                    $.each(value, function(errorIndex, errorValue) {
+                        messages += errorValue + "<br>";
+                    });
+                    $('#modal-error').html(messages);
+                    $('#modal-error').addClass('animated fadeInDown pb-3');
+                }
+            });
+        }
+    });
 }

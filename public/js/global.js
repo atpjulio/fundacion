@@ -122,6 +122,45 @@ function showModal(url) {
     });
 }
 
+function validateForm(myUrl, myFormName, returnUrl) {
+    var values = {};
+    $.each($(myFormName).serializeArray(), function(i, field) {
+        values[field.name] = field.value;
+    });
+
+    $.ajax({
+        method: "POST",
+        headers: { "X-CSRF-TOKEN" : $("#_tokenBase").val() },
+        cache: false,
+        url: myUrl,
+        data: values,
+
+        success: function(response) {
+            if (returnUrl=="closeModal()") {
+                $('#show-modal').modal('hide');
+            } else if(returnUrl=="showResponseWithClosingModal") {
+                $('#show-modal').modal('hide');
+            } else {
+                window.location = returnUrl;
+            }
+        },
+        error: function(errors){
+            $.each(jQuery.parseJSON(errors.responseText), function (index, value) {
+                if (index == 'errors') {
+                    var messages = '';
+                    $('#modal-error').html(messages);
+                    $('#modal-error').removeClass('animated fadeInDown pb-3');
+                    $.each(value, function(errorIndex, errorValue) {
+                        messages += errorValue + "<br>";
+                    });
+                    $('#modal-error').html(messages);
+                    $('#modal-error').addClass('animated fadeInDown pb-3');
+                }
+            });
+        }
+    });
+}
+
 function fillEntityFields(id)
 {
     $.get("/get-entity/" + id, function (data, status) {
@@ -144,7 +183,6 @@ function fullAuthorizations(search)
 function globalAuthorizations(search)
 {
     $.get("/get-global-authorizations/" + search, function (data, status) {
-        console.log(data);
         $('#dynamic-authorizations').html(data);
         $('#searching').val(search);
         $('#searching').on('change', function (e) {

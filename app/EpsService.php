@@ -55,7 +55,7 @@ class EpsService extends Model
             'eps_id' => $request->get('eps_id'),
             'code' => strtoupper($request->get('code')),
             'name' => ucfirst(mb_strtolower($request->get('name'))),
-            'price' => $request->get('price'),
+            'price' => str_replace(",", ".", str_replace(".", "", $request->get('price'))),
             'notes' => $request->get('notes'),
         ]);
     }
@@ -69,7 +69,7 @@ class EpsService extends Model
                 'eps_id' => $request->get('eps_id'),
                 'code' => strtoupper($request->get('code')),
                 'name' => ucfirst(mb_strtolower($request->get('name'))),
-                'price' => $request->get('price'),
+                'price' => str_replace(",", ".", str_replace(".", "", $request->get('price'))),
                 'notes' => $request->get('notes'),
             ]);
         }

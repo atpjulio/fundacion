@@ -152,6 +152,11 @@ class EpsController extends Controller
         return redirect()->route('eps.services.index', ['id' => $request->get('eps_id') ]);
     }
 
+    public function servicesNew(StoreEpsServiceRequest $request)
+    {
+        EpsService::storeRecord($request);
+    }
+
     public function servicesEdit($id)
     {
         $service = EpsService::find($id);
