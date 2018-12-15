@@ -8,7 +8,7 @@
     <div class="title-block">
         <div class="float-left">
             <h3 class="title"> Añadir Autorización </h3>
-            <p class="title-description"> Añadiendo una autorización nueva al sistema </p>
+            <p class="title-description"> Añadiendo una nueva autorización al sistema </p>
         </div>
         <div class="float-right animated fadeInRight">
             <a href="{{ route('authorization.index') }}" class="btn btn-pill-left btn-secondary btn-lg">
