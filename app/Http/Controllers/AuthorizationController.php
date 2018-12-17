@@ -184,7 +184,7 @@ class AuthorizationController extends Controller
                             $cell->setValue($authorization->companion_name ?: (count($authorization->companions) > 0 ? $authorization->companions[0]->name : ''));
                         });
                         $sheet->cell('F11', function($cell) use ($authorization) {
-                            $cell->setValue('CC - '.$authorization->companion_dni ?: (count($authorization->companions) > 0 ? $authorization->companions[0]->dni : ''));
+                            $cell->setValue('CC - '.(!empty($authorization->companion_dni) ? $authorization->companion_dni : (count($authorization->companions) > 0 ? $authorization->companions[0]->dni : '')));
                         });
                     }
 
