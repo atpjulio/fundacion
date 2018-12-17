@@ -21,7 +21,7 @@
               <input type="text" name="companion_phone[]" value="" maxlength="15" class="form-control">
             </td>
             <td>
-              <a href="javascript:void(0);" class="addRow btn btn-oval btn-success">Añadir</a>
+              <a href="javascript:void(0);" class="addRow btn btn-oval btn-success">Otro</a>
             </td>
         </tr>
     @elseif(old('companion_dni'))
@@ -40,7 +40,7 @@
                   @if ($key > 0)
                       <a href="javascript:void(0);" class="removeRow btn btn-oval btn-danger">Quitar</a>
                   @else
-                      <a href="javascript:void(0);" class="addRow btn btn-oval btn-success">Añadir</a>
+                      <a href="javascript:void(0);" class="addRow btn btn-oval btn-success">Otro</a>
                   @endif
                 </td>
             </tr>
@@ -61,7 +61,7 @@
                   @if ($key > 0)
                       <a href="javascript:void(0);" class="removeRow btn btn-oval btn-danger">Quitar</a>
                   @else
-                      <a href="javascript:void(0);" class="addRow btn btn-oval btn-success">Añadir</a>
+                      <a href="javascript:void(0);" class="addRow btn btn-oval btn-success">Otro</a>
                   @endif
                 </td>
             </tr>
@@ -78,7 +78,7 @@
               <input type="text" name="companion_phone[]" value="{{ $authorization->companion_phone }}" maxlength="15" class="form-control">
             </td>
             <td>
-                <a href="javascript:void(0);" class="addRow btn btn-oval btn-success">Añadir</a>
+                <a href="javascript:void(0);" class="addRow btn btn-oval btn-success">Otro</a>
             </td>
         </tr>
     @endif

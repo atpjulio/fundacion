@@ -33,13 +33,15 @@ class AuthorizationCompanion extends Model
     protected function storeRecord($authorizationId, $request)
     {
         foreach ($request->get('companion_dni') as $key => $dni) {
-          AuthorizationCompanion::create([
-              'authorization_id' => $authorizationId,
-              'eps_service_id' =>  $request->get('eps_service_id'),
-              'dni' => $dni,
-              'name' => ucwords(mb_strtolower($request->get('companion_name')[$key])),
-              'phone' => $request->get('companion_phone')[$key],
-          ]);
+            if ($dni and $request->get('companion_name')[$key]) {
+                AuthorizationCompanion::create([
+                    'authorization_id' => $authorizationId,
+                    'eps_service_id' =>  $request->get('eps_service_id'),
+                    'dni' => $dni,
+                    'name' => ucwords(mb_strtolower($request->get('companion_name')[$key])),
+                    'phone' => $request->get('companion_phone')[$key],
+                ]);
+            }
         }
     }
 
