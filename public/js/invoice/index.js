@@ -26,11 +26,12 @@ $(document).ready(function() {
         //$('#total').val($('#selected_price').val() * $('#total_days').val() + parseInt($('#total').val()));
         $('#authorization_code').val($(this).parent().parent().find('td').first()[0].outerText.trim());
         //$('#authorization_code').val($(this).parent().parent().find('td').first()[0].outerText.trim() + "," + $('#authorization_code').val());
-        $('html, body').animate({
-            scrollTop: $('#beginning').offset().top
-        }, 300, function(){
-            window.location.href = '#beginning';
+        document.querySelector('#beginning').scrollIntoView({
+            behavior: 'smooth',
+            block: 'start'
         });
+        history.pushState(null, null, '#beginning');
+        e.preventDefault();
     });
     $('#total_days').on('change', function (e) {
         $('#total').val($('#selected_price').val() * $('#total_days').val());

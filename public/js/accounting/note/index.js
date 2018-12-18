@@ -23,11 +23,9 @@ $(document).ready(function() {
         // console.log($(this).parent().parent().find('td')[5].outerText);
         $('#invoice_id').val($(this).parent().find('input')[0].value);
         $('#invoice_number').val($(this).parent().parent().find('td').first()[0].outerText);
-        $('html, body').animate({
-            scrollTop: $('#beginning').offset().top
-        }, 300, function(){
-            // Add hash (#) to URL when done scrolling (default click behavior)
-            window.location.href = '#beginning';
+        document.querySelector('#beginning').scrollIntoView({
+            behavior: 'smooth',
+            block: 'start'
         });
     });
     $('#total_days').on('change', function (e) {
@@ -38,7 +36,7 @@ $(document).ready(function() {
         var fullDescription = $("#pucs").children("option").filter(":selected").text().split('-');
         var description = '';
         var counter = 0;
-        
+
         fullDescription.forEach(function(element) {
             if (counter > 0) {
                 description += element.trim();
@@ -46,7 +44,7 @@ $(document).ready(function() {
             counter++;
         });
 
-        $('#puc_description').val(description);                
+        $('#puc_description').val(description);
     });
     $(".addRow").click(function(){
         if ($('#puc_debit').val() > 0) {
@@ -58,7 +56,7 @@ $(document).ready(function() {
             $('#credits').html("Créditos $ " + credit.toLocaleString('co-CO'));
         }
         $("#pucsTable").append('<tr>' +
-            '<td><input type="text" id="notePucs" name="notePucs[]" value="' + $('#puc_code').val() + '" class="form-control" placeholder="Código PUC"/></td>' + 
+            '<td><input type="text" id="notePucs" name="notePucs[]" value="' + $('#puc_code').val() + '" class="form-control" placeholder="Código PUC"/></td>' +
             '<td><input type="text" name="pucDescription[]" value="' + $('#puc_description').val()+ '" placeholder="Descripción" class="form-control"></td>' +
             '<td><input type="text" name="pucDebit[]" value="' + $('#puc_debit').val() + '" placeholder="Débitos" class="form-control"></td>' +
             '<td><input type="text" name="pucCredit[]" value="' + $('#puc_credit').val() + '"placeholder="Créditos" class="form-control"></td>' +

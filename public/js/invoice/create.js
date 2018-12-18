@@ -38,14 +38,15 @@ $(document).ready(function() {
             }
 
             $('#alertTable').css('display', 'none');
-            $('#tableMessage').html('');              
+            $('#tableMessage').html('');
             $('#selected_price').val($(this).parent().find('input')[0].value);
 
-            $('html, body').animate({
-                scrollTop: $('#multiple_table').offset().top
-            }, 300, function(){
-                window.location.href = '#multiple_table';
+            document.querySelector('#beginning').scrollIntoView({
+                behavior: 'smooth',
+                block: 'start'
             });
+            history.pushState(null, null, '#beginning');
+            e.preventDefault();
         } else {
             $('#total_days').val(days);
             $('#selected_price').val($(this).parent().find('input')[0].value);
@@ -54,18 +55,19 @@ $(document).ready(function() {
             $('#authorization_code').val($(this).parent().parent().find('td').first()[0].outerText.trim());
             //$('#authorization_code').val($(this).parent().parent().find('td').first()[0].outerText.trim() + "," + $('#authorization_code').val());
 
-            $('html, body').animate({
-                scrollTop: $('#beginning').offset().top
-            }, 300, function(){
-                window.location.href = '#beginning';
-            });            
+            document.querySelector('#beginning').scrollIntoView({
+                behavior: 'smooth',
+                block: 'start'
+            });
+            history.pushState(null, null, '#beginning');
+            e.preventDefault();
         }
     });
     $('#total_days').on('change', function (e) {
         $('#total').val($('#selected_price').val() * $('#total_days').val());
     });
     $('#multiple_table').on('change', '.multipleDays', function (e) {
-        $(this).parent().parent().find('td input')[2].value = e.target.value * $('#selected_price').val();        
+        $(this).parent().parent().find('td input')[2].value = e.target.value * $('#selected_price').val();
     });
     $('#multiple').on('change', function (e) {
         if ($('#multiple').is(":checked")) {
@@ -89,17 +91,17 @@ $(document).ready(function() {
                 + '</td><td><a href="javascript:void(0);" class="removeRow btn btn-oval btn-danger">Quitar</a></td></tr>'
             );
             $('#alertTable').css('display', 'none');
-            $('#tableMessage').html('');              
+            $('#tableMessage').html('');
         } else {
             if ($('#multiple_codes').val().length == 0) {
-                $('#tableMessage').html('Número de autorización inválido');              
+                $('#tableMessage').html('Número de autorización inválido');
                 $('#alertTable').css('display', 'block');
             } else if ($('#multiple_days').val().length == 0) {
-                $('#tableMessage').html('Número de días inválido');              
-                $('#alertTable').css('display', 'block');                        
+                $('#tableMessage').html('Número de días inválido');
+                $('#alertTable').css('display', 'block');
             } else if ($('#multiple_totals').val().length == 0) {
-                $('#tableMessage').html('Monto de factura inválido');              
-                $('#alertTable').css('display', 'block');                        
+                $('#tableMessage').html('Monto de factura inválido');
+                $('#alertTable').css('display', 'block');
             }
         }
 

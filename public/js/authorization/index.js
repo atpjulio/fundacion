@@ -101,11 +101,11 @@ function sendInfo(id, eps_id, name) {
     $('#serviceLink').attr("href", "javascript:showModal('new-service/" + eps_id + "')");
     $('#restOfFields').css('display', 'block');
     $('#restOfFields').addClass('animated fadeIn');
-    $('html, body').animate({
-            scrollTop: $('#authFields').offset().top
-        }, 300, function(){
-            window.location.href = '#authFields';
-        });
+
+    document.querySelector('#authFields').scrollIntoView({
+        behavior: 'smooth',
+        block: 'start'
+    });
     $('#epsSelect').val(eps_id);
     fillServices($('#epsSelect').val());
     fillMultipleServices($('#epsSelect').val());
