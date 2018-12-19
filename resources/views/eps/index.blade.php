@@ -41,7 +41,7 @@
                                         <td>{!! $eps->code !!}</td>
                                         <td>{!! $eps->alias ? $eps->alias : $eps->name !!}</td>
                                         <td>$ {!! $eps->daily_price > 0 ? number_format($eps->daily_price, 2, ',', '.') : join("<br>$ ", $eps->daily_prices)!!}</td>
-                                        <td>{!! $eps->total_patients !!}</td>
+                                        <td>{!! number_format($eps->total_patients, 0, ',', '.') !!}</td>
                                         <td>
                                             <a href="{{ route('eps.edit', $eps->id) }}" class="btn btn-pill-left btn-info btn-sm">
                                                 Editar
