@@ -254,6 +254,9 @@ class Patient extends Model
                       $counter++;
                   }
               }
+              if ($counter > 90000) {
+                break;
+              }
           }
           fclose($fileResource);
       }
