@@ -44,7 +44,7 @@ class Eps extends Model
 
     public function getTotalPatientsAttribute()
     {
-        return count(Patient::getPatientsForEps($this->id));
+        return Patient::countPatientsForEps($this->id);
     }
 
     public function price()

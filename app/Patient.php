@@ -230,6 +230,12 @@ class Patient extends Model
             ->get();
     }
 
+    protected function countPatientsForEps($epsId)
+    {
+        return $this->where('eps_id', $epsId)
+            ->count();
+    }
+
     protected function searchRecords($search)
     {
         return $this::where('dni', 'like', '%'.$search.'%')
