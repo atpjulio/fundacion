@@ -10,7 +10,7 @@ $myConstants = [
         'admin2' => 'zuleima0326@gmail.com'
     ],
     'pagination' => 20,
-    'stylesVersion' => '2.28',
+    'stylesVersion' => '2.29',
     'productImages' => '/img/products/',
     'usersImages' => '/img/users/',
     'companiesImages' => '/img/companies/',
