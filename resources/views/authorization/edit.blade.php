@@ -43,7 +43,7 @@
                         <div class="card-title-block">
                             <h3 class="title" id="authFields"> Paciente seleccionado </h3>
                         </div>
-                        <p id="selected_patient">{!! $authorization->patient->full_name !!}</p>
+                        <h2 id="selected_patient">{!! $authorization->patient->full_name !!}</h2>
                     </div>
                 </div>
             </div>

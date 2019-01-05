@@ -369,4 +369,12 @@ class Invoice extends Model
 
       return "Invoices processed: ".count($invoices);
     }
+
+    protected function searchRecords($search)
+    {
+        return $this::where('number', 'like', '%'.$search.'%')
+            ->orWhere('authorization_code', 'like', '%'.$search.'%')
+            ->paginate(config('constants.pagination'));
+    }
+
 }

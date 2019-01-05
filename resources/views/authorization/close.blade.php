@@ -24,7 +24,14 @@
                 <div class="card">
                     <div class="card-block">
                         <div class="card-title-block">
-                            <h3 class="title"> Autorizaciones cerradas en el sistema </h3>
+                            <div class="float-left">
+                              <h3 class="title"> Autorizaciones cerradas en el sistema </h3>
+                            </div>
+                            <div class="dataTables_filter float-right form-inline mb-3 mt-0">
+                                <label class="mr-2">Buscar:</label>
+                                <input type="search" class="form-control form-control-sm" placeholder="" id="searching">
+                            </div>                            
+                        </div>
                         <div id="dynamic-authorizations">
                             @include('partials._authorizations')
                         </div>

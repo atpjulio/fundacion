@@ -89,6 +89,7 @@ Route::middleware(['auth', 'both'])->group(function () {
     Route::get('/get-invoices-amount/{data}', 'AjaxController@getInvoicesAmount');
     Route::get('/get-daily-prices/{id}', 'AjaxController@getDailyPrices');
     Route::get('/get-eps-patients/{id}', 'AjaxController@getEpsPatients');
+    Route::get('/get-invoices/{search}', 'AjaxController@getInvoices');
     Route::get('/get-patients/{search}', 'AjaxController@getPatients');
     Route::get('/get-day-range/{date}', 'AjaxController@getDayRange');
     Route::get('/get-services/{id}', 'AjaxController@getServices');

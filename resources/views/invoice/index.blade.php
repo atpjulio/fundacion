@@ -7,7 +7,7 @@
 @section('content')
     <div class="title-block">
         <div class="float-left">
-            <h3 class="title"> Listado de Facturas (Total: {{ count($invoices) }})</h3>
+            <h3 class="title"> Listado de Facturas (Total: {{ number_format($total, 0, ',', '.') }})</h3>
             <p class="title-description"> Aquí puedes ver el listado de todas las facturas y crear, actualizar o eliminar cualquiera de ellas </p>
         </div>
         <div class="float-right animated fadeInRight">
@@ -24,40 +24,16 @@
                 <div class="card">
                     <div class="card-block">
                         <div class="card-title-block">
-                            <h3 class="title"> Facturas registradas en el sistema </h3>
+                            <div class="float-left">
+                              <h3 class="title"> Facturas registradas en el sistema </h3>
+                            </div>
+                            <div class="dataTables_filter float-right form-inline mb-3 mt-0">
+                                <label class="mr-2">Buscar:</label>
+                                <input type="search" class="form-control form-control-sm" placeholder="" id="searching">
+                            </div>
                         </div>
-                        <div class="table-responsive">
-                            <table class="table table-striped table-bordered table-condensed table-hover" id="myTable">
-                                <thead>
-                                <th># Factura</th>
-                                <th>Autorización</th>
-                                <th>Monto</th>
-                                <th>Días</th>
-                                <th style="width: 200px;">Opciones</th>
-                                </thead>
-                                <tbody>
-                                    @foreach($invoices as $invoice)
-                                    <tr>
-                                        <td>{!! $invoice->format_number !!}</td>
-                                        <td>{!! !$invoice->multiple ? $invoice->authorization_code : join("<br>", json_decode($invoice->multiple_codes, true)) !!}</td>
-                                        <td>$ {!! !$invoice->multiple ? number_format($invoice->total, 2, ",", ".") : join("<br>$ ", $invoice->multiple_totals_formated)!!}</td>
-                                        <td>{!! !$invoice->multiple ? $invoice->days : join("<br>", json_decode($invoice->multiple_days, true)) !!}</td>
-                                        <td>
-                                            <a href="{{ route('invoice.edit', $invoice->id) }}" class="btn btn-pill-left btn-info btn-sm">
-                                                Editar
-                                            </a>
-                                            <a href="{{ route('invoice.pdf', $invoice->id) }}" class="btn btn-secondary btn-sm" target="_blank">
-                                                Ver factura
-                                            </a>
-                                            <a href="" data-toggle="modal" data-target="#confirm-modal-{{ $invoice->id }}" class="btn btn-pill-right btn-danger btn-sm">
-                                                Borrar
-                                            </a>
-                                        </td>
-                                        @include('invoice.delete_modal')
-                                    </tr>
-                                    @endforeach
-                                </tbody>
-                            </table>
+                        <div id="dynamic-invoices">
+                          @include('partials._invoices')
                         </div>
                     </div>
                 </div>
@@ -69,5 +45,5 @@
 @push('scripts')
     <script src="{{ asset('js/jquery.dataTables.min.js') }}"></script>
     <script src="{{ asset('js/dataTables.bootstrap.min.js') }}"></script>
-    <script src="{{ asset('js/general/table.js').'?version='.config('constants.stylesVersion') }}"></script>
+    <script src="{{ asset('js/invoice/filter.js').'?version='.config('constants.stylesVersion') }}"></script>
 @endpush

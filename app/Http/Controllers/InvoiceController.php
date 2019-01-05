@@ -21,9 +21,10 @@ class InvoiceController extends Controller
      */
     public function index()
     {
-        $invoices = Invoice::all();
+        $total = Invoice::count();
+        $invoices = Invoice::searchRecords('');
 
-        return view('invoice.index', compact('invoices'));
+        return view('invoice.index', compact('invoices', 'total'));
     }
 
     /**

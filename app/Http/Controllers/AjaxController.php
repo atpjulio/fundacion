@@ -164,4 +164,9 @@ class AjaxController extends Controller
         return view('partials._new_service', compact('eps'));
     }
 
+    public function getInvoices($search)
+    {
+        $invoices = Invoice::searchRecords($search);
+        return view('partials._invoices', compact('invoices'));
+    }
 }

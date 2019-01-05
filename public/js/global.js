@@ -114,6 +114,13 @@ function fillInvoicesByEpsAndNumber(id)
     });
 }
 
+function fillFilteredInvoices(search)
+{
+    $.get("/get-invoices/" + search, function (data, status) {
+        $('#dynamic-invoices').html(data);
+    });
+}
+
 function showModal(url) {
     $.get('/' + url, function( data ) {
         // console.log(data);
@@ -171,12 +178,8 @@ function fillEntityFields(id)
 function fullAuthorizations(search)
 {
     $.get("/get-full-authorizations/" + search, function (data, status) {
-        console.log(data);
         $('#dynamic-authorizations').html(data);
         $('#searching').val(search);
-        $('#searching').on('change', function (e) {
-            fullAuthorizations($('#searching').val());
-        });
     });
 }
 
