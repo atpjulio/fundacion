@@ -30,10 +30,18 @@
                 <div class="card">
                     <div class="card-block">
                         <div class="card-title-block">
-                            <h3 class="title"> Usuarios registrados en el sistema </h3>
+                            <div class="float-left">
+                              <h3 class="title"> Usuarios registrados en el sistema </h3>
+                            </div>
+                            <div class="float-right">
+                              <div class="dataTables_filter float-right form-inline mb-3 mt-0">
+                                <label class="mr-2">Buscar:</label>
+                                <input type="search" class="form-control form-control-sm" placeholder="" id="searching">
+                              </div>
+                            </div>
                         </div>
                         <div id="dynamic-patients">
-                            @include('partials._patients')                            
+                            @include('partials._patients')
                         </div>
                     </div>
                 </div>
@@ -45,5 +53,5 @@
 @push('scripts')
     <script src="{{ asset('js/jquery.dataTables.min.js') }}"></script>
     <script src="{{ asset('js/dataTables.bootstrap.min.js') }}"></script>
-    <script src="{{ asset('js/patient/index.js') }}"></script>
+    <script src="{{ asset('js/patient/index.js').'?version='.config('constants.stylesVersion') }}"></script>
 @endpush
