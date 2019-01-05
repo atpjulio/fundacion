@@ -1,24 +1,16 @@
 $(document).ready(function() {
     var days = 0;
     $('#total').val($('#selected_price').val() * $('#total_days').val());
-    $('#myTable').DataTable({
-        "language": {
-            "lengthMenu": "Mostrando _MENU_ registros por página",
-            "zeroRecords": "No se encontró ningún resultado",
-            "info": "Mostrando página _PAGE_ de _PAGES_",
-            "infoEmpty": "No hay información disponible",
-            "infoFiltered": "(filtrando de un total de _MAX_ registros)",
-            "search":         "Buscar:",
-            "paginate": {
-                "first":      "Primera",
-                "last":       "Última",
-                "next":       "Siguiente",
-                "previous":   "Anterior"
-            }
-        }
-    });
     $('#myTable').on('click','.btn-success', function() {
         days = parseInt($(this).parent().parent().find('td')[5].outerText);
+        $('#multiple').prop('checked', true);
+        $('#multiple').val("1");
+        $('#multiple_card').css('display', 'block');
+        $('#multiple_card').addClass('animated fadeIn');
+        $('#authorization_code').val('');
+        $('#total_days').val('');
+        $('#total').val('');
+
         if ($('#multiple').is(":checked")) {
             if ($("#multiple_table tr:nth-child(1)").find('td input')[0].value.length > 0) {
                 $("#multiple_table").append(

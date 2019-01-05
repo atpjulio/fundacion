@@ -72,10 +72,10 @@
                 </div>
                 <div class="float-right">
                     <div class="form-check">
-                        <input class="form-check-input" type="checkbox" value="{{ old('multiple', isset($invoice) ? $invoice->multiple : '0') }}" id="multiple" name="multiple" @if(old('multiple') == "1" or (isset($invoice) and $invoice->multiple)) checked @endif>
-                    <label class="form-check-label" for="multiple">
+                      <input class="form-check-input" type="checkbox" value="{{ old('multiple', isset($invoice) ? $invoice->multiple : '0') }}" id="multiple" name="multiple" @if(old('multiple') == "1" or (isset($invoice) and $invoice->multiple)) checked @endif>
+                      <label class="form-check-label" for="multiple">
                         ¿Varias autorizaciones?
-                    </label>
+                      </label>
                     </div>
                 </div>
                 {!! Form::text('authorization_code', old('authorization_code', (isset($invoice) and !$invoice->multiple) ? $invoice->authorization_code : ''), ['class' => 'form-control underlined', 'readonly', 'id' => 'authorization_code']) !!}
