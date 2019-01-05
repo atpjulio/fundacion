@@ -310,26 +310,26 @@ class Invoice extends Model
             ->first();
     }
 
-    protected function setInvoiceToAuthorizations()
+    protected function setInvoiceToAuthorizations($max = 7650)
     {
         $invoices = $this::all();
 
         foreach ($invoices as $key => $invoice) {
-          if ($invoice->number > 7578) {
+          if ($invoice->number > $max) {
             break;
           }
-          echo "\n\nInvoice id :".$invoice ;
+          echo "\n\nInvoice id: ".$invoice->id." Invoice number: ".$invoice->number;
           if ($invoice->multiple) {
               foreach (json_decode($invoice->multiple_codes, true) as $code) {
                   $currentAuthorization = Authorization::findByCode($code);
-                  echo "\nMultiple, processing code: ".$code;
+                  echo "\n-> Multiple, processing code: ".$code;
                   if ($currentAuthorization and $currentAuthorization->invoice_id == 0) {
                       echo "\n[ <<< TRUE >>> ]";
                       $currentAuthorization->update(['invoice_id' => $invoice->id]);
                   }
               }
           } else {
-              echo "\nSingle, processing code: ".$invoice->authorization_code;
+              echo "\n-> Single, processing code: ".$invoice->authorization_code;
               $currentAuthorization = Authorization::findByCode($invoice->authorization_code);
               if ($currentAuthorization and $currentAuthorization->invoice_id == 0) {
                   echo "\n[ <<< TRUE >>> ]";
