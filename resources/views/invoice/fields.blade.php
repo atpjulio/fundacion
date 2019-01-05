@@ -44,12 +44,12 @@
             @if (isset($invoice))
                 <div class="form-group @if($errors->has('number')) has-error @endif">
                     {!! Form::label('number', 'Número de factura', ['class' => 'control-label']) !!}
-                    {!! Form::number('number', $invoice->number, ['class' => 'form-control underlined', 'placeholder' => 'Número de factura', 'min' => 1, $lastNumber > 0 ? 'readonly' : '']) !!}
+                    {!! Form::number('number', $invoice->number, ['class' => 'form-control underlined', 'placeholder' => 'Número de factura', 'min' => 1, $lastNumber > 0 ? '' : '']) !!}
                 </div>
             @else
                 <div class="form-group @if($errors->has('number')) has-error @endif">
                     {!! Form::label('number', 'Número de factura', ['class' => 'control-label']) !!}
-                    {!! Form::number('number', ($lastNumber > 0) ? ($lastNumber + 1) : 1, ['class' => 'form-control underlined', 'placeholder' => 'Número de factura', 'min' => 1, $lastNumber > 0 ? 'readonly' : '']) !!}
+                    {!! Form::number('number', ($lastNumber > 0) ? ($lastNumber + 1) : 1, ['class' => 'form-control underlined', 'placeholder' => 'Número de factura', 'min' => 1, $lastNumber > 0 ? '' : '']) !!}
                 </div>
             @endif
             <div class="form-group  @if($errors->has('created_at')) has-error @endif">
