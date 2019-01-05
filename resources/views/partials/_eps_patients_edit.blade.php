@@ -1,9 +1,4 @@
 <div class="table-responsive">
-    <div id="" class="dataTables_filter float-right form-inline mb-3 mt-0">
-        <label class="mr-2">Buscar:</label>
-        <input type="search" class="form-control form-control-sm" placeholder="" id="searching"
-        value="{{ old('searching', $authorization->patient->dni) }}" name="searching">
-    </div>    
     <table class="table table-striped table-bordered table-condensed table-hover" id="myTable">
         <thead>
         <th>Tipo Doc.</th>

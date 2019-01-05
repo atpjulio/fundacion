@@ -24,9 +24,18 @@
                 <div class="card">
                     <div class="card-block">
                         <div class="card-title-block">
+                          <div class="float-left">
                             <h3 class="title"> Usuario al que pertenece esta autorización
-                                <a href="{{ route('patient.create.authorization') }}" class="btn btn-oval btn-info float-right">Nuevo Usuario</a>
+                              &nbsp;&nbsp;&nbsp;
+                              <a href="{{ route('patient.create.authorization') }}" class="btn btn-oval btn-info">Nuevo Usuario</a>
                             </h3>
+                          </div>
+                          <div class="float-right">
+                            <div class="dataTables_filter float-right form-inline mb-3 mt-0">
+                                <label class="mr-2">Buscar:</label>
+                                <input type="search" class="form-control form-control-sm" placeholder="" id="searching">
+                            </div>
+                          </div>
                         </div>
                         <div class="col-12" id="dynamic-patients">
                             @include('partials._eps_patients')
