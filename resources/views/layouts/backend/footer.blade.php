@@ -8,12 +8,9 @@
     --}}
     <div class="footer-block author">
         <ul>
-            {{--
             <li>
-                created by
-                <a href="https://github.com/modularcode">ModularCode</a>
+                <span class="badge badge-primary">Versión: {{ config('constants.stylesVersion') }}</span>
             </li>
-            --}}
             <li>
                 <i class="fa fa-copyright"></i> Copyright {{ date("Y").' | '.config('constants.companyInfo.longName') }}. Todos los derechos reservados
             </li>

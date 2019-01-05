@@ -14,8 +14,8 @@
     {!! Form::label('state', 'Departamento', ['class' => 'control-label']) !!}
     <select name="state" id="state" class="form-control">
         @foreach(\App\State::getStates() as $code => $name)
-            <option value="{{ $code }}" 
-                @if(isset($patient) && $patient->state == $code) selected 
+            <option value="{{ $code }}"
+                @if(isset($patient) && $patient->state == $code) selected
                 @elseif($code == '08') selected @endif
                 >
                 {!! $code.' - '.$name !!}
@@ -28,10 +28,10 @@
     <div id="dynamic-cities">
         <select name="city" id="city" class="form-control">
             @foreach(\App\City::getCitiesByStateId((isset($patient) and $patient->state) ? $patient->state : '08') as $code => $name)
-            <option value="{{ $code }}" @if(isset($patient) and $patient->state == $code) selected @endif>
+            <option value="{{ $code }}" @if(isset($patient) and $patient->city == $code) selected @endif>
                 {!! $code.' - '.$name !!}
             </option>
-            @endforeach    
+            @endforeach
         </select>
     </div>
 </div>
