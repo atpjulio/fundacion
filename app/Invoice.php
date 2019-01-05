@@ -374,6 +374,7 @@ class Invoice extends Model
     {
         return $this::where('number', 'like', '%'.$search.'%')
             ->orWhere('authorization_code', 'like', '%'.$search.'%')
+            ->orderBy('number', 'desc')
             ->paginate(config('constants.pagination'));
     }
 
