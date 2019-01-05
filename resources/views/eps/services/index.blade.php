@@ -38,7 +38,7 @@
                                     <thead>
                                     <th>Código</th>
                                     <th>Nombre</th>
-                                    <th>Opciones</th>
+                                    <th style="width: 150px;">Opciones</th>
                                     </thead>
                                     <tbody>
                                     @foreach($services as $service)
@@ -70,24 +70,5 @@
 @push('scripts')
     <script src="{{asset('js/jquery.dataTables.min.js')}}"></script>
     <script src="{{asset('js/dataTables.bootstrap.min.js')}}"></script>
-    <script>
-        $(document).ready(function() {
-            $('#myTable').DataTable({
-                "language": {
-                    "lengthMenu": "Mostrando _MENU_ registros por página",
-                    "zeroRecords": "No se encontró ningún resultado",
-                    "info": "Mostrando página _PAGE_ de _PAGES_",
-                    "infoEmpty": "No hay información disponible",
-                    "infoFiltered": "(filtrando de un total de _MAX_ registros)",
-                    "search":         "Buscar:",
-                    "paginate": {
-                        "first":      "Primera",
-                        "last":       "Última",
-                        "next":       "Siguiente",
-                        "previous":   "Anterior"
-                    }
-                }
-            });
-        } );
-    </script>
+    <script src="{{asset('js/general/table.js').'?version='.config('constants.stylesVersion')}}"></script>
 @endpush

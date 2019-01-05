@@ -53,7 +53,7 @@
                         "previous":   "Anterior"
                     }
                 },
-                // "oSearch": {"sSearch": "{{ $invoice->authorization_code }}"}
+                "oSearch": {"sSearch": "{{ $invoice->authorization_code }}"}
             });
             $('#myTable').on('click','.btn-success', function() {
                 days = parseInt($(this).parent().parent().find('td')[5].outerText);
@@ -78,7 +78,7 @@
                     }
 
                     $('#alertTable').css('display', 'none');
-                    $('#tableMessage').html('');              
+                    $('#tableMessage').html('');
 
                     $('html, body').animate({
                         scrollTop: $('#multiple_table').offset().top
@@ -97,7 +97,7 @@
                         scrollTop: $('#beginning').offset().top
                     }, 300, function(){
                         window.location.href = '#beginning';
-                    });            
+                    });
                 }
             });
             $('#total_days').on('change keyup', function (e) {
@@ -117,7 +117,7 @@
                 }
             });
             $('#multiple_table').on('change', '.multipleDays', function (e) {
-                $(this).parent().parent().find('td input')[2].value = e.target.value * $('#selected_price').val();        
+                $(this).parent().parent().find('td input')[2].value = e.target.value * $('#selected_price').val();
             });
             $("#multiple_table").on('click','.addRow', function() {
                 if ($('#multiple_codes').val().length > 0 && $('#multiple_days').val() > 0 && $('#multiple_totals').val() > 0) {
@@ -128,17 +128,17 @@
                         + '</td><td><a href="javascript:void(0);" class="removeRow btn btn-oval btn-danger">Quitar</a></td></tr>'
                     );
                     $('#alertTable').css('display', 'none');
-                    $('#tableMessage').html('');              
+                    $('#tableMessage').html('');
                 } else {
                     if ($('#multiple_codes').val().length == 0) {
-                        $('#tableMessage').html('Número de autorización inválido');              
+                        $('#tableMessage').html('Número de autorización inválido');
                         $('#alertTable').css('display', 'block');
                     } else if ($('#multiple_days').val().length == 0) {
-                        $('#tableMessage').html('Número de días inválido');              
-                        $('#alertTable').css('display', 'block');                        
+                        $('#tableMessage').html('Número de días inválido');
+                        $('#alertTable').css('display', 'block');
                     } else if ($('#multiple_totals').val().length == 0) {
-                        $('#tableMessage').html('Monto de factura inválido');              
-                        $('#alertTable').css('display', 'block');                        
+                        $('#tableMessage').html('Monto de factura inválido');
+                        $('#alertTable').css('display', 'block');
                     }
                 }
 

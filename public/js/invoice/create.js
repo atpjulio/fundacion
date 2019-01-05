@@ -19,6 +19,13 @@ $(document).ready(function() {
     });
     $('#myTable').on('click','.btn-success', function() {
         days = parseInt($(this).parent().parent().find('td')[5].outerText);
+        $('#multiple_card').css('display', 'block');
+        $('#multiple_card').addClass('animated fadeIn');
+        $('#authorization_code').val('');
+        $('#total_days').val('');
+        $('#total').val('');
+
+        /*
         $('#multiple').prop('checked', true);
         $('#multiple').val("1");
         $('#multiple_card').css('display', 'block');
@@ -28,6 +35,7 @@ $(document).ready(function() {
         $('#total').val('');
 
         if ($('#multiple').is(":checked")) {
+        */
             if ($("#multiple_table tr:nth-child(1)").find('td input')[0].value.length > 0) {
                 $("#multiple_table").append(
                     '<tr><td><input type="text" id="multiple_codes" name="multiple_codes[]" value="' + $(this).parent().parent().find('td').first()[0].outerText.trim() + '" class="form-control" placeholder="Número de autorización" readonly />'
@@ -41,7 +49,7 @@ $(document).ready(function() {
                     '<tr><td><input type="text" id="multiple_codes" name="multiple_codes[]" value="' + $(this).parent().parent().find('td').first()[0].outerText.trim() + '" class="form-control" placeholder="Número de autorización" readonly />'
                     + '</td><td><input type="number" id="multiple_days" name="multiple_days[]" value="' + days + '" class="form-control multipleDays" placeholder="Total de días" min="0"/>'
                     + '</td><td><input type="number" id="multiple_totals" name="multiple_totals[]" value="' + ($(this).parent().find('input')[0].value * days) + '" class="form-control" placeholder="Valor total" min="0"/>'
-                    + '</td><td><a href="javascript:void(0);" class="addRow btn btn-oval btn-success">Añadir</a></td></tr>'
+                    + '</td><td><a href="javascript:void(0);" class="addRow btn btn-oval btn-success">Otra</a></td></tr>'
                 );
             }
 
@@ -55,6 +63,7 @@ $(document).ready(function() {
             });
             history.pushState(null, null, '#beginning');
             e.preventDefault();
+            /*
         } else {
             $('#total_days').val(days);
             $('#selected_price').val($(this).parent().find('input')[0].value);
@@ -70,6 +79,7 @@ $(document).ready(function() {
             history.pushState(null, null, '#beginning');
             e.preventDefault();
         }
+        */
     });
     $('#total_days').on('change', function (e) {
         $('#total').val($('#selected_price').val() * $('#total_days').val());
@@ -77,6 +87,7 @@ $(document).ready(function() {
     $('#multiple_table').on('change', '.multipleDays', function (e) {
         $(this).parent().parent().find('td input')[2].value = e.target.value * $('#selected_price').val();
     });
+    /*
     $('#multiple').on('change', function (e) {
         if ($('#multiple').is(":checked")) {
             $('#multiple').val("1");
@@ -90,6 +101,7 @@ $(document).ready(function() {
             $('#multiple').val("0");
         }
     });
+    */
     $("#multiple_table").on('click','.addRow', function() {
         if ($('#multiple_codes').val().length > 0 && $('#multiple_days').val() > 0 && $('#multiple_totals').val() > 0) {
             $("#multiple_table").append(
