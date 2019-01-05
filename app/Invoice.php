@@ -315,24 +315,27 @@ class Invoice extends Model
         $invoices = $this::all();
 
         foreach ($invoices as $key => $invoice) {
-            echo "\n\nInvoice id :".$invoice ;
-            if ($invoice->multiple) {
-                foreach (json_decode($invoice->multiple_codes, true) as $code) {
-                    $currentAuthorization = Authorization::findByCode($code);
-                    echo "\nMultiple, processing code: ".$code;
-                    if ($currentAuthorization and $currentAuthorization->invoice_id == 0) {
-                        echo "\n[ <<< TRUE >>> ]";
-                        $currentAuthorization->update(['invoice_id' => $invoice->id]);
-                    }
-                }
-            } else {
-                echo "\nSingle, processing code: ".$invoice->authorization_code;
-                $currentAuthorization = Authorization::findByCode($invoice->authorization_code);
-                if ($currentAuthorization and $currentAuthorization->invoice_id == 0) {
-                    echo "\n[ <<< TRUE >>> ]";
-                    $currentAuthorization->update(['invoice_id' => $invoice->id]);
-                }
-            }
+          if ($invoice->number > 7578) {
+            break;
+          }
+          echo "\n\nInvoice id :".$invoice ;
+          if ($invoice->multiple) {
+              foreach (json_decode($invoice->multiple_codes, true) as $code) {
+                  $currentAuthorization = Authorization::findByCode($code);
+                  echo "\nMultiple, processing code: ".$code;
+                  if ($currentAuthorization and $currentAuthorization->invoice_id == 0) {
+                      echo "\n[ <<< TRUE >>> ]";
+                      $currentAuthorization->update(['invoice_id' => $invoice->id]);
+                  }
+              }
+          } else {
+              echo "\nSingle, processing code: ".$invoice->authorization_code;
+              $currentAuthorization = Authorization::findByCode($invoice->authorization_code);
+              if ($currentAuthorization and $currentAuthorization->invoice_id == 0) {
+                  echo "\n[ <<< TRUE >>> ]";
+                  $currentAuthorization->update(['invoice_id' => $invoice->id]);
+              }
+          }
         }
     }
 
@@ -362,7 +365,7 @@ class Invoice extends Model
             'multiple_days' => '["'.$invoice->days.'"]',
           ]);
           echo "\nProcessing invoice number: ".$invoice->number;
-          if ($key > 3) {
+          if ($key > 30) {
             break;
           }
       }
