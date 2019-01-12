@@ -269,7 +269,7 @@ class InvoiceController extends Controller
         $companyId = $request->get('company_id');
 
         $invoices = Invoice::getInvoicesByEpsId($epsId, $initialDate, $finalDate);
-        dd(count($invoices), $epsId, $initialDate, $finalDate);
+        dd($invoices, $epsId, $initialDate, $finalDate);
 
         if (count($invoices) == 0) {
             Session::flash('message_danger', 'No hay facturas disponibles para el rango de fecha seleccionado');
