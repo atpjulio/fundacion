@@ -348,7 +348,7 @@ class Invoice extends Model
         return $result ? $result->number : 0;
     }
 
-    protected function convertToMultiple()
+    protected function convertToMultiple($max = 30)
     {
       $invoices = $this::where('multiple', 0)
             ->get();
@@ -365,7 +365,7 @@ class Invoice extends Model
             'multiple_days' => '["'.$invoice->days.'"]',
           ]);
           echo "\nProcessing invoice number: ".$invoice->number;
-          if ($key > 30) {
+          if ($key > $max) {
             break;
           }
       }
