@@ -2,6 +2,7 @@
   $currentEps = \App\Eps::find(old('eps_id') ?: $initialEpsId);
 @endphp
 
+
 <select class="form-control" name="daily_price">
   @if (isset($currentEps) and count($currentEps->price) > 0)
     @foreach ($currentEps->price as $epsPrice)

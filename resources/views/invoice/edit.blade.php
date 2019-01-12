@@ -28,9 +28,8 @@
             </div>
         </div>
     </section>
-    {!! Form::hidden('selected_price', 
-        $invoice->multiple ? ($invoice->eps->daily_price > 0 ?
-            $invoice->eps->daily_price : $invoice->eps->price[0]->daily_price) : 
+    {!! Form::text('selected_price', 
+        $invoice->multiple ? $invoice->eps->price[0]->daily_price : 
             ($invoice->authorization->daily_price > 0 ? $invoice->authorization->daily_price : 
             $invoice->authorization->price->daily_price), ['id' => 'selected_price']) !!}
     {!! Form::hidden('id', $invoice->id) !!}
@@ -69,7 +68,8 @@
                             '<tr><td><input type="text" id="multiple_codes" name="multiple_codes[]" value="' + $(this).parent().parent().find('td').first()[0].outerText.trim() + '" class="form-control" placeholder="Número de autorización" readonly />'
                             + '</td><td><input type="number" id="multiple_days" name="multiple_days[]" value="' + days + '" class="form-control multipleDays" placeholder="Total de días" min="0"/>'
                             + '</td><td><input type="number" id="multiple_totals" name="multiple_totals[]" value="' + ($(this).parent().find('input')[0].value * days) + '" class="form-control" placeholder="Valor total" min="0"/>'
-                            + '</td><td><a href="javascript:void(0);" class="removeRow btn btn-oval btn-danger">Quitar</a></td></tr>'
+                            + '<input type="hidden" id="multiple_price" name="multiple_price[]" class="form-control" placeholder="" min="0" value="' + $(this).parent().find('input')[0].value + '" />'
+                            + '</td><td><a href="javascript:void(0);" class="removeRow btn btn-oval btn-danger">Quitar</a>&nbsp;<a href="javascript:void(0);" class="servicesDetail btn btn-oval btn-secondary">Servicios</a></td></tr>'
                         );
                     } else {
                         $("#multiple_table tr:last").remove();
@@ -77,13 +77,13 @@
                             '<tr><td><input type="text" id="multiple_codes" name="multiple_codes[]" value="' + $(this).parent().parent().find('td').first()[0].outerText.trim() + '" class="form-control" placeholder="Número de autorización" readonly />'
                             + '</td><td><input type="number" id="multiple_days" name="multiple_days[]" value="' + days + '" class="form-control multipleDays" placeholder="Total de días" min="0"/>'
                             + '</td><td><input type="number" id="multiple_totals" name="multiple_totals[]" value="' + ($(this).parent().find('input')[0].value * days) + '" class="form-control" placeholder="Valor total" min="0"/>'
-                            + '</td><td><a href="javascript:void(0);" class="removeRow btn btn-oval btn-danger">Quitar</a></td></tr>'
+                            + '<input type="hidden" id="multiple_price" name="multiple_price[]" class="form-control" placeholder="" min="0" value="' + $(this).parent().find('input')[0].value + '" />'
+                            + '</td><td><a href="javascript:void(0);" class="removeRow btn btn-oval btn-danger">Quitar</a>&nbsp;<a href="javascript:void(0);" class="servicesDetail btn btn-oval btn-secondary">Servicios</a></td></tr>'
                         );
                     }
 
                     $('#alertTable').css('display', 'none');
                     $('#tableMessage').html('');
-
 
                     document.querySelector('#multiple_table').scrollIntoView({
                         behavior: 'smooth',
@@ -123,7 +123,7 @@
                 }
             });
             $('#multiple_table').on('change', '.multipleDays', function (e) {
-                console.log($('#selected_price').val());
+                $('#selected_price').val($(this).parent().parent().find('td input')[3].value);
                 $(this).parent().parent().find('td input')[2].value = e.target.value * $('#selected_price').val();
             });
             $("#multiple_table").on('click','.addRow', function() {
@@ -131,8 +131,8 @@
                     $("#multiple_table").append(
                         '<tr><td><input type="text" id="multiple_codes" name="multiple_codes[]" class="form-control" placeholder="Número de autorización" value="" readonly />'
                         + '</td><td><input type="number" id="multiple_days" name="multiple_days[]" class="form-control multipleDays" placeholder="Total de días" min="0" value=""/>'
-                        + '</td><td><input type="number" id="multiple_totals" name="multiple_totals[]" class="form-control" placeholder="Valor total" min="0" value=""/>'
-                        + '</td><td><a href="javascript:void(0);" class="removeRow btn btn-oval btn-danger">Quitar</a></td></tr>'
+                        + '</td><td><input type="number" id="multiple_totals" name="multiple_totals[]" class="form-control" placeholder="Valor total" min="0" value=""/><input type="hidden" id="multiple_price" name="multiple_price[]" class="form-control" placeholder="" min="0" value="" />'
+                        + '</td><td><a href="javascript:void(0);" class="removeRow btn btn-oval btn-danger">Quitar</a>&nbsp;<a href="javascript:void(0);" class="servicesDetail btn btn-oval btn-secondary">Servicios</a></td></tr>'
                     );
                     $('#alertTable').css('display', 'none');
                     $('#tableMessage').html('');

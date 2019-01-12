@@ -140,6 +140,7 @@
                                     </td>
                                     <td>
                                         <input type="number" id="multiple_totals" name="multiple_totals[]" class="form-control" placeholder="Valor total" min="0"/>
+                                        <input type="hidden" id="multiple_price" name="multiple_price[]" class="form-control" placeholder="" min="0" value="" />
                                     </td>
                                     <td>
                                         <a href="javascript:void(0);" class="addRow btn btn-oval btn-success">Añadir</a>
@@ -157,6 +158,7 @@
                                         </td>
                                         <td>
                                             <input type="number" id="multiple_totals" name="multiple_totals[]" class="form-control" placeholder="Valor total" min="0" value="{{ old('multiple_totals')[$k] }}" />
+                                            <input type="hidden" id="multiple_price" name="multiple_price[]" class="form-control" placeholder="" min="0" value="{{ old('multiple_totals')[$k] / old('multiple_days')[$k] }}" />
                                         </td>
                                         <td>
                                             @if ($k > 0)
@@ -184,6 +186,7 @@
                                     </td>
                                     <td>
                                         <input type="number" id="multiple_totals" name="multiple_totals[]" class="form-control" placeholder="Valor total" min="0" value="{{ old('multiple_totals', $currentAuthorization->total_services) }}" />
+                                        <input type="hidden" id="multiple_price" name="multiple_price[]" class="form-control" placeholder="" min="0" value="{{ $currentAuthorization->total_services / json_decode($invoice->multiple_days, true)[$k] }}" />
                                     </td>
                                     <td>
                                         <a href="javascript:void(0);" class="removeRow btn btn-oval btn-danger">Quitar</a>

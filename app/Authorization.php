@@ -115,7 +115,8 @@ class Authorization extends Model
     {
         // dd($this->services->pluck('price'));
 
-        return array_sum($this->services->pluck('price')->toArray());
+        return array_sum($this->services->pluck('price')->toArray()) * 
+            array_sum($this->services->pluck('days')->toArray());
     }
 
     public function getCodecAttribute()
