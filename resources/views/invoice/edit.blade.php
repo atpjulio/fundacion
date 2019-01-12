@@ -28,7 +28,7 @@
             </div>
         </div>
     </section>
-    {!! Form::text('selected_price', 
+    {!! Form::hidden('selected_price', 
         $invoice->multiple ? $invoice->eps->price[0]->daily_price : 
             ($invoice->authorization->daily_price > 0 ? $invoice->authorization->daily_price : 
             $invoice->authorization->price->daily_price), ['id' => 'selected_price']) !!}
