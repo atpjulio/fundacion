@@ -42,6 +42,21 @@ class AuthorizationService extends Model
           'days' => $request->get('total_days'),
         ]);
 
+        /*
+        if ($request->get('companion')) {
+            foreach ($request->get('service_code') as $key => $serviceCode) {
+                $currentService = EpsService::getService($authorization->eps_id, $serviceCode);
+                if ($currentService) {
+                    $this->create([
+                        'authorization_id' => $authorization->id,
+                        'eps_service_id' => $currentService->id,
+                        'price' => $currentService->price,
+                        'days' => $request->get('service_days')[$key] ?: $request->get('total_days'),
+                    ]);
+                }
+            }
+        }
+        */
         if ($request->get('service_code') and is_array($request->get('service_code'))) {
           foreach ($request->get('service_code') as $key => $serviceCode) {
               $currentService = EpsService::getService($authorization->eps_id, $serviceCode);

@@ -143,7 +143,7 @@
                                     </td>
                                     <td>
                                         <a href="javascript:void(0);" class="addRow btn btn-oval btn-success">Añadir</a>
-                                        <a href="javascript:void(0);" class="servicesDetail btn btn-oval btn-secondary">Servicios</a>
+                                        &nbsp;<a href="javascript:void(0);" class="servicesDetail btn btn-oval btn-secondary">Servicios</a>
                                     </td>
                                 </tr>
                             @else
@@ -164,7 +164,7 @@
                                             @else
                                                 <a href="javascript:void(0);" class="addRow btn btn-oval btn-success">Añadir</a>
                                             @endif
-                                            <a href="javascript:void(0);" class="servicesDetail btn btn-oval btn-secondary">Servicios</a>
+                                            &nbsp;<a href="javascript:void(0);" class="servicesDetail btn btn-oval btn-secondary">Servicios</a>
                                         </td>
                                     </tr>
                                 @endforeach
@@ -187,7 +187,7 @@
                                     </td>
                                     <td>
                                         <a href="javascript:void(0);" class="removeRow btn btn-oval btn-danger">Quitar</a>
-                                        <a href="javascript:void(0);" class="servicesDetail btn btn-oval btn-secondary">Servicios</a>
+                                        &nbsp;<a href="javascript:void(0);" class="servicesDetail btn btn-oval btn-secondary">Servicios</a>
                                     </td>
                                 </tr>
                             @endforeach

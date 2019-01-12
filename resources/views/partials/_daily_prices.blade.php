@@ -5,7 +5,8 @@
 <select class="form-control" name="daily_price">
   @if (isset($currentEps) and count($currentEps->price) > 0)
     @foreach ($currentEps->price as $epsPrice)
-      <option value="{{ $epsPrice->daily_price }}">
+      <option value="{{ $epsPrice->daily_price }}" 
+        @if (isset($authorization) and $authorization->prices->daily_price == $epsPrice->daily_price) selected @endif>
         {!! number_format($epsPrice->daily_price, 2, ",", ".").' - '.$epsPrice->name !!}
       </option>
     @endforeach
