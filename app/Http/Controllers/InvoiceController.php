@@ -269,6 +269,7 @@ class InvoiceController extends Controller
         $companyId = $request->get('company_id');
 
         $invoices = Invoice::getInvoicesByEpsId($epsId, $initialDate, $finalDate);
+        dd(count($invoices), $epsId, $initialDate, $finalDate);
 
         if (count($invoices) == 0) {
             Session::flash('message_danger', 'No hay facturas disponibles para el rango de fecha seleccionado');
@@ -278,7 +279,6 @@ class InvoiceController extends Controller
         $company = Company::find($companyId);
         $eps = Eps::find($epsId);
 
-        dd($eps);
         $html = \View::make('invoice.pdf_relation', compact('invoices', 'company', 'eps', 'initialDate', 'finalDate'));
         $mpdf = new \Mpdf\Mpdf([
             'margin_left' => 20,
