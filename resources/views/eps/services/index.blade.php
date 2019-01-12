@@ -38,6 +38,7 @@
                                     <thead>
                                     <th>Código</th>
                                     <th>Nombre</th>
+                                    <th style="width: 150px;">Monto</th>
                                     <th style="width: 150px;">Opciones</th>
                                     </thead>
                                     <tbody>
@@ -45,6 +46,11 @@
                                         <tr>
                                             <td>{!! $service->code !!}</td>
                                             <td>{!! $service->name !!}</td>
+                                            <td>$ {!! number_format($service->price > 0 ?
+                                                $service->price : 
+                                                ($eps->daily_price > 0 ? 
+                                                    $eps->daily_price : 
+                                                    $eps->price[0]->daily_price), 2, ',', '.') !!}</td>
                                             <td>
                                                 <a href="{{ route('eps.services.edit', $service->id) }}" class="btn btn-pill-left btn-info btn-sm">
                                                     Editar

@@ -111,6 +111,13 @@ class Authorization extends Model
         return 1;
     }
 
+    public function getTotalServicesAttribute()
+    {
+        // dd($this->services->pluck('price'));
+
+        return array_sum($this->services->pluck('price')->toArray());
+    }
+
     public function getCodecAttribute()
     {
         if (strpos($this->code, config('constants.unathorized.prefix')) === FALSE) {

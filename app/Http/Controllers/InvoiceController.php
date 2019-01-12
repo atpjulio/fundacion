@@ -278,6 +278,7 @@ class InvoiceController extends Controller
         $company = Company::find($companyId);
         $eps = Eps::find($epsId);
 
+        dd($eps);
         $html = \View::make('invoice.pdf_relation', compact('invoices', 'company', 'eps', 'initialDate', 'finalDate'));
         $mpdf = new \Mpdf\Mpdf([
             'margin_left' => 20,

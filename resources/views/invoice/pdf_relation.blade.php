@@ -164,6 +164,9 @@ mpdf-->
                 </tr>
 
                 @if ($flag)
+                    @if ($invoice->number == "8168")
+                    {{ dd("in here", $currentAuthorization->services) }}
+                    @endif
                     @foreach($currentAuthorization->services as $authorizationService)
                         @php
                             $currentTotal = $authorizationService->price * $authorizationService->days;

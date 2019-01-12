@@ -28,7 +28,11 @@
             </div>
         </div>
     </section>
-    {!! Form::hidden('selected_price', $invoice->multiple ? $invoice->eps->daily_price : $invoice->authorization->daily_price, ['id' => 'selected_price']) !!}
+    {!! Form::hidden('selected_price', 
+        $invoice->multiple ? ($invoice->eps->daily_price > 0 ?
+            $invoice->eps->daily_price : $invoice->eps->price[0]->daily_price) : 
+            ($invoice->authorization->daily_price > 0 ? $invoice->authorization->daily_price : 
+            $invoice->authorization->price->daily_price), ['id' => 'selected_price']) !!}
     {!! Form::hidden('id', $invoice->id) !!}
     {!! Form::close() !!}
 @endsection
@@ -58,8 +62,8 @@
             $('#myTable').on('click','.btn-success', function() {
                 days = parseInt($(this).parent().parent().find('td')[5].outerText);
                 if ($('#multiple').is(":checked")) {
-                    console.log($("#multiple_table tr").length);
-                    console.log($("#multiple_table tr:nth-child(1)").find('td input')[0].value.length);
+                    // console.log($("#multiple_table tr").length);
+                    // console.log($("#multiple_table tr:nth-child(1)").find('td input')[0].value.length);
                     if ($("#multiple_table tr:nth-child(1)").find('td input')[0].value.length > 0) {
                         $("#multiple_table").append(
                             '<tr><td><input type="text" id="multiple_codes" name="multiple_codes[]" value="' + $(this).parent().parent().find('td').first()[0].outerText.trim() + '" class="form-control" placeholder="Número de autorización" readonly />'
@@ -80,11 +84,13 @@
                     $('#alertTable').css('display', 'none');
                     $('#tableMessage').html('');
 
-                    $('html, body').animate({
-                        scrollTop: $('#multiple_table').offset().top
-                    }, 300, function(){
-                        window.location.href = '#multiple_table';
+
+                    document.querySelector('#multiple_table').scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
                     });
+                    history.pushState(null, null, '#multiple_table');
+                    e.preventDefault();
                 } else {
                     $('#total_days').val(days);
                     $('#selected_price').val($(this).parent().find('input')[0].value);
@@ -117,6 +123,7 @@
                 }
             });
             $('#multiple_table').on('change', '.multipleDays', function (e) {
+                console.log($('#selected_price').val());
                 $(this).parent().parent().find('td input')[2].value = e.target.value * $('#selected_price').val();
             });
             $("#multiple_table").on('click','.addRow', function() {
