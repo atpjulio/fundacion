@@ -39,7 +39,7 @@
           </div>
         </div>
         <div class="form-group" id="multipleServicesDiv"
-            @if (old('multiple_services') || (isset($authorization) and $authorization->multiple_services))
+            @if (old('multiple_services') || (isset($authorization) and $authorization->services))
                 style="display: block;"
             @else
                 style="display: none;"
