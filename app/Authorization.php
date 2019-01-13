@@ -444,4 +444,20 @@ class Authorization extends Model
         echo "\n\nAuthorizations that don't exist on AuthorizationService: $counter";
     }
 
+
+    protected function createAuthorizationPrice($authorizationCode)
+    {
+        $authorization = $this->findByCode($authorizationCode);
+        if (!$authorization) {
+            return false;
+        }
+
+        $request = new Request();
+        $request->request->add([
+            'eps_id' => $authorization->eps_id,
+            'daily_price' => $authorization->service->price,
+        ]);
+
+        AuthorizationPrice::updateRecord($authorization, $request);
+    }
 }
