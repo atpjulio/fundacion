@@ -235,7 +235,6 @@ class Authorization extends Model
                     $authorization->multiple = config('constants.status.active');
                     $authorization->multiple_services = null;
                 }
-                dd($request->all());
                 $authorization->save();
 
                 if ($authorization->companion) {
