@@ -373,6 +373,8 @@ class Authorization extends Model
             foreach (json_decode($invoice->multiple_codes, true) as $key => $code) {
                 $authorization = $this->findByCode($code);
                 var_dump($code, json_decode($invoice->multiple_totals, true)[$key], $authorization->price->daily_price);
+                echo floatval($authorization->price->daily_price);
+                echo floatval(json_decode($invoice->multiple_totals, true)[$key]);
                 if ($authorization and floatval($authorization->price->daily_price) != floatval(json_decode($invoice->multiple_totals, true)[$key])) {
                     AuthorizationPrice::fixRecord($authorization, json_decode($invoice->multiple_totals, true)[$key]);
                     echo ' -> Fixed on authorization: '.$authorization->code;                    
