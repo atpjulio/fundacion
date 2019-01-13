@@ -381,7 +381,6 @@ class Authorization extends Model
     protected function matchAuthorizationsWithInvoice($invoiceNumber)
     {
         $invoice = Invoice::getInvoiceByNumber($invoiceNumber);
-
         if (!$invoice) {
             return false;
         }

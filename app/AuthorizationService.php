@@ -101,4 +101,30 @@ class AuthorizationService extends Model
             'price' => $service->price
         ]);
     }
+
+    protected function fixAuthorizationService($authorization, $epsServiceId, $days)
+    {
+        $service = EpsService::where('code', $epsServiceId)
+            ->first();
+        if (!$service) {
+            return 'service not found';
+        }
+
+        $record = $this->where('authorization_id', $authorization->id)
+            ->where('eps_service_id', $service->id)
+            ->first();
+
+        if (!$record) {
+            return 'record not found';            
+        }
+
+        $record->update([
+            'days' => $days,
+            'price' => $service->price
+        ]);
+
+        return 'received: '.$days.' then '.$record->days.' days, update performed on id: '.$record->id;
+    }
+
+
 }

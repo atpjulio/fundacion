@@ -13,6 +13,8 @@ use App\State;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
 use Maatwebsite\Excel\Facades\Excel;
+use App\AuthorizationService;
+use App\Invoice;
 
 class AuthorizationController extends Controller
 {
@@ -336,5 +338,44 @@ class AuthorizationController extends Controller
         $authorizations = Authorization::global($request->get('authorization_code'));
 
         return view('authorization.global', compact('authorizations'));
+    }
+
+    public function servicesUpdate(Request $request)
+    {
+        $authorization = Authorization::findOrFail($request->get('authorization_id'));
+        $some = '';
+
+        for ($i = 0; $i < $request->get('services_quantity'); $i++) { 
+            if ($request->get('service_days'.$i) == "" or $request->get('service_totals'.$i) == "") {
+                continue;
+            }
+            $bool = AuthorizationService::fixAuthorizationService(
+                $authorization, 
+                $request->get('service_codes'.$i),
+                $request->get('service_days'.$i)
+            );
+            $some .= $authorization->id.' '.$request->get('service_codes'.$i).' '
+                .$request->get('service_days'.$i).' result: '.$bool;            
+        }
+
+        $invoice = Invoice::findOrFail($request->get('invoice_id'));
+        $invoiceCodes = json_decode($invoice->multiple_codes, true);
+        $invoiceDays = json_decode($invoice->multiple_days, true);
+        $invoiceTotals = json_decode($invoice->multiple_totals, true);
+
+        foreach ($invoiceCodes as $k => $val) {
+            if ($val == $authorization->code) {
+                $invoiceDays[$k] = $request->get('service_days0');
+                $invoiceTotals[$k] = $authorization->price->daily_price * $request->get('service_days0');
+            }
+        }
+
+        $invoice->multiple_codes = json_encode($invoiceCodes);
+        $invoice->multiple_days = json_encode($invoiceDays);
+        $invoice->multiple_totals = json_encode($invoiceTotals);
+
+        $invoice->save();
+
+        return response(json_encode($request->all()).' some -> '.$some, 200);
     }
 }

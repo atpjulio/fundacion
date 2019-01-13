@@ -17,7 +17,7 @@ $(document).ready(function() {
             }
         }
     });
-    $('#myTable').on('click','.btn-success', function() {
+    $('#myTable').on('click','.btn-success', function(e) {
         days = parseInt($(this).parent().parent().find('td')[5].outerText);
         $('#multiple_card').css('display', 'block');
         $('#multiple_card').addClass('animated fadeIn');
@@ -128,6 +128,10 @@ $(document).ready(function() {
     });
     $("#multiple_table").on('click','.removeRow', function() {
         $(this).parent().parent().remove();
+    });
+    $("#multiple_table").on('click','.servicesDetail', function() {
+        var currentAuthorizationCode = $(this).parent().parent().find('td input')[0].value;
+        showModal('get-authorization-services/' + currentAuthorizationCode);
     });
 
 } );

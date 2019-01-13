@@ -67,6 +67,7 @@ Route::middleware(['auth', 'both'])->group(function () {
     Route::get('authorization-close', 'AuthorizationController@close')->name('authorization.close');
     Route::post('authorization-global', 'AuthorizationController@global')->name('authorization.global');
     Route::post('authorization/create-back', 'AuthorizationController@createBack')->name('authorization.create.back');
+    Route::post('authorization-services-update', 'AuthorizationController@servicesUpdate')->name('authorization.services.update');
 
     Route::resource('patient', 'PatientController');
     Route::get('patient-create-from-authorization', 'PatientController@createAuthorization')->name('patient.create.authorization');
@@ -83,7 +84,8 @@ Route::middleware(['auth', 'both'])->group(function () {
     Route::get('/get-eps-patients-filtered/{search}', 'AjaxController@getEpsPatientsFiltered');
     Route::get('/get-global-authorizations/{search}', 'AjaxController@getGlobalAuthorizations');
     Route::get('/get-invoices-amount-number/{data}', 'AjaxController@getInvoicesAmountNumber');
-    Route::get('/get-authorization-services/{code}', 'AjaxController@getAuthoriationServices');
+    Route::get('/get-authorization-services/{code}', 'AjaxController@getAuthorizationServices');
+    Route::get('/get-invoice-authorizations/{id}', 'AjaxController@getInvoiceAuthorizations');
     Route::get('/get-full-authorizations/{search}', 'AjaxController@getFullAuthorizations');
     Route::get('/get-companion-services/{id}', 'AjaxController@getCompanionServices');
     Route::get('/get-multiple-services/{id}', 'AjaxController@getMultipleServices');

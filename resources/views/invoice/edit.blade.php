@@ -66,7 +66,7 @@
                 },
                 "oSearch": {"sSearch": "{{ $invoice->authorization_code }}"}
             });
-            $('#myTable').on('click','.btn-success', function() {
+            $('#myTable').on('click','.btn-success', function(e) {
                 days = parseInt($(this).parent().parent().find('td')[5].outerText);
                 if ($('#multiple').is(":checked")) {
                     // console.log($("#multiple_table tr").length);
@@ -164,6 +164,9 @@
             $("#multiple_table").on('click','.servicesDetail', function() {
                 var currentAuthorizationCode = $(this).parent().parent().find('td input')[0].value;
                 showModal('get-authorization-services/' + currentAuthorizationCode);
+            });
+            $("#service_table").on('change','.serviceDays', function() {
+                console.log($(this).val());
             });
         } );
     </script>

@@ -170,10 +170,16 @@ class AjaxController extends Controller
         return view('partials._invoices', compact('invoices'));
     }
 
-    public function getAuthoriationServices($authorizationCode)
+    public function getAuthorizationServices($authorizationCode)
     {
         $authorization = Authorization::findByCode($authorizationCode);
         return view('partials._authorization_services', compact('authorization'));
+    }
+    
+    public function getInvoiceAuthorizations($invoiceId)
+    {
+        $invoice = Invoice::findOrFail($invoiceId);
+        return view('partials._invoice_multiple_table', compact('invoice'));
     }
 
 }

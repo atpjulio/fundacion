@@ -112,8 +112,8 @@ class Invoice extends Model
         if ($authorization) {
             $invoice->eps_id = $authorization->eps_id;
         }
-        Authorization::matchAuthorizationsWithInvoice($invoice->number);
         $invoice->save();
+        Authorization::matchAuthorizationsWithInvoice($invoice->number);
 
         // InvoiceLog::storeRecord($request, config('constants.invoices.action.create'));
 
@@ -195,8 +195,6 @@ class Invoice extends Model
                 $invoice->eps_id = $authorization->eps_id;
             }
 
-            Authorization::matchAuthorizationsWithInvoice($invoice->number);
-
             if ($invoice->multiple and $oldAuthorizationCodes) {
                 foreach (json_decode($oldAuthorizationCodes, true) as $oldCode) {
                     $oldAuthorization = Authorization::findByCode($oldCode);
@@ -258,6 +256,7 @@ class Invoice extends Model
                 AccountingNote::updateRecord($invoice, $pucs, $notes, $invoice->total);
             }
 
+            Authorization::matchAuthorizationsWithInvoice($invoice->number);
         }
 
         return $invoice;
