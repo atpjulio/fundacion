@@ -362,22 +362,24 @@ class AuthorizationController extends Controller
         }
 
         $invoice = Invoice::findOrFail($request->get('invoice_id'));
-        $invoiceCodes = json_decode($invoice->multiple_codes, true);
-        $invoiceDays = json_decode($invoice->multiple_days, true);
-        $invoiceTotals = json_decode($invoice->multiple_totals, true);
-
-        foreach ($invoiceCodes as $k => $val) {
-            if ($val == $authorization->code) {
-                $invoiceDays[$k] = $request->get('service_days0');
-                $invoiceTotals[$k] = $authorization->price->daily_price * $request->get('service_days0');
+        if ($invoice) {
+            $invoiceCodes = json_decode($invoice->multiple_codes, true);
+            $invoiceDays = json_decode($invoice->multiple_days, true);
+            $invoiceTotals = json_decode($invoice->multiple_totals, true);
+    
+            foreach ($invoiceCodes as $k => $val) {
+                if ($val == $authorization->code) {
+                    $invoiceDays[$k] = $request->get('service_days0');
+                    $invoiceTotals[$k] = $authorization->price->daily_price * $request->get('service_days0');
+                }
             }
+    
+            $invoice->multiple_codes = json_encode($invoiceCodes);
+            $invoice->multiple_days = json_encode($invoiceDays);
+            $invoice->multiple_totals = json_encode($invoiceTotals);
+    
+            $invoice->save();
         }
-
-        $invoice->multiple_codes = json_encode($invoiceCodes);
-        $invoice->multiple_days = json_encode($invoiceDays);
-        $invoice->multiple_totals = json_encode($invoiceTotals);
-
-        $invoice->save();
 
         return response(json_encode($request->all()).' some -> '.$some, 200);
     }
