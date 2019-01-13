@@ -361,7 +361,7 @@ class AuthorizationController extends Controller
                 .$request->get('service_days'.$i).' result: '.$bool;            
         }
 
-        $invoice = Invoice::findOrFail($request->get('invoice_id'));
+        $invoice = Invoice::find($request->get('invoice_id'));
         if ($invoice) {
             $invoiceCodes = json_decode($invoice->multiple_codes, true);
             $invoiceDays = json_decode($invoice->multiple_days, true);
