@@ -94,7 +94,7 @@ class AuthorizationService extends Model
         
         $record->update([
             'days' => $days,
-            'price' => $record->price * $days
+            'price' => $record->price
         ]);
     }
 }
