@@ -87,14 +87,18 @@ class AuthorizationService extends Model
     {
         $record = $this->where('authorization_id', $authorization->id)
             ->first();
-
         if (!$record) {
             return false;            
         }
-        
+            
+        $service = EpsService::find($record->eps_service_id);
+        if (!$service) {
+            return false;
+        }
+
         $record->update([
             'days' => $days,
-            'price' => $record->price
+            'price' => $service->price
         ]);
     }
 }
