@@ -174,6 +174,9 @@ class AuthorizationController extends Controller
         Excel::load('public/files/hospedaje.xls', function($excel) use ($authorization) {
 
             $monthDiff = intval(substr($authorization->date_to, 5, 2)) - intval(substr($authorization->date_from, 5, 2));
+            if ($monthDiff < 0) {
+                $monthDiff += 12;
+            }
 
             for ($i = 0; $i <= $monthDiff; $i++) {
                 $excel->sheet($i, function($sheet) use ($authorization, $i, $monthDiff) {
