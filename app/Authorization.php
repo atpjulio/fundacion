@@ -113,8 +113,6 @@ class Authorization extends Model
 
     public function getTotalServicesAttribute()
     {
-        // dd($this->services->pluck('price'));
-
         return array_sum($this->services->pluck('price')->toArray()) * 
             array_sum($this->services->pluck('days')->toArray());
     }
@@ -237,7 +235,7 @@ class Authorization extends Model
                     $authorization->multiple = config('constants.status.active');
                     $authorization->multiple_services = null;
                 }
-
+                dd($request->all());
                 $authorization->save();
 
                 if ($authorization->companion) {
