@@ -223,6 +223,7 @@ function validateAuthorizationServices(myUrl, myFormName, invoiceId)
         data: values,
 
         success: function(response) {  
+            console.log(response);
             $('#modal-success').html('<h3>Actualizando...</h3>')
             $('#modal-success').addClass('animated bounce pb-3');
             fillInvoiceAuthorizations(invoiceId);
