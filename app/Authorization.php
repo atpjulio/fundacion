@@ -11,6 +11,7 @@ use App\AuthorizationDate;
 use App\AuthorizationPrice;
 use App\AuthorizationService;
 use App\AuthorizationCompanion;
+use Illuminate\Http\Request;
 
 class Authorization extends Model
 {
@@ -404,4 +405,43 @@ class Authorization extends Model
         echo " -> Left the same\n";
         return true;
     }
+
+    protected function createAuthorizationService($authorizationCode)
+    {
+        $authorization = $this->findByCode($authorizationCode);
+        if (!$authorization) {
+            return false;
+        }
+
+        $request = new Request();
+        $request->request->add([
+            'eps_service_id' => $authorization->eps_service_id,
+            'daily_price' => $authorization->service->price,
+            'total_days' => $authorization->days
+        ]);
+
+        AuthorizationService::updateRecord($authorization, $request);
+    }
+
+    protected function checkAuthorizationService($max = 30)
+    {
+        $authorizations = $this::where('multiple', 0)
+            ->get();
+
+        $counter = 0;
+        foreach ($authorizations as $key => $authorization) {
+            $authorizationService = AuthorizationService::checkIfExists($authorization);
+            if (!$authorizationService) {
+                $counter++;
+                $this->createAuthorizationService($authorization->code);
+                echo "\nAuthorization code: $authorization->code";
+            }
+
+            if ($counter == $max) {
+                break;
+            }
+        }
+        echo "\n\nAuthorizations that don't exist on AuthorizationService: $counter";
+    }
+
 }

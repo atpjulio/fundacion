@@ -126,5 +126,9 @@ class AuthorizationService extends Model
         return 'received: '.$days.' then '.$record->days.' days, update performed on id: '.$record->id;
     }
 
-
+    protected function checkIfExists($authorization) 
+    {
+        return $this->where('authorization_id', $authorization->id)
+            ->first();
+    }
 }
