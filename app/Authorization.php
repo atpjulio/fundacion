@@ -346,6 +346,7 @@ class Authorization extends Model
     {
         $invoices = Invoice::where('multiple', 1)
             ->whereNull('deleted_at')
+            ->where('created_at', '>', '2019-01-01 00:00:00')
             ->get();
 
         echo "\nFound: ".count($invoices)." invoices multiple";
