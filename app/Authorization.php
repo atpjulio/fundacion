@@ -345,7 +345,7 @@ class Authorization extends Model
     protected function matchAuthorizationsWithInvoices()
     {
         $invoices = Invoice::where('multiple', 1)
-            ->whereIsNull('deleted_at')
+            ->whereNull('deleted_at')
             ->get();
 
         echo "\nFound: ".count($invoices)." invoices multiple";
