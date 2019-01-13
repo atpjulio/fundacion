@@ -169,4 +169,11 @@ class AjaxController extends Controller
         $invoices = Invoice::searchRecords($search);
         return view('partials._invoices', compact('invoices'));
     }
+
+    public function getAuthoriationServices($authorizationCode)
+    {
+        $authorization = Authorization::findByCode($authorizationCode);
+        return view('partials._authorization_services', compact('authorization'));
+    }
+
 }

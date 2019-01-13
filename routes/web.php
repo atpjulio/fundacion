@@ -83,6 +83,7 @@ Route::middleware(['auth', 'both'])->group(function () {
     Route::get('/get-eps-patients-filtered/{search}', 'AjaxController@getEpsPatientsFiltered');
     Route::get('/get-global-authorizations/{search}', 'AjaxController@getGlobalAuthorizations');
     Route::get('/get-invoices-amount-number/{data}', 'AjaxController@getInvoicesAmountNumber');
+    Route::get('/get-authorization-services/{code}', 'AjaxController@getAuthoriationServices');
     Route::get('/get-full-authorizations/{search}', 'AjaxController@getFullAuthorizations');
     Route::get('/get-companion-services/{id}', 'AjaxController@getCompanionServices');
     Route::get('/get-multiple-services/{id}', 'AjaxController@getMultipleServices');

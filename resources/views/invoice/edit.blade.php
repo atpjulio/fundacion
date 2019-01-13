@@ -2,6 +2,14 @@
 
 @push('styles')
     <link rel="stylesheet" href="{{asset('css/dataTables.bootstrap.min.css')}}">
+    <style>
+        @media only screen and (min-width: 576px) {    
+            .modal-dialog {
+                max-width: 70% !important;
+                margin: 1.75rem auto;
+            }
+        }
+    </style>
 @endpush
 
 @section('content')
@@ -152,6 +160,10 @@
             });
             $("#multiple_table").on('click','.removeRow', function() {
                 $(this).parent().parent().remove();
+            });
+            $("#multiple_table").on('click','.servicesDetail', function() {
+                var currentAuthorizationCode = $(this).parent().parent().find('td input')[0].value;
+                showModal('get-authorization-services/' + currentAuthorizationCode);
             });
         } );
     </script>
