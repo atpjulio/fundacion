@@ -342,23 +342,33 @@ class Authorization extends Model
             ->paginate(config('constants.pagination'));
     }
 
-    /*
     protected function matchAuthorizationsWithInvoices()
     {
         $invoices = Invoices::where('multiple', 1)
             ->whereIsNull('deleted_at')
             ->get();
 
-        echo 'Found '.count($invoices);
+        echo "\nFound: ".count($invoices)." invoices multiple";
         
         $counter = 0;
         foreach ($invoices as $invoice) {
-            if ($invoice->multiple) {
-                
+            foreach (json_decode($invoice->multiple_codes, true) as $key => $code) {
+                $authorization = $this->findByCode($code);
+                if ($authorization and $authorization->days != json_decode($invoice->multiple_days, true)[$key]) {
+                    $counter++;
+                    // $authorization->date_to = \Carbon\Carbon::parse($authorization->date_from)
+                    //     ->addDays(json_decode($invoice->multiple_days, true)[$key])->format("Y-m-d");
+                    // $authorization->save();
+
+                    // AuthorizationService::fixRecord($authorization, floatval(json_decode($invoice->multiple_days, true)[$key]));
+                    // echo ' -> Fixed on authorization: '.$authorization->code."\n";                    
+                }                
             }
         }
+        echo "\n$counter invoices don't match with authorizations";
     }
-    */
+    
+
     protected function matchAuthorizationsWithInvoice($invoiceNumber)
     {
         $invoice = Invoice::getInvoiceByNumber($invoiceNumber);
@@ -378,12 +388,12 @@ class Authorization extends Model
                     $authorization->save();
 
                     AuthorizationService::fixRecord($authorization, floatval(json_decode($invoice->multiple_days, true)[$key]));
-                    echo ' -> Fixed on authorization: '.$authorization->code;                    
+                    echo ' -> Fixed on authorization: '.$authorization->code."\n";                    
                 }                
             }
             return true;
         }
-        echo ' -> Left the same';
+        echo " -> Left the same\n";
         return true;
     }
 }
