@@ -359,6 +359,7 @@ class Authorization extends Model
                 $authorization = $this->findByCode($code);
                 if ($authorization and $authorization->days != json_decode($invoice->multiple_days, true)[$key]) {
                     $authorizationsCounter++;
+                    $flag = true;
                     // $authorization->date_to = \Carbon\Carbon::parse($authorization->date_from)
                     //     ->addDays(json_decode($invoice->multiple_days, true)[$key])->format("Y-m-d");
                     // $authorization->save();
@@ -369,6 +370,7 @@ class Authorization extends Model
             }
             if ($flag) {
                 $counter++;
+                echo "\nInvoice to fix: $invoice->number";
             }
         }
         echo "\n$counter invoices don't match with authorizations";
