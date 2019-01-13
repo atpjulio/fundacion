@@ -13,6 +13,9 @@
                 <div class="text-center">
                     {!! $authorization->codec !!}
                 </div>
+                {{ $authorization->id }}
+                <input type="number" id="test_number" name="test_number" class="form-control" value="1" min=0>
+                <input type="number" id="test_result" name="test_result" class="form-control" value="1">
             </div>
 
             {!! Form::hidden('id', $authorization->id) !!}

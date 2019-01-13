@@ -165,8 +165,11 @@
                 var currentAuthorizationCode = $(this).parent().parent().find('td input')[0].value;
                 showModal('get-authorization-services/' + currentAuthorizationCode);
             });
-            $("#service_table").on('change','.serviceDays', function() {
-                console.log($(this).val());
+            $("#show-modal").on('change','#service_table .serviceDays', function() {
+                var serviceTotal = $(this).parent().parent().find('td input')[3];
+                var servicePrice = $(this).parent().parent().find('td input')[2].value;
+
+                serviceTotal.value = $(this).val() * servicePrice;
             });
         } );
     </script>

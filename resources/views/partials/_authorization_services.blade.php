@@ -13,9 +13,8 @@
             <div class="text-danger" id="modal-error"></div>
             <div class="text-success" id="modal-success"></div>
             <br>
-            <h5>NOTAS:</h5>
+            <h5>IMPORTANTE:</h5>
             <p>- Con actualizar los días es suficiente. El sistema internamente calculará el nuevo monto de acuerdo al valor parametrizado</p>
-            <p>- El cambio automático del monto al mover el día estará listo próximamente</p>
             {!! Form::open(['route' => 'authorization.services.update', 'method' => 'POST', 'id' => 'formService']) !!}
             <div class="table-responsive">
                 <table class="table table-hover table-bordered" id="service_table">
@@ -34,6 +33,7 @@
                             </td>
                             <td>
                                 <input type="number" id="service_days" name="service_days{{ $key }}" class="form-control serviceDays" placeholder="Total de días" min="0" value="{{ $service->days }}" />
+                                <input type="hidden" name="service_price{{ $key }}" class="form-control" placeholder="" min="0" value="{{ $service->price }}" />
                             </td>
                             <td>
                                 <input type="number" id="service_totals" name="service_totals{{ $key }}" class="form-control" placeholder="Valor total" min="0" value="{{ $service->days * $service->price }}" />

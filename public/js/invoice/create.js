@@ -133,5 +133,10 @@ $(document).ready(function() {
         var currentAuthorizationCode = $(this).parent().parent().find('td input')[0].value;
         showModal('get-authorization-services/' + currentAuthorizationCode);
     });
+    $("#show-modal").on('change','#service_table .serviceDays', function() {
+        var serviceTotal = $(this).parent().parent().find('td input')[3];
+        var servicePrice = $(this).parent().parent().find('td input')[2].value;
 
+        serviceTotal.value = $(this).val() * servicePrice;
+    });
 } );
