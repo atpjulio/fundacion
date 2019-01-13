@@ -46,19 +46,4 @@ class AuthorizationPrice extends Model
         }
     }
 
-    protected function fixRecord($authorization, $dailyPrice)
-    {
-        if ($authorization->price) {
-            $authorization->price->update([
-                'eps_id' => $authorization->eps_id,
-                'daily_price' => $dailyPrice,
-            ]);
-        } else {
-            $this->create([
-                'authorization_id' => $authorization->id,
-                'eps_id' => $authorization->eps_id,
-                'daily_price' => $dailyPrice,
-            ]);
-        }
-    }
 }

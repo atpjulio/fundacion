@@ -373,7 +373,11 @@ class Authorization extends Model
             foreach (json_decode($invoice->multiple_codes, true) as $key => $code) {
                 $authorization = $this->findByCode($code);
                 if ($authorization) {
-                    AuthorizationPrice::fixRecord($authorization, floatval(json_decode($invoice->multiple_totals, true)[$key]));
+                    $authorization->date_to = \Carbon\Carbon::parse($authorization->date_from)
+                        ->addDays(json_decode($invoice->multiple_days, true)[$key])->format("Y-m-d");
+                    $authorization->save();
+
+                    AuthorizationPrice::fixRecord($authorization, floatval(json_decode($invoice->multiple_days, true)[$key]));
                     echo ' -> Fixed on authorization: '.$authorization->code;                    
                 }                
             }

@@ -82,4 +82,19 @@ class AuthorizationService extends Model
             }
         }
     }
+
+    protected function fixRecord($authorization, $days)
+    {
+        $record = $this->where('authorization_id', $authorization->id)
+            ->first();
+
+        if (!$record) {
+            return false;            
+        }
+        
+        $record->update([
+            'days' => $days,
+            'price' => $record->price * $days
+        ]);
+    }
 }
