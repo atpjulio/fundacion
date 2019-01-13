@@ -377,7 +377,7 @@ class Authorization extends Model
                         ->addDays(json_decode($invoice->multiple_days, true)[$key])->format("Y-m-d");
                     $authorization->save();
 
-                    AuthorizationPrice::fixRecord($authorization, floatval(json_decode($invoice->multiple_days, true)[$key]));
+                    AuthorizationService::fixRecord($authorization, floatval(json_decode($invoice->multiple_days, true)[$key]));
                     echo ' -> Fixed on authorization: '.$authorization->code;                    
                 }                
             }
