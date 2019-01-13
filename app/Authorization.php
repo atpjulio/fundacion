@@ -342,4 +342,44 @@ class Authorization extends Model
             ->paginate(config('constants.pagination'));
     }
 
+    /*
+    protected function matchAuthorizationsWithInvoices()
+    {
+        $invoices = Invoices::where('multiple', 1)
+            ->whereIsNull('deleted_at')
+            ->get();
+
+        echo 'Found '.count($invoices);
+        
+        $counter = 0;
+        foreach ($invoices as $invoice) {
+            if ($invoice->multiple) {
+                
+            }
+        }
+    }
+    */
+    protected function matchAuthorizationsWithInvoice($invoiceNumber)
+    {
+        $invoice = Invoice::getInvoiceByNumber($invoiceNumber);
+
+        if (!$invoice) {
+            return false;
+        }
+
+        echo 'Invoice number: '.$invoice->number;
+
+        if ($invoice->multiple) {
+            foreach (json_decode($invoice->multiple_codes, true) as $key => $code) {
+                $authorization = $this->findByCode($code);
+                if ($authorization and $authorization->price->daily_price != json_decode($invoice->multiple_totals, true)[$key]) {
+                    AuthorizationPrice::fixRecord($authorization, json_decode($invoice->multiple_totals, true)[$key]);
+                    echo ' -> Fixed on authorization: '.$authorization->code;                    
+                }                
+            }
+            return true;
+        }
+        echo ' -> Left the same';
+        return true;
+    }
 }
