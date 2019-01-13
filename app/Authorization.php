@@ -352,11 +352,13 @@ class Authorization extends Model
         echo "\nFound: ".count($invoices)." invoices multiple";
         
         $counter = 0;
+        $authorizationsCounter = 0;
         foreach ($invoices as $invoice) {
+            $flag = false;
             foreach (json_decode($invoice->multiple_codes, true) as $key => $code) {
                 $authorization = $this->findByCode($code);
                 if ($authorization and $authorization->days != json_decode($invoice->multiple_days, true)[$key]) {
-                    $counter++;
+                    $authorizationsCounter++;
                     // $authorization->date_to = \Carbon\Carbon::parse($authorization->date_from)
                     //     ->addDays(json_decode($invoice->multiple_days, true)[$key])->format("Y-m-d");
                     // $authorization->save();
@@ -365,8 +367,12 @@ class Authorization extends Model
                     // echo ' -> Fixed on authorization: '.$authorization->code."\n";                    
                 }                
             }
+            if ($flag) {
+                $counter++;
+            }
         }
         echo "\n$counter invoices don't match with authorizations";
+        echo "\n$authorizationsCounter authorizations to fix";
     }
     
 
