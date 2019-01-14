@@ -431,4 +431,37 @@ class Invoice extends Model
             ->paginate(config('constants.pagination'));
     }
 
+    protected function findByNumber($number)
+    {
+        return $this->where('number', $number)
+            ->first();
+    }
+
+    protected function fixSimpleInvoice($number)
+    {
+        $invoice = $this->findByNumber($number);
+        if (!$invoice) {
+            return "\nInvoice not found";
+        }
+
+        if ($invoice->multiple) {
+            $authorization = Authorization::findByCode(json_decode($invoice->multiple_codes,true)[0]);
+        } else {
+            $authorization = Authorization::findByCode($invoice->authorization_code);
+        }
+
+        if (!$authorization) {
+            return "\nAuthorization not found";
+        }
+
+        $authorizationService = AuthorizationService::checkIfExists($authorization);
+        if (!$authorizationService) {
+            return "\nAuthorizationService not found";
+        }
+        $authorizationService->update([
+            'days' => $invoice->multiple ? json_decode($invoice->multiple_days,true)[0] : $invoice->total / $authorizationService->price
+        ]);
+
+        return "\nSuccess!";
+    }
 }
