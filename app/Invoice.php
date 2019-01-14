@@ -124,7 +124,8 @@ class Invoice extends Model
                 if ($authorization) {
                     $tot = 0;
                     foreach($authorization->services as $as) {
-                        $tot += $as->price * $invoiceDays[$k];
+                        
+                        $tot += $as->price * $as->days;
                     }
                     
                     $invoiceTotals[$k] = $tot;
