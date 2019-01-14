@@ -361,11 +361,11 @@ class Authorization extends Model
                 if ($authorization and $authorization->days != json_decode($invoice->multiple_days, true)[$key]) {
                     $authorizationsCounter++;
                     $flag = true;
-                    // $authorization->date_to = \Carbon\Carbon::parse($authorization->date_from)
-                    //     ->addDays(json_decode($invoice->multiple_days, true)[$key])->format("Y-m-d");
-                    // $authorization->save();
+                    $authorization->date_to = \Carbon\Carbon::parse($authorization->date_from)
+                         ->addDays(json_decode($invoice->multiple_days, true)[$key])->format("Y-m-d");
+                    $authorization->save();
 
-                    // AuthorizationService::fixRecord($authorization, floatval(json_decode($invoice->multiple_days, true)[$key]));
+                    AuthorizationService::fixRecord($authorization, floatval(json_decode($invoice->multiple_days, true)[$key]));
                     // echo ' -> Fixed on authorization: '.$authorization->code."\n";                    
                 }                
             }

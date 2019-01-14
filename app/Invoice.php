@@ -431,15 +431,9 @@ class Invoice extends Model
             ->paginate(config('constants.pagination'));
     }
 
-    protected function findByNumber($number)
-    {
-        return $this->where('number', $number)
-            ->first();
-    }
-
     protected function fixSimpleInvoice($number)
     {
-        $invoice = $this->findByNumber($number);
+        $invoice = $this->getInvoiceByNumber($number);
         if (!$invoice) {
             echo "\nInvoice $number not found";
             return;
