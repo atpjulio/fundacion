@@ -221,7 +221,12 @@ class Invoice extends Model
                 foreach ($invoiceCodes as $k => $val) {
                     $authorization = Authorization::findByCode($val);
                     if ($authorization) {
-                        $invoiceTotals[$k] = $authorization->total_services - $invoiceTotals[$k];
+                        $tot = 0;
+                        foreach($authorization->services as $as) {
+                            $tot += $as->price * $as->days;
+                        }
+                        
+                        $invoiceTotals[$k] = $tot;
                     }
                 }
         
