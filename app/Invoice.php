@@ -115,7 +115,6 @@ class Invoice extends Model
             $invoice->multiple_days = json_encode($request->get('multiple_days'));
             $invoice->multiple_totals = json_encode($request->get('multiple_totals'));
 
-            /*
             $invoiceCodes = json_decode($invoice->multiple_codes, true);
             $invoiceDays = json_decode($invoice->multiple_days, true);
             $invoiceTotals = json_decode($invoice->multiple_totals, true);
@@ -123,14 +122,18 @@ class Invoice extends Model
             foreach ($invoiceCodes as $k => $val) {
                 $authorization = Authorization::findByCode($val);
                 if ($authorization) {
-                    $invoiceTotals[$k] = $authorization->total_services;
+                    $tot = 0;
+                    foreach($authorization->services as $as) {
+                        $tot += $as->price * $as->days;
+                    }
+                    
+                    $invoiceTotals[$k] = $tot;
                 }
             }
     
             $invoice->multiple_codes = json_encode($invoiceCodes);
             $invoice->multiple_days = json_encode($invoiceDays);
             $invoice->multiple_totals = json_encode($invoiceTotals);
-            */
         }
 
         $authorization = Authorization::findByCode($request->get('authorization_code') ?: $request->get('multiple_codes')[0]);
@@ -232,8 +235,7 @@ class Invoice extends Model
         
                 $invoice->multiple_codes = json_encode($invoiceCodes);
                 $invoice->multiple_days = json_encode($invoiceDays);
-                $invoice->multiple_totals = json_encode($invoiceTotals);
-    
+                $invoice->multiple_totals = json_encode($invoiceTotals);    
             }
 
             $authorization = Authorization::findByCode($request->get('authorization_code') ?: $request->get('multiple_codes')[0]);
