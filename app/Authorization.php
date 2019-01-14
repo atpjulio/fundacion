@@ -334,6 +334,7 @@ class Authorization extends Model
     protected function checkIfExists($code)
     {
         return $this->where("code", $code)
+            ->whereNull('deleted_at')
             ->first();
     }
 
