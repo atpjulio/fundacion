@@ -39,7 +39,7 @@
     {!! Form::hidden('selected_price', 
         $invoice->multiple ? $invoice->eps->price[0]->daily_price : 
             ($invoice->authorization->daily_price > 0 ? $invoice->authorization->daily_price : 
-            $invoice->authorization->price->daily_price), ['id' => 'selected_price']) !!}
+            ($invoice->authorization->price ? 0 : $invoice->authorization->price->daily_price)), ['id' => 'selected_price']) !!}
     {!! Form::hidden('id', $invoice->id) !!}
     {!! Form::close() !!}
 @endsection
