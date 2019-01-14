@@ -54,7 +54,7 @@ class Invoice extends Model
     /**
      * Attributes
      */
-    public function getDaysAttribute()
+    public function DaysAttribute()
     {
         $dailyPrice = $this->eps->daily_price;
         if ($dailyPrice == 0) {
@@ -79,11 +79,32 @@ class Invoice extends Model
 
     public function getMultipleTotalsFormatedAttribute()
     {
+        // $codes = json_decode($this->multiple_codes, true);
+        // $totals = [];
+        // foreach ($codes as $code) {
+        //     $authorization = Authorization::findByCode($code);
+        //     if ($authorization) {
+        //         $totals[] = number_format($authorization->total_services, 2, ",", ".");
+        //     }
+        // }
         $totals = json_decode($this->multiple_totals, true);
         foreach ($totals as $key => $value) {
             $totals[$key] = number_format($value, 2, ",", ".");
         }
 
+        return $totals;
+    }
+
+    public function getTotalAttribute()
+    {
+        $codes = json_decode($this->multiple_codes, true);
+        $totals = 0;
+        foreach ($codes as $code) {
+            $authorization = Authorization::findByCode($code);
+            if ($authorization) {
+                $totals += $authorization->total_services;
+            }
+        }
         return $totals;
     }
 
