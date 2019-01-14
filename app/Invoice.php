@@ -122,7 +122,7 @@ class Invoice extends Model
             foreach ($invoiceCodes as $k => $val) {
                 $authorization = Authorization::findByCode($val);
                 if ($authorization) {
-                    $invoiceTotals[$k] = $authorization->total_services;
+                    $invoiceTotals[$k] = $authorization->total_services - $invoiceTotals[0];
                 }
             }
     
@@ -220,7 +220,7 @@ class Invoice extends Model
                 foreach ($invoiceCodes as $k => $val) {
                     $authorization = Authorization::findByCode($val);
                     if ($authorization) {
-                        $invoiceTotals[$k] = $authorization->total_services;
+                        $invoiceTotals[$k] = $authorization->total_services - $invoiceTotals[0];
                     }
                 }
         
