@@ -441,27 +441,42 @@ class Invoice extends Model
     {
         $invoice = $this->findByNumber($number);
         if (!$invoice) {
-            return "\nInvoice not found";
+            echo "\nInvoice $number not found";
+            return;
         }
 
         if ($invoice->multiple) {
-            $authorization = Authorization::findByCode(json_decode($invoice->multiple_codes,true)[0]);
+            foreach (json_decode($invoice->multiple_codes,true) as $k => $code) {
+                $authorization = Authorization::findByCode($code);
+                if (!$authorization) {
+                    echo "\nAuthorization $code not found";
+                    continue;
+                }
+                $authorizationService = AuthorizationService::checkIfExists($authorization);
+                if (!$authorizationService) {
+                    echo "\nAuthorizationService not found";
+                    continue;
+                }
+                $authorizationService->update([
+                    'days' => json_decode($invoice->multiple_days,true)[$k]
+                ]);
+                echo "\nDone with authorization $code";
+            }
         } else {
             $authorization = Authorization::findByCode($invoice->authorization_code);
+            if (!$authorization) {
+                echo "\nAuthorization $invoice->authorization_code not found";
+                return;
+            }
+            $authorizationService = AuthorizationService::checkIfExists($authorization);
+            if (!$authorizationService) {
+                echo "\nAuthorizationService not found";
+                return;
+            }
+            $authorizationService->update([
+                'days' => $invoice->total / $authorizationService->price
+            ]);
         }
-
-        if (!$authorization) {
-            return "\nAuthorization not found";
-        }
-
-        $authorizationService = AuthorizationService::checkIfExists($authorization);
-        if (!$authorizationService) {
-            return "\nAuthorizationService not found";
-        }
-        $authorizationService->update([
-            'days' => $invoice->multiple ? json_decode($invoice->multiple_days,true)[0] : $invoice->total / $authorizationService->price
-        ]);
-
-        return "\nSuccess!";
+        echo "\nSuccess!! On invoice number $number";
     }
 }
