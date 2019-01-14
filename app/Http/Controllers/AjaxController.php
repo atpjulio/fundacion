@@ -182,4 +182,16 @@ class AjaxController extends Controller
         return view('partials._invoice_multiple_table', compact('invoice'));
     }
 
+    public function updateNewInvoice(Request $request)
+    {
+        $invoice = new Invoice();
+
+        $invoice->multiple = 1;
+        $invoice->multiple_codes = $request->get('multiple_codes');
+        $invoice->multiple_days = $request->get('multiple_days');
+        $invoice->multiple_totals = $request->get('multiple_totals');
+
+        return view('partials._invoice_multiple_table', compact('invoice'));
+    }
+    
 }

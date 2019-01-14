@@ -69,8 +69,8 @@
                                     <input type="number" id="multiple_days" name="multiple_days[]" class="form-control multipleDays" placeholder="Total de días" min="0" value="{{ old('multiple_days', json_decode($invoice->multiple_days, true))[$k] }}" />
                                 </td>
                                 <td>
-                                    @if ($currentAuthorization->price)
-                                        <input type="number" id="multiple_totals" name="multiple_totals[]" class="form-control" placeholder="Valor total" min="0" value="{{ old('multiple_totals', json_decode($invoice->multiple_days, true)[$k] * $currentAuthorization->price->daily_price) }}" />                                    
+                                    @if ($currentAuthorization and $currentAuthorization->price)
+                                        <input type="number" id="multiple_totals" name="multiple_totals[]" class="form-control" placeholder="Valor total" min="0" value="{{ old('multiple_totals', json_decode($invoice->multiple_days, true)[$k] * $currentAuthorization->price->daily_price) }}" />
                                         <input type="hidden" id="multiple_price" name="multiple_price[]" class="form-control" placeholder="" min="0" value="{{ $currentAuthorization->price->daily_price }}" />
                                     @else                                    
                                         <input type="number" id="multiple_totals" name="multiple_totals[]" class="form-control" placeholder="Valor total" min="0" value="{{ old('multiple_totals', json_decode($invoice->multiple_days, true)[$k] * json_decode($invoice->multiple_totals, true)[$k]) }}" />

@@ -347,11 +347,20 @@ class AuthorizationController extends Controller
     {
         $authorization = Authorization::findOrFail($request->get('authorization_id'));
         $some = '';
+        $newInvoiceCodes = [];
+        $newInvoiceDays = [];
+        $newInvoiceTotals = [];
 
         for ($i = 0; $i < $request->get('services_quantity'); $i++) { 
             if ($request->get('service_days'.$i) == "" or $request->get('service_totals'.$i) == "") {
                 continue;
             }
+            if ($i == 0) {
+                array_push($newInvoiceCodes, $authorization->code);
+                array_push($newInvoiceDays, $request->get('service_days'.$i));
+                array_push($newInvoiceTotals, $request->get('service_totals'.$i));
+            }
+    
             $bool = AuthorizationService::fixAuthorizationService(
                 $authorization, 
                 $request->get('service_codes'.$i),
@@ -379,8 +388,14 @@ class AuthorizationController extends Controller
             $invoice->multiple_totals = json_encode($invoiceTotals);
     
             $invoice->save();
+        } else {
+            $invoice = new Invoice();
+
+            $invoice->multiple_codes = json_encode($newInvoiceCodes);
+            $invoice->multiple_days = json_encode($newInvoiceDays);
+            $invoice->multiple_totals = json_encode($newInvoiceTotals);
         }
 
-        return response(json_encode($request->all()).' some -> '.$some, 200);
+        return response(json_encode($invoice), 200);
     }
 }

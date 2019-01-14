@@ -81,6 +81,8 @@ Route::middleware(['auth', 'both'])->group(function () {
 
     Route::get('authorization/excel/{id}', 'AuthorizationController@excel')->name('authorization.excel');
 
+    Route::post('/update-new-invoice', 'AjaxController@updateNewInvoice');
+
     Route::get('/get-eps-patients-filtered/{search}', 'AjaxController@getEpsPatientsFiltered');
     Route::get('/get-global-authorizations/{search}', 'AjaxController@getGlobalAuthorizations');
     Route::get('/get-invoices-amount-number/{data}', 'AjaxController@getInvoicesAmountNumber');
