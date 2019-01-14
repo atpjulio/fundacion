@@ -36,9 +36,6 @@
             </div>
         </div>
     </section>
-    @if ($invoice->number == 8162)
-        {{ dd($invoice, $invoice->authorization, $invoice->eps) }}
-    @endif
     {!! Form::hidden('selected_price', 
         $invoice->multiple ? $invoice->eps->price[0]->daily_price : 
             ($invoice->authorization->daily_price > 0 ? $invoice->authorization->daily_price : 
