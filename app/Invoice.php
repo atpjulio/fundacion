@@ -79,20 +79,20 @@ class Invoice extends Model
 
     public function getMultipleTotalsFormatedAttribute()
     {
-        $codes = json_decode($this->multiple_codes, true);
-        $totals = [];
-        foreach ($codes as $code) {
-            $authorization = Authorization::findByCode($code);
-            if ($authorization) {
-                $totals[] = number_format($authorization->total_services, 2, ",", ".");
-            }
-        }
-        // $totals = json_decode($this->multiple_totals, true);
-        // foreach ($totals as $key => $value) {
-        //     $totals[$key] = number_format($value, 2, ",", ".");
+        // $codes = json_decode($this->multiple_codes, true);
+        // $totals = [];
+        // foreach ($codes as $code) {
+        //     $authorization = Authorization::findByCode($code);
+        //     if ($authorization) {
+        //         $totals[] = number_format($authorization->total_services, 2, ",", ".");
+        //     }
         // }
+        $totals = json_decode($this->multiple_totals, true);
+        foreach ($totals as $key => $value) {
+            $totals[$key] = number_format($value, 2, ",", ".");
+        }
 
-        // return $totals;
+        return $totals;
     }
 
     /**
