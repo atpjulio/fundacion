@@ -236,6 +236,24 @@ class Authorization extends Model
                     $authorization->multiple = config('constants.status.active');
                     $authorization->multiple_services = null;
                 }
+
+                if ($authorization->invoice_id > 0) {
+                    $invoice = $authorization->invoice;
+                    if ($invoice->multiple) {
+                        $invoiceCodes = json_decode($invoice->multiple_codes, true);
+                        foreach ($invoiceCodes as $index => $code) {
+                            if ($code == $oldCode) {
+                                $invoiceCodes[$index] = $authorization->code;
+                                break;
+                            }
+                        }
+                        $invoice->multiple_codes = json_encode($invoiceCodes);
+                    } else {
+                        $invoice->authorization_code = $authorization->code;
+                    }
+                    $invoice->save();
+                }
+                
                 $authorization->save();
 
                 if ($authorization->companion) {
