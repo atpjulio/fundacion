@@ -135,8 +135,12 @@ class Rip extends Model
                     $currentAuthorization = Authorization::findByCode($value);
                     if ($currentAuthorization) {
                         $days = json_decode($invoice->multiple_days, true)[$key];
-						$dailyPrice = $currentAuthorization->daily_price;
-						$total = floatval(json_decode($invoice->multiple_totals, true)[$key]);
+                        $dailyPrice = $currentAuthorization->daily_price;
+                        try {
+                            $total = floatval(json_decode($invoice->multiple_totals, true)[$key]);
+                        } catch(\Exception $e) {
+                            dd($invoice, $key);
+                        }
                         $line .= $invoice->number.",".substr($invoice->company->doc, 0, 9).","
                             .$currentAuthorization->patient->dni_type.",".$currentAuthorization->patient->dni.","
                             .$currentAuthorization->code.",1,".$currentAuthorization->service->code.","
