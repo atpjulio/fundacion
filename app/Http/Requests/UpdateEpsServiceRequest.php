@@ -23,6 +23,7 @@ class UpdateEpsServiceRequest extends FormRequest
      */
     public function rules()
     {
+        dd($this->request->all());
         return [
             'code' => 'required|unique:eps_services,id,'.$this->request->get('id'),
             'name' => 'required',
