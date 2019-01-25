@@ -25,7 +25,8 @@ class UpdateEpsServiceRequest extends FormRequest
     {
         return [
             'code' => 'required|unique:eps_services,id,'.$this->request->get('id'),
-            'name' => 'required'
+            'name' => 'required',
+            'price' => 'numeric'
         ];
     }
 }

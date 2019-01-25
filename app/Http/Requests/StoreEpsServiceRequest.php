@@ -27,7 +27,8 @@ class StoreEpsServiceRequest extends FormRequest
         return [
             'eps_id' => 'required',
             'code' => 'required|unique:eps_services,code,eps_id',
-            'name' => 'required'
+            'name' => 'required',
+            'price' => 'numeric',
         ];
     }
 
