@@ -46,6 +46,9 @@ class Egress extends Model
      */
     public function getNumberAttribute()
     {
+//        $record = $this->latest()->first();
+
+
         return 'G-'.\Carbon\Carbon::parse($this->created_at)->format("Ym").sprintf("%05d", $this->id);
     }
 
@@ -69,6 +72,7 @@ class Egress extends Model
             'amount' => $amount,
             'entity_id' => $request->get('entity_id'),
             'concept' => $request->get('concept'),
+            'created_at' => $request->get('created_at'),
         ]);
 
         EgressPuc::storeRecord($egress, $pucs);
@@ -82,9 +86,9 @@ class Egress extends Model
             $egress->update([
                 'company_id' => 1,
                 'amount' => $amount,
-                'created_at' => $egress->created_at,
                 'entity_id' => $request->get('entity_id'),
                 'concept' => $request->get('concept'),
+                'created_at' => $request->get('created_at'),
             ]);
 
             EgressPuc::updateRecord($egress, $pucs);
