@@ -37,6 +37,16 @@ class CustomValidationRules extends Validator
         }
         return false;
     }
+
+    public function validateEgressNumber($attribute, $value, $parameters,$messages) {
+        dd($attribute, $value, $parameters,$messages);
+        // $extension = strtolower($value->getClientOriginalExtension());
+
+        // if($extension === "txt"){
+        //     return true;
+        // }
+        // return false;
+    }
 /*
     public function validateCustomerPhone($attribute, $value, $parameters,$messages)
     {

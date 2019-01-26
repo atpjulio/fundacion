@@ -20,7 +20,7 @@ class EgressController extends Controller
      */
     public function index()
     {
-        $egresses = Egress::all();
+        $egresses = Egress::searchRecords();
 
         return view('accounting.egress.index', compact('egresses'));
     }
@@ -148,6 +148,16 @@ class EgressController extends Controller
                 .' | Cŕeditos: '.number_format($amount, 2, ",", ".")
                 .'<br>No coinciden los montos de débito y cŕedito');
             return redirect()->back()->withInput();
+        }
+
+        if (!$request->get('entity_id')) {
+            $entity = Entity::storeRecord($request);
+
+            $request->request->add([
+                'entity_id' => $entity->id
+            ]);
+        } else {
+            Entity::updateRecord($request);
         }
 
         Egress::updateRecord($pucs, $request, $amount, $id);

@@ -465,5 +465,13 @@ function fillNewInvoiceAuthorizations(invoice)
             console.log(errors);
         }
     });
-
 }
+
+function fillFilteredEgresses(search)
+{
+    $.get("/get-egresses-filtered/" + search, function (data, status) {
+        $('#dynamic-egresses').html(data);
+        $('#searching').val(search);
+    });
+}
+

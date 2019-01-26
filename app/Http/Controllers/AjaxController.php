@@ -10,6 +10,7 @@ use App\EpsService;
 use App\Invoice;
 use App\Patient;
 use Illuminate\Http\Request;
+use App\Egress;
 
 class AjaxController extends Controller
 {
@@ -194,4 +195,10 @@ class AjaxController extends Controller
         return view('partials._invoice_multiple_table', compact('invoice'));
     }
     
+    public function getEgressesFiltered($search)
+    {
+        $egresses = Egress::searchRecords($search);
+        return view('partials._egresses', compact('egresses'));
+    }
+
 }

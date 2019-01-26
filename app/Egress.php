@@ -73,7 +73,7 @@ class Egress extends Model
             'amount' => $amount,
             'entity_id' => $request->get('entity_id'),
             'concept' => $request->get('concept'),
-            'created_at' => $request->get('created_at'),
+            'created_at' => $createdAt,
             'counter' => $counter,
         ]);
 
@@ -85,16 +85,18 @@ class Egress extends Model
         $egress = $this->find($id);
         if ($egress) {
             $counter = $egress->counter ?: 1;
-            if ($request->get('created_at') != substr($egress->created_at, 0, 10)) {
-                $counter = $this->getCounter($request->get('created_at').' '.\Carbon\Carbon::now()->format('H:i:s'));
+            $createdAt = $request->get('created_at').' '.\Carbon\Carbon::now()->format('H:i:s');
+            // dd($request->get('created_at'), substr($egress->created_at, 0, 10));
+            if (substr($request->get('created_at'), 0, 7) != substr($egress->created_at, 0, 7)) {
+                $counter = $this->getCounter($createdAt);
             }
 
             $egress->update([
-                'company_id' => 1,
+                'company_id' => 1,  
                 'amount' => $amount,
                 'entity_id' => $request->get('entity_id'),
                 'concept' => $request->get('concept'),
-                'created_at' => $request->get('created_at'),
+                'created_at' => $createdAt,
                 'counter' => $counter,
             ]);
 
@@ -112,4 +114,15 @@ class Egress extends Model
 
         return $query ? $query->counter + 1 : 1;
     }
+
+    protected function searchRecords($search = '')
+    {
+        return $this::join('entities', 'egresses.entity_id', '=', 'entities.id')
+            ->select('egresses.*', 'entities.name', 'entities.doc')
+            ->where('entities.name', 'like', '%'.$search.'%')
+            ->orWhere('entities.doc', 'like', '%'.$search.'%')
+            ->orderBy('egresses.created_at', 'DESC')
+            ->paginate(config('constants.pagination'));
+    }
+
 }
