@@ -33,7 +33,7 @@
                                 <th>Recibido de</th>
                                 <th style="width: 110px;">Monto</th>
                                 <th>Fecha</th>
-                                <th style="width: 28mm;">Opciones</th>
+                                <th style="width: 300px;">Opciones</th>
                                 </thead>
                                 <tbody>
                                 @foreach($egresses as $egress)
