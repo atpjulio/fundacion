@@ -65,8 +65,9 @@ class Egress extends Model
      */
     protected function storeRecord($pucs, $request, $amount)
     {
-        $counter = $this->getCounter($request->get('created_at'));
-
+        $createdAt = $request->get('created_at').' '.\Carbon\Carbon::now()->format('H:i:s');
+        $counter = $this->getCounter($createdAt);
+        
         $egress = $this->create([
             'company_id' => 1,
             'amount' => $amount,
@@ -85,7 +86,7 @@ class Egress extends Model
         if ($egress) {
             $counter = $egress->counter ?: 1;
             if ($request->get('created_at') != substr($egress->created_at, 0, 10)) {
-                $counter = $this->getCounter($request->get('created_at'));
+                $counter = $this->getCounter($request->get('created_at').' '.\Carbon\Carbon::now()->format('H:i:s'));
             }
 
             $egress->update([
@@ -106,7 +107,8 @@ class Egress extends Model
     protected function getCounter($createdAt)
     {
         $query = $this->where('created_at', 'like', '%'.substr($createdAt, 0, 7).'%')
-            ->orderBy('created_at', 'desc')->first();
+            ->orderBy('created_at', 'desc')
+            ->first();
 
         return $query ? $query->counter + 1 : 1;
     }
