@@ -6,7 +6,7 @@
 			    {!! Form::date('created_at', old('created_at', isset($egress) ? $egress->created_at : \Carbon\Carbon::now()), ['class' => 'form-control underlined', 'placeholder' => 'dd/mm/aaaa']) !!}
 			</div>
 			<div class="form-group @if($errors->has('entity_id')) has-error @endif">
-			    {!! Form::label('entity_id', 'Hemos recibido de', ['class' => 'control-label']) !!}
+			    {!! Form::label('entity_id', 'Pagado a', ['class' => 'control-label']) !!}
 			    <select name="entity_id" id="entity_id" class="form-control">
 			    	<option value="0">-- Añadir nuevo --</option>
 			    	@foreach($entities as $ent)
