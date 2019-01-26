@@ -4,7 +4,7 @@
         <th style="width: 160px;"># Comprobante</th>
         <th>Pagado a</th>
         <th>NIT/CC</th>
-        <th style="width: 110px;">Monto</th>
+        <th style="width: 140px;">Monto</th>
         <th style="width: 300px;">Opciones</th>
         </thead>
         <tbody>
