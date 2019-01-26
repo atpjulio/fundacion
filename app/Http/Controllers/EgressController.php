@@ -74,6 +74,13 @@ class EgressController extends Controller
             return redirect()->back()->withInput();
         }
 
+        if (!$request->get('entity_id')) {
+            $entity = Entity::storeRecord($request);
+
+            $request->request->add([
+                'entity_id' => $entity->id
+            ]);
+        }
         Egress::storeRecord($pucs, $request, $amount);
 
         $request->session()->flash('message', 'Comprobante de egreso guardado exitosamente');

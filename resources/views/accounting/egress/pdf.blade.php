@@ -85,7 +85,7 @@ mpdf-->
         <tr>
             <td width="30%" style="border: 0.1mm solid #888888; ">
                 <span style="font-size: 9pt; color: #555555; font-family: sans;">
-                    RECIBIDO DE:
+                    PAGADO A:
                 </span>
                 <br><br>
                 {{ $egress->entity->name }}
