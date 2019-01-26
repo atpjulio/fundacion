@@ -15,6 +15,7 @@ class Egress extends Model
         'amount',
         'concept',
         'created_at',
+        'counter',
     ];
     /**
      * The attributes that should be mutated to dates.
@@ -46,10 +47,7 @@ class Egress extends Model
      */
     public function getNumberAttribute()
     {
-//        $record = $this->latest()->first();
-
-
-        return 'G-'.\Carbon\Carbon::parse($this->created_at)->format("Ym").sprintf("%05d", $this->id);
+        return 'G-'.\Carbon\Carbon::parse($this->created_at)->format("Ym").sprintf("%05d", $this->counter);
     }
 
     public function getBankAttribute()
@@ -67,12 +65,15 @@ class Egress extends Model
      */
     protected function storeRecord($pucs, $request, $amount)
     {
+        $counter = $this->getCounter($request->get('created_at'));
+
         $egress = $this->create([
             'company_id' => 1,
             'amount' => $amount,
             'entity_id' => $request->get('entity_id'),
             'concept' => $request->get('concept'),
             'created_at' => $request->get('created_at'),
+            'counter' => $counter,
         ]);
 
         EgressPuc::storeRecord($egress, $pucs);
@@ -81,14 +82,19 @@ class Egress extends Model
     protected function updateRecord($pucs, $request, $amount, $id)
     {
         $egress = $this->find($id);
-
         if ($egress) {
+            $counter = $egress->counter ?: 1;
+            if ($request->get('created_at') != substr($egress->created_at, 0, 10)) {
+                $counter = $this->getCounter($request->get('created_at'));
+            }
+
             $egress->update([
                 'company_id' => 1,
                 'amount' => $amount,
                 'entity_id' => $request->get('entity_id'),
                 'concept' => $request->get('concept'),
                 'created_at' => $request->get('created_at'),
+                'counter' => $counter,
             ]);
 
             EgressPuc::updateRecord($egress, $pucs);
@@ -97,4 +103,11 @@ class Egress extends Model
         return $egress;
     }
 
+    protected function getCounter($createdAt)
+    {
+        $query = $this->where('created_at', 'like', '%'.substr($createdAt, 0, 7).'%')
+            ->orderBy('created_at', 'desc')->first();
+
+        return $query ? $query->counter + 1 : 1;
+    }
 }

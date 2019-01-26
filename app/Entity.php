@@ -42,11 +42,11 @@ class Entity extends Model
 
 	protected function updateRecord($request, $doc = null)
 	{
-    if ($request->get('entity_id')) {
-      $entity = $this->find($request->get('entity_id'));
-    } else {
-      $entity = $this->checkIfExists($doc);
-    }
+		if ($request->get('entity_id')) {
+			$entity = $this->find($request->get('entity_id'));
+		} else {
+			$entity = $this->checkIfExists($doc);
+		}
 
 		if ($entity) {
 			$entity->name = ucwords(mb_strtolower($request->get('name')));
