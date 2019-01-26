@@ -30,9 +30,9 @@ class Entity extends Model
 	{
 		$entity = new Entity();
 
-		$entity->name = ucfirst(mb_strtolower($request->get('name')));
+		$entity->name = ucwords(mb_strtolower($request->get('name')));
 		$entity->doc = $request->get('doc') ?: $request->get('nit');
-		$entity->address = ucfirst(mb_strtolower($request->get('address')));
+		$entity->address = ucwords(mb_strtolower($request->get('address')));
 		$entity->phone = $request->get('phone');
 
 		$entity->save();
@@ -49,9 +49,9 @@ class Entity extends Model
     }
 
 		if ($entity) {
-			$entity->name = ucfirst(mb_strtolower($request->get('name')));
+			$entity->name = ucwords(mb_strtolower($request->get('name')));
 			$entity->doc = $request->get('doc') ?: $request->get('nit');
-			$entity->address = ucfirst(mb_strtolower($request->get('address')));
+			$entity->address = ucwords(mb_strtolower($request->get('address')));
 			$entity->phone = $request->get('phone');
 
 			$entity->save();

@@ -54,7 +54,7 @@ class EpsService extends Model
         return $this->create([
             'eps_id' => $request->get('eps_id'),
             'code' => strtoupper($request->get('code')),
-            'name' => ucfirst(mb_strtolower($request->get('name'))),
+            'name' => ucwords(mb_strtolower($request->get('name'))),
             'price' => $request->get('price'),
             'notes' => $request->get('notes'),
         ]);
@@ -68,7 +68,7 @@ class EpsService extends Model
             $service->update([
                 'eps_id' => $request->get('eps_id'),
                 'code' => strtoupper($request->get('code')),
-                'name' => ucfirst(mb_strtolower($request->get('name'))),
+                'name' => ucwords(mb_strtolower($request->get('name'))),
                 'price' => $request->get('price'),
                 'notes' => $request->get('notes'),
             ]);
