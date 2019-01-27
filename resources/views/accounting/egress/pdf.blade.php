@@ -80,7 +80,7 @@ mpdf-->
         Total: $ {{ number_format($egress->amount, 0, ",", ".") }}
     </div>
     -->
-    <div style="text-align: right">Fecha de elaboración: {{ date("d/m/Y") }}</div>
+    <div style="text-align: right">Fecha de elaboración: {{ \Carbon\Carbon::parse($egress->created_at)->format("d/m/Y") }}</div>
     <table width="100%" style="font-family: serif;" cellpadding="10">
         <tr>
             <td width="30%" style="border: 0.1mm solid #888888; ">

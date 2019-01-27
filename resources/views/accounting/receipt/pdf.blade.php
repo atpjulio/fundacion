@@ -80,7 +80,7 @@ mpdf-->
         Total: $ {{ number_format($receipt->amount, 0, ",", ".") }}
     </div>
     -->
-    <div style="text-align: right">Fecha de elaboración: {{ date("d/m/Y") }}</div>
+    <div style="text-align: right">Fecha de elaboración: {{ \Carbon\Carbon::parse($receipt->created_at)->format("d/m/Y") }}</div>
     
     <table width="100%" style="font-family: serif;" cellpadding="10">
         <tr>
