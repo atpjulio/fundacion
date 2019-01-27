@@ -147,8 +147,7 @@ class Receipt extends Model
     protected function getCounter($createdAt)
     {
         $query = $this->where('created_at', 'like', '%'.substr($createdAt, 0, 7).'%')
-            ->where('counter', '<>', 0)
-            ->orderBy('id', 'desc')
+            ->orderBy('created_at', 'desc')
             ->first();
 
         return $query ? $query->counter + 1 : 1;
