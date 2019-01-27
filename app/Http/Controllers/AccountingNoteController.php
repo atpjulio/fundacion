@@ -50,6 +50,10 @@ class AccountingNoteController extends Controller
         $amount = 0.00;
         $amountDebit = 0.00;
 
+        $request->request->add([
+            'created_at' => $request->get('created_at').' '.\Carbon\Carbon::now()->format('H:i:s')
+        ]);
+
         foreach ($request->get('notePucs') as $key => $value) {
             array_push($pucs, [
                 'code' => $value,    
@@ -121,6 +125,10 @@ class AccountingNoteController extends Controller
         $pucs = [];
         $amount = 0.00;
         $amountDebit = 0.00;
+
+        $request->request->add([
+            'created_at' => $request->get('created_at').' '.\Carbon\Carbon::now()->format('H:i:s')
+        ]);
 
         foreach ($request->get('notePucs') as $key => $value) {
             array_push($pucs, [

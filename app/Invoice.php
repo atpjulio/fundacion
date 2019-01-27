@@ -102,6 +102,10 @@ class Invoice extends Model
     {
         $invoice = new Invoice();
 
+        $request->request->add([
+            'created_at' => $request->get('created_at').' '.\Carbon\Carbon::now()->format('H:i:s')
+        ]);
+
         $invoice->number = $request->get('number');
         $invoice->company_id = $request->get('company_id');
         $invoice->authorization_code = $request->get('authorization_code') ?: '';
@@ -110,6 +114,7 @@ class Invoice extends Model
         $invoice->created_at = $request->get('created_at');
         $invoice->eps_id = 0;
         $invoice->multiple = $request->get('multiple') == "1";
+
         if ($invoice->multiple) {
             $invoice->multiple_codes = json_encode($request->get('multiple_codes'));
             $invoice->multiple_days = json_encode($request->get('multiple_days'));
@@ -150,7 +155,12 @@ class Invoice extends Model
         // InvoiceLog::storeRecord($request, config('constants.invoices.action.create'));
 
         if ($invoice->multiple) {
-            $notes = "Factura para las autorizaciones ".join(",", $request->get('multiple_codes'))." de la EPS: ".$invoice->eps->code." - ".$invoice->eps->alias;
+
+            if (is_array($request->get('multiple_codes')) and count($request->get('multiple_codes')) == 1) {
+                $notes = "Factura para la autorización ".join(",", $request->get('multiple_codes'))." de la EPS: ".$invoice->eps->code." - ".$invoice->eps->alias;
+            } else {
+                $notes = "Factura para la(s) autorizacion(es) ".join(",", $request->get('multiple_codes'))." de la EPS: ".$invoice->eps->code." - ".$invoice->eps->alias;
+            }
 
             $pucs = [];
             $pucTotal = 0;
@@ -204,6 +214,10 @@ class Invoice extends Model
         $invoice = $this->find($request->get('id'));
 
         if ($invoice) {
+            $request->request->add([
+                'created_at' => $request->get('created_at').' '.\Carbon\Carbon::now()->format('H:i:s')
+            ]);
+
             $oldAuthorizationCode = $invoice->authorization_code;
             $oldAuthorizationCodes = $invoice->multiple_codes;
 
@@ -279,7 +293,7 @@ class Invoice extends Model
                         $currentAuthorization->update(['invoice_id' => $invoice->id]);
                     }
                 }
-                AccountingNote::updateRecord($invoice, $pucs, $notes, $invoice->total);
+                AccountingNote::updateRecord($invoice, $pucs, $notes, $pucTotal);
             } else {
                 $oldAuthorization = Authorization::findByCode($oldAuthorizationCode);
                 if ($oldAuthorization) {
