@@ -21,8 +21,7 @@ class ReceiptController extends Controller
      */
     public function index()
     {
-        $receipts = Receipt::orderBy('id', 'desc')
-            ->get();
+        $receipts = Receipt::searchRecords('');
 
         return view('accounting.receipt.index', compact('receipts'));
     }
@@ -52,6 +51,10 @@ class ReceiptController extends Controller
         $pucs = [];
         $amount = 0.00;
         $amountDebit = 0.00;
+
+        $request->request->add([
+            'created_at' => $request->get('created_at').' '.\Carbon\Carbon::now()->format('H:i:s')
+        ]);
 
         foreach ($request->get('notePucs') as $key => $value) {
             array_push($pucs, [
@@ -138,6 +141,10 @@ class ReceiptController extends Controller
         $pucs = [];
         $amount = 0.00;
         $amountDebit = 0.00;
+
+        $request->request->add([
+            'created_at' => $request->get('created_at').' '.\Carbon\Carbon::now()->format('H:i:s')
+        ]);
 
         foreach ($request->get('notePucs') as $key => $value) {
             array_push($pucs, [

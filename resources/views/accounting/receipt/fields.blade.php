@@ -11,7 +11,7 @@
 			    	<option value="0">-- Añadir nuevo --</option>
 			    	@foreach($entities as $ent)
 			    		<option value="{{ $ent->id }}"
-			    			@if (isset($receipt) and $receipt->entity_id == $ent->id)
+			    			@if ((isset($receipt) and $receipt->entity_id == $ent->id) or old('entity_id') == $ent->id)
 			    				selected 
 		    				@endif>
 			    			{!! $ent->name !!}

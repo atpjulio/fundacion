@@ -482,3 +482,11 @@ function fillFilteredAccountingNotes(search)
         $('#searching').val(search);
     });
 }
+
+function fillFilteredReceipts(search)
+{
+    $.get("/get-receipts-filtered/" + search, function (data, status) {
+        $('#dynamic-receipts').html(data);
+        $('#searching').val(search);
+    });
+}

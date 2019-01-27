@@ -91,6 +91,7 @@ Route::middleware(['auth', 'both'])->group(function () {
     Route::get('/get-invoice-authorizations/{id}', 'AjaxController@getInvoiceAuthorizations');
     Route::get('/get-full-authorizations/{search}', 'AjaxController@getFullAuthorizations');
     Route::get('/get-egresses-filtered/{search}', 'AjaxController@getEgressesFiltered');
+    Route::get('/get-receipts-filtered/{search}', 'AjaxController@getReceiptsFiltered');
     Route::get('/get-companion-services/{id}', 'AjaxController@getCompanionServices');
     Route::get('/get-multiple-services/{id}', 'AjaxController@getMultipleServices');
     Route::get('/get-invoices-amount/{data}', 'AjaxController@getInvoicesAmount');

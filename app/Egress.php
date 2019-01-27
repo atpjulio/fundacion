@@ -86,7 +86,7 @@ class Egress extends Model
         if ($egress) {
             $counter = $egress->counter ?: 1;
             $createdAt = $request->get('created_at').' '.\Carbon\Carbon::now()->format('H:i:s');
-            // dd($request->get('created_at'), substr($egress->created_at, 0, 10));
+
             if (substr($request->get('created_at'), 0, 7) != substr($egress->created_at, 0, 7)) {
                 $counter = $this->getCounter($createdAt);
             }

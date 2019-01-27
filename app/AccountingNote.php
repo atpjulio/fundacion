@@ -49,11 +49,14 @@ class AccountingNote extends Model
      */
     protected function storeRecord($invoice, $pucs, $notes = null, $amount)
     {
+        $counter = $this->getCounter($invoice->created_at);
+
         $accountingNote = $this->create([
             'invoice_id' => $invoice->id,
             'amount' => $amount,
             'created_at' => $invoice->created_at,
             'notes' => $notes,
+            'counter' => $counter,
         ]);
 
         AccountingNotePuc::storeRecord($accountingNote, $pucs);
@@ -69,11 +72,19 @@ class AccountingNote extends Model
         }
 
         if ($accountingNote) {
+            $counter = $accountingNote->counter ?: 1;
+            $createdAt = $invoice->created_at;
+
+            if (substr($invoice->created_at, 0, 7) != substr($accountingNote->created_at, 0, 7)) {
+                $counter = $this->getCounter($createdAt);
+            }
+
             $accountingNote->update([
                 'invoice_id' => $invoice->id,
                 'amount' => $amount,
                 'created_at' => $invoice->created_at,
                 'notes' => $notes,
+                'counter' => $counter,
             ]);
 
             AccountingNotePuc::updateRecord($accountingNote, $pucs);
@@ -85,8 +96,7 @@ class AccountingNote extends Model
     protected function getCounter($createdAt)
     {
         $query = $this->where('created_at', 'like', '%'.substr($createdAt, 0, 7).'%')
-            ->where('counter', '<>', 0)
-            ->orderBy('id', 'desc')
+            ->orderBy('created_at', 'desc')
             ->first();
 
         return $query ? $query->counter + 1 : 1;
@@ -110,7 +120,7 @@ class AccountingNote extends Model
             if (!$note->invoice_id) {
                 $note->invoice_id = $note->id;
             }
-            
+
             $note->save();
             $count++;
 

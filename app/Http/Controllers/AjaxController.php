@@ -11,6 +11,8 @@ use App\Invoice;
 use App\Patient;
 use Illuminate\Http\Request;
 use App\Egress;
+use App\AccountingNote;
+use App\Receipt;
 
 class AjaxController extends Controller
 {
@@ -203,8 +205,14 @@ class AjaxController extends Controller
 
     public function getAccountingNotesFiltered($search)
     {
-        $egresses = Egress::searchRecords($search);
+        $egresses = AccountingNote::searchRecords($search);
         return view('partials._egresses', compact('egresses'));
+    }
+
+    public function getReceiptsFiltered($search)
+    {
+        $receipts = Receipt::searchRecords($search);
+        return view('partials._receipts', compact('receipts'));
     }
 
 }

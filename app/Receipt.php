@@ -14,6 +14,7 @@ class Receipt extends Model
         'amount',
         'concept',
         'created_at',
+        'counter'
     ];
     /**
      * The attributes that should be mutated to dates.
@@ -50,7 +51,7 @@ class Receipt extends Model
      */
     public function getNumberAttribute()
     {
-        return 'R-'.\Carbon\Carbon::parse($this->created_at)->format("Ym").sprintf("%05d", $this->id);
+        return 'R-'.\Carbon\Carbon::parse($this->created_at)->format("Ym").sprintf("%05d", $this->counter);
     }
 
     /**
@@ -58,11 +59,14 @@ class Receipt extends Model
      */
     protected function storeRecord($request, $pucs, $amount)
     {
+        $counter = $this->getCounter($request->get('created_at'));
+
         $receipt = $this->create([
             'entity_id' => $request->get('entity_id'),
             'concept' => $request->get('concept'),
             'amount' => $amount,
             'created_at' => $request->get('created_at'),
+            'counter' => $counter,
         ]);
 
         ReceiptPuc::storeRecord($receipt, $pucs);
@@ -73,11 +77,19 @@ class Receipt extends Model
         $receipt = $this->find($id);
 
         if ($receipt) {
+            $counter = $receipt->counter ?: 1;
+            $createdAt = $request->get('created_at');
+
+            if (substr($request->get('created_at'), 0, 7) != substr($receipt->created_at, 0, 7)) {
+                $counter = $this->getCounter($createdAt);
+            }
+
             $receipt->update([
                 'entity_id' => $request->get('entity_id'),
                 'concept' => $request->get('concept'),
                 'amount' => $amount,
                 'created_at' => $request->get('created_at'),
+                'counter' => $counter,
             ]);
 
             ReceiptPuc::updateRecord($receipt, $pucs);
@@ -90,7 +102,7 @@ class Receipt extends Model
     {
         $data = explode(",", $line);
         $epsCode = $data[0];
-        $createdAt = isset($data[1]) ? \Carbon\Carbon::parse($data[1])->format("Y-m-d") : '';
+        $createdAt = isset($data[1]) ? \Carbon\Carbon::parse($data[1])->format("Y-m-d").' '.\Carbon\Carbon::now()->format('H:i:s') : '';
         $number = isset($data[2]) ? $data[2] : '';
         $amount = isset($data[3]) ? $data[3] : '';
 
@@ -128,6 +140,52 @@ class Receipt extends Model
         ReceiptPuc::storeRecord($receipt, $pucs);
 
         return $receipt;
+    }
+
+    protected function getCounter($createdAt)
+    {
+        $query = $this->where('created_at', 'like', '%'.substr($createdAt, 0, 7).'%')
+            ->where('counter', '<>', 0)
+            ->orderBy('id', 'desc')
+            ->first();
+
+        return $query ? $query->counter + 1 : 1;
+    }
+
+    protected function fixCounter($limit = 10)
+    {
+        $receipts = $this->where('counter', 0)
+            ->get();
+
+        if (!$receipts) {
+            return 'No receipts to fix';
+        }
+
+        echo "\nCount: ".count($receipts)."\n";
+
+        $count = 0;
+        foreach ($receipts as $key => $receipt) {
+            $receipt->counter = $this->getCounter($receipt->created_at);
+            $receipt->created_at = $receipt->created_at.' '.\Carbon\Carbon::now()->format('H:i:s');
+            $receipt->save();
+            $count++;
+
+            if ($count == $limit) {
+                break;
+            }
+        }
+
+        return 'Processed '.$count.' receipt(s)';
+    }
+
+    protected function searchRecords($search = '')
+    {
+        return $this::join('entities', 'receipts.entity_id', '=', 'entities.id')
+            ->select('receipts.*', 'entities.name', 'entities.doc')
+            ->where('entities.name', 'like', '%'.$search.'%')
+            // ->orWhere('entities.doc', 'like', '%'.$search.'%')
+            ->orderBy('receipts.created_at', 'DESC')
+            ->paginate(config('constants.pagination'));
     }
 
 }
