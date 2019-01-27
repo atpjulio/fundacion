@@ -117,10 +117,19 @@ class Egress extends Model
 
     protected function searchRecords($search = '')
     {
-        return $this::join('entities', 'egresses.entity_id', '=', 'entities.id')
+        $query = $this::join('entities', 'egresses.entity_id', '=', 'entities.id')
             ->select('egresses.*', 'entities.name', 'entities.doc')
             ->where('entities.name', 'like', '%'.$search.'%')
-            ->orWhere('entities.doc', 'like', '%'.$search.'%')
+            ->orWhere('entities.doc', 'like', '%'.$search.'%');
+
+        if (is_numeric($search)) {
+            if ($search > 9999) {
+                $search = substr($search, 0, 4).'-'.substr($search, 4);
+            }
+            $query = $query->orWhere('egresses.created_at', 'like', $search.'%');
+        }
+
+        return $query
             ->orderBy('egresses.created_at', 'DESC')
             ->paginate(config('constants.pagination'));
     }

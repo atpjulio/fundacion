@@ -19,8 +19,7 @@ class AccountingNoteController extends Controller
      */
     public function index()
     {
-        $notes = AccountingNote::orderBy('id', 'DESC')
-            ->get();
+        $notes = AccountingNote::searchRecords('');
 
         return view('accounting.note.index', compact('notes'));
     }

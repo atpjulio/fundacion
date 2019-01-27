@@ -132,4 +132,22 @@ class AccountingNote extends Model
         return 'Processed '.$count.' note(s)';
     }
 
+    protected function searchRecords($search = '')
+    {
+        $query = $this::join('invoices', 'accounting_notes.invoice_id', '=', 'invoices.id')
+            ->select('accounting_notes.*', 'invoices.number');
+            // ->where('invoices.number', 'like', '%'.$search.'%');
+
+        if (is_numeric($search)) {
+            if ($search > 9999) {
+                $search = substr($search, 0, 4).'-'.substr($search, 4);
+            }
+            $query = $query->orWhere('accounting_notes.created_at', 'like', $search.'%');
+        }
+
+        return $query
+            ->orderBy('accounting_notes.created_at', 'DESC')
+            ->paginate(config('constants.pagination'));
+    }
+
 }

@@ -205,8 +205,8 @@ class AjaxController extends Controller
 
     public function getAccountingNotesFiltered($search)
     {
-        $egresses = AccountingNote::searchRecords($search);
-        return view('partials._egresses', compact('egresses'));
+        $notes = AccountingNote::searchRecords($search);
+        return view('partials._notes', compact('notes'));
     }
 
     public function getReceiptsFiltered($search)

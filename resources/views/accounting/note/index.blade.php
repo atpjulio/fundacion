@@ -7,7 +7,7 @@
 @section('content')
     <div class="title-block">
         <div class="float-left">
-            <h3 class="title"> Notas Internas (Total: {{ count($notes) }})</h3>
+            <h3 class="title"> Notas Internas </h3>
             <p class="title-description"> Aquí puedes ver el listado de todas las notas internas y crear, actualizar o eliminar cualquiera de ellas </p>
         </div>
         <div class="float-right animated fadeInRight">
@@ -24,34 +24,16 @@
                 <div class="card">
                     <div class="card-block">
                         <div class="card-title-block">
-                            <h3 class="title"> Notas internas registradas en el sistema </h3>
+                            <div class="float-left">
+                                <h3 class="title"> Notas internas registradas en el sistema </h3>
+                            </div>
+                            <div class="dataTables_filter float-right form-inline mb-3 mt-0">
+                                <label class="mr-2">Buscar:</label>
+                                <input type="search" class="form-control form-control-sm" placeholder="" id="searching">
+                            </div>      
                         </div>
-                        <div class="table-responsive">
-                            <table class="table table-striped table-bordered table-condensed table-hover" id="myTable">
-                                <thead>
-                                <th style="width: 100px;"># Nota</th>
-                                <th>Monto</th>
-                                <th>Fecha</th>
-                                <th>Opciones</th>
-                                </thead>
-                                <tbody>
-                                @foreach($notes as $note)
-                                    <tr>
-                                        <td>{!! $note->number !!}</td>
-                                        <td>$ {!! number_format($note->amount, 2, ",", ".") !!}</td>
-                                        <td>{!! \Carbon\Carbon::parse($note->created_at)->format("d/m/Y") !!}</td>
-                                        <td>
-                                            <a href="{{ route('accounting-note.edit', $note->id) }}" class="btn btn-pill-left btn-info btn-sm">
-                                                Editar
-                                            </a>
-                                            <a href="javascript:showModal('accounting-note-delete/{{ $note->id }}')" class="btn btn-pill-right btn-danger btn-sm">
-                                                Borrar
-                                            </a>
-                                        </td>
-                                    </tr>
-                                @endforeach
-                                </tbody>
-                            </table>
+                        <div id="dynamic-notes">
+                            @include('partials._notes')
                         </div>
                     </div>
                 </div>
@@ -63,5 +45,5 @@
 @push('scripts')
     <script src="{{ asset('js/jquery.dataTables.min.js') }}"></script>
     <script src="{{ asset('js/dataTables.bootstrap.min.js') }}"></script>
-    <script src="{{ asset('js/accounting/note/index.js') }}"></script>
+    <script src="{{ asset('js/accounting/note/filter.js').'?version='.config('constants.stylesVersion') }}"></script>
 @endpush
