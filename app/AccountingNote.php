@@ -106,7 +106,11 @@ class AccountingNote extends Model
         $count = 0;
         foreach ($notes as $key => $note) {
             $note->counter = $this->getCounter($note->created_at);
-            $note->invoice_id = $note->id;
+
+            if (!$note->invoice_id) {
+                $note->invoice_id = $note->id;
+            }
+            
             $note->save();
             $count++;
 
