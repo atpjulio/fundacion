@@ -83,6 +83,7 @@ Route::middleware(['auth', 'both'])->group(function () {
 
     Route::post('/update-new-invoice', 'AjaxController@updateNewInvoice');
 
+    Route::get('/get-accounting-notes-filtered/{search}', 'AjaxController@getAccountingNotesFiltered');
     Route::get('/get-eps-patients-filtered/{search}', 'AjaxController@getEpsPatientsFiltered');
     Route::get('/get-global-authorizations/{search}', 'AjaxController@getGlobalAuthorizations');
     Route::get('/get-invoices-amount-number/{data}', 'AjaxController@getInvoicesAmountNumber');

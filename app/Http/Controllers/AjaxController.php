@@ -201,4 +201,10 @@ class AjaxController extends Controller
         return view('partials._egresses', compact('egresses'));
     }
 
+    public function getAccountingNotesFiltered($search)
+    {
+        $egresses = Egress::searchRecords($search);
+        return view('partials._egresses', compact('egresses'));
+    }
+
 }

@@ -14,6 +14,7 @@ class AccountingNote extends Model
         'amount',
         'notes',
         'created_at',
+        'counter',
     ];
     /**
      * The attributes that should be mutated to dates.
@@ -40,7 +41,7 @@ class AccountingNote extends Model
      */
     public function getNumberAttribute()
     {
-        return 'N-'.\Carbon\Carbon::parse($this->created_at)->format("Ym").sprintf("%05d", $this->id);
+        return 'N-'.\Carbon\Carbon::parse($this->created_at)->format("Ym").sprintf("%05d", $this->counter);
     }
 
     /**
@@ -80,4 +81,41 @@ class AccountingNote extends Model
 
         return $accountingNote;
     }
+
+    protected function getCounter($createdAt)
+    {
+        $query = $this->where('created_at', 'like', '%'.substr($createdAt, 0, 7).'%')
+            ->where('counter', '<>', 0)
+            ->orderBy('id', 'desc')
+            ->first();
+
+        return $query ? $query->counter + 1 : 1;
+    }
+
+    protected function fixCounter($limit = 10)
+    {
+        $notes = $this->where('counter', 0)
+            ->get();
+
+        if (!$notes) {
+            return 'No accounting notes to fix';
+        }
+
+        echo "\nCount: ".count($notes)."\n";
+
+        $count = 0;
+        foreach ($notes as $key => $note) {
+            $note->counter = $this->getCounter($note->created_at);
+            // $note->invoice_id = $note->id;
+            $note->save();
+            $count++;
+
+            if ($count == $limit) {
+                break;
+            }
+        }
+
+        return 'Processed '.$count.' note(s)';
+    }
+
 }

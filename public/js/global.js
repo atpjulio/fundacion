@@ -475,3 +475,10 @@ function fillFilteredEgresses(search)
     });
 }
 
+function fillFilteredAccountingNotes(search)
+{
+    $.get("/get-accounting-notes-filtered/" + search, function (data, status) {
+        $('#dynamic-notes').html(data);
+        $('#searching').val(search);
+    });
+}
