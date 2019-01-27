@@ -115,11 +115,13 @@ class Receipt extends Model
         if (!$entity) {
             return null;
         }
+        $counter = $this->getCounter($createdAt);
         $receipt = $this->create([
             'entity_id' => $entity->id,
             'concept' => 'Pago de factura '.$number.' de '.$eps->name,
             'amount' => floatval($amount),
             'created_at' => $createdAt,
+            'counter' => $counter,
         ]);
 
         $pucs = [
@@ -166,7 +168,7 @@ class Receipt extends Model
         $count = 0;
         foreach ($receipts as $key => $receipt) {
             $receipt->counter = $this->getCounter($receipt->created_at);
-            $receipt->created_at = $receipt->created_at.' '.\Carbon\Carbon::now()->format('H:i:s');
+            $receipt->created_at = \Carbon\Carbon::parse($receipt->created_at)->format("Y-m-d").' '.\Carbon\Carbon::now()->format('H:i:s');
             $receipt->save();
             $count++;
 
