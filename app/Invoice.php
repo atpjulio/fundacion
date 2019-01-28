@@ -346,7 +346,10 @@ class Invoice extends Model
     {
         if ($initialDate and $finalDate) {
             return $this->where('eps_id', $epsId)
-                ->whereBetween('created_at', [$initialDate, $finalDate])
+                ->whereBetween('created_at', [
+                    substr($initialDate, 0, 10).' 00:00:00', 
+                    substr($finalDate, 0, 10).' 23:59:59',
+                ])
                 ->get();
         }
 
