@@ -91,6 +91,10 @@ class Egress extends Model
                 $counter = $this->getCounter($createdAt);
             }
 
+            while($this->checkIfExists($createdAt, $counter)) {
+                $counter++;
+            }
+
             $egress->update([
                 'company_id' => 1,  
                 'amount' => $amount,
@@ -132,6 +136,13 @@ class Egress extends Model
         return $query
             ->orderBy('egresses.created_at', 'DESC')
             ->paginate(config('constants.pagination'));
+    }
+
+    protected function checkIfExists($createdAt, $counter)
+    {
+        return $this->where('created_at', 'like', '%'.substr($createdAt, 0, 7).'%')
+            ->where('counter', $counter)
+            ->first();
     }
 
 }

@@ -79,6 +79,10 @@ class AccountingNote extends Model
                 $counter = $this->getCounter($createdAt);
             }
 
+            while($this->checkIfExists($createdAt, $counter)) {
+                $counter++;
+            }
+
             $accountingNote->update([
                 'invoice_id' => $invoice->id,
                 'amount' => $amount,
@@ -150,4 +154,10 @@ class AccountingNote extends Model
             ->paginate(config('constants.pagination'));
     }
 
+    protected function checkIfExists($createdAt, $counter)
+    {
+        return $this->where('created_at', 'like', '%'.substr($createdAt, 0, 7).'%')
+            ->where('counter', $counter)
+            ->first();
+    }
 }

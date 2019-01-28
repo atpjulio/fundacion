@@ -116,6 +116,11 @@ class Receipt extends Model
             return null;
         }
         $counter = $this->getCounter($createdAt);
+
+        while($this->checkIfExists($createdAt, $counter)) {
+            $counter++;
+        }
+
         $receipt = $this->create([
             'entity_id' => $entity->id,
             'concept' => 'Pago de factura '.$number.' de '.$eps->name,
@@ -195,6 +200,13 @@ class Receipt extends Model
         return $query
             ->orderBy('receipts.created_at', 'DESC')
             ->paginate(config('constants.pagination'));
+    }
+
+    protected function checkIfExists($createdAt, $counter)
+    {
+        return $this->where('created_at', 'like', '%'.substr($createdAt, 0, 7).'%')
+            ->where('counter', $counter)
+            ->first();
     }
 
 }
