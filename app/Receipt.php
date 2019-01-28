@@ -84,6 +84,10 @@ class Receipt extends Model
                 $counter = $this->getCounter($createdAt);
             }
 
+            while($this->checkIfExistsById($createdAt, $counter, $id)) {
+                $counter++;
+            }
+        
             $receipt->update([
                 'entity_id' => $request->get('entity_id'),
                 'concept' => $request->get('concept'),
@@ -116,10 +120,6 @@ class Receipt extends Model
             return null;
         }
         $counter = $this->getCounter($createdAt);
-
-        while($this->checkIfExists($createdAt, $counter)) {
-            $counter++;
-        }
 
         $receipt = $this->create([
             'entity_id' => $entity->id,
@@ -205,6 +205,14 @@ class Receipt extends Model
     protected function checkIfExists($createdAt, $counter)
     {
         return $this->where('created_at', 'like', '%'.substr($createdAt, 0, 7).'%')
+            ->where('counter', $counter)
+            ->first();
+    }
+
+    protected function checkIfExistsById($createdAt, $counter, $id)
+    {
+        return $this->where('created_at', 'like', '%'.substr($createdAt, 0, 7).'%')
+            ->where('id', '<>', $id)
             ->where('counter', $counter)
             ->first();
     }

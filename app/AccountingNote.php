@@ -79,7 +79,7 @@ class AccountingNote extends Model
                 $counter = $this->getCounter($createdAt);
             }
 
-            while($this->checkIfExists($createdAt, $counter)) {
+            while($this->checkIfExistsById($createdAt, $counter, $id)) {
                 $counter++;
             }
 
@@ -160,4 +160,13 @@ class AccountingNote extends Model
             ->where('counter', $counter)
             ->first();
     }
+
+    protected function checkIfExistsById($createdAt, $counter, $id)
+    {
+        return $this->where('created_at', 'like', '%'.substr($createdAt, 0, 7).'%')
+            ->where('id', '<>', $id)
+            ->where('counter', $counter)
+            ->first();
+    }
+
 }
