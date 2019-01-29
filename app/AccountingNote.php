@@ -100,7 +100,7 @@ class AccountingNote extends Model
     protected function getCounter($createdAt)
     {
         $query = $this->where('created_at', 'like', '%'.substr($createdAt, 0, 7).'%')
-            ->orderBy('created_at', 'desc')
+            ->orderBy('counter', 'desc')
             ->first();
 
         return $query ? $query->counter + 1 : 1;
@@ -150,6 +150,7 @@ class AccountingNote extends Model
         }
 
         return $query
+            ->orderBy('accounting_notes.counter', 'DESC')
             ->orderBy('accounting_notes.created_at', 'DESC')
             ->paginate(config('constants.pagination'));
     }

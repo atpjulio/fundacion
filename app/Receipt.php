@@ -152,7 +152,7 @@ class Receipt extends Model
     protected function getCounter($createdAt)
     {
         $query = $this->where('created_at', 'like', '%'.substr($createdAt, 0, 7).'%')
-            ->orderBy('created_at', 'desc')
+            ->orderBy('counter', 'desc')
             ->first();
 
         return $query ? $query->counter + 1 : 1;
@@ -198,6 +198,7 @@ class Receipt extends Model
         }
 
         return $query
+            ->orderBy('receipts.counter', 'DESC')
             ->orderBy('receipts.created_at', 'DESC')
             ->paginate(config('constants.pagination'));
     }

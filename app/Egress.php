@@ -134,6 +134,7 @@ class Egress extends Model
         }
 
         return $query
+            ->orderBy('egresses.counter', 'DESC')
             ->orderBy('egresses.created_at', 'DESC')
             ->paginate(config('constants.pagination'));
     }
