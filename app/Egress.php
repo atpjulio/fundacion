@@ -65,7 +65,7 @@ class Egress extends Model
      */
     protected function storeRecord($pucs, $request, $amount)
     {
-        $createdAt = $request->get('created_at').' '.\Carbon\Carbon::now()->format('H:i:s');
+        $createdAt = $request->get('created_at');//.' '.\Carbon\Carbon::now()->format('H:i:s');
         $counter = $this->getCounter($createdAt);
         
         $egress = $this->create([
