@@ -150,8 +150,8 @@ class AccountingNote extends Model
         }
 
         return $query
-            ->orderBy('accounting_notes.counter', 'DESC')
             ->orderBy('accounting_notes.created_at', 'DESC')
+            ->orderBy('accounting_notes.counter', 'DESC')
             ->paginate(config('constants.pagination'));
     }
 

@@ -198,8 +198,8 @@ class Receipt extends Model
         }
 
         return $query
-            ->orderBy('receipts.counter', 'DESC')
             ->orderBy('receipts.created_at', 'DESC')
+            ->orderBy('receipts.counter', 'DESC')
             ->paginate(config('constants.pagination'));
     }
 
