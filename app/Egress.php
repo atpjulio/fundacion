@@ -134,7 +134,7 @@ class Egress extends Model
         }
 
         return $query
-            ->orderByRaw('SUBSTRING(egresses.created_at, 0, 7)', 'DESC')
+            ->orderByRaw('DATE(SUBSTRING(egresses.created_at, 0, 7))', 'DESC')
             //->orderBy('egresses.created_at', 'DESC')
             ->orderBy('egresses.counter', 'DESC')
             ->paginate(config('constants.pagination'));
