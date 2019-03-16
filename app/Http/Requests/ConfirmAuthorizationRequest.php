@@ -26,17 +26,15 @@ class ConfirmAuthorizationRequest extends FormRequest
     public function rules()
     {
         $rules = [
-//            'code' => 'unique:authorizations',
+            'code' => [
+                Rule::unique('authorizations', 'code')->ignore($this->request->get('code'))->whereNull('deleted_at')   
+            ],
             'eps_id' => 'required',
             'eps_service_id' => 'required|numeric|min:1',
             'patient_id' => 'required',
             'date_from' => 'required|date_format:Y-m-d',
             'total_days' => 'required',
         ];
-
-        if (Authorization::checkIfExists($this->request->get('code'))) {
-            $rules['code'] = 'unique:authorizations';
-        }
 
         if ($this->request->get('companion')) {
             $rules['companion_dni'] = 'required';

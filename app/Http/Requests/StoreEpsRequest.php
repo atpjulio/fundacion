@@ -23,18 +23,25 @@ class StoreEpsRequest extends FormRequest
      */
     public function rules()
     {
-        return [
-            'code' => 'required|min:6|unique:eps',
-            'name' => 'required|min:3',
-            'nit' => 'required|min:9|unique:eps',
-            // 'daily_price' => 'required',
-            'address' => 'required',
-            'city' => 'required|min:3',
-            'state' => 'required',
-            'phone' => 'required|min:7',
-            'names.*' => 'required',
-            'prices.*' => 'required',
-        ];
+      return [
+        'code' => [
+          'required', 
+          'min:6',
+          Rule::unique('eps', 'code')->ignore($this->request->get('code'))->whereNull('deleted_at')   
+        ],
+        'name' => 'required|min:3',
+        'nit' => [
+          'required',
+          'min:9',
+          Rule::unique('eps', 'nit')->ignore($this->request->get('nit'))->whereNull('deleted_at')
+        ],
+        'address' => 'required',
+        'city' => 'required|min:3',
+        'state' => 'required',
+        'phone' => 'required|min:7',
+        'names.*' => 'required',
+        'prices.*' => 'required',
+      ];
     }
 
     public function messages()

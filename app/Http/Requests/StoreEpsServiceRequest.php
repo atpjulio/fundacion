@@ -4,6 +4,8 @@ namespace App\Http\Requests;
 
 use App\Eps;
 use Illuminate\Foundation\Http\FormRequest;
+use App\EpsService;
+use Illuminate\Validation\Rule;
 
 class StoreEpsServiceRequest extends FormRequest
 {
@@ -24,12 +26,17 @@ class StoreEpsServiceRequest extends FormRequest
      */
     public function rules()
     {
-        return [
+        $rules = [
             'eps_id' => 'required',
-            'code' => 'required|unique:eps_services,code,eps_id',
+            'code' => [
+                'required',
+                Rule::unique('eps_services', 'code', 'eps_id')->ignore($this->request->get('code'))->whereNull('deleted_at')
+            ],
             'name' => 'required',
             'price' => 'numeric',
         ];
+        
+        return $rules;
     }
 
 }

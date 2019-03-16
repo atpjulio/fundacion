@@ -24,8 +24,12 @@ class StoreInvoiceRequest extends FormRequest
     public function rules()
     {
         $rules = [
-            'company_id' => 'required',
-            'number' => 'required|numeric|unique:invoices',
+            'company_id' => 'required',            
+            'number' => [
+                'required',
+                'numeric',
+                Rule::unique('invoices', 'number')->ignore($this->request->get('number'))->whereNull('deleted_at') 
+            ]
         ];
 
         if ($this->request->get('multiple') == "1") {
