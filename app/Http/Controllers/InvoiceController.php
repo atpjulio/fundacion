@@ -334,6 +334,7 @@ class InvoiceController extends Controller
         $company = Company::find($companyId);
         $eps = Eps::find($epsId);
 
+        ini_set("pcre.backtrack_limit", "5000000");
         $html = \View::make('invoice.pdf_volume', compact('invoices', 'company', 'eps', 'initialDate', 'finalDate'));
         $mpdf = new \Mpdf\Mpdf([
             'margin_left' => 20,
