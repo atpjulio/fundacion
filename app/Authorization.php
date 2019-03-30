@@ -210,73 +210,79 @@ class Authorization extends Model
     {
         $authorization = $this->find($request->get('id'));
 
-        if ($authorization) {
-            try {
-                DB::beginTransaction();
+        if (!$authorization) {
+            return null;
+        }
+        try {
+            DB::beginTransaction();
 
-                $authorization->eps_id = $request->get('eps_id');
-                $authorization->eps_service_id = $request->get('eps_service_id');
-                $authorization->patient_id = $request->get('patient_id');
-                $oldCode = $authorization->code;
-                $authorization->code = $request->get('code');
-                if ($authorization->codec == '' or empty($request->get('code'))) {
-                    $authorization->code = $oldCode;
-                }
-
-                $authorization->date_from = $request->get('date_from');
-                $authorization->date_to = \Carbon\Carbon::parse($request->get('date_from'))->addDays($request->get('total_days'))->format("Y-m-d");
-                $authorization->notes = $request->get('notes');
-                $authorization->status = config('constants.status.active');
-                $authorization->diagnosis = ucwords(mb_strtolower($request->get('diagnosis')));
-                $authorization->location = config('constants.patient.location')[$request->get('location')];
-                $authorization->companion = ($request->get('companion') == "1");
-
-                $authorization->multiple = 0;
-                if ($request->get('multiple_services')) {
-                    $authorization->multiple = config('constants.status.active');
-                    $authorization->multiple_services = null;
-                }
-
-                if ($authorization->invoice_id > 0) {
-                    $invoice = $authorization->invoice;
-                    if ($invoice->multiple) {
-                        $invoiceCodes = json_decode($invoice->multiple_codes, true);
-                        foreach ($invoiceCodes as $index => $code) {
-                            if ($code == $oldCode) {
-                                $invoiceCodes[$index] = $authorization->code;
-                                break;
-                            }
-                        }
-                        $invoice->multiple_codes = json_encode($invoiceCodes);
-                    } else {
-                        $invoice->authorization_code = $authorization->code;
-                    }
-                    $invoice->save();
-                }
-                
-                $authorization->save();
-
-                if ($authorization->companion) {
-                    AuthorizationCompanion::updateRecord($authorization->id, $request);
-                }
-                AuthorizationPrice::updateRecord($authorization, $request);
-                AuthorizationDate::updateRecord($authorization, $request);
-                AuthorizationService::updateRecord($authorization, $request);
-                Patient::createOrUpdatePhone($authorization->patient_id, $request);
-
-                $invoice = Invoice::getInvoiceByAuthorizationCode($authorization->code);
-                if ($invoice) {
-                    $invoice->update([
-                        'total' => $authorization->eps->daily_price * $authorization->days
-                    ]);
-                }
-
-                DB::commit();
-            } catch (\Exception $e) {
-                DB::rollback();
-                dd($e);
+            $authorization->eps_id = $request->get('eps_id');
+            $authorization->eps_service_id = $request->get('eps_service_id');
+            $authorization->patient_id = $request->get('patient_id');
+            $oldCode = $authorization->code;
+            $authorization->code = $request->get('code');
+            if ($authorization->codec == '' or empty($request->get('code'))) {
+                $authorization->code = $oldCode;
             }
 
+            $authorization->date_from = $request->get('date_from');
+            $authorization->date_to = \Carbon\Carbon::parse($request->get('date_from'))->addDays($request->get('total_days'))->format("Y-m-d");
+            $authorization->notes = $request->get('notes');
+            $authorization->status = config('constants.status.active');
+            $authorization->diagnosis = ucwords(mb_strtolower($request->get('diagnosis')));
+            $authorization->location = config('constants.patient.location')[$request->get('location')];
+            $authorization->companion = ($request->get('companion') == "1");
+
+            $authorization->multiple = 0;
+            if ($request->get('multiple_services')) {
+                $authorization->multiple = config('constants.status.active');
+                $authorization->multiple_services = null;
+            }
+
+            if ($authorization->invoice_id > 0) {
+                $invoice = $authorization->invoice;
+                if ($invoice->multiple) {
+                    $invoiceCodes = json_decode($invoice->multiple_codes, true);
+                    $invoiceDays = json_decode($invoice->multiple_days, true);
+                    $invoiceTotals = json_decode($invoice->multiple_totals, true);
+                    foreach ($invoiceCodes as $index => $code) {
+                        if ($code == $oldCode) {
+                            $invoiceCodes[$index] = $authorization->code;
+                            $invoiceDays[$index] = $authorization->days."";
+                            $invoiceTotals[$index] = $authorization->price->daily_price * $authorization->days;
+                            break;
+                        }
+                    }
+                    $invoice->multiple_codes = json_encode($invoiceCodes);
+                    $invoice->multiple_days = json_encode($invoiceDays);
+                    $invoice->multiple_totals = json_encode($invoiceTotals);
+                } else {
+                    $invoice->authorization_code = $authorization->code;
+                }
+                $invoice->save();
+            }
+            
+            $authorization->save();
+
+            if ($authorization->companion) {
+                AuthorizationCompanion::updateRecord($authorization->id, $request);
+            }
+            AuthorizationPrice::updateRecord($authorization, $request);
+            AuthorizationDate::updateRecord($authorization, $request);
+            AuthorizationService::updateRecord($authorization, $request);
+            Patient::createOrUpdatePhone($authorization->patient_id, $request);
+
+            $invoice = Invoice::getInvoiceByAuthorizationCode($authorization->code);
+            if ($invoice) {
+                $invoice->update([
+                    'total' => $authorization->eps->daily_price * $authorization->days
+                ]);
+            }
+
+            DB::commit();
+        } catch (\Exception $e) {
+            DB::rollback();
+            dd($e);
         }
 
         return $authorization;

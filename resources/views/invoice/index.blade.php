@@ -33,7 +33,7 @@
                             </div>
                         </div>
                         <div id="dynamic-invoices">
-                          @include('partials._invoices')
+                            @include('partials._invoices')
                         </div>
                     </div>
                 </div>
