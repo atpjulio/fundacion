@@ -210,6 +210,43 @@ class EgressController extends Controller
         $mpdf->SetAuthor($egress->company->name);
         $mpdf->SetDisplayMode('fullpage');
         $mpdf->WriteHTML($html);
-        $mpdf->Output('Recibo No '.$egress->number.'.pdf', 'I');
+        $mpdf->Output('Comprobante de Egreso No '.$egress->number.'.pdf', 'I');
     }
+
+    public function volume(Request $request)
+    {
+        $egressesAmount = count(Egress::getEgressesByDate(date("Y-m")));
+        return view('accounting.egress.volume', compact('egressesAmount'));
+    }
+
+    public function volumePDF(Request $request)
+    {
+        $month = sprintf("%02d", $request->get('month'));
+        $year = $request->get('year');
+        $egresses = Egress::getEgressesByDate($year.'-'.$month);
+
+        if (count($egresses) == 0) {
+            Session::flash('message_danger', 'No hay comprobantes de egreso disponibles para el mes y año seleccionado');
+            return redirect()->back();
+        }
+
+        ini_set("pcre.backtrack_limit", "5000000");
+
+        $html = \View::make('accounting.egress.volume_pdf', compact('egresses'));
+        $mpdf = new \Mpdf\Mpdf([
+            'margin_left' => 20,
+            'margin_right' => 15,
+            'margin_top' => 48,
+            'margin_bottom' => 25,
+            'margin_header' => 10,
+            'margin_footer' => 10
+        ]);
+        $mpdf->SetProtection(array('print'));
+        $mpdf->SetTitle("Comprobantes de Egreso del mes de ".config('constants.months.'.$month));
+        $mpdf->SetAuthor("Fundación");
+        $mpdf->SetDisplayMode('fullpage');
+        $mpdf->WriteHTML($html);
+        $mpdf->Output("Comprobantes de Egreso del mes de ".config('constants.months.'.$month).'.pdf', 'I');
+    }
+
 }

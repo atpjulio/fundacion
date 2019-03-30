@@ -155,4 +155,11 @@ class Egress extends Model
             ->first();
     }
 
+    protected function getEgressesByDate($yearMonth)
+    {
+        return $this->whereBetween('created_at', [
+            $yearMonth.'-01 00:00:00', $yearMonth.'-31 23:59:59'
+        ])->get();
+    }
+
 }

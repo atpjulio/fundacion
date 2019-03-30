@@ -490,3 +490,10 @@ function fillFilteredReceipts(search)
         $('#searching').val(search);
     });
 }
+
+function fillEgressesByDate(yearMonth)
+{
+    $.get("/get-egresses-amount/" + yearMonth, function (data, status) {
+        $('#dynamic-egress-amount').html(data);
+    });
+}

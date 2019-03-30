@@ -7,7 +7,7 @@
 @section('content')
     <div class="title-block">
         <div class="float-left">
-            <h3 class="title"> Listado de Autorizaciones Incompletas (Total: {{ count($authorizations) }})</h3>
+            <h3 class="title"> Listado de Autorizaciones Sin Número de Autorización  (Total: {{ count($authorizations) }})</h3>
             <p class="title-description"> Aquí puedes ver el listado de todas las autorizaciones incompletas </p>
         </div>
         <div class="float-right animated fadeInRight">
@@ -52,7 +52,7 @@
                                             <a href="{{ route('authorization.excel', $authorization->id) }}" class="btn btn-secondary btn-sm">
                                                 Planilla
                                             </a>
-                                            <a href="" data-toggle="modal" data-target="#confirm-modal-{{ $authorization->id }}" class="btn btn-pill-right btn-danger btn-sm">
+                                            <a href="javascript:showModal('authorization/delete/{{ $authorization->id }}')" class="btn btn-pill-right btn-danger btn-sm">
                                                 Borrar
                                             </a>
                                             @endrole
@@ -66,7 +66,6 @@
                                             @endrole
                                         </td>
                                     </tr>
-                                    @include('authorization.delete_modal')
                                 @endforeach
                                 </tbody>
                             </table>

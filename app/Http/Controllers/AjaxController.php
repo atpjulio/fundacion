@@ -96,7 +96,6 @@ class AjaxController extends Controller
 
         $invoicesAmount = count(Invoice::getInvoicesByEpsId($epsId, $initialDate, $finalDate));
         return view('partials._invoice_amount', compact('invoicesAmount'));
-
     }
 
     public function getInvoicesAmountNumber($data)
@@ -107,7 +106,6 @@ class AjaxController extends Controller
 
         $invoicesAmount = count(Invoice::getInvoicesByEpsIdNumber($epsId, $initialDate, $finalDate));
         return view('partials._invoice_amount', compact('invoicesAmount'));
-
     }
 
     public function getFullAuthorizations($search)
@@ -213,6 +211,12 @@ class AjaxController extends Controller
     {
         $receipts = Receipt::searchRecords($search);
         return view('partials._receipts', compact('receipts'));
+    }
+
+    public function getEgressesAmount($data)
+    {
+        $egressesAmount = count(Egress::getEgressesByDate($data));
+        return view('partials._egress_amount', compact('egressesAmount'));
     }
 
 }

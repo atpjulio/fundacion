@@ -155,20 +155,18 @@
                         <i class="fa arrow"></i>
                     </a>
                     <ul class="sidebar-nav">
-                        <li class="@if(Request::is('egress*')) active @endif" >
+                        <li class="@if(Request::is('egress')) active @endif" >
                             <a href="{{ route('egress.index') }}">
                                 <i class="fas fa-file-export"></i>&nbsp;
                                 Comprobante de Egreso
                             </a>
                         </li>
-                        {{--  
-                        <li class="@if(Request::is('accounting/eps*')) active @endif" >
-                            <a href="{{ route('accounting.eps') }}">
-                                <i class="fa fa-hospital-o"></i>&nbsp;
-                                Contabilidad EPS
+                        <li class="@if(Request::is('egress-volume')) active @endif" >
+                            <a href="{{ route('egress.volume') }}">
+                                <i class="fas fa-calendar-alt"></i>&nbsp;
+                                Comprobante de Egresos por Mes
                             </a>
                         </li>
-                        --}}
                         <li class="@if(Request::is('accounting-note*')) active @endif" >
                             <a href="{{ route('accounting-note.index') }}">
                                 <i class="far fa-sticky-note"></i>&nbsp;

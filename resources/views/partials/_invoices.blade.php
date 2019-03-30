@@ -21,11 +21,10 @@
                     <a href="{{ route('invoice.pdf', $invoice->id) }}" class="btn btn-secondary btn-sm" target="_blank">
                         Ver factura
                     </a>
-                    <a href="" data-toggle="modal" data-target="#confirm-modal-{{ $invoice->id }}" class="btn btn-pill-right btn-danger btn-sm">
+                    <a href="javascript:showModal('invoice/delete/{{ $invoice->id }}')" class="btn btn-pill-right btn-danger btn-sm">
                         Borrar
                     </a>
                 </td>
-                @include('invoice.delete_modal')
             </tr>
             @endforeach
         </tbody>

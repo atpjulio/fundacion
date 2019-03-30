@@ -304,7 +304,6 @@ class InvoiceController extends Controller
     public function volume()
     {
         $epss = Eps::all();
-
         if (!$epss) {
             Session::flash('message_danger', 'No se encontró el listado de EPS');
             return redirect()->back()->withInput();
@@ -350,7 +349,6 @@ class InvoiceController extends Controller
         $mpdf->SetDisplayMode('fullpage');
         $mpdf->WriteHTML($html);
         $mpdf->Output("Volumen de Facturas ".$eps->alias.'.pdf', 'I');
-
     }
 
     public function import()
@@ -381,6 +379,17 @@ class InvoiceController extends Controller
             Session::flash("message_warning", "No se guardó ningún factura. Es posible que ya estén guardadas en el sistema");
         }
         return redirect()->route('invoice.import');
+    }
+
+    public function delete($id)
+    {
+        $invoice = Invoice::find($id);
+        if (!$invoice) {
+            Session::flash('message_danger', 'No se encontró la factura, por favor inténtalo nuevamente');
+            return redirect()->back()->withInput();
+        }
+
+        return view('invoice.delete_modal', compact('invoice'));
     }
 
 }

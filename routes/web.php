@@ -24,6 +24,7 @@ Route::middleware(['auth', 'admin'])->group(function () {
 
     Route::resource('invoice', 'InvoiceController');
     Route::get('invoice/pdf/{id}', 'InvoiceController@pdf')->name('invoice.pdf');
+    Route::get('invoice/delete/{id}', 'InvoiceController@delete')->name('invoice.delete');
     Route::get('invoice-relation', 'InvoiceController@relation')->name('invoice.relation');
     Route::get('invoice-relation-pdf', 'InvoiceController@relationPDF')->name('invoice.relation.pdf');
     Route::get('invoice-volume', 'InvoiceController@volume')->name('invoice.volume');
@@ -39,6 +40,8 @@ Route::middleware(['auth', 'admin'])->group(function () {
     Route::resource('egress', 'EgressController');
     Route::get('egress/pdf/{id}', 'EgressController@pdf')->name('egress.pdf');
     Route::get('egress-delete/{id}', 'EgressController@delete')->name('egress.delete');
+    Route::get('egress-volume', 'EgressController@volume')->name('egress.volume');
+    Route::get('egress-volume-pdf', 'EgressController@volumePDF')->name('egress.volume.pdf');
 
     Route::resource('rip', 'RipController');
     Route::get('rip/download/{id}', 'RipController@download')->name('rip.download');
@@ -68,6 +71,7 @@ Route::middleware(['auth', 'both'])->group(function () {
     Route::post('authorization-global', 'AuthorizationController@global')->name('authorization.global');
     Route::post('authorization/create-back', 'AuthorizationController@createBack')->name('authorization.create.back');
     Route::post('authorization-services-update', 'AuthorizationController@servicesUpdate')->name('authorization.services.update');
+    Route::get('authorization/delete/{id}', 'AuthorizationController@delete')->name('authorization.delete');
 
     Route::resource('patient', 'PatientController');
     Route::get('patient-create-from-authorization', 'PatientController@createAuthorization')->name('patient.create.authorization');
@@ -95,6 +99,7 @@ Route::middleware(['auth', 'both'])->group(function () {
     Route::get('/get-companion-services/{id}', 'AjaxController@getCompanionServices');
     Route::get('/get-multiple-services/{id}', 'AjaxController@getMultipleServices');
     Route::get('/get-invoices-amount/{data}', 'AjaxController@getInvoicesAmount');
+    Route::get('/get-egresses-amount/{data}', 'AjaxController@getEgressesAmount');
     Route::get('/get-daily-prices/{id}', 'AjaxController@getDailyPrices');
     Route::get('/get-eps-patients/{id}', 'AjaxController@getEpsPatients');
     Route::get('/get-invoices/{search}', 'AjaxController@getInvoices');

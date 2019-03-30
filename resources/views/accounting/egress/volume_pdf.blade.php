@@ -37,8 +37,9 @@
     </style>
 </head>
 <body>
+@foreach ($egresses as $index => $egress)
 <!--mpdf
-<htmlpageheader name="myheader">
+<htmlpageheader name="myheader{{ $index }}">
     <table width="100%">
         <tr>
             <td width="15%" style="color:#0000BB; ">
@@ -72,15 +73,10 @@
     Página {PAGENO} de {nb}
     </div>
 </htmlpagefooter>
-<sethtmlpageheader name="myheader" value="on" show-this-page="1" />
-<sethtmlpagefooter name="myfooter" value="on" />
+<sethtmlpageheader name="myheader{{ $index }}" value="on" show-this-page="1" />
+<sethtmlpagefooter name="myfooter" value="off" />
 mpdf-->
-    <!--
-    <div style="text-align: right; font-size: 12pt;">
-        Total: $ {{ number_format($egress->amount, 0, ",", ".") }}
-    </div>
-    -->
-    <div style="text-align: right">Fecha de elaboración: {{ \Carbon\Carbon::parse($egress->created_at)->format("d/m/Y") }}</div>
+<div style="text-align: right">Fecha de elaboración: {{ \Carbon\Carbon::parse($egress->created_at)->format("d/m/Y") }}</div>
     <table width="100%" style="font-family: serif;" cellpadding="10">
         <tr>
             <td width="30%" style="border: 0.1mm solid #888888; ">
@@ -190,5 +186,9 @@ mpdf-->
     <div style="text-align: center; font-style: italic;">
         Comprobante de egreso generado automáticamente
     </div>
+    @if ($index < count($egresses) - 1)
+        <pagebreak>
+    @endif    
+@endforeach
 </body>
 </html>

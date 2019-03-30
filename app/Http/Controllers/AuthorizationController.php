@@ -398,4 +398,16 @@ class AuthorizationController extends Controller
 
         return response(json_encode($invoice), 200);
     }
+
+    public function delete($id)
+    {
+        $authorization = Authorization::find($id);
+        if (!$authorization) {
+            Session::flash('message_danger', 'No se encontró la autorización, por favor inténtalo nuevamente');
+            return redirect()->back()->withInput();
+        }
+
+        return view('authorization.delete_modal', compact('authorization'));
+    }
+
 }
