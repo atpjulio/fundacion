@@ -49121,7 +49121,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             oldNotePucs: [],
             oldPucDescription: [],
             oldPucDebit: [],
-            oldPucCredit: []
+            oldPucCredit: [],
+            i: 0
         };
     },
 
@@ -49147,6 +49148,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             this.resetAddTable();
         },
         removePuc: function removePuc(index) {
+            this.debits -= parseInt(this.pucTable[index].debit);
+            this.credits -= parseInt(this.pucTable[index].credit);
             this.pucTable.splice(index, 1);
         },
         updateAddTable: function updateAddTable(event) {
@@ -49408,8 +49411,8 @@ var render = function() {
             _vm.pucTable.length > 0
               ? _c(
                   "tbody",
-                  _vm._l(_vm.pucTable, function(element) {
-                    return _c("tr", { key: element.i }, [
+                  _vm._l(_vm.pucTable, function(element, index) {
+                    return _c("tr", [
                       _c("td", [
                         _c("input", {
                           directives: [
@@ -49536,7 +49539,7 @@ var render = function() {
                             on: {
                               click: function($event) {
                                 $event.preventDefault()
-                                return _vm.removePuc(element.i)
+                                return _vm.removePuc(index)
                               }
                             }
                           },

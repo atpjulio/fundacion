@@ -64,7 +64,7 @@
                         </tr>
                         </thead>
                         <tbody v-if="pucTable.length > 0">
-                            <tr v-for="element in pucTable" :key="element.i">
+                            <tr v-for="(element, index) in pucTable">
                                 <td>
                                     <input type="text" name="notePucs[]" v-model="element.code" class="form-control" placeholder="Código PUC" />
                                 </td>
@@ -78,7 +78,7 @@
                                     <input type="number" min=0 name="pucCredit[]" v-model="element.credit" placeholder="Créditos" class="form-control">
                                 </td>
                                 <td>
-                                    <button @click.prevent="removePuc(element.i)" class="btn btn-oval btn-danger">Quitar</button>
+                                    <button @click.prevent="removePuc(index)" class="btn btn-oval btn-danger">Quitar</button>
                                 </td>
                             </tr>
                         </tbody>
@@ -126,7 +126,8 @@
                 oldNotePucs: [], 
                 oldPucDescription: [], 
                 oldPucDebit: [],
-                oldPucCredit: []
+                oldPucCredit: [],
+                i: 0
             }
         },
         methods: {
@@ -149,6 +150,8 @@
                 this.resetAddTable();
             },
             removePuc(index) {
+                this.debits -= parseInt(this.pucTable[index].debit);
+                this.credits -= parseInt(this.pucTable[index].credit);
                 this.pucTable.splice(index, 1);
             },
             updateAddTable(event) {
