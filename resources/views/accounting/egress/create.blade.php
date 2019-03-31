@@ -32,5 +32,5 @@
 @push('scripts')
     <script src="{{ asset('js/jquery.dataTables.min.js') }}"></script>
     <script src="{{ asset('js/dataTables.bootstrap.min.js') }}"></script>
-    <script src="{{ asset('js/accounting/receipt/index.js') }}"></script>
+    <script src="{{ asset('js/accounting/egress/create.js') }}"></script>
 @endpush

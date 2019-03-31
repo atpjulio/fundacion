@@ -8,7 +8,8 @@
     </title>
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+    
     <link rel="apple-touch-icon" href="apple-touch-icon.png">
     <!-- Place favicon.ico in the root directory -->
     <link rel="icon" href="{{ asset('favicon.png') }}">
@@ -70,6 +71,7 @@
     </script>
     --}}
     @include('layouts.backend.modals')
+    <script src="{{ asset('js/app.js') }}"></script>
     <script src="{{ asset('modular-admin/js/vendor.js') }}"></script>
     <script src="{{ asset('modular-admin/js/app.js') }}"></script>
     <script src="{{ asset('js/global.js').'?version='.config('constants.stylesVersion') }}"></script>

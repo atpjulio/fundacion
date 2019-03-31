@@ -42,6 +42,7 @@ class StoreEgressRequest extends FormRequest
         return [
             'concept.required' => 'El concepto es obligatorio',
             'doc.required' => 'El NIT/CC es obligatorio',
+            'notePucs.required' => 'Debe haber al menos un código PUC',
         ];
     }
 }

@@ -69,8 +69,8 @@ class EgressController extends Controller
 
         if ($amount != $amountDebit) {
             Session::flash('message_danger', 'Débitos: '.number_format($amountDebit, 2, ",", ".")
-                .' | Cŕeditos: '.number_format($amount, 2, ",", ".")
-                .'<br>No coinciden los montos de débito y cŕedito');
+                .' | Créditos: '.number_format($amount, 2, ",", ".")
+                .'<br>No coinciden los montos de débito y crédito');
             return redirect()->back()->withInput();
         }
 
@@ -112,7 +112,18 @@ class EgressController extends Controller
         $companies = Company::all()->pluck('name', 'id');
         $entity = Entity::find($egress->entity_id);
 
-        return view('accounting.egress.edit', compact('pucs', 'egress', 'companies', 'entities', 'entity'));
+        $codes = $descriptions = $debits = $credits = [];
+
+        foreach($egress->pucs as $puc) {
+            array_push($codes, $puc->code);
+            array_push($descriptions, $puc->description);
+            array_push($debits, !$puc->type ? $puc->amount : 0);
+            array_push($credits, $puc->type ? $puc->amount : 0);
+        }
+
+        return view('accounting.egress.edit', compact(
+            'pucs', 'egress', 'companies', 'entities', 'entity', 'codes', 'descriptions', 'debits', 'credits'
+        ));
     }
 
     /**
@@ -145,8 +156,8 @@ class EgressController extends Controller
 
         if ($amount != $amountDebit) {
             Session::flash('message_danger', 'Débitos: '.number_format($amountDebit, 2, ",", ".")
-                .' | Cŕeditos: '.number_format($amount, 2, ",", ".")
-                .'<br>No coinciden los montos de débito y cŕedito');
+                .' | Créditos: '.number_format($amount, 2, ",", ".")
+                .'<br>No coinciden los montos de débito y crédito');
             return redirect()->back()->withInput();
         }
 
