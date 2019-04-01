@@ -70,8 +70,8 @@ class AccountingNoteController extends Controller
 
         if ($amount != $amountDebit) {
             Session::flash('message_danger', 'Débitos: '.number_format($amountDebit, 2, ",", ".")
-                .' | Cŕeditos: '.number_format($amount, 2, ",", ".")
-                .'<br>No coinciden los montos de débito y cŕedito');
+                .' | Créditos: '.number_format($amount, 2, ",", ".")
+                .'<br>No coinciden los montos de débito y crédito');
             return redirect()->back()->withInput();
         }
 
@@ -109,7 +109,19 @@ class AccountingNoteController extends Controller
         $pucs = Puc::orderBy('code')->get();
         $note = AccountingNote::find($id);
 
-        return view('accounting.note.edit', compact('invoices', 'pucs', 'note'));
+        $codes = $descriptions = $debits = $credits = [];
+
+        foreach($note->pucs as $puc) {
+            array_push($codes, $puc->code);
+            array_push($descriptions, $puc->description);
+            array_push($debits, !$puc->type ? $puc->amount : 0);
+            array_push($credits, $puc->type ? $puc->amount : 0);
+        }
+
+        return view('accounting.note.edit', compact(
+            'invoices', 'pucs', 'note', 
+            'descriptions', 'debits', 'credits', 'codes'
+        ));
     }
 
     /**
@@ -146,8 +158,8 @@ class AccountingNoteController extends Controller
 
         if ($amount != $amountDebit) {
             Session::flash('message_danger', 'Débitos: '.number_format($amountDebit, 2, ",", ".")
-                .' | Cŕeditos: '.number_format($amount, 2, ",", ".")
-                .'<br>No coinciden los montos de débito y cŕedito');
+                .' | Créditos: '.number_format($amount, 2, ",", ".")
+                .'<br>No coinciden los montos de débito y crédito');
             return redirect()->back()->withInput();
         }
 

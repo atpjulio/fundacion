@@ -73,8 +73,8 @@ class ReceiptController extends Controller
 
         if ($amount != $amountDebit) {
             Session::flash('message_danger', 'Débitos: '.number_format($amountDebit, 2, ",", ".")
-                .' | Cŕeditos: '.number_format($amount, 2, ",", ".")
-                .'<br>No coinciden los montos de débito y cŕedito');
+                .' | Créditos: '.number_format($amount, 2, ",", ".")
+                .'<br>No coinciden los montos de débito y crédito');
             return redirect()->back()->withInput();
         }
 
@@ -126,7 +126,19 @@ class ReceiptController extends Controller
         $entity = Entity::find($receipt->entity_id);
         $entities = Entity::all();
 
-        return view('accounting.receipt.edit', compact('invoices', 'pucs', 'receipt', 'entities', 'entity'));
+        $codes = $descriptions = $debits = $credits = [];
+
+        foreach($receipt->pucs as $puc) {
+            array_push($codes, $puc->code);
+            array_push($descriptions, $puc->description);
+            array_push($debits, !$puc->type ? $puc->amount : 0);
+            array_push($credits, $puc->type ? $puc->amount : 0);
+        }
+
+        return view('accounting.receipt.edit', compact(
+            'invoices', 'pucs', 'receipt', 'entities', 'entity', 
+            'descriptions', 'debits', 'credits', 'codes'
+        ));
     }
 
     /**
@@ -163,8 +175,8 @@ class ReceiptController extends Controller
 
         if ($amount != $amountDebit) {
             Session::flash('message_danger', 'Débitos: '.number_format($amountDebit, 2, ",", ".")
-                .' | Cŕeditos: '.number_format($amount, 2, ",", ".")
-                .'<br>No coinciden los montos de débito y cŕedito');
+                .' | Créditos: '.number_format($amount, 2, ",", ".")
+                .'<br>No coinciden los montos de débito y crédito');
             return redirect()->back()->withInput();
         }
 
