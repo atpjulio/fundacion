@@ -167,6 +167,12 @@
                                 Comprobante de Egresos por Mes
                             </a>
                         </li>
+                        <li class="@if(Request::is('egress-balance')) active @endif" >
+                            <a href="{{ route('egress.balance') }}">
+                                <i class="fas fa-file-invoice-dollar"></i>&nbsp;
+                                Balance de Comprobante de Egresos
+                            </a>
+                        </li>
                         <li class="@if(Request::is('accounting-note*')) active @endif" >
                             <a href="{{ route('accounting-note.index') }}">
                                 <i class="far fa-sticky-note"></i>&nbsp;

@@ -260,4 +260,83 @@ class EgressController extends Controller
         $mpdf->Output("Comprobantes de Egreso del mes de ".config('constants.months.'.$month).'.pdf', 'I');
     }
 
+    public function balance(Request $request)
+    {
+        $egressesAmount = count(Egress::getEgressesByDate(date("Y-m")));
+        return view('accounting.egress.balance', compact('egressesAmount'));
+    }
+
+    public function balancePDF(Request $request)
+    {
+        $month = sprintf("%02d", $request->get('month'));
+        $year = $request->get('year');
+        $egresses = Egress::getEgressesByDate($year.'-'.$month);
+
+        if (count($egresses) == 0) {
+            Session::flash('message_danger', 'No hay comprobantes de egreso disponibles para el mes y año seleccionado');
+            return redirect()->back();
+        }
+
+        $initialBalance = 0;
+        $pucs = [];
+        $credits = [];
+        $debits = [];
+        $descriptions = [];
+        $ascendingPucs = [];
+        $ascendingDescriptions = [];
+
+        foreach ($egresses as $egress) {
+            foreach ($egress->pucs as $index => $puc) {
+                if (in_array($puc->code, $pucs)) {
+                    if ($puc->type) {
+                        $credits[$puc->code] += $puc->amount;
+                    } else {
+                        $debits[$puc->code] += $puc->amount;
+                    }
+                } else {
+                    array_push($pucs, $puc->code);
+                    $descriptions[$puc->code] = $puc->description;
+                    if ($puc->type) {
+                        $credits[$puc->code] = $puc->amount;
+                        $debits[$puc->code] = 0;
+                    } else {
+                        $credits[$puc->code] = 0;
+                        $debits[$puc->code] = $puc->amount;
+                    }
+                }
+            }
+        }
+
+        sort($pucs, SORT_STRING);
+        ksort($credits, SORT_STRING);
+        ksort($debits, SORT_STRING);
+        ksort($descriptions, SORT_STRING);
+
+        foreach ($pucs as $puc) {
+            $counter = 1;
+            $levelUp = substr($puc, 0, strlen($puc) - $counter);
+            $ascendingPucs[$puc] = [];
+            $ascendingDescriptions[$puc] = [];
+
+            while (strlen($levelUp) > 0) {
+                $exists = Puc::getPuc($levelUp);
+                if ($exists and !in_array($levelUp, $ascendingPucs[$puc])) {
+                    $ascendingDescriptions[$puc][] = $exists->description;
+                    $ascendingPucs[$puc][] = $levelUp;
+                }
+                $levelUp = substr($puc, 0, strlen($puc) - $counter);
+                $counter++;
+            }
+            $ascendingDescriptions[$puc] = array_reverse($ascendingDescriptions[$puc]);
+            $ascendingPucs[$puc] = array_reverse($ascendingPucs[$puc]);
+        }
+
+        // dd($pucs, $ascendingPucs);
+
+        return view('accounting.egress.balance_pdf', compact(
+           'pucs','ascendingPucs', 'ascendingDescriptions', 'credits', 
+           'debits', 'descriptions', 'initialBalance'
+        ));
+    }
+
 }
