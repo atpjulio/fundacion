@@ -82,7 +82,7 @@
 <sethtmlpageheader name="myheader" value="on" show-this-page="1" />
 <sethtmlpagefooter name="myfooter" value="on" />
 mpdf-->
-<div style="text-align: right">Fecha de elaboración: {{ date("d/m/Y") }}</div>
+<div style="text-align: right">Fecha de elaboración: {{ \Carbon\Carbon::parse($createdAt)->format("d/m/Y") }}</div>
 {{--
     <table width="100%" style="font-family: serif;" cellpadding="10">
         <tr>

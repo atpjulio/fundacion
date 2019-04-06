@@ -3,7 +3,7 @@
 @section('content')
     <div class="title-block">
         <div class="float-left">
-            <h3 class="title"> Comprobante de Egresos por Mes</h3>
+            <h3 class="title"> Balance de Egresos por mes</h3>
             <p class="title-description"> Generar balance de comprobante de egresos para un mes </p>
         </div>
         <div class="float-right animated fadeInRight">

@@ -172,5 +172,9 @@ return [
         'puc_code' => 'código PUC',
         'puc_description' => 'descripción del código PUC',
         'invoice_number' => 'número de la factura',
+        'initial_date' => 'fecha inicial',
+        'final_date' => 'fecha final',
+        'initial_number' => 'factura inicial',
+        'final_number' => 'factura final',
     ],
 ];

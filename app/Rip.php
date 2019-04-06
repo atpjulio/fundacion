@@ -40,12 +40,22 @@ class Rip extends Model
     {
         $filePrefix = ['AT', 'US', 'AF', 'CT', 'RIPS'];
         $prefixCounter = 0;
-        $invoices = Invoice::getInvoicesByEpsId($request->get('eps_id'), $request->get('initial_date'), $request->get('final_date'));
-        $rip = null;
+        $epsId = $request->get('eps_id');
+        // $initialDate = $request->get('initial_date');
+        // $finalDate = $request->get('final_date');
+        $initialNumber = $request->get('initial_number');
+        $finalNumber = $request->get('final_number');
 
+        // $invoices = Invoice::getInvoicesByEpsId($epsId, $initialDate, $finalDate);
+        $invoices = Invoice::getInvoicesByEpsIdNumber($epsId, $initialNumber, $finalNumber);
+
+        $rip = null;
         if (count($invoices) <= 0) {
             return $rip;
         }
+
+        $initialDate = $invoices->first()->created_at;
+        $finalDate = $invoices->last()->created_at;        
 
         $lastRip = $this->all()
             ->last();
@@ -77,8 +87,8 @@ class Rip extends Model
 
         $rip->company_id = $request->get('company_id');
         $rip->eps_id = $request->get('eps_id');
-        $rip->initial_date = $request->get('initial_date');
-        $rip->final_date = $request->get('final_date');
+        $rip->initial_date = $initialDate;
+        $rip->final_date = $finalDate;
         $rip->created_at = $request->get('created_at');
         $rip->url = config('constants.ripsFiles').$ripPackage;
 

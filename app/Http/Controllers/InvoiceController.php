@@ -201,32 +201,7 @@ class InvoiceController extends Controller
             Session::flash('message_danger', 'Factura no encontrada');
             return redirect()->back()->withInput();
         }
-        /*
-        $services = '';
-        foreach (json_decode($invoice->multiple_codes, true) as $k => $authorizationCode) {
-            $currentAuthorization = \App\Authorization::findByCode($authorizationCode);
 
-            if (!$currentAuthorization) {
-                dd($authorizationCode);
-            }
-
-            $services = $currentAuthorization->eps_service_id;
-            $companionService = $currentAuthorization->multiple_services;
-
-            if ($companionService) {
-                $services .= ",".$companionService;
-            } elseif (count($currentAuthorization->services) > 0) {
-                $services = '';
-                dd($currentAuthorization->services);
-                foreach ($currentAuthorization->services as $servicePrice) {
-                    $services .= $servicePrice->eps_service_id.",";
-                }
-                $services = trim($services, ",");
-            }
-            var_dump($services);
-        }
-        dd($services);
-        */
         $html = \View::make('invoice.pdf', compact('invoice'));
         $mpdf = new \Mpdf\Mpdf([
             'margin_left' => 20,
@@ -254,32 +229,47 @@ class InvoiceController extends Controller
             return redirect()->back()->withInput();
         }
 
-        $invoicesAmount = count(Invoice::getInvoicesByEpsId($epss->toArray()[0]['id'], date("Y-m-d"), date("Y-m-d")));
+        // $invoicesAmount = count(Invoice::getInvoicesByEpsId($epss->toArray()[0]['id'], date("Y-m-d"), date("Y-m-d")));
+        $invoices = Invoice::getInvoicesByEpsIdNumber($epss->toArray()[0]['id'], 1, 50000);
+        $invoicesAmount = count($invoices);
+        $initialNumber = 1;
+        $finalNumber = 1;
+
+        if ($invoices) {
+            $initialNumber = $invoices->first()->number;
+            $finalNumber = $invoices->last()->number;
+        }
+
         $epss = $epss->pluck('name', 'id');
         $companies = Company::all()->pluck('name', 'id');
 
-        return view('invoice.relation', compact('epss', 'companies', 'invoicesAmount'));
+        return view('invoice.relation', compact('epss', 'companies', 'invoicesAmount', 'initialNumber', 'finalNumber'));
     }
 
     public function relationPDF(Request $request)
     {
         $epsId = $request->get('eps_id');
-        $initialDate = $request->get('initial_date');
-        $finalDate = $request->get('final_date');
+        // $initialDate = $request->get('initial_date');
+        // $finalDate = $request->get('final_date');
+        $initialNumber = $request->get('initial_number');
+        $finalNumber = $request->get('final_number');
         $companyId = $request->get('company_id');
+        $createdAt = $request->get('created_at');
 
-        $invoices = Invoice::getInvoicesByEpsId($epsId, $initialDate, $finalDate);
-        // dd($invoices, $epsId, $initialDate, $finalDate);
+        // $invoices = Invoice::getInvoicesByEpsId($epsId, $initialDate, $finalDate);
+        $invoices = Invoice::getInvoicesByEpsIdNumber($epsId, $initialNumber, $finalNumber);
 
         if (count($invoices) == 0) {
             Session::flash('message_danger', 'No hay facturas disponibles para el rango de fecha seleccionado');
             return redirect()->back();
         }
 
+        $initialDate = $invoices->first()->created_at;
+        $finalDate = $invoices->last()->created_at;
         $company = Company::find($companyId);
         $eps = Eps::find($epsId);
 
-        $html = \View::make('invoice.pdf_relation', compact('invoices', 'company', 'eps', 'initialDate', 'finalDate'));
+        $html = \View::make('invoice.pdf_relation', compact('invoices', 'company', 'eps', 'initialDate', 'finalDate', 'createdAt'));
         $mpdf = new \Mpdf\Mpdf([
             'margin_left' => 20,
             'margin_right' => 15,
@@ -309,32 +299,48 @@ class InvoiceController extends Controller
             return redirect()->back()->withInput();
         }
 
-        $invoicesAmount = count(Invoice::getInvoicesByEpsId($epss->toArray()[0]['id'], date("Y-m-d"), date("Y-m-d")));
+        // $invoicesAmount = count(Invoice::getInvoicesByEpsId($epss->toArray()[0]['id'], date("Y-m-d"), date("Y-m-d")));
+        $invoices = Invoice::getInvoicesByEpsIdNumber($epss->toArray()[0]['id'], 1, 50000);
+        $invoicesAmount = count($invoices);
+        $initialNumber = 1;
+        $finalNumber = 1;
+
+        if ($invoices) {
+            $initialNumber = $invoices->first()->number;
+            $finalNumber = $invoices->last()->number;
+        }
+
         $epss = $epss->pluck('name', 'id');
         $companies = Company::all()->pluck('name', 'id');
 
-        return view('invoice.volume', compact('epss', 'companies', 'invoicesAmount'));
+        return view('invoice.volume', compact('epss', 'companies', 'invoicesAmount', 'initialNumber', 'finalNumber'));
     }
 
     public function volumePDF(Request $request)
     {
         $epsId = $request->get('eps_id');
-        $initialDate = $request->get('initial_date');
-        $finalDate = $request->get('final_date');
+        // $initialDate = $request->get('initial_date');
+        // $finalDate = $request->get('final_date');
+        $initialNumber = $request->get('initial_number');
+        $finalNumber = $request->get('final_number');        
         $companyId = $request->get('company_id');
+        $createdAt = $request->get('created_at');
 
-        $invoices = Invoice::getInvoicesByEpsId($epsId, $initialDate, $finalDate);
+        // $invoices = Invoice::getInvoicesByEpsId($epsId, $initialDate, $finalDate);
+        $invoices = Invoice::getInvoicesByEpsIdNumber($epsId, $initialNumber, $finalNumber);
 
         if (count($invoices) == 0) {
             Session::flash('message_danger', 'No hay facturas disponibles para el rango de fecha seleccionado');
             return redirect()->back();
         }
 
+        $initialDate = $invoices->first()->created_at;
+        $finalDate = $invoices->last()->created_at;        
         $company = Company::find($companyId);
         $eps = Eps::find($epsId);
 
         ini_set("pcre.backtrack_limit", "5000000");
-        $html = \View::make('invoice.pdf_volume', compact('invoices', 'company', 'eps', 'initialDate', 'finalDate'));
+        $html = \View::make('invoice.pdf_volume', compact('invoices', 'company', 'eps', 'initialDate', 'finalDate', 'createdAt'));
         $mpdf = new \Mpdf\Mpdf([
             'margin_left' => 20,
             'margin_right' => 15,

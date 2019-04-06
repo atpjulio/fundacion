@@ -101,10 +101,10 @@ class AjaxController extends Controller
     public function getInvoicesAmountNumber($data)
     {
         $epsId = explode("_", $data)[0];
-        $initialDate = explode("_", $data)[1];
-        $finalDate = explode("_", $data)[2];
+        $initialNumber = explode("_", $data)[1];
+        $finalNumber = explode("_", $data)[2];
 
-        $invoicesAmount = count(Invoice::getInvoicesByEpsIdNumber($epsId, $initialDate, $finalDate));
+        $invoicesAmount = count(Invoice::getInvoicesByEpsIdNumber($epsId, $initialNumber, $finalNumber));
         return view('partials._invoice_amount', compact('invoicesAmount'));
     }
 

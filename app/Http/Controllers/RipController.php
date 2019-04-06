@@ -35,11 +35,21 @@ class RipController extends Controller
     public function create()
     {
         $epss = Eps::all();
-        $invoicesAmount = count(Invoice::getInvoicesByEpsId($epss->toArray()[0]['id'], date("Y-m-d"), date("Y-m-d")));
+        // $invoicesAmount = count(Invoice::getInvoicesByEpsId($epss->toArray()[0]['id'], date("Y-m-d"), date("Y-m-d")));
+        $invoices = Invoice::getInvoicesByEpsIdNumber($epss->toArray()[0]['id'], 1, 50000);
+        $invoicesAmount = count($invoices);
+        $initialNumber = 1;
+        $finalNumber = 1;
+
+        if ($invoices) {
+            $initialNumber = $invoices->first()->number;
+            $finalNumber = $invoices->last()->number;
+        }
+
         $epss = $epss->pluck('name', 'id');
         $companies = Company::all()->pluck('name', 'id');
 
-        return view('accounting.rip.create', compact('epss', 'companies', 'invoicesAmount'));
+        return view('accounting.rip.create', compact('epss', 'companies', 'invoicesAmount', 'initialNumber', 'finalNumber'));
     }
 
     /**

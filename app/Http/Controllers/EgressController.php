@@ -270,6 +270,7 @@ class EgressController extends Controller
     {
         $month = sprintf("%02d", $request->get('month'));
         $year = $request->get('year');
+        $createdAt = $request->get('created_at');
         $egresses = Egress::getEgressesByDate($year.'-'.$month);
 
         if (count($egresses) == 0) {
@@ -333,10 +334,34 @@ class EgressController extends Controller
 
         // dd($pucs, $ascendingPucs);
 
-        return view('accounting.egress.balance_pdf', compact(
-           'pucs','ascendingPucs', 'ascendingDescriptions', 'credits', 
-           'debits', 'descriptions', 'initialBalance'
+        // return view('accounting.egress.balance_html', compact(
+        //    'pucs','ascendingPucs', 'ascendingDescriptions', 'credits', 
+        //    'debits', 'descriptions', 'initialBalance'
+        // ));
+
+        ini_set("pcre.backtrack_limit", "5000000");
+
+        $initialEgress = $egresses->first();
+
+        $html = \View::make('accounting.egress.balance_pdf', compact(
+            'initialEgress', 'egresses', 'month', 'year', 'createdAt',
+            'pucs','ascendingPucs', 'ascendingDescriptions', 'credits', 
+            'debits', 'descriptions', 'initialBalance' 
         ));
+        $mpdf = new \Mpdf\Mpdf([
+            'margin_left' => 20,
+            'margin_right' => 15,
+            'margin_top' => 48,
+            'margin_bottom' => 25,
+            'margin_header' => 10,
+            'margin_footer' => 10
+        ]);
+        $mpdf->SetProtection(array('print'));
+        $mpdf->SetTitle("Balance de Egresos del mes de ".config('constants.months.'.$month));
+        $mpdf->SetAuthor("Fundación");
+        $mpdf->SetDisplayMode('fullpage');
+        $mpdf->WriteHTML($html);
+        $mpdf->Output("Balance de Egresos del mes de ".config('constants.months.'.$month).'.pdf', 'I');        
     }
 
 }

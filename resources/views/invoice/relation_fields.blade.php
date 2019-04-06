@@ -16,6 +16,7 @@
     </div>
 @endif
 <div class="row">
+    {{-- 
     <div class="col-6">
         <div class="form-group  @if($errors->has('initial_date')) has-error @endif">
             {!! Form::label('initial_date', 'Fecha inicial', ['class' => 'control-label']) !!}
@@ -26,6 +27,19 @@
         <div class="form-group  @if($errors->has('final_date')) has-error @endif">
             {!! Form::label('final_date', 'Fecha final', ['class' => 'control-label']) !!}
             {!! Form::date('final_date', old('final_date', isset($rip) ? $rip->final_date : \Carbon\Carbon::now()), ['class' => 'form-control underlined', 'id' => 'final_date', 'placeholder' => 'dd/mm/aaaa', isset($show) ? 'readonly' : '']) !!}
+        </div>
+    </div>
+    --}}
+    <div class="col-6">
+        <div class="form-group  @if($errors->has('initial_number')) has-error @endif">
+            {!! Form::label('initial_number', 'Factura inicial', ['class' => 'control-label']) !!}
+            {!! Form::number('initial_number', old('initial_number', $initialNumber), ['class' => 'form-control underlined', 'id' => 'initial_number', isset($show) ? 'readonly' : '', 'min' => '1']) !!}
+        </div>
+    </div>
+    <div class="col-6">
+        <div class="form-group  @if($errors->has('final_number')) has-error @endif">
+            {!! Form::label('final_number', 'Factura final', ['class' => 'control-label']) !!}
+            {!! Form::number('final_number', old('final_number', $finalNumber), ['class' => 'form-control underlined', 'id' => 'final_number', isset($show) ? 'readonly' : '', 'min' => '1']) !!}
         </div>
     </div>
 </div>
