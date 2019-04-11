@@ -200,7 +200,7 @@ class Rip extends Model
                             .$lastName.",".$firstName.",".$currentAuthorization->patient->age.",1,"
                             .config('constants.genderShort.'.$currentAuthorization->patient->gender).","
                             .$currentAuthorization->patient->state.","
-                            .$currentAuthorization->patient->city.","
+                            .sprintf("%03d", $currentAuthorization->patient->city).","
                             .$currentAuthorization->patient->zone."\r\n";
 
                         array_push($arrPatients, $currentAuthorization->patient->id);
@@ -427,7 +427,7 @@ class Rip extends Model
                                     $cell->setValue($currentAuthorization->patient->state);
                                 });
                                 $sheet->cell('M'.$counter, function($cell) use ($currentAuthorization) {
-                                    $cell->setValue($currentAuthorization->patient->city);
+                                    $cell->setValue(sprintf("%03d", $currentAuthorization->patient->city));
                                 });
                                 $sheet->cell('N'.$counter, function($cell) use ($currentAuthorization) {
                                     $cell->setValue($currentAuthorization->patient->zone);
@@ -478,7 +478,7 @@ class Rip extends Model
                             $cell->setValue($invoice->authorization->patient->state);
                         });
                         $sheet->cell('M'.$counter, function($cell) use ($invoice) {
-                            $cell->setValue($invoice->authorization->patient->city);
+                            $cell->setValue(sprintf("%03d", $invoice->authorization->patient->city));
                         });
                         $sheet->cell('N'.$counter, function($cell) use ($invoice) {
                             $cell->setValue($invoice->authorization->patient->zone);
