@@ -27,7 +27,13 @@
     {!! Form::open(['route' => 'invoice.store', 'method' => 'POST']) !!}
     <section class="section">
         <div class="row">
-            @include('invoice.fields')
+            {{-- @include('invoice.fields') --}}
+            <invoice-component :companies="'{{ json_encode($companies) }}'" 
+                :number={{ $lastNumber > 0 ? ($lastNumber + 1) : 1 }}
+                :codes="'{{ json_encode(old('multiple_codes', isset($invoice) ? $invoice->multiple_codes : [])) }}'"
+                :days="'{{ json_encode(old('multiple_days', isset($invoice) ? $invoice->multiple_days : [])) }}'"
+                :totals="'{{ json_encode(old('multiple_totals', isset($invoice) ? $invoice->multiple_totals : [])) }}'"
+            ></invoice-component>
             <div class="col-12">
                 <div class="text-center">
                     {!! Form::submit('Guardar la factura', ['class' => 'btn btn-oval btn-primary']) !!}

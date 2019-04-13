@@ -15,7 +15,7 @@
 @section('content')
     <div class="title-block">
         <div class="float-left">
-            <h3 id="beginning" class="title"> Editar Factura </h3>
+            <h3 class="title"> Editar Factura </h3>
             <p class="title-description"> Editando factura del sistema </p>
         </div>
         <div class="float-right animated fadeInRight">
@@ -28,7 +28,14 @@
     {!! Form::open(['route' => ['invoice.update', $invoice->id], 'method' => 'PUT']) !!}
     <section class="section">
         <div class="row">
-            @include('invoice.fields')
+            <invoice-component :companies="'{{ json_encode($companies) }}'" 
+                :number="{{ $invoice->number }}"
+                :codes="{{ json_encode($invoice->multiple_codes) }}"
+                :days="{{ json_encode($invoice->multiple_days) }}"
+                :totals="{{ json_encode($invoice->multiple_totals) }}"
+            ></invoice-component>
+
+            {{--@include('invoice.fields')--}}
             <div class="col-12">
                 <div class="text-center">
                     {!! Form::submit('Actualizar la factura', ['class' => 'btn btn-oval btn-warning']) !!}

@@ -79,7 +79,7 @@ class Authorization extends Model
 
     public function services()
     {
-      return $this->hasMany(AuthorizationService::class);
+      return $this->hasMany(AuthorizationService::class)->with('service');
     }
 
     public function dates()
@@ -331,11 +331,20 @@ class Authorization extends Model
             ->get();
     }
 
-    protected function openForInvoices()
+    protected function openForInvoices($search = '', $pagination = false)
     {
-        return $this->where('invoice_id', 0)
-            ->where('code', 'not like', config('constants.unathorized.prefix').'%')
-            ->get();
+        $result = $this->where('code', 'like', '%'.$search.'%')
+            ->with('eps')
+            ->with('patient')
+            ->with('services')
+            ->where('invoice_id', 0)
+            ->where('code', 'not like', config('constants.unathorized.prefix').'%');
+
+        if ($pagination) {
+            return $result->paginate(config('constants.pagination') / 2);
+        }
+
+        return $result->get();
     }
 
     protected function close($search = '')
@@ -358,6 +367,16 @@ class Authorization extends Model
     protected function checkIfExists($code)
     {
         return $this->where("code", $code)
+            ->whereNull('deleted_at')
+            ->first();
+    }
+
+    protected function getByCode($code)
+    {
+        return $this->where("code", $code)
+            ->with('eps')
+            ->with('patient')
+            ->with('services')        
             ->whereNull('deleted_at')
             ->first();
     }

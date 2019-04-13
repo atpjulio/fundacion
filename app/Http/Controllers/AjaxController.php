@@ -154,6 +154,11 @@ class AjaxController extends Controller
         return $result;
     }
 
+    public function getAuthorization($code)
+    {
+        return Authorization::getByCode($code);
+    }
+
     public function getDailyPrices($initialEpsId)
     {
         return view('partials._daily_prices', compact('initialEpsId'));
@@ -217,6 +222,14 @@ class AjaxController extends Controller
     {
         $egressesAmount = count(Egress::getEgressesByDate($data));
         return view('partials._egress_amount', compact('egressesAmount'));
+    }
+
+    public function searchOpenAuthorizations(Request $request)
+    {
+        $search = $request->get('search');
+        $authorizations = Authorization::openForInvoices($search, true);
+        
+        return $authorizations;
     }
 
 }

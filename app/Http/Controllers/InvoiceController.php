@@ -34,8 +34,7 @@ class InvoiceController extends Controller
      */
     public function create()
     {
-        $companies = Company::all()->pluck('name', 'id');
-        $invoices = Invoice::all();
+        $companies = Company::all();//->pluck('name', 'id');
         $lastNumber = Invoice::getLastNumber();
         $authorizations = Authorization::openForInvoices();
 
@@ -50,22 +49,21 @@ class InvoiceController extends Controller
      */
     public function store(StoreInvoiceRequest $request)
     {
-        if ($request->get('multiple') == "1") {
-            foreach ($request->get('multiple_codes') as $key => $value) {
-                if ($request->get('multiple_days')[$key] == "") {
-                    Session::flash('message_danger', 'Falta al menos un campo de días por llenar');
-                    return redirect()->back()->withInput();
-                }
-                if ($request->get('multiple_totals')[$key] == "") {
-                    Session::flash('message_danger', 'Falta al menos un campo de total por llenar');
-                    return redirect()->back()->withInput();
-                }
-                if ($value == "") {
-                    Session::flash('message_danger', 'Falta al menos un campo de autorización por llenar');
-                    return redirect()->back()->withInput();
-                }
+        foreach ($request->get('multiple_codes') as $key => $value) {
+            if ($request->get('multiple_days')[$key] == "") {
+                Session::flash('message_danger', 'Falta al menos un campo de días por llenar');
+                return redirect()->back()->withInput();
+            }
+            if ($request->get('multiple_totals')[$key] == "") {
+                Session::flash('message_danger', 'Falta al menos un campo de total por llenar');
+                return redirect()->back()->withInput();
+            }
+            if ($value == "") {
+                Session::flash('message_danger', 'Falta al menos un campo de autorización por llenar');
+                return redirect()->back()->withInput();
             }
         }
+        // dd($request->all());
         $invoice = Invoice::storeRecord($request);
 
         Session::flash('message', 'Factura '.$invoice->format_number.' guardada exitosamente');
@@ -91,7 +89,7 @@ class InvoiceController extends Controller
      */
     public function edit($id)
     {
-        $companies = Company::all()->pluck('name', 'id');
+        $companies = Company::all();//->pluck('name', 'id');
         $invoice = Invoice::find($id);
 
         if (!$invoice) {
@@ -119,28 +117,26 @@ class InvoiceController extends Controller
      */
     public function update(UpdateInvoiceRequest $request, $id)
     {
-        if ($request->get('multiple') == "1") {
-            if ($request->get('multiple_codes') == null) {
-                Session::flash('message_danger', 'Falta al menos un código de autorización por llenar');
+        if ($request->get('multiple_codes') == null) {
+            Session::flash('message_danger', 'Falta al menos un código de autorización por llenar');
+            return redirect()->back()->withInput();
+        }
+
+        foreach ($request->get('multiple_codes') as $key => $value) {
+            if ($request->get('multiple_days')[$key] == "") {
+                Session::flash('message_danger', 'Falta al menos un campo de días por llenar');
                 return redirect()->back()->withInput();
             }
-
-            foreach ($request->get('multiple_codes') as $key => $value) {
-                if ($request->get('multiple_days')[$key] == "") {
-                    Session::flash('message_danger', 'Falta al menos un campo de días por llenar');
-                    return redirect()->back()->withInput();
-                }
-                if ($request->get('multiple_totals')[$key] == "") {
-                    Session::flash('message_danger', 'Falta al menos un campo de total por llenar');
-                    return redirect()->back()->withInput();
-                }
-                if ($value == "") {
-                    Session::flash('message_danger', 'Falta al menos un campo de autorización por llenar');
-                    return redirect()->back()->withInput();
-                }
+            if ($request->get('multiple_totals')[$key] == "") {
+                Session::flash('message_danger', 'Falta al menos un campo de total por llenar');
+                return redirect()->back()->withInput();
+            }
+            if ($value == "") {
+                Session::flash('message_danger', 'Falta al menos un campo de autorización por llenar');
+                return redirect()->back()->withInput();
             }
         }
-        Invoice::updateRecord($request);
+        Invoice::updateRecord($request, $id);
 
         Session::flash('message', 'Factura actualizada exitosamente');
         return redirect()->route('invoice.index');

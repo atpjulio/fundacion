@@ -7,14 +7,36 @@
 
 require('./bootstrap');
 
+import moment from 'moment';
+
 window.Vue = require('vue');
+window.moment = moment;
 
-/**
- * Next, we will create a fresh Vue application instance and attach it to
- * the page. Then, you may begin adding components to this application
- * or customize the JavaScript scaffolding to fit your unique needs.
- */
+// Filters
+Vue.filter('moment', function (value) {
+    if (!value)  {
+        return '';
+    }
+    
+    value = value.toString();
 
+    return moment(value).format("DD/MM/YYYY");
+});
+
+Vue.filter('days', function(dateFrom, dateTo) {
+    if (!dateFrom || !dateTo) {
+        return '';
+    }
+
+    dateFrom = dateFrom.toString();
+    dateTo = dateTo.toString();
+
+    return moment(dateTo).diff(moment(dateFrom), 'days');
+});
+
+
+// Components
+Vue.component('invoice-component', require('./components/InvoiceComponent.vue'));
 Vue.component('example-component', require('./components/ExampleComponent.vue'));
 Vue.component('puc-component', require('./components/PucComponent.vue'));
 

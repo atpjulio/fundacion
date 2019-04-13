@@ -77,8 +77,8 @@ class Patient extends Model
             'gender' => $request->get('gender'),
             'type' => $request->get('type'),
             'state' => $request->get('state'),
-            'city' => $request->get('city'),
-            'zone' => $request->get('zone'),
+            'city' => sprinft("%02d", $request->get('city')),
+            'zone' => sprinft("%03d", $request->get('zone')),
         ]);
 
         if ($request->get('phone')) {
@@ -110,8 +110,8 @@ class Patient extends Model
                 'birth_date' => $birthDate,
                 'gender' => $request->get('gender'),
                 'type' => $request->get('type'),
-                'state' => $request->get('state'),
-                'city' => $request->get('city'),
+                'state' => sprinft("%02d", $request->get('state')),
+                'city' => sprinft("%03d", $request->get('city')),
                 'zone' => $request->get('zone'),
             ]);
 

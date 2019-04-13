@@ -176,5 +176,8 @@ return [
         'final_date' => 'fecha final',
         'initial_number' => 'factura inicial',
         'final_number' => 'factura final',
+        'multiple_codes' => 'código de autorización',
+        'multiple_days' => 'días de autorización',       
+        'multiple_totals' => 'total de autorización',       
     ],
 ];

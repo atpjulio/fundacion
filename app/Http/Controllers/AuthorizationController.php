@@ -346,28 +346,30 @@ class AuthorizationController extends Controller
     public function servicesUpdate(Request $request)
     {
         $authorization = Authorization::findOrFail($request->get('authorization_id'));
-        $some = '';
         $newInvoiceCodes = [];
         $newInvoiceDays = [];
         $newInvoiceTotals = [];
+        $result = '';
 
         for ($i = 0; $i < $request->get('services_quantity'); $i++) { 
-            if ($request->get('service_days'.$i) == "" or $request->get('service_totals'.$i) == "") {
+            if ($request->get('service_days[]')[$i] == "" or $request->get('service_totals[]')[$i] == "") {
+                $result = 'something weird';
                 continue;
             }
             if ($i == 0) {
+                $authorization->date_to = \Carbon\Carbon::parse($authorization->date_from)->addDays($request->get('service_days[]')[$i]);
+                $authorization->save();
+                
                 array_push($newInvoiceCodes, $authorization->code);
-                array_push($newInvoiceDays, $request->get('service_days'.$i));
-                array_push($newInvoiceTotals, $request->get('service_totals'.$i));
+                array_push($newInvoiceDays, $request->get('service_days[]')[$i]);
+                array_push($newInvoiceTotals, $request->get('service_totals[]')[$i]);
             }
     
-            $bool = AuthorizationService::fixAuthorizationService(
+            $result = AuthorizationService::fixAuthorizationService(
                 $authorization, 
-                $request->get('service_codes'.$i),
-                $request->get('service_days'.$i)
+                $request->get('service_codes[]')[$i],
+                $request->get('service_days[]')[$i]
             );
-            $some .= $authorization->id.' '.$request->get('service_codes'.$i).' '
-                .$request->get('service_days'.$i).' result: '.$bool;            
         }
 
         $invoice = Invoice::find($request->get('invoice_id'));
@@ -378,8 +380,8 @@ class AuthorizationController extends Controller
     
             foreach ($invoiceCodes as $k => $val) {
                 if ($val == $authorization->code) {
-                    $invoiceDays[$k] = $request->get('service_days0');
-                    $invoiceTotals[$k] = $authorization->price->daily_price * $request->get('service_days0');
+                    $invoiceDays[$k] = $request->get('service_days[]')[0];
+                    $invoiceTotals[$k] = $authorization->price->daily_price * $request->get('service_days')[0];
                 }
             }
     
@@ -396,7 +398,8 @@ class AuthorizationController extends Controller
             $invoice->multiple_totals = json_encode($newInvoiceTotals);
         }
 
-        return response(json_encode($invoice), 200);
+        return response($result, 200);
+        // return response(json_encode($invoice), 200);
     }
 
     public function delete($id)

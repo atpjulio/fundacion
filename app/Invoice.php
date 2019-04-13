@@ -113,7 +113,7 @@ class Invoice extends Model
         $invoice->notes = $request->get('notes');
         $invoice->created_at = $request->get('created_at');
         $invoice->eps_id = 0;
-        $invoice->multiple = $request->get('multiple') == "1";
+        $invoice->multiple = 1; //$request->get('multiple') == "1";
 
         if ($invoice->multiple) {
             $invoice->multiple_codes = json_encode($request->get('multiple_codes'));
@@ -209,9 +209,9 @@ class Invoice extends Model
         return $invoice;
     }
 
-    protected function updateRecord($request)
+    protected function updateRecord($request, $id)
     {
-        $invoice = $this->find($request->get('id'));
+        $invoice = $this->find($id);
 
         if ($invoice) {
             $request->request->add([
@@ -229,7 +229,7 @@ class Invoice extends Model
             $invoice->created_at = $request->get('created_at');
             $invoice->eps_id = 0;
 
-            $invoice->multiple = $request->get('multiple') == "1";
+            $invoice->multiple = 1;
             if ($invoice->multiple) {
                 $invoice->multiple_codes = json_encode($request->get('multiple_codes'));
                 $invoice->multiple_days = json_encode($request->get('multiple_days'));

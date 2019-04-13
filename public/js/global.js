@@ -223,14 +223,9 @@ function validateAuthorizationServices(myUrl, myFormName, invoiceId)
         data: values,
 
         success: function(response) {  
-            // console.log(response);
             $('#modal-success').html('<h3>Actualizando...</h3>')
             $('#modal-success').addClass('animated bounce pb-3');
-            // if (invoiceId > 0) {
-                fillInvoiceAuthorizations(invoiceId);
-            // } else {
-            //     fillNewInvoiceAuthorizations(response);
-            // }
+            fillInvoiceAuthorizations(invoiceId);
             setTimeout(function () { $('#show-modal').modal('hide'); }, 1500);
         },
         error: function(errors){

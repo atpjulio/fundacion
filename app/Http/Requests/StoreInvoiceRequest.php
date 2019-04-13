@@ -33,12 +33,9 @@ class StoreInvoiceRequest extends FormRequest
             ]
         ];
 
-        if ($this->request->get('multiple') == "1") {
-            // dd($this->request->all());            
-        } else {
-            $rules['authorization_code'] = 'required';
-            $rules['total'] = 'required|numeric';
-        }
+        $rules['multiple_codes'] = 'required';
+        $rules['multiple_days'] = 'required';
+        $rules['multiple_totals'] = 'required';
 
         return $rules;
     }
