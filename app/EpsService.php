@@ -38,7 +38,7 @@ class EpsService extends Model
     protected function getServices($id)
     {
         return $this->where('eps_id', $id)
-            ->orderBy('code')
+            // ->orderBy('code')
             ->get();
     }
 
