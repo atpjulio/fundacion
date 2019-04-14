@@ -50,19 +50,10 @@
                                                 </a>
                                             </td>
                                             <td>
-                                                {{--  
-                                                <a href="{{ route('rip.edit', $rip->id) }}" class="btn btn-pill-left btn-info btn-sm">
-                                                    Editar
-                                                </a>
-                                                <a href="{{ route('rip.download', $rip->id) }}" class="btn btn-secondary btn-sm">
-                                                    Descargar
-                                                </a>
-                                                --}}
-                                                <a href="" data-toggle="modal" data-target="#confirm-modal-{{ $rip->id }}" class="btn btn-oval btn-danger btn-sm">
+                                                <a href="javascript:showModal('rip/delete/{{ $rip->id }}')" class="btn btn-pill-right btn-danger btn-sm">
                                                     Borrar
-                                                </a>
+                                                </a>                                                
                                             </td>
-                                            @include('accounting.rip.delete_modal')
                                         </tr>
                                     @endforeach
                                     </tbody>

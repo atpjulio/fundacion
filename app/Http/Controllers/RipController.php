@@ -114,6 +114,16 @@ class RipController extends Controller
         return redirect()->back();
     }
 
+    public function delete($id)
+    {
+        $rip = Rip::find($id);
+        if (!$rip) {
+            Session::flash('message_danger', 'No se encontró el RIPS, por favor inténtalo nuevamente');
+            return redirect()->back()->withInput();
+        }
+
+        return view('accounting.rip.delete_modal', compact('rip'));
+    }
     /**
      * Remove the specified resource from storage.
      *
@@ -123,7 +133,7 @@ class RipController extends Controller
     public function destroy($id)
     {
         if (auth()->user()->hasRole('admin')) {
-            $rip = rip::find($id);
+            $rip = Rip::find($id);
 
             $rip->delete();
 

@@ -91,6 +91,7 @@ mpdf-->
         @php
             $debitTotals = 0;
             $creditTotals = 0;
+            $finalTotals = 0;
             $noRepeatPucs = [];
         @endphp
         @foreach($pucs as $key => $puc)
@@ -112,7 +113,8 @@ mpdf-->
             @php
                 $debitTotals += $debits[$puc];
                 $creditTotals += $credits[$puc];
-                $finalBalance = $credits[$puc] - $debits[$puc] - $initialBalance;
+                $finalBalance = $initialBalance - $credits[$puc] + $debits[$puc];
+                $finalTotals += $finalBalance;
                 array_push($noRepeatPucs, $puc);
             @endphp                                     
             <tr>
@@ -147,7 +149,7 @@ mpdf-->
             </td>
             <td class="totals cost">
                 <b>
-                --
+                $ {!! number_format($finalTotals, 0, ",", ".") !!}
                 </b>
             </td>
         </tr>

@@ -46,6 +46,7 @@ Route::middleware(['auth', 'admin'])->group(function () {
     Route::get('egress-balance-pdf', 'EgressController@balancePDF')->name('egress.balance.pdf');
 
     Route::resource('rip', 'RipController');
+    Route::get('rip/delete/{id}', 'RipController@delete')->name('rip.delete');
     Route::get('rip/download/{id}', 'RipController@download')->name('rip.download');
 
     Route::get('test', 'RipController@test');
