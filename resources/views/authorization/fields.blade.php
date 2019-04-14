@@ -53,7 +53,10 @@
         </div>
     </div>
 @endif
-<div class="form-group  @if($errors->has('diagnosis')) has-error @endif">
-    {!! Form::label('diagnosis', 'Diagnóstico', ['class' => 'control-label']) !!}
-    {!! Form::text('diagnosis', old('diagnosis', isset($authorization) ? $authorization->diagnosis : ''), ['class' => 'form-control underlined', 'placeholder' => 'Diagnóstico (opcional)']) !!}
+<div class="form-group  @if($errors->has('daily_price')) has-error @endif">
+    {!! Form::label('daily_price', 'Tarifa diaria', ['class' => 'control-label']) !!}
+    <div id="dynamic-daily-prices">
+        @include('partials._daily_prices')
+    </div>
 </div>
+

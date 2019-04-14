@@ -2,7 +2,7 @@
     <div class="card">
         <div class="card-block">
 			<div class="form-group  @if($errors->has('created_at')) has-error @endif">
-			    {!! Form::label('created_at', 'Fecha del recibo de pago', ['class' => 'control-label']) !!}
+			    {!! Form::label('created_at', 'Fecha del egreso', ['class' => 'control-label']) !!}
 			    {!! Form::date('created_at', old('created_at', isset($egress) ? $egress->created_at : \Carbon\Carbon::now()), ['class' => 'form-control underlined', 'placeholder' => 'dd/mm/aaaa']) !!}
 			</div>
 			<div class="form-group @if($errors->has('entity_id')) has-error @endif">

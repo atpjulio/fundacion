@@ -20,7 +20,7 @@
                     <a href="{{ route('patient.edit', $patient->id) }}" class="btn btn-pill-left btn-info btn-sm">
                         Editar
                     </a>
-                    <a href="" data-toggle="modal" data-target="#confirm-modal-{{ $patient->id }}" class="btn btn-pill-right btn-danger btn-sm">
+                    <a href="javascript:showModal('patient/delete/{{ $patient->id }}')" class="btn btn-pill-right btn-danger btn-sm">
                         Borrar
                     </a>
                     @endrole
@@ -31,7 +31,6 @@
                     @endrole
                 </td>
             </tr>
-            @include('patient.delete_modal')
         @endforeach
         @else
             <tr>

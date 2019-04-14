@@ -57,8 +57,8 @@ class Rip extends Model
         $initialDate = $invoices->first()->created_at;
         $finalDate = $invoices->last()->created_at;        
 
-        $lastRip = $this->all()
-            ->last();
+        $lastRip = $this->latest()->first();
+
         // Creating AT file
         $counterAT = $this->produceAT($invoices, $lastRip ? $lastRip->id + 1 : 1);
 

@@ -94,6 +94,16 @@ class EpsController extends Controller
         return redirect()->route('eps.index');
     }
 
+    public function delete($id)
+    {
+        $eps = Eps::find($id);
+        if (!$eps) {
+            Session::flash('message_danger', 'No se encontró la EPS, por favor inténtalo nuevamente');
+            return redirect()->back()->withInput();
+        }
+
+        return view('eps.delete_modal', compact('eps'));
+    }
     /**
      * Remove the specified resource from storage.
      *
@@ -171,6 +181,17 @@ class EpsController extends Controller
 
         Session::flash('message', 'Servicio actualizado exitosamente');
         return redirect()->route('eps.services.index', ['id' => $request->get('eps_id') ]);
+    }
+
+    public function servicesDelete($id)
+    {
+        $service = EpsService::find($id);
+        if (!$service) {
+            Session::flash('message_danger', 'No se encontró el Servicio de EPS, por favor inténtalo nuevamente');
+            return redirect()->back()->withInput();
+        }
+
+        return view('eps.services.delete_modal', compact('service'));
     }
 
     public function servicesDestroy(Request $request)

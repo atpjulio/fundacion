@@ -3,12 +3,6 @@
         <div class="card-title-block">
             <h3 class="title"> Adicionales </h3>
         </div>
-        <div class="form-group  @if($errors->has('daily_price')) has-error @endif">
-            {!! Form::label('daily_price', 'Tarifa diaria', ['class' => 'control-label']) !!}
-            <div id="dynamic-daily-prices">
-                @include('partials._daily_prices')
-            </div>
-        </div>
         <div class="form-group  @if($errors->has('companion')) has-error @endif">
             {!! Form::label('companion', '¿Viene con acompañante(s)?', ['class' => 'control-label']) !!}
             {!! Form::select('companion', config('constants.noYes'), old('companion', isset($authorization) ? $authorization->companion : ''), ['class' => 'form-control', isset($show) ? 'disabled' : '', 'id' => 'companion']) !!}

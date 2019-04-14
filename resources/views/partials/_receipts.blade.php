@@ -21,11 +21,10 @@
                     <a href="{{ route('receipt.pdf', $receipt->id) }}" class="btn btn-secondary btn-sm" target="_blank">
                         Ver recibo
                     </a>
-                    <a href="" data-toggle="modal" data-target="#confirm-modal-{{ $receipt->id }}" class="btn btn-pill-right btn-danger btn-sm">
+                    <a href="javascript:showModal('receipt/delete/{{ $receipt->id }}')" class="btn btn-pill-right btn-danger btn-sm">
                         Borrar
-                    </a>
+                    </a>                                                
                 </td>
-                @include('accounting.receipt.delete_modal')
             </tr>
         @endforeach
         </tbody>

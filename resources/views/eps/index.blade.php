@@ -49,12 +49,11 @@
                                             <a href="{{ route('eps.services.index', $eps->id) }}" class="btn btn-secondary btn-sm">
                                                 Servicios
                                             </a>
-                                            <a href="" data-toggle="modal" data-target="#confirm-modal-{{ $eps->id }}" class="btn btn-pill-right btn-danger btn-sm">
+                                            <a href="javascript:showModal('eps/delete/{{ $eps->id }}')" class="btn btn-pill-right btn-danger btn-sm">
                                                 Borrar
-                                            </a>
+                                            </a>                                                
                                         </td>
                                     </tr>
-                                    @include('eps.delete_modal')
                                 @endforeach
                                 </tbody>
                             </table>

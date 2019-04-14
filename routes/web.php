@@ -19,8 +19,11 @@ Route::middleware(['auth', 'admin'])->group(function () {
     Route::resource('company', 'CompanyController');
 
     Route::resource('eps', 'EpsController');
+    Route::get('eps/delete/{id}', 'EpsController@delete')->name('eps.delete');
+
     Route::get('eps-services/{id}', 'EpsController@services')->name('eps.services.index');
     Route::delete('eps-services/{id}/destroy', 'EpsController@servicesDestroy')->name('eps.services.destroy');
+    Route::get('eps-services/delete/{id}', 'EpsController@servicesDelete')->name('eps.services.delete');
 
     Route::resource('invoice', 'InvoiceController');
     Route::get('invoice/pdf/{id}', 'InvoiceController@pdf')->name('invoice.pdf');
@@ -49,6 +52,8 @@ Route::middleware(['auth', 'admin'])->group(function () {
     Route::get('rip/delete/{id}', 'RipController@delete')->name('rip.delete');
     Route::get('rip/download/{id}', 'RipController@download')->name('rip.download');
 
+    Route::get('patient/delete/{id}', 'PatientController@delete')->name('patient.delete');
+
     Route::get('test', 'RipController@test');
 
     Route::resource('receipt', 'ReceiptController');
@@ -56,6 +61,8 @@ Route::middleware(['auth', 'admin'])->group(function () {
     Route::get('receipt/pdf/{id}', 'ReceiptController@pdf')->name('receipt.pdf');
     Route::view('receipt-import', 'accounting.receipt.import')->name('receipt.import');
     Route::post('receipt-import-process', 'ReceiptController@importProcess')->name('receipt.import.process');
+    Route::get('receipt/delete/{id}', 'ReceiptController@delete')->name('receipt.delete');
+
 });
 
 Route::middleware(['auth', 'both'])->group(function () {

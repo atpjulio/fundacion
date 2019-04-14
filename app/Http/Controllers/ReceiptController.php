@@ -205,6 +205,16 @@ class ReceiptController extends Controller
         return redirect()->route('receipt.index');
     }
 
+    public function delete($id)
+    {
+        $receipt = Receipt::find($id);
+        if (!$receipt) {
+            Session::flash('message_danger', 'No se encontró el Recibo, por favor inténtalo nuevamente');
+            return redirect()->back()->withInput();
+        }
+
+        return view('accounting.receipt.delete_modal', compact('receipt'));
+    }
     /**
      * Remove the specified resource from storage.
      *

@@ -110,6 +110,16 @@ class PatientController extends Controller
 
     }
 
+    public function delete($id)
+    {
+        $patient = Patient::find($id);
+        if (!$patient) {
+            Session::flash('message_danger', 'No se encontró al paciente, por favor inténtalo nuevamente');
+            return redirect()->back()->withInput();
+        }
+
+        return view('patient.delete_modal', compact('patient'));
+    }
     /**
      * Remove the specified resource from storage.
      *
