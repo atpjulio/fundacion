@@ -76,9 +76,9 @@ class Patient extends Model
             'birth_date' => $birthDate,
             'gender' => $request->get('gender'),
             'type' => $request->get('type'),
-            'state' => $request->get('state'),
-            'city' => sprintf("%02d", $request->get('city')),
-            'zone' => sprintf("%03d", $request->get('zone')),
+            'state' => sprintf("%02d", $request->get('state')),
+            'city' => sprintf("%03d", $request->get('city')),
+            'zone' => $request->get('zone'),
         ]);
 
         if ($request->get('phone')) {
@@ -169,8 +169,8 @@ class Patient extends Model
                 'birth_date' => $birthDate,
                 'gender' => ($line->sexo == 'F') ? 0 : 1,
                 'type' => intval($line->tipo_de_usuario),
-                'state' => intval($line->codigo_del_departamento_de_residencia_habitual).'',
-                'city' => intval($line->codigo_de_municipios_de_residencia_habitual).'',
+                'state' => sprintf("%02d",intval($line->codigo_del_departamento_de_residencia_habitual)),
+                'city' => sprintf("%03d",intval($line->codigo_de_municipios_de_residencia_habitual)),
                 'zone' => $line->zona_de_residencia_habitual,
             ]);
 
