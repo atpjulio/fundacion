@@ -110,8 +110,8 @@ class Patient extends Model
                 'birth_date' => $birthDate,
                 'gender' => $request->get('gender'),
                 'type' => $request->get('type'),
-                'state' => sprinft("%02d", $request->get('state')),
-                'city' => sprinft("%03d", $request->get('city')),
+                'state' => sprintf("%02d", $request->get('state')),
+                'city' => sprintf("%03d", $request->get('city')),
                 'zone' => $request->get('zone'),
             ]);
 
