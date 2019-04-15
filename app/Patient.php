@@ -77,8 +77,8 @@ class Patient extends Model
             'gender' => $request->get('gender'),
             'type' => $request->get('type'),
             'state' => $request->get('state'),
-            'city' => sprinft("%02d", $request->get('city')),
-            'zone' => sprinft("%03d", $request->get('zone')),
+            'city' => sprintf("%02d", $request->get('city')),
+            'zone' => sprintf("%03d", $request->get('zone')),
         ]);
 
         if ($request->get('phone')) {
