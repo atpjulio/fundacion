@@ -38,6 +38,26 @@ class Patient extends Model
             substr($this->birth_date,8,2))->age;
     }
 
+    public function getDaysAttribute()
+    {
+        return \Carbon\Carbon::createFromDate(
+            substr($this->birth_date,0,4),
+            substr($this->birth_date,5,2),
+            substr($this->birth_date,8,2))
+            ->diff(\Carbon\Carbon::now())
+            ->format('%d');
+    }
+
+    public function getMonthsAttribute()
+    {
+        return \Carbon\Carbon::createFromDate(
+            substr($this->birth_date,0,4),
+            substr($this->birth_date,5,2),
+            substr($this->birth_date,8,2))
+            ->diff(\Carbon\Carbon::now())
+            ->format('%m');
+    }
+
     /**
      * Relations
      */

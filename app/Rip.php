@@ -57,7 +57,7 @@ class Rip extends Model
         $initialDate = $invoices->first()->created_at;
         $finalDate = $invoices->last()->created_at;        
 
-        $lastRip = $this->latest()->first();
+        $lastRip = $this->orderBy('id', 'desc')->first();
 
         // Creating AT file
         $counterAT = $this->produceAT($invoices, $lastRip ? $lastRip->id + 1 : 1);
@@ -154,7 +154,7 @@ class Rip extends Model
                         $line .= $invoice->number.",".substr($invoice->company->doc, 0, 9).","
                             .$currentAuthorization->patient->dni_type.",".$currentAuthorization->patient->dni.","
                             .$currentAuthorization->code.",1,".$currentAuthorization->service->code.","
-                            .mb_strtoupper($currentAuthorization->service->name).","
+                            .Utilities::normalizeString(mb_strtoupper($currentAuthorization->service->name)).","
                             .$days.",".number_format($dailyPrice, 2, ".", "").","
                             .number_format($total, 2, ".", "")."\r\n";
                         $counter++;
@@ -166,7 +166,7 @@ class Rip extends Model
                 $line .= $invoice->number.",".substr($invoice->company->doc, 0, 9).","
                     .$invoice->authorization->patient->dni_type.",".$invoice->authorization->patient->dni.","
                     .$invoice->authorization->code.",1,".$invoice->authorization->service->code.","
-                    .mb_strtoupper($invoice->authorization->service->name).","
+                    .Utilities::normalizeString(mb_strtoupper($invoice->authorization->service->name)).","
                     .$days.",".number_format($dailyPrice, 2, ".", "").","
                     .number_format($invoice->total, 2, ".", "")."\r\n";
                 $counter++;
@@ -197,7 +197,7 @@ class Rip extends Model
 
                         $line .= $currentAuthorization->patient->dni_type.",".$currentAuthorization->patient->dni
                             .",".$invoice->eps->code.",".$currentAuthorization->patient->type.","
-                            .$lastName.",".$firstName.",".$currentAuthorization->patient->age.",1,"
+                            .Utilities::normalizeString($lastName).",".Utilities::normalizeString($firstName).",".$this->realAge($currentAuthorization->patient)
                             .config('constants.genderShort.'.$currentAuthorization->patient->gender).","
                             .sprintf("%02d", $currentAuthorization->patient->state).","
                             .sprintf("%03d", $currentAuthorization->patient->city).","
@@ -215,7 +215,7 @@ class Rip extends Model
 
                 $line .= $invoice->authorization->patient->dni_type.",".$invoice->authorization->patient->dni
                     .",".$invoice->eps->code.",".$invoice->authorization->patient->type.","
-                    .$lastName.",".$firstName.",".$invoice->authorization->patient->age.",1,"
+                    .Utilities::normalizeString($lastName).",".Utilities::normalizeString($firstName).",".$this->realAge($invoice->authorization->patient)
                     .config('constants.genderShort.'.$invoice->authorization->patient->gender).","
                     .$invoice->authorization->patient->state.","
                     .$invoice->authorization->patient->city.","
@@ -232,6 +232,23 @@ class Rip extends Model
         return $counter;
     }
 
+    private function realAge($patient)
+    {
+        $type = 1;
+        $realAge = $patient->age;
+        if ($realAge == 0) {
+            $realAge = $patient->months;
+            $type = 2;
+
+            if ($realAge == 0) {
+                $realAge = $patient->days;
+                $type = 3;
+            }
+        }
+
+        return "$realAge,$type,";
+    }
+
     protected function produceAF($invoices, $id, $update = false)
     {
         $line = "";
@@ -240,10 +257,10 @@ class Rip extends Model
             $createdAt = \Carbon\Carbon::parse($invoice->created_at)->format("d/m/Y");
             $total = $invoice->multiple ? array_sum(json_decode($invoice->multiple_totals, true)) : $invoice->total;
 
-            $line .= substr($invoice->company->doc, 0, 9).",".mb_strtoupper($invoice->company->name).","
+            $line .= substr($invoice->company->doc, 0, 9).",".Utilities::normalizeString(mb_strtoupper($invoice->company->name)).","
                 .$invoice->company->doc_type.",".substr($invoice->company->doc, 0, 9).","
                 .$invoice->number.",".$createdAt.",".$createdAt.",".$createdAt.","
-                .$invoice->eps->code.",".substr(mb_strtoupper($invoice->eps->name), 0, 30).",,,,"
+                .$invoice->eps->code.",".Utilities::normalizeString(substr(mb_strtoupper($invoice->eps->name), 0, 30)).",,,,"
                 ."0.00,0.00,0.00,".number_format($total, 2, ".", "")."\r\n";
             $counter++;
         }
