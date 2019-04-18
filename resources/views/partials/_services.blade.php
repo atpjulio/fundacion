@@ -2,7 +2,7 @@
     @foreach($services as $key => $service)
         @if (isset($service->id))
             <option value="{{ $service->id }}" @if(old('eps_service_id', isset($authorization) ? $authorization->eps_service_id : '') == $service->id) selected @endif>
-             {!! $service->code.' - '.$service->name !!}
+             {!! $service->code.' - '.$service->name.' - $'.$service->price !!}
             </option>
         @else
             <option value="{{ $key }}">{!! $service !!}</option>
