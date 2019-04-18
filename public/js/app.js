@@ -32985,11 +32985,27 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 credit: 0
             };
         },
+        updateDebits: function updateDebits() {
+            var _this2 = this;
+
+            this.debits = 0;
+            this.pucTable.forEach(function (element) {
+                _this2.debits += parseInt(element.debit);
+            });
+        },
+        updateCredits: function updateCredits() {
+            var _this3 = this;
+
+            this.credits = 0;
+            this.pucTable.forEach(function (element) {
+                _this3.credits += parseInt(element.credit);
+            });
+        },
         invalidData: function invalidData() {
             return this.addTable.debit == 0 && this.addTable.credit == 0 || this.addTable.debit == '' && this.addTable.credit == '' || this.addTable.description == '' || this.addTable.code == '';
         },
         loadOldValues: function loadOldValues() {
-            var _this2 = this;
+            var _this4 = this;
 
             this.oldNotePucs = JSON.parse(this.notePucs);
             this.oldPucDescription = JSON.parse(this.pucDescription);
@@ -32998,14 +33014,14 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
             if (this.oldNotePucs.length > 0) {
                 this.oldNotePucs.forEach(function (element, index) {
-                    _this2.pucTable.push({
+                    _this4.pucTable.push({
                         code: element,
-                        description: _this2.oldPucDescription[index],
-                        debit: _this2.oldPucDebit[index],
-                        credit: _this2.oldPucCredit[index]
+                        description: _this4.oldPucDescription[index],
+                        debit: _this4.oldPucDebit[index],
+                        credit: _this4.oldPucCredit[index]
                     });
-                    _this2.debits += parseInt(_this2.oldPucDebit[index]);
-                    _this2.credits += parseInt(_this2.oldPucCredit[index]);
+                    _this4.debits += parseInt(_this4.oldPucDebit[index]);
+                    _this4.credits += parseInt(_this4.oldPucCredit[index]);
                 });
             }
         }
@@ -33208,11 +33224,13 @@ var render = function() {
           _c("p", [
             _vm._v("Totales: "),
             _c("span", { staticClass: "text-info" }, [
-              _vm._v("Débitos $ " + _vm._s(_vm.debits))
+              _vm._v("Débitos $ " + _vm._s(_vm.debits.toLocaleString("es-ES")))
             ]),
             _vm._v(" | "),
             _c("span", { staticClass: "text-warning" }, [
-              _vm._v("Créditos $ " + _vm._s(_vm.credits))
+              _vm._v(
+                "Créditos $ " + _vm._s(_vm.credits.toLocaleString("es-ES"))
+              )
             ])
           ])
         ])
@@ -33313,6 +33331,9 @@ var render = function() {
                           },
                           domProps: { value: element.debit },
                           on: {
+                            change: function($event) {
+                              return _vm.updateDebits()
+                            },
                             input: function($event) {
                               if ($event.target.composing) {
                                 return
@@ -33342,6 +33363,9 @@ var render = function() {
                           },
                           domProps: { value: element.credit },
                           on: {
+                            change: function($event) {
+                              return _vm.updateCredits()
+                            },
                             input: function($event) {
                               if ($event.target.composing) {
                                 return

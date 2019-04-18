@@ -149,30 +149,40 @@
                 </li>
                 @endrole
                 @role('admin')
-                <li class="@if(Request::is('accounting*') or Request::is('egress*') or Request::is('receipt*')) open active @endif">
+                <li class="@if(Request::is('egress*')) open active @endif">
                     <a href="">
-                        <i class="fas fa-calculator"></i> Contabilidad
+                        <i class="fas fa-file-invoice"></i> Comprobantes de Egreso
                         <i class="fa arrow"></i>
                     </a>
                     <ul class="sidebar-nav">
                         <li class="@if(Request::is('egress')) active @endif" >
                             <a href="{{ route('egress.index') }}">
                                 <i class="fas fa-file-export"></i>&nbsp;
-                                Comprobante de Egreso
+                                Listado
                             </a>
                         </li>
                         <li class="@if(Request::is('egress-volume')) active @endif" >
                             <a href="{{ route('egress.volume') }}">
                                 <i class="fas fa-calendar-alt"></i>&nbsp;
-                                Comprobante de Egresos por Mes
+                                Volumen de Egresos
                             </a>
                         </li>
                         <li class="@if(Request::is('egress-balance')) active @endif" >
                             <a href="{{ route('egress.balance') }}">
                                 <i class="fas fa-file-invoice-dollar"></i>&nbsp;
-                                Balance de Comprobante de Egresos
+                                Balance Mensual
                             </a>
                         </li>
+                    </ul>
+                </li>
+                @endrole
+                @role('admin')
+                <li class="@if(Request::is('accounting*') or Request::is('receipt*')) open active @endif">
+                    <a href="">
+                        <i class="fas fa-calculator"></i> Contabilidad
+                        <i class="fa arrow"></i>
+                    </a>
+                    <ul class="sidebar-nav">
                         <li class="@if(Request::is('accounting-note*')) active @endif" >
                             <a href="{{ route('accounting-note.index') }}">
                                 <i class="far fa-sticky-note"></i>&nbsp;

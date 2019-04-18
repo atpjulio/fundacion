@@ -45,7 +45,7 @@
                 </div>
                 <div class="col-md-6 text-danger">{{ addTableError }}</div>
                 <div class="col-md-6 text-right">
-                    <p>Totales: <span class="text-info">Débitos $ {{ debits }}</span> | <span class="text-warning">Créditos $ {{ credits }}</span></p>
+                    <p>Totales: <span class="text-info">Débitos $ {{ debits.toLocaleString('es-ES') }}</span> | <span class="text-warning">Créditos $ {{ credits.toLocaleString('es-ES') }}</span></p>
                 </div>
             </div>
         </div>
@@ -72,10 +72,10 @@
                                     <input type="text" name="pucDescription[]" v-model="element.description" placeholder="Descripción" class="form-control">
                                 </td>
                                 <td>
-                                    <input type="number" min=0 name="pucDebit[]" v-model="element.debit" placeholder="Débitos" class="form-control">
+                                    <input type="number" min=0 name="pucDebit[]" v-model="element.debit" placeholder="Débitos" class="form-control" @change="updateDebits()">
                                 </td>
                                 <td>
-                                    <input type="number" min=0 name="pucCredit[]" v-model="element.credit" placeholder="Créditos" class="form-control">
+                                    <input type="number" min=0 name="pucCredit[]" v-model="element.credit" placeholder="Créditos" class="form-control" @change="updateCredits()">
                                 </td>
                                 <td>
                                     <button @click.prevent="removePuc(index)" class="btn btn-oval btn-danger">Quitar</button>
@@ -165,6 +165,18 @@
                     debit: 0,
                     credit: 0
                 };
+            },
+            updateDebits() {
+                this.debits = 0;
+                this.pucTable.forEach(element => {
+                    this.debits += parseInt(element.debit);
+                });
+            },
+            updateCredits() {
+                this.credits = 0;
+                this.pucTable.forEach(element => {
+                    this.credits += parseInt(element.credit);
+                });
             },
             invalidData() {
                 return (this.addTable.debit == 0 && this.addTable.credit == 0) ||
