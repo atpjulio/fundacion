@@ -18,7 +18,7 @@
 
     <section class="section">
         <div class="row">
-            <div class="col-md-6">
+            <div class="row justify-content-center">
                 {!! Form::open(['route' => ['eps.services.update', $service->id], 'method' => 'PATCH']) !!}
                     <div class="card">
                         <div class="card-block">
