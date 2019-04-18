@@ -37,6 +37,19 @@ class AjaxController extends Controller
         return view('partials._services', compact('services'));
     }
 
+    public function getService($id)
+    {
+        $service = EpsService::find($id);
+        $price = 0;
+
+        if (!$service) {
+            return $price;
+        }
+        $price = $service->price;
+
+        return $price;
+    }
+
     public function getMultipleServices($id)
     {
         $services = EpsService::getServices($id);

@@ -11,6 +11,25 @@ $(document).ready(function() {
         }
     });
 
+    $('#dynamic-services').on('change', '#eps_service_id', function (e) {
+        console.log('executed');
+        var myUrl = '/get-service/' + $('#eps_service_id').val();
+
+        $.ajax({
+            method: "GET",
+            headers: { "X-CSRF-TOKEN" : $("#_tokenBase").val() },
+            cache: false,
+            url: myUrl,
+    
+            success: function(response) {
+                $('#daily_price').val(response);
+            },
+            error: function(errors){
+                console.log(errors);
+            }
+        });
+    });
+
     $('#companion').on('change', function (e) {
         if ($('#companion').val() == 1) {
             $('#companionsDiv').css('display', 'block');

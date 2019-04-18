@@ -30,7 +30,7 @@ class StoreEpsServiceRequest extends FormRequest
             'eps_id' => 'required',
             'code' => [
                 'required',
-                Rule::unique('eps_services', 'code', 'eps_id')->ignore($this->request->get('code'))->whereNull('deleted_at')
+                // Rule::unique('eps_services', 'code', 'eps_id')->ignore($this->request->get('code'))->whereNull('deleted_at')
             ],
             'name' => 'required',
             'price' => 'numeric',

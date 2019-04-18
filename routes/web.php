@@ -116,6 +116,7 @@ Route::middleware(['auth', 'both'])->group(function () {
     Route::get('/get-patients/{search}', 'AjaxController@getPatients');
     Route::get('/get-day-range/{date}', 'AjaxController@getDayRange');
     Route::get('/get-services/{id}', 'AjaxController@getServices');
+    Route::get('/get-service/{id}', 'AjaxController@getService');
     Route::get('/get-cities/{id}', 'AjaxController@getCities');
     Route::get('/get-entity/{id}', 'AjaxController@getEntity');
     Route::get('/new-service/{id}', 'AjaxController@newService');

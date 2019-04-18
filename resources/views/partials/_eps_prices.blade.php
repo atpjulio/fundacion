@@ -49,7 +49,11 @@
                       <input type="text" name="names[]" value="{{ $epsPrice->name }}" class="form-control" placeholder="Ejemplo: Precio Barranquilla">
                     </td>
                     <td>
+                      @if ($key == 0)
                       <a href="javascript:void(0);" class="addRow btn btn-oval btn-success">Añadir</a>
+                      @else
+                      <a href="javascript:void(0);" class="removeRow btn btn-oval btn-danger">Quitar</a>
+                      @endif
                     </td>
                   </tr>
                 @endforeach
