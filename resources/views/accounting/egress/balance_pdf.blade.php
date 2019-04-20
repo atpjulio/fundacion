@@ -9,7 +9,10 @@
         table.items {
             border: 0.1mm solid #000000;
         }
-        td { vertical-align: top; }
+        td {
+            padding-top: 0.9mm; 
+            vertical-align: top; 
+        }
         .items td {
             border-left: 0.1mm solid #000000;
             border-right: 0.1mm solid #000000;
