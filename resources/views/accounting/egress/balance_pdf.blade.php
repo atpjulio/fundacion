@@ -11,7 +11,8 @@
         }
         td {
             padding-top: 0.9mm; 
-            vertical-align: top; 
+            vertical-align: top;
+            font-size: 8pt;
         }
         .items td {
             border-left: 0.1mm solid #000000;
@@ -35,6 +36,7 @@
             border: 0.1mm solid #000000;
         }
         .items td.cost {
+            text-align: center;
             /*text-align: "." center;*/
         }
     </style>
@@ -83,11 +85,11 @@ mpdf-->
         <thead>
         <tr>
             <td width="10%">Codigo</td>
-            <td width="30%">Nombre Cuenta</td>
-            <td width="15%">Saldo Inicial</td>
-            <td width="15%">Debitos</td>
-            <td width="15%">Creditos</td>
-            <td width="15%">Saldo Final</td>
+            <td width="28%">Nombre Cuenta</td>
+            <td width="14.5%">Saldo Inicial</td>
+            <td width="14.5%">Debitos</td>
+            <td width="14.5%">Creditos</td>
+            <td width="14.5%">Saldo Final</td>
         </tr>
         </thead>
         <tbody>
