@@ -144,9 +144,11 @@ class AccountingNote extends Model
 
     protected function searchRecords($search = '')
     {
-        $query = $this::join('invoices', 'accounting_notes.invoice_id', '=', 'invoices.id')
-            ->select('accounting_notes.*', 'invoices.number');
+        // $query = $this::join('invoices', 'accounting_notes.invoice_id', '=', 'invoices.id')
+        //     ->select('accounting_notes.*', 'invoices.number');
             // ->where('invoices.number', 'like', '%'.$search.'%');
+
+        $query = $this;
 
         if (is_numeric($search)) {
             if ($search > 9999) {
