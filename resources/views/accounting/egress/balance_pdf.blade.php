@@ -80,11 +80,11 @@ mpdf-->
         <thead>
         <tr>
             <td width="10%">Codigo</td>
-            <td width="34%">Nombre Cuenta</td>
-            <td width="14%">Saldo Inicial</td>
-            <td width="14%">Debitos</td>
-            <td width="14%">Creditos</td>
-            <td width="14%">Saldo Final</td>
+            <td width="30%">Nombre Cuenta</td>
+            <td width="15%">Saldo Inicial</td>
+            <td width="15%">Debitos</td>
+            <td width="15%">Creditos</td>
+            <td width="15%">Saldo Final</td>
         </tr>
         </thead>
         <tbody>
