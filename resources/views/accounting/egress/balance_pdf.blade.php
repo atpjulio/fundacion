@@ -35,7 +35,7 @@
             border: 0.1mm solid #000000;
         }
         .items td.cost {
-            text-align: "." center;
+            /*text-align: "." center;*/
         }
     </style>
 </head>
