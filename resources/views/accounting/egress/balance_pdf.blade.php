@@ -105,9 +105,9 @@ mpdf-->
                     @php
                         array_push($noRepeatPucs, $ascendingPuc);
                     @endphp
-                    <tr>
+                    <tr style="background-color: #e3e3e3;">
                         <td>{!! $ascendingPuc !!}</td>
-                        <td>{!! $ascendingDescriptions[$puc][$index] !!}</td>
+                        <td style="font-style: italic;">{!! $ascendingDescriptions[$puc][$index] !!}</td>
                         <td></td>
                         <td></td>
                         <td></td>
