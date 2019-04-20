@@ -4,10 +4,11 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use App\Traits\Balanceable;
 
 class AccountingNote extends Model
 {
-    use SoftDeletes;
+    use SoftDeletes, Balanceable;
 
     protected $fillable = [
         'invoice_id',
@@ -34,6 +35,11 @@ class AccountingNote extends Model
     public function pucs()
     {
         return $this->hasMany(AccountingNotePuc::class, 'accounting_note_id');
+    }
+
+    public function balance()
+    {
+        return $this->morphOne(Balance::class, 'balanceable');
     }
 
     /**
@@ -168,6 +174,11 @@ class AccountingNote extends Model
             ->where('id', '<>', $id)
             ->where('counter', $counter)
             ->first();
+    }
+
+    public function saveBalance($month, $year, $type)
+    {
+        return $this->createBalance($this, $this->amount, $month, $year, $type);
     }
 
 }

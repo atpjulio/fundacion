@@ -4,10 +4,11 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use App\Traits\Balanceable;
 
 class Egress extends Model
 {
-	use SoftDeletes;
+	use SoftDeletes, Balanceable;
 
     protected $fillable = [
         'company_id',
@@ -40,6 +41,11 @@ class Egress extends Model
     public function entity()
     {
         return $this->hasOne(Entity::class, 'id', 'entity_id');
+    }
+
+    public function balance()
+    {
+        return $this->morphOne(Balance::class, 'balanceable');
     }
 
     /**
@@ -160,6 +166,16 @@ class Egress extends Model
         return $this->whereBetween('created_at', [
             $yearMonth.'-01 00:00:00', $yearMonth.'-31 23:59:59'
         ])->get();
+    }
+
+    public function saveBalance($amount, $month, $year, $type)
+    {
+        $balance = $this->balance;
+        if ($balance and $balance->type == $type) {
+            return $this->updateBalance($balance, $amount, $month, $year, $type);
+        }
+
+        return $this->createBalance($this, $amount, $month, $year, $type);
     }
 
 }

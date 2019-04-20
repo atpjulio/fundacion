@@ -114,7 +114,7 @@ mpdf-->
                 $debitTotals += $debits[$puc];
                 $creditTotals += $credits[$puc];
                 $finalBalance = $initialBalance - $credits[$puc] + $debits[$puc];
-                $finalTotals += $finalBalance;
+                // $finalTotals += $finalBalance;
                 array_push($noRepeatPucs, $puc);
             @endphp                                     
             <tr>
@@ -125,6 +125,11 @@ mpdf-->
                 <td class="cost">{!! $credits[$puc] > 0 ? number_format($credits[$puc], 2, ",", ".") : "--" !!}</td>
                 <td class="cost">{!! number_format($finalBalance, 2, ",", ".") !!}</td>
             </tr>
+            @php
+                if ($key < count($pucs) - 1) {
+                    $initialBalance = $finalBalance;
+                }
+            @endphp
         @endforeach
         <!-- END ITEMS HERE -->
         <tr style="border-bottom-width: 0;">
@@ -134,7 +139,7 @@ mpdf-->
             </td>
             <td class="totals cost">
                 <b>
-                --
+                    $ {!! number_format($initialBalance, 0, ",", ".") !!}    
                 </b>
             </td>
             <td class="totals cost">
@@ -149,7 +154,7 @@ mpdf-->
             </td>
             <td class="totals cost">
                 <b>
-                $ {!! number_format($finalTotals, 0, ",", ".") !!}
+                $ {!! number_format($finalBalance, 0, ",", ".") !!}
                 </b>
             </td>
         </tr>

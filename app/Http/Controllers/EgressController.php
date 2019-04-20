@@ -10,6 +10,7 @@ use App\Http\Requests\UpdateEgressRequest;
 use App\Puc;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
+use App\AccountingNote;
 
 class EgressController extends Controller
 {
@@ -278,7 +279,22 @@ class EgressController extends Controller
             return redirect()->back();
         }
 
+        $type = 0;
         $initialBalance = 0;
+        $initialEgress = $egresses->first();
+        $balance = $initialEgress->balance;
+
+        if ($balance and $balance->type == $type) {
+            $initialBalance = $balance->amount;
+        } else {
+            $accountingNote = AccountingNote::whereHas('balance', function ($query) use ($month, $year, $type) {
+                $query->where('month', $month)
+                    ->where('year', $year)
+                    ->where('type', $type);
+            })->first();
+            $initialBalance = $accountingNote ? $accountingNote->amount : 0;
+        }
+
         $pucs = [];
         $credits = [];
         $debits = [];
@@ -313,6 +329,12 @@ class EgressController extends Controller
         ksort($debits, SORT_STRING);
         ksort($descriptions, SORT_STRING);
 
+        $type = 1;
+        $nextMonth = ($month + 1 > 12) ? 1 : $month + 1;
+        $nextYear = ($month + 1 > 12) ? $year + 1 : $year;
+
+        $initialEgress->saveBalance($initialBalance - array_sum($debits), $nextMonth, $nextYear, $type);
+
         foreach ($pucs as $puc) {
             $counter = 1;
             $levelUp = substr($puc, 0, strlen($puc) - $counter);
@@ -340,8 +362,6 @@ class EgressController extends Controller
         // ));
 
         ini_set("pcre.backtrack_limit", "5000000");
-
-        $initialEgress = $egresses->first();
 
         $html = \View::make('accounting.egress.balance_pdf', compact(
             'initialEgress', 'egresses', 'month', 'year', 'createdAt',
