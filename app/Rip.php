@@ -260,7 +260,8 @@ class Rip extends Model
             $line .= substr($invoice->company->doc, 0, 9).",".Utilities::normalizeString(mb_strtoupper($invoice->company->name)).","
                 .$invoice->company->doc_type.",".substr($invoice->company->doc, 0, 9).","
                 .$invoice->number.",".$createdAt.",".$createdAt.",".$createdAt.","
-                .$invoice->eps->code.",".Utilities::normalizeString(substr(mb_strtoupper($invoice->eps->name), 0, 30)).",,,,"
+                .$invoice->eps->code.",".Utilities::normalizeString(substr(mb_strtoupper($invoice->eps->name), 0, 30)).","
+                .$invoice->eps->contract.",,,"
                 ."0.00,0.00,0.00,".number_format($total, 2, ".", "")."\r\n";
             $counter++;
         }
@@ -423,19 +424,19 @@ class Rip extends Model
                                     $cell->setValue(mb_strtoupper($arrayLastName[0]));
                                 });
                                 $sheet->cell('F'.$counter, function($cell) use ($arrayLastName) {
-																	$cell->setValue(mb_strtoupper(join(" ", array_slice($arrayLastName, 1))));
+                                    $cell->setValue(mb_strtoupper(join(" ", array_slice($arrayLastName, 1))));
                                 });
                                 $sheet->cell('G'.$counter, function($cell) use ($arrayFirstName) {
                                     $cell->setValue(mb_strtoupper($arrayFirstName[0]));
                                 });
                                 $sheet->cell('H'.$counter, function($cell) use ($arrayFirstName) {
-																	$cell->setValue(mb_strtoupper(join(" ", array_slice($arrayFirstName, 1))));
+                                    $cell->setValue(mb_strtoupper(join(" ", array_slice($arrayFirstName, 1))));
                                 });
-                                $sheet->cell('I'.$counter, function($cell) use ($currentAuthorization) {
-                                    $cell->setValue($currentAuthorization->patient->age);
+                                $sheet->cell('I'.$counter, function($cell) use ($currentAuthorization) {                                    
+                                    $cell->setValue(explode(',', $this->realAge($currentAuthorization->patient))[0]);
                                 });
-                                $sheet->cell('J'.$counter, function($cell) {
-                                    $cell->setValue("1");
+                                $sheet->cell('J'.$counter, function($cell) use ($currentAuthorization) {
+                                    $cell->setValue(explode(',', $this->realAge($currentAuthorization->patient))[1]);
                                 });
                                 $sheet->cell('K'.$counter, function($cell) use ($currentAuthorization) {
                                     $cell->setValue(config('constants.genderShort.'.$currentAuthorization->patient->gender));
@@ -661,8 +662,8 @@ class Rip extends Model
                     $sheet->cell('J'.$counter, function($cell) use ($invoice) {
                         $cell->setValue(substr(mb_strtoupper($invoice->eps->name), 0, 30));
                     });
-                    $sheet->cell('K'.$counter, function($cell) {
-                        $cell->setValue('EPS');
+                    $sheet->cell('K'.$counter, function($cell) use ($invoice) {
+                        $cell->setValue($invoice->eps->contract);
                     });
                     $sheet->cell('N'.$counter, function($cell) {
                         $cell->setValue('0');
