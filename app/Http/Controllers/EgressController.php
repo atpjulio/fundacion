@@ -35,7 +35,7 @@ class EgressController extends Controller
     {
         $pucs = Puc::orderBy('code')->get();
         $companies = Company::all()->pluck('name', 'id');        
-        $entities = Entity::all();
+        $entities = Entity::orderBy('name', 'asc')->get();
 
         return view('accounting.egress.create', compact('pucs', 'companies', 'entities'));
     }
@@ -107,7 +107,8 @@ class EgressController extends Controller
      */
     public function edit($id)
     {
-        $entities = Entity::all();
+        // $entities = Entity::all();
+        $entities = Entity::orderBy('name', 'asc')->get();
         $pucs = Puc::orderBy('code')->get();
         $egress = Egress::find($id);
         $companies = Company::all()->pluck('name', 'id');
