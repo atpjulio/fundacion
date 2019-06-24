@@ -83,6 +83,7 @@ function fillFilteredEpsPatients(search)
     $.get("/get-eps-patients-filtered/" + search, function (data, status) {
         $('#dynamic-patients').html(data);
         $('#searching').val(search);
+        $('#search-spinner').css('display', 'none');
     });
 }
 
