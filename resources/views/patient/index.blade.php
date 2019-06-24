@@ -35,6 +35,10 @@
                             </div>
                             <div class="float-right">
                               <div class="dataTables_filter float-right form-inline mb-3 mt-0">
+                                <span id="search-spinner" style="display: none;">
+                                    <i class="fas fa-circle-notch fa-spin"></i>
+                                    &nbsp;
+                                </span>                                
                                 <label class="mr-2">Buscar:</label>
                                 <input type="search" class="form-control form-control-sm" placeholder="" id="searching">
                               </div>
