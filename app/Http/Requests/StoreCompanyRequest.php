@@ -24,7 +24,7 @@ class StoreCompanyRequest extends FormRequest
     public function rules()
     {
         return [
-            'doc' => 'required|unique:companies,nit',
+            'doc' => 'required|unique:companies,doc',
             'name' => 'required',
             'billing_resolution' => 'required',
             'billing_date' => 'required',

@@ -24,7 +24,7 @@ class UpdateCompanyRequest extends FormRequest
     public function rules()
     {
         return [
-            'doc' => 'required|unique:companies,nit,'.$this->request->get('id'),
+            'doc' => 'required|unique:companies,doc,'.$this->request->get('id'),
             'name' => 'required',
             'billing_resolution' => 'required',
             'billing_date' => 'required',
