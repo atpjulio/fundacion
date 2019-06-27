@@ -73,7 +73,7 @@ class Utilities extends Model
                 "<br>EPS: ".$authorization->eps->name."<br>Autorización: ".$authorization->code.
                 "<br><br>Tiene programada su salida para el día de hoy";
 
-                $admins = User::whereIn('email', [config('constants.emails.admin'), config('constants.emails.admin2')])
+                $admins = User::whereIn('email', [config('constants.emails.admin')])
                     ->get();
     			self::sendEmails($admins, $subject, $content);    				
 
