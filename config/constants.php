@@ -16,6 +16,14 @@ $myConstants = [
     'companiesImages' => '/img/companies/',
     'importFiles' => storage_path().'/app/',
     'ripsFiles' => 'public/rips/',
+    'ripsExtensions' => [
+        'AF' => '.TXT',
+        'AT' => '.TXT',
+        'CT' => '.TXT',
+        'US' => '.TXT',
+        'RIP' => '.xls',
+        'RIPS' => '.zip',
+    ],
     'citiesFilename' => 'codigos_dane.xls',
     'pucsFilename' => 'puc_comerciantes.xls',
     'systemUser' => [

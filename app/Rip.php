@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\Storage;
 use Maatwebsite\Excel\Facades\Excel;
+use Illuminate\Support\Facades\DB;
 
 class Rip extends Model
 {
@@ -38,7 +39,6 @@ class Rip extends Model
      */
     protected function produceRIPS($request)
     {
-        $filePrefix = ['AT', 'US', 'AF', 'CT', 'RIPS'];
         $prefixCounter = 0;
         $epsId = $request->get('eps_id');
         // $initialDate = $request->get('initial_date');
@@ -75,6 +75,19 @@ class Rip extends Model
         // Creating Excel file
         $this->produceExcel($invoices, $lastRip ? $lastRip->id + 1 : 1, $request);
 
+        $ripsExtensions = config('constants.ripsExtensions');
+        $packageExtension = array_pop($ripsExtensions);
+        $ripPackage = array_keys(array_reverse(config('constants.ripsExtensions')))[0]
+            .sprintf("%06d", $lastRip ? $lastRip->id + 1 : 1)
+            .$packageExtension;
+        foreach ($ripsExtensions as $prefix => $extension) {
+            $fileName = $prefix.sprintf("%06d", $lastRip ? $lastRip->id + 1 : 1).$extension;
+            \Zipper::make(storage_path('app/public/rips/'.$ripPackage))
+                ->add(storage_path('app/public/rips/'.$fileName))
+                ->close();
+        }
+        /*
+        $filePrefix = ['AT', 'US', 'AF', 'CT', 'RIPS'];
         $ripPackage = 'RIPS'.sprintf("%06d", $lastRip ? $lastRip->id + 1 : 1).'.zip';
         foreach ($filePrefix as $currentPrefix) {
             $fileName = ($currentPrefix == 'RIPS') ? $currentPrefix.sprintf("%06d", $lastRip ? $lastRip->id + 1 : 1).".xls" : $currentPrefix.sprintf("%06d", $lastRip ? $lastRip->id + 1 : 1).".TXT";
@@ -82,6 +95,7 @@ class Rip extends Model
                 ->add(storage_path('app/public/rips/'.$fileName))
                 ->close();
         }
+        */
 
         $rip = new Rip();
 
@@ -144,6 +158,25 @@ class Rip extends Model
                 foreach (json_decode($invoice->multiple_codes, true) as $key => $value) {
                     $currentAuthorization = Authorization::findByCode($value);
                     if ($currentAuthorization) {
+/*
+                    ** Include this for several services **
+                    foreach ($currentAuthorization->services as $service) {
+                        $days = $service->days;
+                        $dailyPrice = $service->price;
+                        try {
+                            $total = $days * floatval($dailyPrice);
+                        } catch(\Exception $e) {
+                            dd($invoice, $key, $e);
+                        }
+                        $line .= $invoice->number.",".substr($invoice->company->doc, 0, 9).","
+                            .$currentAuthorization->patient->dni_type.",".$currentAuthorization->patient->dni.","
+                            .$authorization->code.",1,".$service->service->code.","
+                            .Utilities::normalizeString(mb_strtoupper($service->service->name)).","
+                            .$days.",".number_format($dailyPrice, 2, ".", "").","
+                            .number_format($total, 2, ".", "")."\r\n";
+                        $counter++;
+                    }
+*/
                         $days = json_decode($invoice->multiple_days, true)[$key];
                         $dailyPrice = $currentAuthorization->daily_price;
                         try {
@@ -1594,6 +1627,30 @@ class Rip extends Model
             });
             $excel->setActiveSheetIndex(0);
         })->store('xls', storage_path('app/'.config('constants.ripsFiles')));
+    }
+
+    protected function deleteRecord($id)
+    {        
+        try {
+            DB::beginTransaction();
+            
+            $rip = Rip::findOrFail($id);
+            $basePath = config('constants.ripsFiles');
+            $ripNumber = preg_replace("/\D/", '', $rip->url);
+
+            foreach (config('constants.ripsExtensions') as $prefix => $extension) {
+                Storage::delete($basePath.$prefix.$ripNumber.$extension);
+            }
+
+            $rip->delete();
+    
+            DB::commit();
+            return true;
+        } catch (\Exception $e) {
+            DB::rollback();
+            dd($e);
+            return false;
+        }
     }
 
 }

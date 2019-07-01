@@ -133,14 +133,17 @@ class RipController extends Controller
     public function destroy($id)
     {
         if (auth()->user()->hasRole('admin')) {
-            $rip = Rip::find($id);
+            $result = Rip::deleteRecord($id);
 
-            $rip->delete();
+            if ($result) {
+                Session::flash('message', 'RIPS eliminado exitosamente');
+            } else {
+                Session::flash('message_danger', 'El RIPS no se pudo eliminar, por favor inténtalo nuevamente');
+            }
 
-            Session::flash('message', 'RIPS eliminado exitosamente');
             return redirect()->route('rip.index');
         }
-        Session::flash('message_danger', 'No tienes permiso para borrar recibos. Este movimiento ha sido notificado');
+        Session::flash('message_danger', 'No tienes permiso para borrar RIPS. Este movimiento ha sido notificado');
         return redirect()->route('rip.index');
     }
 
