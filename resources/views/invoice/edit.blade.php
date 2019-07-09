@@ -27,15 +27,13 @@
     </div>
     {!! Form::open(['route' => ['invoice.update', $invoice->id], 'method' => 'PUT']) !!}
     <section class="section">
+        <invoice-component :companies="'{{ json_encode($companies) }}'" 
+            :number="{{ $invoice->number }}"
+            :codes="{{ json_encode($invoice->multiple_codes) }}"
+            :days="{{ json_encode($invoice->multiple_days) }}"
+            :totals="{{ json_encode($invoice->multiple_totals) }}"
+        ></invoice-component>
         <div class="row">
-            <invoice-component :companies="'{{ json_encode($companies) }}'" 
-                :number="{{ $invoice->number }}"
-                :codes="{{ json_encode($invoice->multiple_codes) }}"
-                :days="{{ json_encode($invoice->multiple_days) }}"
-                :totals="{{ json_encode($invoice->multiple_totals) }}"
-            ></invoice-component>
-
-            {{--@include('invoice.fields')--}}
             <div class="col-12">
                 <div class="text-center">
                     {!! Form::submit('Actualizar la factura', ['class' => 'btn btn-oval btn-warning']) !!}
