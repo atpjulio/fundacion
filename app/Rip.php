@@ -326,7 +326,7 @@ class Rip extends Model
     protected function produceExcel($invoices, $id, $request, $update = false)
     {
         $ripDate = $request->get('created_at');
-        $fileName = "RIPS".sprintf("%06d", $id);
+        $fileName = "RIP".sprintf("%06d", $id);
         Excel::create($fileName, function($excel) use ($invoices, $ripDate, $id) {
 
             $counterUS = 0;
