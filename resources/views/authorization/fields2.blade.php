@@ -22,6 +22,6 @@
     {!! Form::date('date_from', old('date_from', isset($dateFrom) ? $dateFrom : ''), ['class' => 'form-control underlined', 'placeholder' => 'dd/mm/aaaa', isset($show) ? 'readonly' : '']) !!}
 </div>
 <div class="form-group  @if($errors->has('total_days')) has-error @endif">
-    {!! Form::label('total_days', 'Total de días', ['class' => 'control-label']) !!}
+    {!! Form::label('total_days', 'Cantidad', ['class' => 'control-label']) !!}
     {!! Form::number('total_days', old('total_days', isset($authorization) ? $authorization->days : 1), ['class' => 'form-control underlined', 'placeholder' => '0', isset($show) ? 'readonly' : '', 'min' => 1, 'id' => 'total_days']) !!}
 </div>

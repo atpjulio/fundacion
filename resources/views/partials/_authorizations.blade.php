@@ -5,7 +5,7 @@
         <th>EPS</th>
         <th>Desde</th>
         <th>Factura</th>
-        <th>Días</th>
+        <th>Cant.</th>
         <th>Opciones</th>
         </thead>
         <tbody>

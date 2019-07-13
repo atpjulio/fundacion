@@ -4,7 +4,7 @@
         <th># Factura</th>
         <th>Autorización</th>
         <th>Monto</th>
-        <th>Días</th>
+        <th>Cant.</th>
         <th style="width: 250px;">Opciones</th>
         </thead>
         <tbody>

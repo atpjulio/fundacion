@@ -44,7 +44,7 @@
                 <tr>
                   <th style="width: 150px;">Código</th>
                   <th>Nombre</th>
-                  <th style="width: 100px;">Días</th>
+                  <th style="width: 100px;">Cant.</th>
                   <th style="width: 100px;">Opciones</th>
                 </tr>
               </thead>
