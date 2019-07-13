@@ -12,7 +12,6 @@ $(document).ready(function() {
     });
 
     $('#dynamic-services').on('change', '#eps_service_id', function (e) {
-        console.log('executed');
         var myUrl = '/get-service/' + $('#eps_service_id').val();
 
         $.ajax({
