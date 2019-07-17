@@ -113,40 +113,6 @@ class Rip extends Model
 
     protected function updateRIPS($request, $id)
     {
-        $invoices = Invoice::getInvoicesByEpsId($request->get('eps_id'));
-        $rip = $this->find($id);
-
-        if (count($invoices) <= 0 or !$rip) {
-            return null;
-        }
-
-        $line = "";
-
-        foreach ($invoices as $invoice) {
-            $days = \Carbon\Carbon::parse($invoice->authorization->date_to)->diffInDays(\Carbon\Carbon::parse($invoice->authorization->date_from));
-            $line .= $invoice->number.",".substr($invoice->company->doc, 0, 9).","
-                .$invoice->authorization->patient->dni_type.",".$invoice->authorization->patient->dni.","
-                .$invoice->authorization->code.",1,".$invoice->authorization->service->code.","
-                .mb_strtoupper($invoice->authorization->service->name).","
-                .$days.",".$invoice->eps->daily_price.","
-                .floatval($days * $invoice->eps->daily_price)."\r";
-        }
-
-        $fileName = "AT".sprintf("%06d", $rip->id).".TXT";
-
-        Storage::delete(config('constants.ripsFiles').$fileName);
-        Storage::put(config('constants.ripsFiles').$fileName, $line);
-
-        $rip->company_id = $request->get('company_id');
-        $rip->eps_id = $request->get('eps_id');
-        $rip->initial_date = $request->get('initial_date');
-        $rip->final_date = $request->get('final_date');
-        $rip->created_at = $request->get('created_at');
-        $rip->url = config('constants.ripsFiles').$fileName;
-
-        $rip->save();
-
-        return $rip;
     }
 
     protected function produceAT($invoices, $id, $update = false)
@@ -187,7 +153,7 @@ class Rip extends Model
                         $line .= $invoice->number.",".substr($invoice->company->doc, 0, 9).","
                             .$currentAuthorization->patient->dni_type.",".$currentAuthorization->patient->dni.","
                             .$currentAuthorization->code.",1,".$currentAuthorization->service->code.","
-                            .Utilities::normalizeString(mb_strtoupper($currentAuthorization->service->name)).","
+                            .Utilities::normalizeString(mb_strtoupper(substr($currentAuthorization->service->name, 0, 59))).","
                             .$days.",".number_format($dailyPrice, 2, ".", "").","
                             .number_format($total, 2, ".", "")."\r\n";
                         $counter++;
@@ -199,7 +165,7 @@ class Rip extends Model
                 $line .= $invoice->number.",".substr($invoice->company->doc, 0, 9).","
                     .$invoice->authorization->patient->dni_type.",".$invoice->authorization->patient->dni.","
                     .$invoice->authorization->code.",1,".$invoice->authorization->service->code.","
-                    .Utilities::normalizeString(mb_strtoupper($invoice->authorization->service->name)).","
+                    .Utilities::normalizeString(mb_strtoupper(substr($invoice->authorization->service->name, 0, 59))).","
                     .$days.",".number_format($dailyPrice, 2, ".", "").","
                     .number_format($invoice->total, 2, ".", "")."\r\n";
                 $counter++;
