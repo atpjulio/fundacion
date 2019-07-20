@@ -136,6 +136,7 @@ $myConstants = [
         "CE" => "CE - Cédula de Extranjería",
         "PA" => "PA - Pasaporte",
         "RC" => "RC - Registro Civil",
+        "CN" => "CN - Certificado de Nacimiento",
         "AS" => "AS - Adulto Sin Identificación",
         "MS" => "MS - Menor Sin Identificación",
         "NU" => "NU - Número Unico de Identificación",
