@@ -71,6 +71,26 @@ class Company extends Model
 
         $company->save();
 
+        $address = new Address();
+
+        $address->model_type = config('constants.modelType.company');
+        $address->model_id = $company->id;
+        $address->address = ucwords(strtolower($request->get('address')));
+        $address->address2 = ucwords(strtolower($request->get('address2')));
+        $address->city = ucwords(strtolower($request->get('city')));
+        $address->state = $request->get('state');
+
+        $address->save();
+
+        $phone = new Phone();
+
+        $phone->model_type = config('constants.modelType.company');
+        $phone->model_id = $company->id;
+        $phone->phone = $request->get('phone');
+        $phone->phone2 = $request->get('phone2');
+
+        $phone->save();
+
         return $company;
     }
 
@@ -98,6 +118,18 @@ class Company extends Model
             }
 
             $company->save();
+
+            $company->address->update([
+                'address' => ucwords(strtolower($request->get('address'))),
+                'address2' => ucwords(strtolower($request->get('address2'))),
+                'city' => ucwords(strtolower($request->get('city'))),
+                'state' => $request->get('state'),
+            ]);
+
+            $company->phone->update([
+                'phone' => $request->get('phone'),
+                'phone2' => $request->get('phone2'),
+            ]);
         }
 
         return $company;

@@ -26,7 +26,8 @@
             <div class="col-md-6">
                 <div class="card">
                     <div class="card-block">
-                        @include('company.fields2')
+                        @include('partials.addresses')
+                        @include('partials.phones')
                     </div>
                 </div>
             </div>
@@ -40,11 +41,5 @@
 @endsection
 
 @push('scripts')
-    <script language="javascript" type="text/javascript">
-        $(document).ready(function() {
-            $('.custom-file-input').on('change', function () {
-                $(this).next('.form-control-file').addClass("selected").html($(this)[0].files[0].name);
-            });
-        });
-    </script>
+    <script src="{{ asset('js/company/create.js') }}"></script>
 @endpush

@@ -65,9 +65,11 @@ class CompanyController extends Controller
      */
     public function edit($id)
     {
-        $company = Company::find($id);
+        $company = Company::findOrFail($id);
+        $address = $company->address;
+        $phone = $company->phone;
 
-        return view('company.edit', compact('company'));
+        return view('company.edit', compact('company', 'address', 'phone'));
     }
 
     /**

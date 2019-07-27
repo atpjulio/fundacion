@@ -31,6 +31,10 @@ class UpdateCompanyRequest extends FormRequest
             'billing_start' => 'required|numeric',
             'billing_end' => 'required|numeric',
             'logo' => 'image',
+            'address' => 'required',
+            'city' => 'required',
+            'state' => 'required',
+            'phone' => 'required',
         ];
     }
 }

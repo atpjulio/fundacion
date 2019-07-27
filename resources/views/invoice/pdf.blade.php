@@ -42,7 +42,7 @@
     <table width="100%">
         <tr>
             <td width="15%" style="color:#0000BB; ">
-                <img src="/img/logo.png" height="100px">
+                <img src="{{ $invoice->company->logo }}" height="100px">
             </td>
             <td width="40%" >
                 <span style="font-weight: bold; font-size: 14pt;">
@@ -53,8 +53,8 @@
                 {{ config('constants.companiesDocumentTypes')[$invoice->company->doc_type] }}:
                 </strong>
                 {{ $invoice->company->doc }}
-                <br><strong>Dirección:</strong> Carrera 60 No. 46 - 76
-                <br><strong>Tel:</strong> 3126214231 - 3157098010
+                <br><strong>Dirección:</strong> {{ $invoice->company->address->full_address }}
+                <br><strong>Tel:</strong> {{ $invoice->company->phone->full_phone }}
                 <br>
             </td>
             <td width="45%" style="text-align: right;">

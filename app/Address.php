@@ -16,4 +16,12 @@ class Address extends Model
         'state',
         'country',
     ];
+
+    public function getFullAddressAttribute()
+    {
+        if (!$this->address2) {
+            return $this->address;
+        }
+        return $this->address.' '.$this->address2;
+    }
 }

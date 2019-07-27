@@ -12,4 +12,13 @@ class Phone extends Model
         'phone',
         'phone2',
     ];
+
+    public function getFullPhoneAttribute()
+    {
+        if (!$this->phone2) {
+            return $this->phone;
+        }
+        return $this->phone.' - '.$this->phone2;
+    }
+
 }
