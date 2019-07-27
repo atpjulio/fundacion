@@ -10,7 +10,7 @@
         <tbody>
             @foreach($invoices as $invoice)
             <tr>
-                <td>{!! $invoice->format_number !!}</td>
+                <td>{!! $invoice->format_number.' - '.optional($invoice->eps)->alias !!}</td>
                 <td>{!! !$invoice->multiple ? $invoice->authorization_code : join("<br>", json_decode($invoice->multiple_codes, true)) !!}</td>
                 <td>$ {!! !$invoice->multiple ? number_format($invoice->total, 2, ",", ".") : join("<br>$ ", $invoice->multiple_totals_formated)!!}</td>
                 <td>{!! !$invoice->multiple ? $invoice->days : join("<br>", json_decode($invoice->multiple_days, true)) !!}</td>
