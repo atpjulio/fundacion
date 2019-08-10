@@ -11,16 +11,14 @@
             <p class="title-description"> Aquí puedes ver el listado de todas los servicios para una EPS en específico y crear, actualizar o eliminarlos</p>
         </div>
         <div class="float-right animated fadeInRight">
-            <a href="{{ route('eps.services.create', $eps->id) }}" class="btn btn-pill-left btn-primary btn-lg">
-                <i class="fa fa-plus"></i>
-                Añadir Servicio
-            </a>
-        </div>
-        <br>
-        <div class="float-right animated fadeInRight">
             <a href="{{ route('eps.index') }}" class="btn btn-pill-left btn-secondary btn-lg">
                 <i class="fas fa-list"></i>
                 Regresar
+            </a>
+            <br>
+            <a href="{{ route('eps.services.create', $eps->id) }}" class="btn btn-pill-left btn-primary btn-lg">
+                <i class="fa fa-plus"></i>
+                Añadir Servicio
             </a>
         </div>
     </div>
