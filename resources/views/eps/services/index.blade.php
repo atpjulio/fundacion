@@ -13,7 +13,7 @@
         <div class="float-right animated fadeInRight">
             <a href="{{ route('eps.index') }}" class="btn btn-pill-left btn-secondary btn-lg">
                 <i class="fas fa-list"></i>
-                Regresar &nbsp;&nbsp;&nbsp;&nbsp;
+                Listado de EPS
             </a>
             <br>
             <a href="{{ route('eps.services.create', $eps->id) }}" class="btn btn-pill-left btn-primary btn-lg">
