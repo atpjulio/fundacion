@@ -26,7 +26,7 @@ class UpdatePatientRequest extends FormRequest
         return [
             'eps_id' => 'required',
             'dni_type' => 'required',
-            'dni' => 'required|unique:patients,id,'.$this->request->get('id'),
+            'dni' => 'required|unique:patients,dni,'.$this->request->get('id'),
             'first_name' => 'required|min:3',
             'last_name' => 'required|min:3',
             'birth_day' => 'required',
