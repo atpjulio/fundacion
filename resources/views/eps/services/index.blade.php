@@ -15,8 +15,7 @@
                 <i class="fa fa-plus"></i>
                 Añadir Servicio
             </a>
-        </div>
-        <div class="float-right animated fadeInRight">
+            <br>
             <a href="{{ route('eps.index') }}" class="btn btn-pill-left btn-secondary btn-lg">
                 <i class="fas fa-list"></i>
                 Regresar
