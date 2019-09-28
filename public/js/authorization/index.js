@@ -1,5 +1,5 @@
 $(document).ready(function() {
-    var code = '';
+    var code        = '';
     var description = '';
     $('#searching').on('change', function (e) {
         fillFilteredEpsPatients($('#searching').val());
@@ -71,8 +71,8 @@ $(document).ready(function() {
     $("#companionsTable").on('click','.addRow', function() {
         $("#companionsTable").append(
           '<tr>' +
-            '<td><input type="text" name="companion_dni[]" value="" maxlength="20" class="form-control"></td>' +
-            '<td><input type="text" name="companion_name[]" value="" maxlength="50" class="form-control"></td>' +
+          '<td><input type="text" name="companion_name[]" value="" maxlength="50" class="form-control"></td>' +
+          '<td><input type="text" name="companion_dni[]" value="" maxlength="20" class="form-control"></td>' +
             '<td><input type="text" name="companion_phone[]" value="" maxlength="15" class="form-control"></td>' +
             '<td><a href="javascript:void(0);" class="removeRow btn btn-oval btn-danger">Quitar</a></td>' +
           '</tr>'

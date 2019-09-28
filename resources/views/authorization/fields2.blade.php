@@ -19,7 +19,7 @@
 
 <div class="form-group  @if($errors->has('date_from')) has-error @endif">
     {!! Form::label('date_from', 'Fecha de inicio', ['class' => 'control-label']) !!}
-    {!! Form::date('date_from', old('date_from', isset($dateFrom) ? $dateFrom : ''), ['class' => 'form-control underlined', 'placeholder' => 'dd/mm/aaaa', isset($show) ? 'readonly' : '']) !!}
+    {!! Form::date('date_from', old('date_from', isset($dateFrom) ? $dateFrom : \Carbon\Carbon::now()), ['class' => 'form-control underlined', 'placeholder' => 'dd/mm/aaaa', isset($show) ? 'readonly' : '']) !!}
 </div>
 <div class="form-group  @if($errors->has('total_days')) has-error @endif">
     {!! Form::label('total_days', 'Cantidad', ['class' => 'control-label']) !!}
