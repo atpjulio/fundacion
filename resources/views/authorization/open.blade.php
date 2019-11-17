@@ -31,8 +31,7 @@
                                 <thead>
                                 <th>Código</th>
                                 <th>EPS</th>
-                                <th>Desde</th>
-                                <th>Hasta</th>
+                                <th>Usuario</th>
                                 <th>Días</th>
                                 <th>Opciones</th>
                                 </thead>
@@ -40,9 +39,8 @@
                                 @foreach($authorizations as $authorization)
                                     <tr>
                                         <td>{!! $authorization->codec ?: '--' !!}</td>
-                                        <td>{!! $authorization->eps->code !!} - {!! $authorization->eps->alias ? $authorization->eps->alias : $authorization->eps->name !!}</td>
-                                        <td>{!! \Carbon\Carbon::parse($authorization->date_from)->format("d/m/Y") !!}</td>
-                                        <td>{!! \Carbon\Carbon::parse($authorization->date_to)->format("d/m/Y") !!}</td>
+                                        <td>{!! $authorization->eps->alias ? $authorization->eps->alias : $authorization->eps->name !!}</td>
+                                        <td>{!! $authorization->patient ? $authorization->patient->back_name : '--' !!}</td>
                                         <td>{!! $authorization->days !!}</td>
                                         <td>
                                             @role('admin')

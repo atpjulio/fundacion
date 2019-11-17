@@ -70,12 +70,12 @@ $(document).ready(function() {
     });
     $("#companionsTable").on('click','.addRow', function() {
         $("#companionsTable").append(
-          '<tr>' +
-          '<td><input type="text" name="companion_name[]" value="" maxlength="50" class="form-control"></td>' +
-          '<td><input type="text" name="companion_dni[]" value="" maxlength="20" class="form-control"></td>' +
+            '<tr>' +
+            '<td><input type="text" name="companion_dni[]" value="" maxlength="20" class="form-control"></td>' +
+            '<td><input type="text" name="companion_name[]" value="" maxlength="50" class="form-control"></td>' +
             '<td><input type="text" name="companion_phone[]" value="" maxlength="15" class="form-control"></td>' +
             '<td><a href="javascript:void(0);" class="removeRow btn btn-oval btn-danger">Quitar</a></td>' +
-          '</tr>'
+            '</tr>'
         );
     });
     $("#companionsTable").on('click','.removeRow', function() {
@@ -86,14 +86,14 @@ $(document).ready(function() {
     });
     $(".addRowService").on('click', function() {
         code = $('#multiple_services option:selected').text().split(" - ")[0].trim();
-        description = $('#multiple_services option:selected').text().split(" - ")[1].trim();
+        description = $('#multiple_services option:selected').text().split(" - ")[1].trim() + ' - ' + $('#multiple_services option:selected').text().split(" - ")[2].trim();
         $("#multipleServicesTable").append(
-          '<tr>' +
+            '<tr>' +
             '<td><input type="text" name="service_code[]" value="' + code + '" class="form-control" readonly></td>' +
             '<td><input type="text" name="service_description[]" value="' + description + '" class="form-control" readonly></td>' +
             '<td><input type="number" name="service_days[]" value="' + $("#total_days").val() + '" class="form-control"></td>' +
             '<td><a href="javascript:void(0);" class="removeRowService btn btn-oval btn-danger">Quitar</a></td>' +
-          '</tr>'
+            '</tr>'
         );
     });
     $("#multipleServicesTable").on('click',' .removeRowService', function() {
@@ -101,21 +101,20 @@ $(document).ready(function() {
     });
     $("#dynamic-multiple-services").on('change', '#multiple_services', function (e) {
         if ($('#multiple_services').val() == 0) {
-          $('#addRowService').removeClass('btn-success');
-          $('#addRowService').addClass('btn-secondary');
-          $('#multipleServicesDiv').css('display', 'none');
+            $('#addRowService').removeClass('btn-success');
+            $('#addRowService').addClass('btn-secondary');
+            $('#multipleServicesDiv').css('display', 'none');
         } else {
-          $('#multipleServicesDiv').css('display', 'block');
-          $('#multipleServicesDiv').addClass('animated fadeIn');
-          $('#addRowService').removeClass('btn-secondary');
-          $('#addRowService').addClass('btn-success');
+            $('#multipleServicesDiv').css('display', 'block');
+            $('#multipleServicesDiv').addClass('animated fadeIn');
+            $('#addRowService').removeClass('btn-secondary');
+            $('#addRowService').addClass('btn-success');
         }
     });
 } );
 function sendInfo(id, eps_id, name) {
     $('#patient_id').val(id);
     $('#selected_patient').html(name);
-    //$('#serviceLink').attr("href", "/eps-services/" + eps_id + "/create-from-authorization");
     $('#serviceLink').attr("href", "javascript:showModal('new-service/" + eps_id + "')");
     $('#restOfFields').css('display', 'block');
     $('#restOfFields').addClass('animated fadeIn');

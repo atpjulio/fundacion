@@ -2,8 +2,8 @@
   <table class="table table-striped table-bordered table-condensed table-hover" id="companionsTable">
     <thead>
       <tr>
-        <th>Nombre completo</th>
         <th>Documento</th>
+        <th>Nombre completo</th>
         <th>Número de contacto</th>
         <th style="width: 100px;">Opciones</th>
       </tr>
@@ -12,10 +12,10 @@
       @if(!old('companion_dni') && !isset($authorization))
       <tr>
         <td>
-          <input type="text" name="companion_name[]" value="" maxlength="50" class="form-control">
+          <input type="text" name="companion_dni[]" value="" maxlength="20" class="form-control">
         </td>
         <td>
-          <input type="text" name="companion_dni[]" value="" maxlength="20" class="form-control">
+          <input type="text" name="companion_name[]" value="" maxlength="50" class="form-control">
         </td>
         <td>
           <input type="text" name="companion_phone[]" value="" maxlength="15" class="form-control">
@@ -28,11 +28,11 @@
       @foreach (old('companion_dni') as $key => $value)
       <tr>
         <td>
-          <input type="text" name="companion_name[]" value="{{ old('companion_name')[$key] }}" maxlength="50"
-            class="form-control">
+          <input type="text" name="companion_dni[]" value="{{ $value }}" maxlength="20" class="form-control">
         </td>
         <td>
-          <input type="text" name="companion_dni[]" value="{{ $value }}" maxlength="20" class="form-control">
+          <input type="text" name="companion_name[]" value="{{ old('companion_name')[$key] }}" maxlength="50"
+            class="form-control">
         </td>
         <td>
           <input type="text" name="companion_phone[]" value="{{ old('companion_phone')[$key] }}" maxlength="15"
@@ -51,10 +51,10 @@
       @foreach ($authorization->companions as $key => $companion)
       <tr>
         <td>
-          <input type="text" name="companion_name[]" value="{{ $companion->name }}" maxlength="50" class="form-control">
+          <input type="text" name="companion_dni[]" value="{{ $companion->dni }}" maxlength="20" class="form-control">
         </td>
         <td>
-          <input type="text" name="companion_dni[]" value="{{ $companion->dni }}" maxlength="20" class="form-control">
+          <input type="text" name="companion_name[]" value="{{ $companion->name }}" maxlength="50" class="form-control">
         </td>
         <td>
           <input type="text" name="companion_phone[]" value="{{ $companion->phone }}" maxlength="15"
@@ -72,11 +72,11 @@
       @else
       <tr>
         <td>
-          <input type="text" name="companion_name[]" value="{{ $authorization->companion_name }}" maxlength="50"
+          <input type="text" name="companion_dni[]" value="{{ $authorization->companion_dni }}" maxlength="20"
             class="form-control">
         </td>
         <td>
-          <input type="text" name="companion_dni[]" value="{{ $authorization->companion_dni }}" maxlength="20"
+          <input type="text" name="companion_name[]" value="{{ $authorization->companion_name }}" maxlength="50"
             class="form-control">
         </td>
         <td>

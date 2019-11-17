@@ -45,11 +45,11 @@ class AuthorizationController extends Controller
         if (session()->has('authorization-create')) {
             session()->forget('authorization-create');
         }
-        $epss = Eps::all();
+        $epss         = Eps::all();
         $initialEpsId = $epss->toArray()[0]['id'];
-        $services = EpsService::getServices($initialEpsId)->pluck('name', 'id');
-        $epss = $epss->pluck('name', 'id');
-        $patients = Patient::searchRecords('');
+        $services     = EpsService::getServices($initialEpsId)->pluck('name', 'id');
+        $epss         = $epss->pluck('name', 'id');
+        $patients     = Patient::searchRecords('');
 
         return view('authorization.create', compact('epss', 'services', 'patients', 'initialEpsId'));
     }
