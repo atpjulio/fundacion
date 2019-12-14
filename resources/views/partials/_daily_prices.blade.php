@@ -3,7 +3,7 @@
 @endphp
 
 @if (isset($authorization))
-  {!! Form::number('daily_price', old('daily_price', $authorization->daily_price), ['class' => 'form-control', 'readonly', 'id' => 'daily_price']) !!}
+  {!! Form::number('daily_price', old('daily_price', $authorization->daily_price_single), ['class' => 'form-control', 'readonly', 'id' => 'daily_price']) !!}
 @elseif (isset($currentEps) and count($currentEps->price) > 0)
   {!! Form::number('daily_price', old('daily_price', $currentEps->price[0]->daily_price), ['class' => 'form-control', 'readonly', 'id' => 'daily_price']) !!}
 @elseif(isset($currentEps))

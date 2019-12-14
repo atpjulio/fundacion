@@ -63,6 +63,7 @@
                     <br>
                     {{ $invoice->format_number }}
                 </span>
+                @if (strlen($invoice->company->billing_resolution) > 1)
                 <br>
                 Resolución de Facturación No.
                 <br>
@@ -70,6 +71,7 @@
                 {{ \Carbon\Carbon::parse($invoice->company->billing_date)->format("d/m/Y") }}
                 <br>
                 Desde {{ $invoice->company->billing_start }} hasta el {{ $invoice->company->billing_end }}
+                @endif
             </td>
         </tr>
     </table>
