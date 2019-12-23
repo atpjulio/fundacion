@@ -7,7 +7,7 @@ $myConstants = [
     'emails' => [
         'testing' => 'atpjulio@gmail.com',
         'admin' => 'fundacasahogar_elmilagro@hotmail.com',
-        'admin2' => 'zuleima0326@gmail.com'
+        'admin2' => 'elmilagrobq1@gmail.com'
     ],
     'pagination' => 20,
     'stylesVersion' => '2.91',
