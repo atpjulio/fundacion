@@ -34,17 +34,17 @@
 </div>
 <div class="form-inline">
     <div class="form-group  @if($errors->has('birth_date')) has-error @endif">
-        <div id="dynamic-days">
-        {!! Form::selectRange('birth_day', 1, 28, isset($patient) ? intval(substr($patient->birth_date, 8, 2)) : 1,
-            ['class' => 'form-control', 'id' => 'birth_day', isset($show) ? 'disabled' : '']) !!}
-        </div>
+        {!! Form::selectRange('birth_year', 1918, date("Y"), isset($patient) ? substr($patient->birth_date, 0, 4) :
+        1970, ['class' => 'form-control', 'id' => 'birth_year', isset($show) ? 'disabled' : '']) !!}
         &nbsp;&nbsp;
         {!! Form::select('birth_month', config('constants.months'), isset($patient) ?
         intval(substr($patient->birth_date, 5, 2)) : 1, ['class' => 'form-control', 'id' => 'birth_month', isset($show)
         ? 'disabled' : '']) !!}
         &nbsp;&nbsp;
-        {!! Form::selectRange('birth_year', 1918, date("Y"), isset($patient) ? substr($patient->birth_date, 0, 4) :
-        1970, ['class' => 'form-control', 'id' => 'birth_year', isset($show) ? 'disabled' : '']) !!}
+        <div id="dynamic-days">
+            {!! Form::selectRange('birth_day', 1, 28, isset($patient) ? intval(substr($patient->birth_date, 8, 2)) : 1,
+            ['class' => 'form-control', 'id' => 'birth_day', isset($show) ? 'disabled' : '']) !!}
+        </div>
     </div>
 </div>
 <br>
