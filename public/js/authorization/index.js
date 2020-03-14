@@ -85,8 +85,11 @@ $(document).ready(function() {
         $(this).parent().parent().remove();
     });
     $(".addRowService").on('click', function() {
-        code = $('#multiple_services option:selected').text().split(" - ")[0].trim();
-        description = $('#multiple_services option:selected').text().split(" - ")[1].trim() + ' - ' + $('#multiple_services option:selected').text().split(" - ")[2].trim();
+        const selectText = $('#multiple_services option:selected').text();
+        const descriptionArray = selectText.split(" - ");
+        code = descriptionArray[0].trim();
+        description = selectText.substr(selectText.indexOf(' - ') + 3);
+
         $("#multipleServicesTable").append(
             '<tr>' +
             '<td><input type="text" name="service_code[]" value="' + code + '" class="form-control" readonly></td>' +
