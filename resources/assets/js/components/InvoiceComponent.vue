@@ -26,7 +26,7 @@
                             </thead>
                             <tbody v-if="authorizationsTable.length > 0">
                                 <tr v-for="element in authorizationsTable" :key="element.id">
-                                    <td>{{ element.code }}</td>
+                                    <td> <a :href="'/authorization/' + element.id + '/edit'"  target="_blank">{{ element.code }}</a></td>
                                     <td>{{ element.eps.name }}</td>
                                     <td>{{ element.patient.first_name + ' ' + element.patient.last_name }}</td>
                                     <td>{{ element.date_from | moment }}</td>
