@@ -101,6 +101,21 @@ class AuthorizationController extends Controller
         return view('authorization.edit', compact('epss', 'services', 'patients', 'authorization', 'code', 'dateFrom', 'dateTo', 'initialEpsId'));
     }
 
+    public function editByCode($code)
+    {
+        $epss = Eps::all();
+        $authorization = Authorization::where('code', $code)->first();
+        $services = EpsService::getServices($authorization->eps_id);
+        $epss = $epss->pluck('name', 'id');
+        $patients = Patient::searchRecords($authorization->patient->dni);
+        $code = $authorization->codec;
+        $dateFrom = $authorization->date_from;
+        $dateTo = $authorization->date_to;
+        $initialEpsId = $authorization->eps_id;
+
+        return view('authorization.edit', compact('epss', 'services', 'patients', 'authorization', 'code', 'dateFrom', 'dateTo', 'initialEpsId'));
+    }
+
     /**
      * Update the specified resource in storage.
      *

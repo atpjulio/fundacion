@@ -9,9 +9,24 @@
         </thead>
         <tbody>
             @foreach($invoices as $invoice)
+            @php
+                $routes = '';
+                if (!$invoice->multiple) {
+                    $routes = '<a href="'. route('authorization.code', $invoice->authorization_code). '" target="_blank">'.$invoice->authorization_code.'</a>';
+                } else {
+                    $codesArray = json_decode($invoice->multiple_codes, true);
+                    foreach ($codesArray as $key => $code) {
+                        $routes .= '<a href="'. route('authorization.code', $code). '" target="_blank">'.$code.'</a>';
+                        // $routes .= route('authorization.code', $code);
+                        if (count($codesArray) > $key - 1) {
+                            $routes .= '<br>';
+                        }
+                    }
+                }
+            @endphp
             <tr>
                 <td>{!! $invoice->format_number.' - '.optional($invoice->eps)->alias !!}</td>
-                <td>{!! !$invoice->multiple ? $invoice->authorization_code : join("<br>", json_decode($invoice->multiple_codes, true)) !!}</td>
+                <td>{!! $routes !!}</td>
                 <td>$ {!! !$invoice->multiple ? number_format($invoice->total, 2, ",", ".") : join("<br>$ ", $invoice->multiple_totals_formated)!!}</td>
                 <td>{!! !$invoice->multiple ? $invoice->days : join("<br>", json_decode($invoice->multiple_days, true)) !!}</td>
                 <td>

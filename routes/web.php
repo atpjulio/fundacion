@@ -74,6 +74,7 @@ Route::middleware(['auth', 'both'])->group(function () {
     Route::patch('eps-services/{id}/update', 'EpsController@servicesUpdate')->name('eps.services.update');
 
     Route::resource('authorization', 'AuthorizationController');
+    Route::get('authorizations/{code}/edit', 'AuthorizationController@editByCode')->name('authorization.code');
     Route::post('authorization/confirm', 'AuthorizationController@confirm')->name('authorization.confirm');
     Route::get('authorization-incomplete', 'AuthorizationController@incomplete')->name('authorization.incomplete');
     Route::get('authorization-open', 'AuthorizationController@open')->name('authorization.open');
