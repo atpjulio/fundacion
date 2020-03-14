@@ -14,7 +14,7 @@
 @section('content')
     <div class="title-block">
         <div class="float-left">
-            <h3 class="title"> Nueva Factura </h3>
+            <h3 class="title"> Nueva Factura #{{ $lastNumber > 0 ? ($lastNumber + 1) : 1 }}</h3>
             <p class="title-description"> Añadiendo nueva factura al sistema </p>
         </div>
         <div class="float-right animated fadeInRight">

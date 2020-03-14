@@ -351,7 +351,8 @@ class Authorization extends Model
             ->with('patient')
             ->with('services')
             ->where('invoice_id', 0)
-            ->where('code', 'not like', config('constants.unathorized.prefix').'%');
+            ->where('code', 'not like', config('constants.unathorized.prefix').'%')
+            ->orderBy('id', 'desc');
 
         if ($pagination) {
             return $result->paginate(config('constants.pagination') / 2);

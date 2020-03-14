@@ -15,7 +15,7 @@
 @section('content')
     <div class="title-block">
         <div class="float-left">
-            <h3 class="title"> Editar Factura </h3>
+            <h3 class="title"> Editar Factura #{{ $invoice->number }} </h3>
             <p class="title-description"> Editando factura del sistema </p>
         </div>
         <div class="float-right animated fadeInRight">
