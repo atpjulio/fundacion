@@ -86,13 +86,14 @@ $(document).ready(function() {
     });
     $(".addRowService").on('click', function() {
         const selectText = $('#multiple_services option:selected').text();
+        // console.log($('#multiple_services option:selected').text());
         const descriptionArray = selectText.split(" - ");
-        code = descriptionArray[0].trim();
+        code = $('#multiple_services option:selected')[0].value;//descriptionArray[0].trim();
         description = selectText.substr(selectText.indexOf(' - ') + 3);
 
         $("#multipleServicesTable").append(
             '<tr>' +
-            '<td><input type="text" name="service_code[]" value="' + code + '" class="form-control" readonly></td>' +
+            '<td><input type="hidden" name="service_code[]" value="' + code + '" class="form-control" readonly><input type="text" name="service_show[]" value="' + descriptionArray[0].trim() + '" class="form-control" readonly></td>' +
             '<td><input type="text" name="service_description[]" value="' + description + '" class="form-control" readonly></td>' +
             '<td><input type="number" name="service_days[]" value="' + $("#total_days").val() + '" class="form-control"></td>' +
             '<td><a href="javascript:void(0);" class="removeRowService btn btn-oval btn-danger">Quitar</a></td>' +

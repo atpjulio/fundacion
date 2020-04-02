@@ -52,7 +52,8 @@
                         @if (old('service_code'))
                         @foreach (old('service_code') as $key => $value)
                         <tr>
-                            <td><input type="text" name="service_code[]" value="{{ $value }}" class="form-control"
+                            <td><input type="hidden" name="service_code[]" value="{{ $value }}" class="form-control"
+                                    readonly><input type="text" name="service_show[]" value="{{ old('service_show')[$key] }}" class="form-control"
                                     readonly></td>
                             <td><input type="text" name="service_description[]"
                                     value="{{ old('service_description')[$key] }}" class="form-control" readonly></td>
@@ -67,11 +68,12 @@
                         @foreach ($authorization->services as $key => $authorizationService)
                         @if ($key > 0)
                         <tr>
-                            <td><input type="text" name="service_code[]"
+                            <td><input type="hidden" name="service_code[]"
+                                    value="{{ $authorizationService->service->id }}" class="form-control" readonly><input type="text" name="service_show[]"
                                     value="{{ $authorizationService->service->code }}" class="form-control" readonly>
                             </td>
                             <td><input type="text" name="service_description[]"
-                                    value="{{ $authorizationService->service->name }}" class="form-control" readonly>
+                                    value="{{ $authorizationService->service->name.' - $'.$authorizationService->service->price }}" class="form-control" readonly>
                             </td>
                             <td><input type="number" name="service_days[]" value="{{ $authorizationService->days }}"
                                     class="form-control" min="1"></td>
@@ -86,7 +88,8 @@
                         @endphp
                         @if ($oldVersionService)
                         <tr>
-                            <td><input type="text" name="service_code[]" value="{{ $oldVersionService->code }}"
+                            <td><input type="hidden" name="service_code[]" value="{{ $oldVersionService->id }}"
+                                    class="form-control" readonly><input type="text" name="service_show[]" value="{{ $oldVersionService->code }}"
                                     class="form-control" readonly></td>
                             <td><input type="text" name="service_description[]" value="{{ $oldVersionService->name }}"
                                     class="form-control" readonly></td>

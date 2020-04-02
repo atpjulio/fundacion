@@ -44,7 +44,8 @@ class AuthorizationService extends Model
 
         if ($request->get('service_code') and is_array($request->get('service_code'))) {
           foreach ($request->get('service_code') as $key => $serviceCode) {
-              $currentService = EpsService::getService($authorization->eps_id, $serviceCode);
+              // $currentService = EpsService::getService($authorization->eps_id, $serviceCode);
+              $currentService = EpsService::findOrFail($serviceCode);
               if ($currentService) {
                   $this->create([
                       'authorization_id' => $authorization->id,
