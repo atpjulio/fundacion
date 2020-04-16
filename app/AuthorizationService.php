@@ -17,10 +17,10 @@ class AuthorizationService extends Model
         'days',
     ];
     /**
-    * The attributes that should be mutated to dates.
-    *
-    * @var array
-    */
+     * The attributes that should be mutated to dates.
+     *
+     * @var array
+     */
     protected $dates = ['deleted_at'];
 
     public function authorization()
@@ -36,25 +36,26 @@ class AuthorizationService extends Model
     protected function storeRecord($authorization, $request)
     {
         $this->create([
-          'authorization_id' => $authorization->id,
-          'eps_service_id' => $request->get('eps_service_id'),
-          'price' => $request->get('daily_price'),
-          'days' => $request->get('total_days'),
+            'authorization_id' => $authorization->id,
+            'eps_service_id' => $request->get('eps_service_id'),
+            'price' => $request->get('daily_price'),
+            'days' => $request->get('total_days'),
         ]);
 
         if ($request->get('service_code') and is_array($request->get('service_code'))) {
-          foreach ($request->get('service_code') as $key => $serviceCode) {
-              // $currentService = EpsService::getService($authorization->eps_id, $serviceCode);
-              $currentService = EpsService::findOrFail($serviceCode);
-              if ($currentService) {
-                  $this->create([
-                      'authorization_id' => $authorization->id,
-                      'eps_service_id' => $currentService->id,
-                      'price' => $currentService->price,
-                      'days' => $request->get('service_days')[$key] ?: $request->get('total_days'),
-                  ]);
-              }
-          }
+            foreach ($request->get('service_code') as $key => $serviceCode) {
+                // $currentService = EpsService::getService($authorization->eps_id, $serviceCode);
+                $currentService = EpsService::findOrFail($serviceCode);
+                // dump($serviceCode);
+                if ($currentService) {
+                    $this->create([
+                        'authorization_id' => $authorization->id,
+                        'eps_service_id' => $currentService->id,
+                        'price' => $currentService->price,
+                        'days' => $request->get('service_days')[$key] ?: $request->get('total_days'),
+                    ]);
+                }
+            }
         }
     }
 
@@ -71,7 +72,8 @@ class AuthorizationService extends Model
 
         if ($request->get('service_code') and is_array($request->get('service_code'))) {
             foreach ($request->get('service_code') as $key => $serviceCode) {
-                $currentService = EpsService::getService($authorization->eps_id, $serviceCode);
+                // $currentService = EpsService::getService($authorization->eps_id, $serviceCode);
+                $currentService = EpsService::findOrFail($serviceCode);
                 if ($currentService) {
                     $this->create([
                         'authorization_id' => $authorization->id,
@@ -89,9 +91,9 @@ class AuthorizationService extends Model
         $record = $this->where('authorization_id', $authorization->id)
             ->first();
         if (!$record) {
-            return false;            
+            return false;
         }
-            
+
         $service = EpsService::find($record->eps_service_id);
         if (!$service) {
             return false;
@@ -116,7 +118,7 @@ class AuthorizationService extends Model
             ->first();
 
         if (!$record) {
-            return 'record not found';            
+            return 'record not found';
         }
 
         $record->update([
@@ -124,10 +126,10 @@ class AuthorizationService extends Model
             'price' => $service->price
         ]);
 
-        return 'received: '.$days.' then '.$record->days.' days, update performed on id: '.$record->id;
+        return 'received: ' . $days . ' then ' . $record->days . ' days, update performed on id: ' . $record->id;
     }
 
-    protected function checkIfExists($authorization) 
+    protected function checkIfExists($authorization)
     {
         return $this->where('authorization_id', $authorization->id)
             ->first();
