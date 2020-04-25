@@ -362,6 +362,7 @@ class Invoice extends Model
         if ($initialNumber and $finalNumber) {
             return $this->where('eps_id', $epsId)
                 ->whereBetween('number', [$initialNumber, $finalNumber])
+                ->orderBy('number')
                 ->get();
         }
 
