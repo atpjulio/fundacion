@@ -122,6 +122,13 @@ class Rip extends Model
 
     protected function produceAT($invoices, $id, $update = false)
     {
+        $serviceType = 1;
+
+/*
+        if ($invoice->eps and strpos($invoice->eps->name, "Mutual") != FALSE) {
+            $serviceType = 2;
+        }
+*/
         $line = "";
         $counter = 0;
         foreach ($invoices as $invoice) {
@@ -157,10 +164,10 @@ class Rip extends Model
                         }
                         $line .= $invoice->number . "," . substr($invoice->company->doc, 0, 9) . ","
                             . $currentAuthorization->patient->dni_type . "," . $currentAuthorization->patient->dni . ","
-                            . $currentAuthorization->code . ",1," . $currentAuthorization->service->code . ","
+                            . $currentAuthorization->code . ",".$serviceType."," . $currentAuthorization->service->code . ","
                             . Utilities::normalizeString(mb_strtoupper(substr($currentAuthorization->service->name, 0, 59))) . ","
-                            . $days . "," . number_format($dailyPrice, 2, ".", "") . ","
-                            . number_format($total, 2, ".", "") . "\r\n";
+                            . $days . "," . number_format($dailyPrice, 0, ".", "") . ","
+                            . number_format($total, 0, ".", "") . "\r\n";
                         $counter++;
                     }
                 }
@@ -169,10 +176,10 @@ class Rip extends Model
                 $dailyPrice = $invoice->authorization->daily_price;
                 $line .= $invoice->number . "," . substr($invoice->company->doc, 0, 9) . ","
                     . $invoice->authorization->patient->dni_type . "," . $invoice->authorization->patient->dni . ","
-                    . $invoice->authorization->code . ",1," . $invoice->authorization->service->code . ","
+                    . $invoice->authorization->code . ",".$serviceType."," . $invoice->authorization->service->code . ","
                     . Utilities::normalizeString(mb_strtoupper(substr($invoice->authorization->service->name, 0, 59))) . ","
-                    . $days . "," . number_format($dailyPrice, 2, ".", "") . ","
-                    . number_format($invoice->total, 2, ".", "") . "\r\n";
+                    . $days . "," . number_format($dailyPrice, 0, ".", "") . ","
+                    . number_format($invoice->total, 0, ".", "") . "\r\n";
                 $counter++;
             }
         }
