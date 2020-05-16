@@ -144,7 +144,7 @@ class Rip extends Model
                         } catch (\Exception $e) {
                             dd($invoice, $key);
                         }
-                        $line .= $invoice->number . "," . str_replace('-', '0', $invoice->company->doc) . ","
+                        $line .= $invoice->number . "," . substr($invoice->company->doc, 0, 9) . ","
                             . $currentAuthorization->patient->dni_type . "," . $currentAuthorization->patient->dni . ","
                             . $currentAuthorization->code . "," . $serviceType . "," . $currentAuthorization->service->code . ","
                             . Utilities::normalizeString(mb_strtoupper(substr($currentAuthorization->service->name, 0, 59))) . ","
@@ -156,7 +156,7 @@ class Rip extends Model
             } else {
                 $days = $invoice->days;
                 $dailyPrice = $invoice->authorization->daily_price;
-                $line .= $invoice->number . "," . str_replace('-', '0', $invoice->company->doc) . ","
+                $line .= $invoice->number . "," . substr($invoice->company->doc, 0, 9) . ","
                     . $invoice->authorization->patient->dni_type . "," . $invoice->authorization->patient->dni . ","
                     . $invoice->authorization->code . "," . $serviceType . "," . $invoice->authorization->service->code . ","
                     . Utilities::normalizeString(mb_strtoupper(substr($invoice->authorization->service->name, 0, 59))) . ","
