@@ -66,10 +66,10 @@
                 }
             });
 
-            $('#eps_id').on('change', function() {
-                var data = $('#eps_id').val() + '_' + $('#initial_date').val() + '_' + $('#final_date').val();
-                fillInvoicesByEpsAndDate(data);
-            });
+            // $('#eps_id').on('change', function() {
+            //     var data = $('#eps_id').val() + '_' + $('#initial_date').val() + '_' + $('#final_date').val();
+            //     fillInvoicesByEpsAndDate(data);
+            // });
 
             // $('#initial_date').on('change', function() {
             //     var data = $('#eps_id').val() + '_' + $('#initial_date').val() + '_' + $('#final_date').val();

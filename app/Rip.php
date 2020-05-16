@@ -41,8 +41,6 @@ class Rip extends Model
     protected function produceRIPS($request)
     {
         $epsId         = $request->get('eps_id');
-        $initialDate   = Carbon::parse($request->get('initial_date'))->format('d/m/Y');
-        $finalDate     = Carbon::parse($request->get('final_date'))->format('d/m/Y');
         $initialNumber = $request->get('initial_number');
         $finalNumber   = $request->get('final_number');
 
@@ -60,7 +58,9 @@ class Rip extends Model
         // Creating US file
         $counterUS = $this->produceUS($invoices, $lastRip ? $lastRip->id + 1 : 1);
         // Creating AF file
-        $counterAF = $this->produceAF($invoices, $lastRip ? $lastRip->id + 1 : 1, $initialDate, $finalDate);
+        $initialDate = Carbon::parse($request->get('initial_date'))->format('d/m/Y');
+        $finalDate   = Carbon::parse($request->get('final_date'))->format('d/m/Y');
+        $counterAF   = $this->produceAF($invoices, $lastRip ? $lastRip->id + 1 : 1, $initialDate, $finalDate);
 
         // Creating CT file
         $this->produceCT(
