@@ -2,6 +2,7 @@
 
 namespace App;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\Storage;
@@ -39,14 +40,12 @@ class Rip extends Model
      */
     protected function produceRIPS($request)
     {
-        $prefixCounter = 0;
-        $epsId = $request->get('eps_id');
-        // $initialDate = $request->get('initial_date');
-        // $finalDate = $request->get('final_date');
+        $epsId         = $request->get('eps_id');
+        $initialDate   = Carbon::parse($request->get('initial_date'))->format('d/m/Y');
+        $finalDate     = Carbon::parse($request->get('final_date'))->format('d/m/Y');
         $initialNumber = $request->get('initial_number');
-        $finalNumber = $request->get('final_number');
+        $finalNumber   = $request->get('final_number');
 
-        // $invoices = Invoice::getInvoicesByEpsId($epsId, $initialDate, $finalDate);
         $invoices = Invoice::getInvoicesByEpsIdNumber($epsId, $initialNumber, $finalNumber);
 
         $rip = null;
@@ -54,19 +53,14 @@ class Rip extends Model
             return $rip;
         }
 
-        $initialDate = $invoices->first()->created_at;
-        $finalDate = $invoices->last()->created_at;
-
         $lastRip = $this->orderBy('id', 'desc')->first();
 
         // Creating AT file
         $counterAT = $this->produceAT($invoices, $lastRip ? $lastRip->id + 1 : 1);
-
         // Creating US file
         $counterUS = $this->produceUS($invoices, $lastRip ? $lastRip->id + 1 : 1);
-
         // Creating AF file
-        $counterAF = $this->produceAF($invoices, $lastRip ? $lastRip->id + 1 : 1);
+        $counterAF = $this->produceAF($invoices, $lastRip ? $lastRip->id + 1 : 1, $initialDate, $finalDate);
 
         // Creating CT file
         $this->produceCT(
@@ -91,25 +85,13 @@ class Rip extends Model
                 ->add(storage_path('app/public/rips/' . $fileName))
                 ->close();
         }
-        /*
-        $filePrefix = ['AT', 'US', 'AF', 'CT', 'RIPS'];
-        $ripPackage = 'RIPS'.sprintf("%06d", $lastRip ? $lastRip->id + 1 : 1).'.zip';
-        foreach ($filePrefix as $currentPrefix) {
-            $fileName = ($currentPrefix == 'RIPS') ? $currentPrefix.sprintf("%06d", $lastRip ? $lastRip->id + 1 : 1).".xls" : $currentPrefix.sprintf("%06d", $lastRip ? $lastRip->id + 1 : 1).".TXT";
-            \Zipper::make(storage_path('app/public/rips/'.$ripPackage))
-                ->add(storage_path('app/public/rips/'.$fileName))
-                ->close();
-        }
-        */
-
         $rip = new Rip();
 
-        $rip->company_id = $request->get('company_id');
-        $rip->eps_id = $request->get('eps_id');
+        $rip->company_id   = $request->get('company_id');
+        $rip->eps_id       = $request->get('eps_id');
         $rip->initial_date = $initialDate;
-        $rip->final_date = $finalDate;
-        $rip->created_at = $request->get('created_at');
-        $rip->url = config('constants.ripsFiles') . $ripPackage;
+        $rip->final_date   = $finalDate;
+        $rip->url          = config('constants.ripsFiles') . $ripPackage;
 
         $rip->save();
 
@@ -120,11 +102,11 @@ class Rip extends Model
     {
     }
 
-    protected function produceAT($invoices, $id, $update = false)
+    protected function produceAT($invoices, $id)
     {
         $serviceType = 1;
 
-/*
+        /*
         if ($invoice->eps and strpos($invoice->eps->name, "Mutual") != FALSE) {
             $serviceType = 2;
         }
@@ -162,9 +144,9 @@ class Rip extends Model
                         } catch (\Exception $e) {
                             dd($invoice, $key);
                         }
-                        $line .= $invoice->number . "," . substr($invoice->company->doc, 0, 9) . ","
+                        $line .= $invoice->number . "," . str_replace('-', '0', $invoice->company->doc) . ","
                             . $currentAuthorization->patient->dni_type . "," . $currentAuthorization->patient->dni . ","
-                            . $currentAuthorization->code . ",".$serviceType."," . $currentAuthorization->service->code . ","
+                            . $currentAuthorization->code . "," . $serviceType . "," . $currentAuthorization->service->code . ","
                             . Utilities::normalizeString(mb_strtoupper(substr($currentAuthorization->service->name, 0, 59))) . ","
                             . $days . "," . number_format($dailyPrice, 0, ".", "") . ","
                             . number_format($total, 0, ".", "") . "\r\n";
@@ -174,9 +156,9 @@ class Rip extends Model
             } else {
                 $days = $invoice->days;
                 $dailyPrice = $invoice->authorization->daily_price;
-                $line .= $invoice->number . "," . substr($invoice->company->doc, 0, 9) . ","
+                $line .= $invoice->number . "," . str_replace('-', '0', $invoice->company->doc) . ","
                     . $invoice->authorization->patient->dni_type . "," . $invoice->authorization->patient->dni . ","
-                    . $invoice->authorization->code . ",".$serviceType."," . $invoice->authorization->service->code . ","
+                    . $invoice->authorization->code . "," . $serviceType . "," . $invoice->authorization->service->code . ","
                     . Utilities::normalizeString(mb_strtoupper(substr($invoice->authorization->service->name, 0, 59))) . ","
                     . $days . "," . number_format($dailyPrice, 0, ".", "") . ","
                     . number_format($invoice->total, 0, ".", "") . "\r\n";
@@ -260,7 +242,7 @@ class Rip extends Model
         return "$realAge,$type,";
     }
 
-    protected function produceAF($invoices, $id, $update = false)
+    protected function produceAF($invoices, $id, $initialDate, $finalDate)
     {
         $line = "";
         $counter = 0;
@@ -270,7 +252,7 @@ class Rip extends Model
 
             $line .= substr($invoice->company->doc, 0, 9) . "," . Utilities::normalizeString(mb_strtoupper($invoice->company->name)) . ","
                 . $invoice->company->doc_type . "," . substr($invoice->company->doc, 0, 9) . ","
-                . $invoice->number . "," . $createdAt . "," . $createdAt . "," . $createdAt . ","
+                . $invoice->number . "," . $createdAt . "," . $initialDate . "," . $finalDate . ","
                 . $invoice->eps->code . "," . Utilities::normalizeString(substr(mb_strtoupper($invoice->eps->name), 0, 30)) . ","
                 . $invoice->eps->contract . ",,,"
                 . "0,0,0," . number_format($total, 0, ".", "") . "\r\n";
@@ -286,7 +268,6 @@ class Rip extends Model
 
     protected function produceCT($invoice, $id, $counterUS, $counterAT, $counterAF, $update = false)
     {
-
         $counters = ['AF' => $counterAF, 'US' => $counterUS, 'AT' => $counterAT];
         $line = "";
         foreach ($counters as $type => $counter) {

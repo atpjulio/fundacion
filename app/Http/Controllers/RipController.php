@@ -8,7 +8,6 @@ use App\Http\Requests\StoreRipRequest;
 use App\Http\Requests\UpdateRipRequest;
 use App\Invoice;
 use App\Rip;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Storage;
 use Maatwebsite\Excel\Facades\Excel;
