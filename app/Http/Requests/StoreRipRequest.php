@@ -30,7 +30,7 @@ class StoreRipRequest extends FormRequest
             // 'final_date' => 'required',
             'initial_number' => 'required',
             'final_number' => 'required',
-            'created_at' => 'required',
+            // 'created_at' => 'required',
         ];
     }
 }

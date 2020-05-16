@@ -71,15 +71,15 @@
                 fillInvoicesByEpsAndDate(data);
             });
 
-            $('#initial_date').on('change', function() {
-                var data = $('#eps_id').val() + '_' + $('#initial_date').val() + '_' + $('#final_date').val();
-                fillInvoicesByEpsAndDate(data);
-            });
+            // $('#initial_date').on('change', function() {
+            //     var data = $('#eps_id').val() + '_' + $('#initial_date').val() + '_' + $('#final_date').val();
+            //     fillInvoicesByEpsAndDate(data);
+            // });
 
-            $('#final_date').on('change', function() {
-                var data = $('#eps_id').val() + '_' + $('#initial_date').val() + '_' + $('#final_date').val();
-                fillInvoicesByEpsAndDate(data);
-            });
+            // $('#final_date').on('change', function() {
+            //     var data = $('#eps_id').val() + '_' + $('#initial_date').val() + '_' + $('#final_date').val();
+            //     fillInvoicesByEpsAndDate(data);
+            // });
 
             $('#eps_id').on('change', function() {
                 var data = $('#eps_id').val() + '_' + $('#initial_number').val() + '_' + $('#final_number').val();
