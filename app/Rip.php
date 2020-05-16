@@ -89,8 +89,8 @@ class Rip extends Model
 
         $rip->company_id   = $request->get('company_id');
         $rip->eps_id       = $request->get('eps_id');
-        $rip->initial_date = $initialDate;
-        $rip->final_date   = $finalDate;
+        $rip->initial_date = Carbon::parse($request->get('initial_date'))->format('Y-m-d');
+        $rip->final_date   = Carbon::parse($request->get('final_date'))->format('Y-m-d');
         $rip->url          = config('constants.ripsFiles') . $ripPackage;
 
         $rip->save();
