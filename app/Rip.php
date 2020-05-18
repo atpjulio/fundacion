@@ -1605,7 +1605,6 @@ class Rip extends Model
             return true;
         } catch (\Exception $e) {
             DB::rollback();
-            dd($e);
             return false;
         }
     }
