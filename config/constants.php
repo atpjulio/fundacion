@@ -6,17 +6,17 @@ $myConstants = [
     ],
     'emails' => [
         'testing' => 'atpjulio@gmail.com',
-        'admin' => 'fundacasahogar_elmilagro@hotmail.com',
-        'admin2' => 'elmilagrobq1@gmail.com'
+        'admin'   => 'fundacasahogar_elmilagro@hotmail.com',
+        'admin2'  => 'elmilagrobq1@gmail.com'
     ],
-    'pagination' => 20,
-    'stylesVersion' => '2.91',
-    'productImages' => '/img/products/',
-    'usersImages' => '/img/users/',
+    'pagination'      => 20,
+    'stylesVersion'   => '2.93',
+    'productImages'   => '/img/products/',
+    'usersImages'     => '/img/users/',
     'companiesImages' => '/img/companies/',
-    'importFiles' => storage_path().'/app/',
-    'ripsFiles' => 'public/rips/',
-    'ripsExtensions' => [
+    'importFiles'     => storage_path().'/app/',
+    'ripsFiles'       => 'public/rips/',
+    'ripsExtensions'  => [
         'AF' => '.TXT',
         'AT' => '.TXT',
         'CT' => '.TXT',
