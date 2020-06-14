@@ -23,16 +23,17 @@ class AuthorizationController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
         if (session()->has('authorization-create')) {
             session()->forget('authorization-create');
         }
 
-        $total = Authorization::fullCount();
-        $authorizations = Authorization::full();
+        $total          = Authorization::fullCount();
+        $authorizations = Authorization::full($request->get('search'));
+        $currentUrl     = request()->getPathInfo();
 
-        return view('authorization.index', compact('total', 'authorizations'));
+        return view('authorization.index', compact('total', 'authorizations', 'currentUrl'));
     }
 
     /**
@@ -343,12 +344,13 @@ class AuthorizationController extends Controller
         return view('authorization.open', compact('authorizations'));
     }
 
-    public function close()
+    public function close(Request $request)
     {
-        $total = Authorization::closeCount();
-        $authorizations = Authorization::close();
+        $total          = Authorization::closeCount();
+        $authorizations = Authorization::close($request->get('search'));
+        $currentUrl     = request()->getPathInfo();
 
-        return view('authorization.close', compact('total', 'authorizations'));
+        return view('authorization.close', compact('total', 'authorizations', 'currentUrl'));
     }
 
     public function global(Request $request)

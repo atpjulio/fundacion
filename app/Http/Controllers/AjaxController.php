@@ -121,10 +121,15 @@ class AjaxController extends Controller
         return view('partials._invoice_amount', compact('invoicesAmount'));
     }
 
-    public function getFullAuthorizations($search)
+    public function getFullAuthorizations($fullSearch)
     {
+        $search = explode('@', $fullSearch)[0];
         $authorizations = Authorization::full($search);
-        return view('partials._authorizations', compact('authorizations'));
+        if (isset(explode('@', $fullSearch)[1])) {
+            $authorizations->setPath('/'.explode('@', $fullSearch)[1]);
+        }
+
+        return view('partials._authorizations', compact('authorizations', 'search'));
     }
 
     public function getGlobalAuthorizations($search)

@@ -174,7 +174,11 @@ function fullAuthorizations(search)
 {
     $.get("/get-full-authorizations/" + search, function (data, status) {
         $('#dynamic-authorizations').html(data);
-        $('#searching').val(search);
+        $('#searching').val(search.split('@')[0]);
+
+        if (search.split('@')[1] !== undefined) {
+            $('#currentUrl').val('/' + search.split('@')[1]);
+        }
     });
 }
 
