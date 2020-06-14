@@ -79,22 +79,22 @@ class Authorization extends Model
 
     public function services()
     {
-      return $this->hasMany(AuthorizationService::class)->with('service');
+        return $this->hasMany(AuthorizationService::class)->with('service');
     }
 
     public function dates()
     {
-      return $this->hasMany(AuthorizationDate::class);
+        return $this->hasMany(AuthorizationDate::class);
     }
 
     public function companions()
     {
-      return $this->hasMany(AuthorizationCompanion::class);
+        return $this->hasMany(AuthorizationCompanion::class);
     }
 
     public function price()
     {
-      return $this->hasOne(AuthorizationPrice::class);
+        return $this->hasOne(AuthorizationPrice::class);
     }
     /**
      * Attributes
@@ -114,7 +114,7 @@ class Authorization extends Model
 
     public function getTotalServicesAttribute()
     {
-        return array_sum($this->services->pluck('price')->toArray()) * 
+        return array_sum($this->services->pluck('price')->toArray()) *
             array_sum($this->services->pluck('days')->toArray());
     }
 
@@ -186,9 +186,9 @@ class Authorization extends Model
                 $lastRecord = $this->orderBy('id', 'desc')
                     ->first();
 
-                $authorization->code = 'SA'.sprintf("%05d", 1);
+                $authorization->code = 'SA' . sprintf("%05d", 1);
                 if ($lastRecord) {
-                    $authorization->code = 'SA'.sprintf("%05d", 1 + $lastRecord->id);
+                    $authorization->code = 'SA' . sprintf("%05d", 1 + $lastRecord->id);
                 }
             }
 
@@ -211,7 +211,7 @@ class Authorization extends Model
             Patient::createOrUpdatePhone($authorization->patient_id, $request);
 
             DB::commit();
-        } catch(\Exception $e) {
+        } catch (\Exception $e) {
             DB::rollback();
             dd($e);
         }
@@ -261,7 +261,7 @@ class Authorization extends Model
                     foreach ($invoiceCodes as $index => $code) {
                         if ($code == $oldCode) {
                             $invoiceCodes[$index] = $authorization->code;
-                            $invoiceDays[$index] = $authorization->days."";
+                            $invoiceDays[$index] = $authorization->days . "";
                             $invoiceTotals[$index] = $authorization->price->daily_price * $authorization->days;
                             break;
                         }
@@ -274,7 +274,7 @@ class Authorization extends Model
                 }
                 $invoice->save();
             }
-            
+
             $authorization->save();
 
             if ($authorization->companion) {
@@ -317,8 +317,8 @@ class Authorization extends Model
     {
         return $this::join('invoices', 'authorizations.invoice_id', '=', 'invoices.id')
             ->select('authorizations.*', 'invoices.number')
-            ->where('authorizations.code', 'not like', config('constants.unathorized.prefix').'%')
-            ->where('authorizations.code', 'like', '%'.$search.'%')
+            ->where('authorizations.code', 'not like', config('constants.unathorized.prefix') . '%')
+            ->where('authorizations.code', 'like', '%' . $search . '%')
             ->orWhere('invoices.number', $search)
             ->orderBy('authorizations.updated_at', 'DESC')
             ->paginate(config('constants.pagination'));
@@ -326,13 +326,13 @@ class Authorization extends Model
 
     protected function fullCount()
     {
-        return $this->where('code', 'not like', config('constants.unathorized.prefix').'%')
+        return $this->where('code', 'not like', config('constants.unathorized.prefix') . '%')
             ->count();
     }
 
     protected function incomplete()
     {
-        return $this->where('code', 'like', config('constants.unathorized.prefix').'%')
+        return $this->where('code', 'like', config('constants.unathorized.prefix') . '%')
             ->orderBy('created_at', 'desc')
             ->get();
     }
@@ -346,12 +346,12 @@ class Authorization extends Model
 
     protected function openForInvoices($search = '', $pagination = false)
     {
-        $result = $this->where('code', 'like', '%'.$search.'%')
+        $result = $this->where('code', 'like', '%' . $search . '%')
             ->with('eps')
             ->with('patient')
             ->with('services')
             ->where('invoice_id', 0)
-            ->where('code', 'not like', config('constants.unathorized.prefix').'%')
+            ->where('code', 'not like', config('constants.unathorized.prefix') . '%')
             ->orderBy('id', 'desc');
 
         if ($pagination) {
@@ -366,7 +366,7 @@ class Authorization extends Model
         return $this::join('invoices', 'authorizations.invoice_id', '=', 'invoices.id')
             ->select('authorizations.*', 'invoices.number')
             ->where('authorizations.invoice_id', '<>', 0)
-            ->where('authorizations.code', 'like', '%'.$search.'%')
+            ->where('authorizations.code', 'like', '%' . $search . '%')
             ->orWhere('invoices.number', $search)
             ->orderBy('invoices.number', 'DESC')
             ->paginate(config('constants.pagination'));
@@ -390,14 +390,15 @@ class Authorization extends Model
         return $this->where("code", $code)
             ->with('eps')
             ->with('patient')
-            ->with('services')        
+            ->with('services')
             ->whereNull('deleted_at')
             ->first();
     }
 
     protected function global($search = '')
     {
-        return $this::where('authorizations.code', 'not like', config('constants.unathorized.prefix').'%')->where('authorizations.code', 'like', '%'.$search.'%')
+        return $this->where('authorizations.code', 'not like', config('constants.unathorized.prefix') . '%')
+            ->where('authorizations.code', 'like', '%' . $search . '%')
             ->paginate(config('constants.pagination'));
     }
 
@@ -408,8 +409,8 @@ class Authorization extends Model
             ->where('created_at', '>', '2019-01-01 00:00:00')
             ->get();
 
-        echo "\nFound: ".count($invoices)." invoices multiple";
-        
+        echo "\nFound: " . count($invoices) . " invoices multiple";
+
         $counter = 0;
         $authorizationsCounter = 0;
         foreach ($invoices as $invoice) {
@@ -420,12 +421,12 @@ class Authorization extends Model
                     $authorizationsCounter++;
                     $flag = true;
                     $authorization->date_to = \Carbon\Carbon::parse($authorization->date_from)
-                         ->addDays(json_decode($invoice->multiple_days, true)[$key])->format("Y-m-d");
+                        ->addDays(json_decode($invoice->multiple_days, true)[$key])->format("Y-m-d");
                     $authorization->save();
 
                     AuthorizationService::fixRecord($authorization, floatval(json_decode($invoice->multiple_days, true)[$key]));
                     // echo ' -> Fixed on authorization: '.$authorization->code."\n";                    
-                }                
+                }
             }
             if ($flag) {
                 $counter++;
@@ -435,7 +436,7 @@ class Authorization extends Model
         echo "\n$counter invoices don't match with authorizations";
         echo "\n$authorizationsCounter authorizations to fix";
     }
-    
+
 
     protected function matchAuthorizationsWithInvoice($invoiceNumber)
     {
@@ -444,7 +445,7 @@ class Authorization extends Model
             return false;
         }
 
-        echo 'Invoice number: '.$invoice->number;
+        echo 'Invoice number: ' . $invoice->number;
 
         if ($invoice->multiple) {
             foreach (json_decode($invoice->multiple_codes, true) as $key => $code) {
@@ -455,8 +456,8 @@ class Authorization extends Model
                     $authorization->save();
 
                     AuthorizationService::fixRecord($authorization, floatval(json_decode($invoice->multiple_days, true)[$key]));
-                    echo ' -> Fixed on authorization: '.$authorization->code."\n";                    
-                }                
+                    echo ' -> Fixed on authorization: ' . $authorization->code . "\n";
+                }
             }
             return true;
         }

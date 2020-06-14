@@ -79,14 +79,14 @@ Route::middleware(['auth', 'both'])->group(function () {
     Route::get('authorization-incomplete', 'AuthorizationController@incomplete')->name('authorization.incomplete');
     Route::get('authorization-open', 'AuthorizationController@open')->name('authorization.open');
     Route::get('authorization-close', 'AuthorizationController@close')->name('authorization.close');
-    Route::post('authorization-global', 'AuthorizationController@global')->name('authorization.global');
+    Route::match(['post', 'get'], 'authorization-global', 'AuthorizationController@global')->name('authorization.global');
     Route::post('authorization/create-back', 'AuthorizationController@createBack')->name('authorization.create.back');
     Route::post('authorization-services-update', 'AuthorizationController@servicesUpdate')->name('authorization.services.update');
     Route::get('authorization/delete/{id}', 'AuthorizationController@delete')->name('authorization.delete');
 
     Route::resource('patient', 'PatientController');
     Route::get('patient-create-from-authorization', 'PatientController@createAuthorization')->name('patient.create.authorization');
-    Route::post('patient-global', 'PatientController@global')->name('patient.global');
+    Route::match(['post', 'get'], 'patient-global', 'PatientController@global')->name('patient.global');
     Route::get('patient-import', 'PatientController@import')->name('patient.import');
     Route::post('patient-import-process', 'PatientController@importProcess')->name('patient.import.process');
     Route::post('patient-import-process-txt', 'PatientController@importProcessTxt')->name('patient.import.process.txt');

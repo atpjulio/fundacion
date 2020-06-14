@@ -44,6 +44,6 @@
 </div>
 @if (count($patients) > 0)
 <div class="float-right">
-    {{ $patients->links() }}
+    {{ $patients->appends(['patient' => request()->get('patient')])->links() }}
 </div>
 @endif

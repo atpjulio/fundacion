@@ -61,6 +61,6 @@
 </div>
 @if (count($authorizations) > 0)
 <div class="float-right">
-    {{ $authorizations->links() }}
+    {{ $authorizations->appends(['authorization_code' => request()->get('authorization_code')])->links() }}
 </div>
 @endif
