@@ -266,8 +266,8 @@ class Patient extends Model
     protected function searchRecords($search)
     {
         return $this::where('dni', 'like', '%' . $search . '%')
-            ->orWhere('first_name', 'like', '%' . $search . '%')
-            ->orWhere('last_name', 'like', '%' . $search . '%')
+            // ->orWhere('first_name', 'like', '%' . $search . '%')
+            // ->orWhere('last_name', 'like', '%' . $search . '%')
             ->orderBy('id', 'desc')
             ->paginate(config('constants.pagination'));
     }
