@@ -190,7 +190,7 @@ class Rip extends Model
 
                         $line .= $currentAuthorization->patient->dni_type . "," . $currentAuthorization->patient->dni
                             . "," . $invoice->eps->code . "," . $currentAuthorization->patient->type . ","
-                            . Utilities::normalizeString($lastName) . "," . Utilities::normalizeString($firstName) . "," . $this->realAge($currentAuthorization->patient)
+                            . strtoupper(Utilities::normalizeString($lastName)) . "," . strtoupper(Utilities::normalizeString($firstName)) . "," . $this->realAge($currentAuthorization->patient)
                             . config('constants.genderShort.' . $currentAuthorization->patient->gender) . ","
                             . sprintf("%02d", $currentAuthorization->patient->state) . ","
                             . sprintf("%03d", $currentAuthorization->patient->city) . ","
@@ -208,7 +208,7 @@ class Rip extends Model
 
                 $line .= $invoice->authorization->patient->dni_type . "," . $invoice->authorization->patient->dni
                     . "," . $invoice->eps->code . "," . $invoice->authorization->patient->type . ","
-                    . Utilities::normalizeString($lastName) . "," . Utilities::normalizeString($firstName) . "," . $this->realAge($invoice->authorization->patient)
+                    . strtoupper(Utilities::normalizeString($lastName)) . "," . strtoupper(Utilities::normalizeString($firstName)) . "," . $this->realAge($invoice->authorization->patient)
                     . config('constants.genderShort.' . $invoice->authorization->patient->gender) . ","
                     . $invoice->authorization->patient->state . ","
                     . $invoice->authorization->patient->city . ","
