@@ -136,20 +136,20 @@ class Rip extends Model
                             $counter++;
                         }
                         
-                        $days = json_decode($invoice->multiple_days, true)[$key];
-                        $dailyPrice = $currentAuthorization->daily_price;
-                        try {
-                            $total = floatval(json_decode($invoice->multiple_totals, true)[$key]);
-                        } catch (\Exception $e) {
-                            dd($invoice, $key);
-                        }
-                        $line .= $invoice->number . "," . substr($invoice->company->doc, 0, 9) . ","
-                            . $currentAuthorization->patient->dni_type . "," . $currentAuthorization->patient->dni . ","
-                            . $currentAuthorization->code . "," . $serviceType . "," . $currentAuthorization->service->code . ","
-                            . Utilities::normalizeString(mb_strtoupper(substr($currentAuthorization->service->name, 0, 59))) . ","
-                            . $days . "," . number_format($dailyPrice, 0, ".", "") . ","
-                            . number_format($total, 0, ".", "") . "\r\n";
-                        $counter++;
+                        // $days = json_decode($invoice->multiple_days, true)[$key];
+                        // $dailyPrice = $currentAuthorization->daily_price;
+                        // try {
+                        //     $total = floatval(json_decode($invoice->multiple_totals, true)[$key]);
+                        // } catch (\Exception $e) {
+                        //     dd($invoice, $key);
+                        // }
+                        // $line .= $invoice->number . "," . substr($invoice->company->doc, 0, 9) . ","
+                        //     . $currentAuthorization->patient->dni_type . "," . $currentAuthorization->patient->dni . ","
+                        //     . $currentAuthorization->code . "," . $serviceType . "," . $currentAuthorization->service->code . ","
+                        //     . Utilities::normalizeString(mb_strtoupper(substr($currentAuthorization->service->name, 0, 59))) . ","
+                        //     . $days . "," . number_format($dailyPrice, 0, ".", "") . ","
+                        //     . number_format($total, 0, ".", "") . "\r\n";
+                        // $counter++;
                     }
                 }
             } else {
