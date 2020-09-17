@@ -118,25 +118,24 @@ class Rip extends Model
                 foreach (json_decode($invoice->multiple_codes, true) as $key => $value) {
                     $currentAuthorization = Authorization::findByCode($value);
                     if ($currentAuthorization) {
-                        /*
-                    ** Include this for several services **
-                    foreach ($currentAuthorization->services as $service) {
-                        $days = $service->days;
-                        $dailyPrice = $service->price;
-                        try {
-                            $total = $days * floatval($dailyPrice);
-                        } catch(\Exception $e) {
-                            dd($invoice, $key, $e);
+                        
+                        foreach ($currentAuthorization->services as $service) {
+                            $days = $service->days;
+                            $dailyPrice = $service->price;
+                            try {
+                                $total = $days * floatval($dailyPrice);
+                            } catch(\Exception $e) {
+                                dd($invoice, $key, $e);
+                            }
+                            $line .= $invoice->number.",".substr($invoice->company->doc, 0, 9).","
+                                .$currentAuthorization->patient->dni_type.",".$currentAuthorization->patient->dni.","
+                                .$authorization->code.",1,".$service->service->code.","
+                                .Utilities::normalizeString(mb_strtoupper($service->service->name)).","
+                                .$days.",".number_format($dailyPrice, 2, ".", "").","
+                                .number_format($total, 2, ".", "")."\r\n";
+                            $counter++;
                         }
-                        $line .= $invoice->number.",".substr($invoice->company->doc, 0, 9).","
-                            .$currentAuthorization->patient->dni_type.",".$currentAuthorization->patient->dni.","
-                            .$authorization->code.",1,".$service->service->code.","
-                            .Utilities::normalizeString(mb_strtoupper($service->service->name)).","
-                            .$days.",".number_format($dailyPrice, 2, ".", "").","
-                            .number_format($total, 2, ".", "")."\r\n";
-                        $counter++;
-                    }
-*/
+                        
                         $days = json_decode($invoice->multiple_days, true)[$key];
                         $dailyPrice = $currentAuthorization->daily_price;
                         try {
