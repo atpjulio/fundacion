@@ -792,8 +792,8 @@ class Rip extends Model
                                     $sheet->cell('I' . $counter, function ($cell) use ($days) {
                                         $cell->setValue("".$days);
                                     });
-                                    $sheet->cell('J' . $counter, function ($cell) use ($daily_price) {
-                                        $cell->setValue(number_format($daily_price, 2, ".", ""));
+                                    $sheet->cell('J' . $counter, function ($cell) use ($dailyPrice) {
+                                        $cell->setValue(number_format($dailyPrice, 2, ".", ""));
                                     });
                                     $sheet->cell('K' . $counter, function ($cell) use ($total) {
                                         $cell->setValue(number_format($total, 2, ".", ""));
