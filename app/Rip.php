@@ -784,19 +784,19 @@ class Rip extends Model
                                         $cell->setValue("1");
                                     });
                                     $sheet->cell('G' . $counter, function ($cell) use ($currentAuthorization) {
-                                        $cell->setValue($currentAuthorization->service->code);
+                                        $cell->setValue($service->service->code);
                                     });
                                     $sheet->cell('H' . $counter, function ($cell) use ($currentAuthorization) {
-                                        $cell->setValue(mb_strtoupper($currentAuthorization->service->name));
+                                        $cell->setValue(mb_strtoupper($service->service->name));
                                     });
                                     $sheet->cell('I' . $counter, function ($cell) use ($invoice, $key) {
-                                        $cell->setValue(json_decode($invoice->multiple_days, true)[$key]);
+                                        $cell->setValue("".$days);
                                     });
                                     $sheet->cell('J' . $counter, function ($cell) use ($currentAuthorization) {
-                                        $cell->setValue(number_format($currentAuthorization->daily_price, 2, ".", ""));
+                                        $cell->setValue(number_format($daily_price, 2, ".", ""));
                                     });
                                     $sheet->cell('K' . $counter, function ($cell) use ($invoice, $key) {
-                                        $cell->setValue(number_format(floatval(json_decode($invoice->multiple_totals, true)[$key]), 2, ".", ""));
+                                        $cell->setValue(number_format($total, 2, ".", ""));
                                     });
                                     $counter++;
                                     $counterAT++;
