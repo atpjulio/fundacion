@@ -784,10 +784,12 @@ class Rip extends Model
                                         $cell->setValue("1");
                                     });
                                     $sheet->cell('G' . $counter, function ($cell) use ($currentAuthorization) {
-                                        $cell->setValue($service->service->code);
+                                        // $cell->setValue($service->service->code);
+                                        $cell->setValue($service);
                                     });
                                     $sheet->cell('H' . $counter, function ($cell) use ($currentAuthorization) {
-                                        $cell->setValue(mb_strtoupper($service->service->name));
+                                        // $cell->setValue(mb_strtoupper($service->service->name));
+                                        $cell->setValue(mb_strtoupper($service));
                                     });
                                     $sheet->cell('I' . $counter, function ($cell) use ($invoice, $key) {
                                         $cell->setValue("".$days);
