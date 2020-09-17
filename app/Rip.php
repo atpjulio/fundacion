@@ -135,7 +135,7 @@ class Rip extends Model
                                 .number_format($total, 2, ".", "")."\r\n";
                             $counter++;
                         }
-                        
+
                         // $days = json_decode($invoice->multiple_days, true)[$key];
                         // $dailyPrice = $currentAuthorization->daily_price;
                         // try {
@@ -757,41 +757,85 @@ class Rip extends Model
                         foreach (json_decode($invoice->multiple_codes, true) as $key => $value) {
                             $currentAuthorization = Authorization::findByCode($value);
                             if ($currentAuthorization) {
-                                $sheet->cell('A' . $counter, function ($cell) use ($invoice) {
-                                    $cell->setValue($invoice->number);
-                                });
-                                $sheet->cell('B' . $counter, function ($cell) use ($invoice) {
-                                    $cell->setValue(substr($invoice->company->doc, 0, 9));
-                                });
-                                $sheet->cell('C' . $counter, function ($cell) use ($currentAuthorization) {
-                                    $cell->setValue($currentAuthorization->patient->dni_type);
-                                });
-                                $sheet->cell('D' . $counter, function ($cell) use ($currentAuthorization) {
-                                    $cell->setValue($currentAuthorization->patient->dni);
-                                });
-                                $sheet->cell('E' . $counter, function ($cell) use ($currentAuthorization) {
-                                    $cell->setValue($currentAuthorization->code);
-                                });
-                                $sheet->cell('F' . $counter, function ($cell) use ($invoice) {
-                                    $cell->setValue("1");
-                                });
-                                $sheet->cell('G' . $counter, function ($cell) use ($currentAuthorization) {
-                                    $cell->setValue($currentAuthorization->service->code);
-                                });
-                                $sheet->cell('H' . $counter, function ($cell) use ($currentAuthorization) {
-                                    $cell->setValue(mb_strtoupper($currentAuthorization->service->name));
-                                });
-                                $sheet->cell('I' . $counter, function ($cell) use ($invoice, $key) {
-                                    $cell->setValue(json_decode($invoice->multiple_days, true)[$key]);
-                                });
-                                $sheet->cell('J' . $counter, function ($cell) use ($currentAuthorization) {
-                                    $cell->setValue(number_format($currentAuthorization->daily_price, 2, ".", ""));
-                                });
-                                $sheet->cell('K' . $counter, function ($cell) use ($invoice, $key) {
-                                    $cell->setValue(number_format(floatval(json_decode($invoice->multiple_totals, true)[$key]), 2, ".", ""));
-                                });
-                                $counter++;
-                                $counterAT++;
+                                foreach ($currentAuthorization->services as $service) {
+                                    $days = $service->days;
+                                    $dailyPrice = $service->price;
+                                    try {
+                                        $total = $days * floatval($dailyPrice);
+                                    } catch(\Exception $e) {
+                                        dd($invoice, $key, $e);
+                                    }
+                                    $sheet->cell('A' . $counter, function ($cell) use ($invoice) {
+                                        $cell->setValue($invoice->number);
+                                    });
+                                    $sheet->cell('B' . $counter, function ($cell) use ($invoice) {
+                                        $cell->setValue(substr($invoice->company->doc, 0, 9));
+                                    });
+                                    $sheet->cell('C' . $counter, function ($cell) use ($currentAuthorization) {
+                                        $cell->setValue($currentAuthorization->patient->dni_type);
+                                    });
+                                    $sheet->cell('D' . $counter, function ($cell) use ($currentAuthorization) {
+                                        $cell->setValue($currentAuthorization->patient->dni);
+                                    });
+                                    $sheet->cell('E' . $counter, function ($cell) use ($currentAuthorization) {
+                                        $cell->setValue($currentAuthorization->code);
+                                    });
+                                    $sheet->cell('F' . $counter, function ($cell) use ($invoice) {
+                                        $cell->setValue("1");
+                                    });
+                                    $sheet->cell('G' . $counter, function ($cell) use ($currentAuthorization) {
+                                        $cell->setValue($currentAuthorization->service->code);
+                                    });
+                                    $sheet->cell('H' . $counter, function ($cell) use ($currentAuthorization) {
+                                        $cell->setValue(mb_strtoupper($currentAuthorization->service->name));
+                                    });
+                                    $sheet->cell('I' . $counter, function ($cell) use ($invoice, $key) {
+                                        $cell->setValue(json_decode($invoice->multiple_days, true)[$key]);
+                                    });
+                                    $sheet->cell('J' . $counter, function ($cell) use ($currentAuthorization) {
+                                        $cell->setValue(number_format($currentAuthorization->daily_price, 2, ".", ""));
+                                    });
+                                    $sheet->cell('K' . $counter, function ($cell) use ($invoice, $key) {
+                                        $cell->setValue(number_format(floatval(json_decode($invoice->multiple_totals, true)[$key]), 2, ".", ""));
+                                    });
+                                    $counter++;
+                                    $counterAT++;
+                                }                                
+                                // $sheet->cell('A' . $counter, function ($cell) use ($invoice) {
+                                //     $cell->setValue($invoice->number);
+                                // });
+                                // $sheet->cell('B' . $counter, function ($cell) use ($invoice) {
+                                //     $cell->setValue(substr($invoice->company->doc, 0, 9));
+                                // });
+                                // $sheet->cell('C' . $counter, function ($cell) use ($currentAuthorization) {
+                                //     $cell->setValue($currentAuthorization->patient->dni_type);
+                                // });
+                                // $sheet->cell('D' . $counter, function ($cell) use ($currentAuthorization) {
+                                //     $cell->setValue($currentAuthorization->patient->dni);
+                                // });
+                                // $sheet->cell('E' . $counter, function ($cell) use ($currentAuthorization) {
+                                //     $cell->setValue($currentAuthorization->code);
+                                // });
+                                // $sheet->cell('F' . $counter, function ($cell) use ($invoice) {
+                                //     $cell->setValue("1");
+                                // });
+                                // $sheet->cell('G' . $counter, function ($cell) use ($currentAuthorization) {
+                                //     $cell->setValue($currentAuthorization->service->code);
+                                // });
+                                // $sheet->cell('H' . $counter, function ($cell) use ($currentAuthorization) {
+                                //     $cell->setValue(mb_strtoupper($currentAuthorization->service->name));
+                                // });
+                                // $sheet->cell('I' . $counter, function ($cell) use ($invoice, $key) {
+                                //     $cell->setValue(json_decode($invoice->multiple_days, true)[$key]);
+                                // });
+                                // $sheet->cell('J' . $counter, function ($cell) use ($currentAuthorization) {
+                                //     $cell->setValue(number_format($currentAuthorization->daily_price, 2, ".", ""));
+                                // });
+                                // $sheet->cell('K' . $counter, function ($cell) use ($invoice, $key) {
+                                //     $cell->setValue(number_format(floatval(json_decode($invoice->multiple_totals, true)[$key]), 2, ".", ""));
+                                // });
+                                // $counter++;
+                                // $counterAT++;
                             }
                         }
                     } else {
