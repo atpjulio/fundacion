@@ -130,7 +130,7 @@ class Rip extends Model
                             $line .= $invoice->number.",".substr($invoice->company->doc, 0, 9).","
                                 .$currentAuthorization->patient->dni_type.",".$currentAuthorization->patient->dni.","
                                 .$currentAuthorization->code.",1,".$service->service->code.","
-                                .Utilities::normalizeString(mb_strtoupper($service->service->name)).","
+                                .substr(Utilities::normalizeString(mb_strtoupper($service->service->name)), 0, 59).","
                                 .$days.",".number_format($dailyPrice, 2, ".", "").","
                                 .number_format($total, 2, ".", "")."\r\n";
                             $counter++;
