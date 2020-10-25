@@ -38,7 +38,6 @@
                 </td>
             </tr>
             @else
-            {{ dd($invoices) }}
             @foreach ($invoices as $invoice)
                 @php
                 $routes = '';

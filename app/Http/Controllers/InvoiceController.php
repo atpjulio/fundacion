@@ -430,6 +430,8 @@ class InvoiceController extends Controller
         $invoices = $query->orderBy('number', 'desc')
             ->paginate(config('constants.pagination'));
 
+        dd($invoices);
+
         return view('invoice.export', compact(
             'epss', 'companies', 'initialNumber', 'finalNumber', 'initialDate', 'finalDate', 
             'selection', 'oldSelection', 'oldEpsId', 'oldCompanyId', 'invoices', 'except'
