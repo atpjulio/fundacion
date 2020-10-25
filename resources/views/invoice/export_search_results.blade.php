@@ -38,6 +38,7 @@
                 </td>
             </tr>
             @else
+            {{ dd($invoices) }}
             @foreach ($invoices as $invoice)
                 @php
                 $routes = '';
@@ -82,16 +83,6 @@
                         $invoice->multiple_totals_formated) !!}</td>
                     <td>
                         $ {!! number_format($invoice->calculateTotal(), 2, ',', '.') !!}
-                        {{-- @if (in_array($invoice->id, $except))
-                        <a href="{{ route('invoice.edit', $invoice->id) }}" class="btn btn-oval btn-info btn-sm">
-                            Agregar
-                        </a>
-                        @else
-                        <a href="javascript:showModal('invoice/delete/{{ $invoice->id }}')"
-                            class="btn btn-oval btn-warning btn-sm">
-                            Quitar
-                        </a>
-                        @endif --}}
                     </td>
                 </tr>
             @endforeach
