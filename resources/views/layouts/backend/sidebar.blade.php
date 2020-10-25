@@ -119,8 +119,14 @@
                         </li>
                         <li class="@if(Request::is('rip*')) active @endif" >
                             <a href="{{ route('rip.index') }}">
-                                <i class="far fa-file-archive"></i>&nbsp;
+                                <i class="far fa-file-archive"></i>&nbsp;&nbsp;
                                 RIPS
+                            </a>
+                        </li>                        
+                        <li class="@if(Request::is('invoices/exports*')) active @endif" >
+                            <a href="{{ route('invoice.export') }}">
+                                <i class="fas fa-file-export"></i>&nbsp;
+                                Exportar
                             </a>
                         </li>                        
                     </ul>

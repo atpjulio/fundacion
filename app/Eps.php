@@ -49,12 +49,12 @@ class Eps extends Model
 
     public function price()
     {
-      return $this->hasMany(EpsPrice::class);
+        return $this->hasMany(EpsPrice::class);
     }
 
     /**
-    * Dynamic attributes
-    */
+     * Dynamic attributes
+     */
     public function getDailyPricesAttribute()
     {
         $totals = [];
@@ -67,35 +67,42 @@ class Eps extends Model
     /**
      * Methods
      */
+
+    public function scopeForSelect($query, $id = 'id', $name = 'name')
+    {
+        return $query->select([$id, $name])
+            ->pluck($name, $id);
+    }
+
     protected function storeRecord($request)
     {
         try {
-          DB::beginTransaction();
+            DB::beginTransaction();
 
-          $eps = $this->create([
-              'code' => strtoupper($request->get('code')),
-              'name' => ucwords(strtolower($request->get('name'))),
-              'nit' => $request->get('nit'),
-              'daily_price' => 0,
-              'alias' => ucwords(strtolower($request->get('alias'))),
-              'contract' => $request->get('contract'),
-              'policy' => $request->get('policy'),
-          ]);
-
-          foreach ($request->get('prices') as $key => $price) {
-            EpsPrice::create([
-              'eps_id' => $eps->id,
-              'daily_price' => $price,
-              'name' => $request->get('names')[$key],
+            $eps = $this->create([
+                'code' => strtoupper($request->get('code')),
+                'name' => ucwords(strtolower($request->get('name'))),
+                'nit' => $request->get('nit'),
+                'daily_price' => 0,
+                'alias' => ucwords(strtolower($request->get('alias'))),
+                'contract' => $request->get('contract'),
+                'policy' => $request->get('policy'),
             ]);
-          }
 
-          Entity::storeRecord($request);
+            foreach ($request->get('prices') as $key => $price) {
+                EpsPrice::create([
+                    'eps_id' => $eps->id,
+                    'daily_price' => $price,
+                    'name' => $request->get('names')[$key],
+                ]);
+            }
 
-          DB::commit();
-        } catch(\Exception $e) {
-          DB::rollback();
-          dd($e);
+            Entity::storeRecord($request);
+
+            DB::commit();
+        } catch (\Exception $e) {
+            DB::rollback();
+            dd($e);
         }
 
         $address = new Address();
@@ -125,48 +132,47 @@ class Eps extends Model
         $eps = $this->find($request->get('id'));
 
         if ($eps) {
-          try {
-            DB::beginTransaction();
+            try {
+                DB::beginTransaction();
 
-            $eps->update([
-                'code' => strtoupper($request->get('code')),
-                'name' => ucwords(strtolower($request->get('name'))),
-                'nit' => $request->get('nit'),
-                'daily_price' => 0,
-                'alias' => ucwords(strtolower($request->get('alias'))),
-                'contract' => $request->get('contract'),
-                'policy' => $request->get('policy'),
-            ]);
+                $eps->update([
+                    'code' => strtoupper($request->get('code')),
+                    'name' => ucwords(strtolower($request->get('name'))),
+                    'nit' => $request->get('nit'),
+                    'daily_price' => 0,
+                    'alias' => ucwords(strtolower($request->get('alias'))),
+                    'contract' => $request->get('contract'),
+                    'policy' => $request->get('policy'),
+                ]);
 
-            $eps->address->update([
-                'address' => ucwords(strtolower($request->get('address'))),
-                'address2' => ucwords(strtolower($request->get('address2'))),
-                'city' => ucwords(strtolower($request->get('city'))),
-                'state' => $request->get('state'),
-            ]);
+                $eps->address->update([
+                    'address' => ucwords(strtolower($request->get('address'))),
+                    'address2' => ucwords(strtolower($request->get('address2'))),
+                    'city' => ucwords(strtolower($request->get('city'))),
+                    'state' => $request->get('state'),
+                ]);
 
-            $eps->phone->update([
-                'phone' => $request->get('phone'),
-            ]);
+                $eps->phone->update([
+                    'phone' => $request->get('phone'),
+                ]);
 
-            \DB::table('eps_prices')->where('eps_id', $eps->id)
-                ->delete();
-            foreach ($request->get('prices') as $key => $price) {
-              EpsPrice::create([
-                'eps_id' => $eps->id,
-                'daily_price' => $price,
-                'name' => $request->get('names')[$key],
-              ]);
+                \DB::table('eps_prices')->where('eps_id', $eps->id)
+                    ->delete();
+                foreach ($request->get('prices') as $key => $price) {
+                    EpsPrice::create([
+                        'eps_id' => $eps->id,
+                        'daily_price' => $price,
+                        'name' => $request->get('names')[$key],
+                    ]);
+                }
+
+                Entity::updateRecord($request, $eps->nit);
+
+                DB::commit();
+            } catch (\Exception $e) {
+                DB::rollback();
+                dd($e);
             }
-
-            Entity::updateRecord($request, $eps->nit);
-
-            DB::commit();
-          } catch(\Exception $e) {
-            DB::rollback();
-            dd($e);
-          }
-
         }
 
         return $eps;
@@ -177,5 +183,4 @@ class Eps extends Model
         return $this->where("code", strtoupper($code))
             ->first();
     }
-
 }

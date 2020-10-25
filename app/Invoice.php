@@ -14,7 +14,7 @@ class Invoice extends Model
         'company_id',
         'authorization_code',
         'eps_id',
-//        'patient_id',
+        //        'patient_id',
         'total',
         'payment',
         'status',
@@ -59,14 +59,12 @@ class Invoice extends Model
         $dailyPrice = $this->eps->daily_price;
         if ($dailyPrice == 0) {
             $dailyPrice = $this->authorization->price ?
-                $this->authorization->price->daily_price :
-                $this->eps->price()->first()->daily_price;
+                $this->authorization->price->daily_price : $this->eps->price()->first()->daily_price;
         }
 
         if ($this->authorization->multiple) {
             return count($this->authorization->services) > 0 ?
-                intval($this->authorization->services[0]->days) :
-                intval($this->total / ($dailyPrice * (1 + count(explode(',', $this->authorization->multiple_services)))));
+                intval($this->authorization->services[0]->days) : intval($this->total / ($dailyPrice * (1 + count(explode(',', $this->authorization->multiple_services)))));
         }
 
         return intval($this->total / $dailyPrice);
@@ -79,14 +77,6 @@ class Invoice extends Model
 
     public function getMultipleTotalsFormatedAttribute()
     {
-        // $codes = json_decode($this->multiple_codes, true);
-        // $totals = [];
-        // foreach ($codes as $code) {
-        //     $authorization = Authorization::findByCode($code);
-        //     if ($authorization) {
-        //         $totals[] = number_format($authorization->total_services, 2, ",", ".");
-        //     }
-        // }
         $totals = json_decode($this->multiple_totals, true);
         foreach ($totals as $key => $value) {
             $totals[$key] = number_format($value, 2, ",", ".");
@@ -96,14 +86,64 @@ class Invoice extends Model
     }
 
     /**
+     * Scopes
+     */
+
+    public function scopeForSelect($query, $id = 'id', $name = 'name')
+    {
+        return $query->select([$id, $name])
+            ->pluck($name, $id);
+    }
+
+    public function scopeSearch($query, $epsId, $companyId, $request)
+    {
+        $initialNumber = $request->get('initial_number');
+        $finalNumber   = $request->get('final_number');
+        $initialDate   = $request->get('initial_date') ? $request->get('initial_date') . ' 00:00:00' : null;
+        $finalDate     = $request->get('final_date') ? $request->get('final_date') . ' 23:59:59' : null;
+
+        $query->where('eps_id', $epsId)
+            ->where('company_id', $companyId);
+
+        if ($initialNumber and $finalNumber) {
+            $query->whereBetween('number', [$initialNumber, $finalNumber]);
+        }
+
+        if ($initialDate and $finalDate) {
+            $query->whereBetween('created_at', [$initialDate, $finalDate]);
+        }
+
+        return $query;
+    }
+
+    /**
      * Methods
      */
+
+    public function getPatient()
+    {
+        $codesArray = json_decode($this->multiple_codes, true);
+        if (count($codesArray) > 0) {
+            $query = Authorization::with('patient')
+                ->where('code', $codesArray[0])
+                ->first();
+
+            return optional($query)->patient;
+        }
+        return null;
+    }
+
+    public function calculateTotal()
+    {
+        return array_sum(json_decode($this->multiple_totals, true));
+    }
+
     protected function storeRecord($request)
     {
         $invoice = new Invoice();
 
         $request->request->add([
-            'created_at' => $request->get('created_at').' '.\Carbon\Carbon::now()->format('H:i:s')
+            'created_at' => $request->get('created_at') . ' ' . \Carbon\Carbon::now()->format('H:i:s')
         ]);
 
         $invoice->number = $request->get('number');
@@ -123,23 +163,23 @@ class Invoice extends Model
             $invoiceCodes = json_decode($invoice->multiple_codes, true);
             $invoiceDays = json_decode($invoice->multiple_days, true);
             $invoiceTotals = json_decode($invoice->multiple_totals, true);
-    
+
             foreach ($invoiceCodes as $k => $val) {
                 $authorization = Authorization::findByCode($val);
                 if ($authorization) {
                     $tot = 0;
-                    foreach($authorization->services as $keyAs => $as) {
+                    foreach ($authorization->services as $keyAs => $as) {
                         // if ($keyAs == 0) {
                         //     $tot += $as->price * $invoiceDays[$keyAs];    
                         // } else {
-                            $tot += $as->price * $as->days;
+                        $tot += $as->price * $as->days;
                         // }
                     }
-                    
+
                     $invoiceTotals[$k] = $tot;
                 }
             }
-    
+
             $invoice->multiple_codes = json_encode($invoiceCodes);
             $invoice->multiple_days = json_encode($invoiceDays);
             $invoice->multiple_totals = json_encode($invoiceTotals);
@@ -157,24 +197,24 @@ class Invoice extends Model
         if ($invoice->multiple) {
 
             if (is_array($request->get('multiple_codes')) and count($request->get('multiple_codes')) == 1) {
-                $notes = "Factura para la autorización ".join(",", $request->get('multiple_codes'))." de la EPS: ".$invoice->eps->code." - ".$invoice->eps->alias;
+                $notes = "Factura para la autorización " . join(",", $request->get('multiple_codes')) . " de la EPS: " . $invoice->eps->code . " - " . $invoice->eps->alias;
             } else {
-                $notes = "Factura para la(s) autorizacion(es) ".join(",", $request->get('multiple_codes'))." de la EPS: ".$invoice->eps->code." - ".$invoice->eps->alias;
+                $notes = "Factura para la(s) autorizacion(es) " . join(",", $request->get('multiple_codes')) . " de la EPS: " . $invoice->eps->code . " - " . $invoice->eps->alias;
             }
 
             $pucs = [];
             $pucTotal = 0;
             foreach ($request->get('multiple_totals') as $key => $total) {
                 array_push($pucs, [
-                    'code' => '270528'.sprintf("%02d", $invoice->eps_id),
+                    'code' => '270528' . sprintf("%02d", $invoice->eps_id),
                     'type' => 1,
-                    'description' => 'Ingresos devengados por facturar otros para '.$invoice->eps->code .' - '.$invoice->eps->alias,
+                    'description' => 'Ingresos devengados por facturar otros para ' . $invoice->eps->code . ' - ' . $invoice->eps->alias,
                     'amount' => $total,
                 ]);
                 array_push($pucs, [
-                    'code' => '130505'.sprintf("%02d", $invoice->eps_id),
+                    'code' => '130505' . sprintf("%02d", $invoice->eps_id),
                     'type' => 0,
-                    'description' => 'Cuentas por pagar para EPS '.$invoice->eps->code .' - '.$invoice->eps->alias,
+                    'description' => 'Cuentas por pagar para EPS ' . $invoice->eps->code . ' - ' . $invoice->eps->alias,
                     'amount' => $total,
                 ]);
                 $pucTotal += $total;
@@ -186,20 +226,20 @@ class Invoice extends Model
             AccountingNote::storeRecord($invoice, $pucs, $notes, $pucTotal);
         } else {
             $authorization->update(['invoice_id' => $invoice->id]);
-            $notes = "Factura para autorización ".$invoice->authorization_code." de la EPS: ".$invoice->eps->code
-                ." - ".$invoice->eps->alias;
+            $notes = "Factura para autorización " . $invoice->authorization_code . " de la EPS: " . $invoice->eps->code
+                . " - " . $invoice->eps->alias;
 
             $pucs = [
                 [
-                    'code' => '270528'.sprintf("%02d", $invoice->eps_id),
+                    'code' => '270528' . sprintf("%02d", $invoice->eps_id),
                     'type' => 1,
-                    'description' => 'Ingresos devengados por facturar otros para '.$invoice->eps->code .' - '.$invoice->eps->alias,
+                    'description' => 'Ingresos devengados por facturar otros para ' . $invoice->eps->code . ' - ' . $invoice->eps->alias,
                     'amount' => $invoice->total,
                 ],
                 [
-                    'code' => '130505'.sprintf("%02d", $invoice->eps_id),
+                    'code' => '130505' . sprintf("%02d", $invoice->eps_id),
                     'type' => 0,
-                    'description' => 'Cuentas por pagar para EPS '.$invoice->eps->code .' - '.$invoice->eps->alias,
+                    'description' => 'Cuentas por pagar para EPS ' . $invoice->eps->code . ' - ' . $invoice->eps->alias,
                     'amount' => $invoice->total,
                 ],
             ];
@@ -215,7 +255,7 @@ class Invoice extends Model
 
         if ($invoice) {
             $request->request->add([
-                'created_at' => $request->get('created_at').' '.\Carbon\Carbon::now()->format('H:i:s')
+                'created_at' => $request->get('created_at') . ' ' . \Carbon\Carbon::now()->format('H:i:s')
             ]);
 
             $oldAuthorizationCode = $invoice->authorization_code;
@@ -238,22 +278,22 @@ class Invoice extends Model
                 $invoiceCodes = json_decode($invoice->multiple_codes, true);
                 $invoiceDays = json_decode($invoice->multiple_days, true);
                 $invoiceTotals = json_decode($invoice->multiple_totals, true);
-        
+
                 foreach ($invoiceCodes as $k => $val) {
                     $authorization = Authorization::findByCode($val);
                     if ($authorization) {
                         $tot = 0;
-                        foreach($authorization->services as $as) {
+                        foreach ($authorization->services as $as) {
                             $tot += $as->price * $as->days;
                         }
-                        
+
                         $invoiceTotals[$k] = $tot;
                     }
                 }
-        
+
                 $invoice->multiple_codes = json_encode($invoiceCodes);
                 $invoice->multiple_days = json_encode($invoiceDays);
-                $invoice->multiple_totals = json_encode($invoiceTotals);    
+                $invoice->multiple_totals = json_encode($invoiceTotals);
             }
 
             $authorization = Authorization::findByCode($request->get('authorization_code') ?: $request->get('multiple_codes')[0]);
@@ -270,21 +310,21 @@ class Invoice extends Model
                 }
                 $invoice->save();
 
-                $notes = "Factura para las autorizaciones ".join(",", $request->get('multiple_codes'))." de la EPS: ".$invoice->eps->code." - ".$invoice->eps->alias;
+                $notes = "Factura para las autorizaciones " . join(",", $request->get('multiple_codes')) . " de la EPS: " . $invoice->eps->code . " - " . $invoice->eps->alias;
 
                 $pucs = [];
                 $pucTotal = 0;
                 foreach ($request->get('multiple_totals') as $key => $total) {
                     array_push($pucs, [
-                        'code' => '270528'.sprintf("%02d", $invoice->eps_id),
+                        'code' => '270528' . sprintf("%02d", $invoice->eps_id),
                         'type' => 1,
-                        'description' => 'Ingresos devengados por facturar otros para '.$invoice->eps->code .' - '.$invoice->eps->alias,
+                        'description' => 'Ingresos devengados por facturar otros para ' . $invoice->eps->code . ' - ' . $invoice->eps->alias,
                         'amount' => $total,
                     ]);
                     array_push($pucs, [
-                        'code' => '130505'.sprintf("%02d", $invoice->eps_id),
+                        'code' => '130505' . sprintf("%02d", $invoice->eps_id),
                         'type' => 0,
-                        'description' => 'Cuentas por pagar para EPS '.$invoice->eps->code .' - '.$invoice->eps->alias,
+                        'description' => 'Cuentas por pagar para EPS ' . $invoice->eps->code . ' - ' . $invoice->eps->alias,
                         'amount' => $total,
                     ]);
                     $pucTotal += $total;
@@ -302,20 +342,20 @@ class Invoice extends Model
                 }
 
                 $authorization->update(['invoice_id' => $invoice->id]);
-                $notes = "Factura para autorización ".$invoice->authorization_code." de la EPS: ".$invoice->eps->code
-                    ." - ".$invoice->eps->alias;
+                $notes = "Factura para autorización " . $invoice->authorization_code . " de la EPS: " . $invoice->eps->code
+                    . " - " . $invoice->eps->alias;
 
                 $pucs = [
                     [
-                        'code' => '270528'.sprintf("%02d", $invoice->eps_id),
+                        'code' => '270528' . sprintf("%02d", $invoice->eps_id),
                         'type' => 1,
-                        'description' => 'Ingresos devengados por facturar otros para '.$invoice->eps->code .' - '.$invoice->eps->alias,
+                        'description' => 'Ingresos devengados por facturar otros para ' . $invoice->eps->code . ' - ' . $invoice->eps->alias,
                         'amount' => $invoice->total,
                     ],
                     [
-                        'code' => '130505'.sprintf("%02d", $invoice->eps_id),
+                        'code' => '130505' . sprintf("%02d", $invoice->eps_id),
                         'type' => 0,
-                        'description' => 'Cuentas por pagar para EPS '.$invoice->eps->code .' - '.$invoice->eps->alias,
+                        'description' => 'Cuentas por pagar para EPS ' . $invoice->eps->code . ' - ' . $invoice->eps->alias,
                         'amount' => $invoice->total,
                     ],
                 ];
@@ -347,8 +387,8 @@ class Invoice extends Model
         if ($initialDate and $finalDate) {
             return $this->where('eps_id', $epsId)
                 ->whereBetween('created_at', [
-                    substr($initialDate, 0, 10).' 00:00:00', 
-                    substr($finalDate, 0, 10).' 23:59:59',
+                    substr($initialDate, 0, 10) . ' 00:00:00',
+                    substr($finalDate, 0, 10) . ' 23:59:59',
                 ])
                 ->get();
         }
@@ -387,27 +427,27 @@ class Invoice extends Model
         $invoices = $this::all();
 
         foreach ($invoices as $key => $invoice) {
-          if ($invoice->number > $max) {
-            break;
-          }
-          echo "\n\nInvoice id: ".$invoice->id." Invoice number: ".$invoice->number;
-          if ($invoice->multiple) {
-              foreach (json_decode($invoice->multiple_codes, true) as $code) {
-                  $currentAuthorization = Authorization::findByCode($code);
-                  echo "\n-> Multiple, processing code: ".$code;
-                  if ($currentAuthorization and $currentAuthorization->invoice_id == 0) {
-                      echo "\n[ <<< TRUE >>> ]";
-                      $currentAuthorization->update(['invoice_id' => $invoice->id]);
-                  }
-              }
-          } else {
-              echo "\n-> Single, processing code: ".$invoice->authorization_code;
-              $currentAuthorization = Authorization::findByCode($invoice->authorization_code);
-              if ($currentAuthorization and $currentAuthorization->invoice_id == 0) {
-                  echo "\n[ <<< TRUE >>> ]";
-                  $currentAuthorization->update(['invoice_id' => $invoice->id]);
-              }
-          }
+            if ($invoice->number > $max) {
+                break;
+            }
+            echo "\n\nInvoice id: " . $invoice->id . " Invoice number: " . $invoice->number;
+            if ($invoice->multiple) {
+                foreach (json_decode($invoice->multiple_codes, true) as $code) {
+                    $currentAuthorization = Authorization::findByCode($code);
+                    echo "\n-> Multiple, processing code: " . $code;
+                    if ($currentAuthorization and $currentAuthorization->invoice_id == 0) {
+                        echo "\n[ <<< TRUE >>> ]";
+                        $currentAuthorization->update(['invoice_id' => $invoice->id]);
+                    }
+                }
+            } else {
+                echo "\n-> Single, processing code: " . $invoice->authorization_code;
+                $currentAuthorization = Authorization::findByCode($invoice->authorization_code);
+                if ($currentAuthorization and $currentAuthorization->invoice_id == 0) {
+                    echo "\n[ <<< TRUE >>> ]";
+                    $currentAuthorization->update(['invoice_id' => $invoice->id]);
+                }
+            }
         }
     }
 
@@ -422,33 +462,33 @@ class Invoice extends Model
 
     protected function convertToMultiple($max = 30)
     {
-      $invoices = $this::where('multiple', 0)
+        $invoices = $this::where('multiple', 0)
             ->get();
 
-      if (!$invoices) {
-        return "No single invoices were found";
-      }
+        if (!$invoices) {
+            return "No single invoices were found";
+        }
 
-      foreach ($invoices as $key => $invoice) {
-          $invoice->update([
-            'multiple' => config('constants.status.active'),
-            'multiple_codes' => '["'.$invoice->authorization_code.'"]',
-            'multiple_totals' => '["'.$invoice->total.'"]',
-            'multiple_days' => '["'.$invoice->days.'"]',
-          ]);
-          echo "\nProcessing invoice number: ".$invoice->number;
-          if ($key > $max) {
-            break;
-          }
-      }
+        foreach ($invoices as $key => $invoice) {
+            $invoice->update([
+                'multiple' => config('constants.status.active'),
+                'multiple_codes' => '["' . $invoice->authorization_code . '"]',
+                'multiple_totals' => '["' . $invoice->total . '"]',
+                'multiple_days' => '["' . $invoice->days . '"]',
+            ]);
+            echo "\nProcessing invoice number: " . $invoice->number;
+            if ($key > $max) {
+                break;
+            }
+        }
 
-      return "Invoices processed: ".count($invoices);
+        return "Invoices processed: " . count($invoices);
     }
 
     protected function searchRecords($search)
     {
-        return $this::where('number', 'like', '%'.$search.'%')
-            ->orWhere('authorization_code', 'like', '%'.$search.'%')
+        return $this::where('number', 'like', '%' . $search . '%')
+            ->orWhere('authorization_code', 'like', '%' . $search . '%')
             ->orderBy('number', 'desc')
             ->paginate(config('constants.pagination'));
     }
@@ -462,7 +502,7 @@ class Invoice extends Model
         }
 
         if ($invoice->multiple) {
-            foreach (json_decode($invoice->multiple_codes,true) as $k => $code) {
+            foreach (json_decode($invoice->multiple_codes, true) as $k => $code) {
                 $authorization = Authorization::findByCode($code);
                 if (!$authorization) {
                     echo "\nAuthorization $code not found";
@@ -474,7 +514,7 @@ class Invoice extends Model
                     continue;
                 }
                 $authorizationService->update([
-                    'days' => json_decode($invoice->multiple_days,true)[$k]
+                    'days' => json_decode($invoice->multiple_days, true)[$k]
                 ]);
                 echo "\nDone with authorization $code";
             }

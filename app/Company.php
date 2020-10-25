@@ -47,7 +47,14 @@ class Company extends Model
     /**
      * Methods
      */
-    protected function storeRecord($request) 
+
+    public function scopeForSelect($query, $id = 'id', $name = 'name')
+    {
+        return $query->select([$id, $name])
+            ->pluck($name, $id);
+    }
+
+    protected function storeRecord($request)
     {
         $company = new Company();
 
@@ -62,11 +69,11 @@ class Company extends Model
 
         if ($request->hasFile('logo')) {
             $file = $request->file('logo');
-            $fileName = time().'_'.$file->getClientOriginalName();
+            $fileName = time() . '_' . $file->getClientOriginalName();
 
-            $file->move(public_path().config('constants.companiesImages'), $fileName);
-            
-            $company->logo = config('constants.companiesImages').$fileName;
+            $file->move(public_path() . config('constants.companiesImages'), $fileName);
+
+            $company->logo = config('constants.companiesImages') . $fileName;
         }
 
         $company->save();
@@ -94,7 +101,7 @@ class Company extends Model
         return $company;
     }
 
-    protected function updateRecord($request) 
+    protected function updateRecord($request)
     {
         $company = $this->find($request->get('id'));
 
@@ -110,11 +117,11 @@ class Company extends Model
 
             if ($request->hasFile('logo')) {
                 $file = $request->file('logo');
-                $fileName = time().'_'.$file->getClientOriginalName();
+                $fileName = time() . '_' . $file->getClientOriginalName();
 
-                $file->move(public_path().config('constants.companiesImages'), $fileName);
-                
-                $company->logo = config('constants.companiesImages').$fileName;
+                $file->move(public_path() . config('constants.companiesImages'), $fileName);
+
+                $company->logo = config('constants.companiesImages') . $fileName;
             }
 
             $company->save();

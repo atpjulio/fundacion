@@ -182,6 +182,18 @@ $myConstants = [
         1 => 'Efectivo',
         2 => 'Transferencia',
     ],
+    'exportMethods' => [
+        'relation'    => 0,
+        'volume'      => 1,
+        'worldOffice' => 2,
+        'excel'       => 3,
+        'options'        => [
+            0 => 'Relación PDF',
+            1 => 'Volumen PDF',
+            2 => 'WorldOffice',
+            3 => 'Excel',
+        ],
+    ],
 ];
 
 return $myConstants;

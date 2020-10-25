@@ -394,4 +394,45 @@ class InvoiceController extends Controller
         return view('invoice.delete_modal', compact('invoice'));
     }
 
+    public function export(Request $request)
+    {
+        // dd($request->all());
+        $epss = Eps::forSelect();
+        $companies = Company::forSelect();
+
+        $oldEpsId      = $request->get('eps_id');
+        $oldCompanyId  = $request->get('company_id');
+        $initialNumber = $request->get('initial_number');
+        $finalNumber   = $request->get('final_number');
+        $initialDate   = $request->get('initial_date');
+        $finalDate     = $request->get('final_date');
+        $epsId         = $request->get('eps_id') ?? $epss->keys()->first();
+        $companyId     = $request->get('company_id') ?? $companies->keys()->first();
+        $oldSelection  = $request->get('selection');
+        $except        = $request->get('except') ?? array();
+
+        $baseQuery = Invoice::search($epsId, $companyId, $request);
+
+        if ($request->get('export')) {
+            // dd('handle baseQuery');
+        }
+
+        $selection = (clone $baseQuery)
+            ->orderBy('number', 'desc')
+            ->pluck('number', 'id');
+
+        $query = (clone $baseQuery);
+
+        if ($oldSelection) {
+            $query->whereIn('id', $oldSelection);
+        }
+
+        $invoices = $query->orderBy('number', 'desc')
+            ->paginate(config('constants.pagination'));
+
+        return view('invoice.export', compact(
+            'epss', 'companies', 'initialNumber', 'finalNumber', 'initialDate', 'finalDate', 
+            'selection', 'oldSelection', 'oldEpsId', 'oldCompanyId', 'invoices', 'except', 
+        ));
+    }
 }

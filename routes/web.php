@@ -32,6 +32,7 @@ Route::middleware(['auth', 'admin'])->group(function () {
     Route::get('invoice-relation-pdf', 'InvoiceController@relationPDF')->name('invoice.relation.pdf');
     Route::get('invoice-volume', 'InvoiceController@volume')->name('invoice.volume');
     Route::get('invoice-volume-pdf', 'InvoiceController@volumePDF')->name('invoice.volume.pdf');
+    Route::get('invoices/exports', 'InvoiceController@export')->name('invoice.export');
 
     Route::get('accounting/eps', 'AccountingController@eps')->name('accounting.eps');
     Route::get('accounting/eps/{id}', 'AccountingController@epsDetail')->name('accounting.eps.detail');
