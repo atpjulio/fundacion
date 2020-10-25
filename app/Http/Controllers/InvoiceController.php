@@ -413,10 +413,6 @@ class InvoiceController extends Controller
 
         $baseQuery = Invoice::search($epsId, $companyId, $request);
 
-        if ($request->get('export')) {
-            // dd('handle baseQuery');
-        }
-
         $selection = (clone $baseQuery)
             ->orderBy('number', 'desc')
             ->pluck('number', 'id');
@@ -425,6 +421,10 @@ class InvoiceController extends Controller
 
         if ($oldSelection) {
             $query->whereIn('id', $oldSelection);
+        }
+
+        if ($request->get('export') != null) {
+            return Invoice::export($request, clone $query);
         }
 
         $invoices = $query->orderBy('number', 'desc')

@@ -46,50 +46,9 @@
         $(document).ready(function() {
             $('.multiple-select').select2();
         });
-
+        function processExport(){
+            const updateQueryParams = window.location.search.replace('export_date={{ now()->format("Y-m-d") }}', 'export_date=' + $('#export-date').val());
+            window.open('{{ env("APP_URL") }}/invoices/exports' + updateQueryParams + '&export=' + $('#export-method').val(),'_blank');
+        }
     </script>
 @endpush
-{{-- <script src="{{ asset('js/jquery.dataTables.min.js') }}"></script>
-<script src="{{ asset('js/dataTables.bootstrap.min.js') }}"></script>
-<script>
-    $(document).ready(function() {
-        $('#eps_id').on('change', function() {
-            var data = $('#eps_id').val() + '_' + $('#initial_date').val() + '_' + $('#final_date')
-                .val();
-            fillInvoicesByEpsAndDate(data);
-        });
-
-        $('#initial_date').on('change', function() {
-            var data = $('#eps_id').val() + '_' + $('#initial_date').val() + '_' + $('#final_date')
-                .val();
-            fillInvoicesByEpsAndDate(data);
-        });
-
-        $('#final_date').on('change', function() {
-            var data = $('#eps_id').val() + '_' + $('#initial_date').val() + '_' + $('#final_date')
-                .val();
-            fillInvoicesByEpsAndDate(data);
-        });
-
-        $('#eps_id').on('change', function() {
-            var data = $('#eps_id').val() + '_' + $('#initial_number').val() + '_' + $('#final_number')
-                .val();
-            fillInvoicesByEpsAndNumber(data);
-        });
-
-        $('#initial_number').on('change', function() {
-            var data = $('#eps_id').val() + '_' + $('#initial_number').val() + '_' + $('#final_number')
-                .val();
-            fillInvoicesByEpsAndNumber(data);
-        });
-
-        $('#final_number').on('change', function() {
-            var data = $('#eps_id').val() + '_' + $('#initial_number').val() + '_' + $('#final_number')
-                .val();
-            fillInvoicesByEpsAndNumber(data);
-        });
-
-    });
-
-</script>
-@endpush --}}

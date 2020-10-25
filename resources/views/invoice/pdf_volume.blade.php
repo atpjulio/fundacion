@@ -62,7 +62,7 @@
                 <span style="font-weight: bold; font-size: 14pt;">
                     No. Factura
                     <br>
-                    {{ $invoice->number }}
+                    F2MC {{ $invoice->number }}
                 </span>
                 @if (strlen($invoice->company->billing_resolution) > 1)
                 <br>

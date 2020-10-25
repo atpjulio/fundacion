@@ -3,18 +3,18 @@
     <div class="col-md-3">
         <div class="form-group  @if($errors->has('export_method')) has-error @endif">
             {!! Form::label('export_method', 'Opciones de exportación', ['class' => 'control-label']) !!}
-            {!! Form::select('export_method', config('constants.exportMethods.options'), null, ['class' => 'form-control']) !!}
+            {!! Form::select('export_method', config('constants.exportMethods.options'), null, ['class' => 'form-control', 'id' => 'export-method']) !!}
         </div>
     </div>
     <div class="col-md-3">
         <div class="form-group  @if($errors->has('export_date')) has-error @endif">
             {!! Form::label('export_date', 'Fecha de exportación', ['class' => 'control-label']) !!}
-            {!! Form::date('export_date', old('export_date', now()), ['class' => 'form-control underlined']) !!}
+            {!! Form::date('export_date', old('export_date', now()), ['class' => 'form-control underlined', 'id' => 'export-date']) !!}
         </div>
     </div>
     <div class="col-md-6 pt-2">
         <br>
-        <button type="submit" class="btn btn-oval btn-success" name="export" value="export">
+        <button type="button" class="btn btn-oval btn-success" name="export" value="export" onclick="processExport()">
             <i class="fas fa-file-export"></i>
             Exportar
         </button>
@@ -61,6 +61,11 @@
                             {!! $invoice->format_number !!}
                         </a>
                         {!! ' - ' . optional($invoice->eps)->alias !!}
+                        <div class="text-muted">
+                            <small>
+                                Fecha de creación: {!! $invoice->created_at->format('d/m/Y') !!}
+                            </small>
+                        </div>
                     </td>                    
                     <td>
                         @if ($patient)

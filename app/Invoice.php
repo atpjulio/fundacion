@@ -535,4 +535,70 @@ class Invoice extends Model
         }
         echo "\nSuccess!! On invoice number $number";
     }
+
+    protected function export($request, $query)
+    {
+        $method     = $request->get('export');
+        $exportDate = $request->get('export_date');
+        $eps        = Eps::findOrFail($request->get('eps_id'));
+        $company    = Company::findOrFail($request->get('company_id'));
+
+        if ($method == config('constants.exportMethods.relation')) {
+            $invoices = $query->orderBy('number', 'asc')
+                ->get();
+
+            return $this->pdfRelation($company, $eps, $invoices, $exportDate);
+            // } elseif ($method == config('constants.exportMethods.volume')) {
+        }
+
+        $invoices = $query->orderBy('number', 'asc')
+            ->get();
+
+        return $this->pdfVolume($company, $eps, $invoices, $exportDate);
+    }
+
+    protected function pdfVolume($company, $eps, $invoices, $createdAt)
+    {
+        ini_set("pcre.backtrack_limit", "5000000");
+        $html = \View::make('invoice.pdf_volume', compact('invoices', 'company', 'eps', 'createdAt'));
+        $mpdf = new \Mpdf\Mpdf([
+            'margin_left' => 20,
+            'margin_right' => 15,
+            'margin_top' => 48,
+            'margin_bottom' => 25,
+            'margin_header' => 10,
+            'margin_footer' => 10
+        ]);
+        $mpdf->SetProtection(array('print'));
+        $mpdf->SetTitle($company->name . " - Volumen de Facturas " . $eps->alias);
+        $mpdf->SetAuthor($company->name);
+        $mpdf->SetDisplayMode('fullpage');
+        $mpdf->WriteHTML($html);
+
+        return $mpdf->Output("Volumen de Facturas " . $eps->alias . '.pdf', 'I');
+    }
+
+    protected function pdfRelation($company, $eps, $invoices, $createdAt)
+    {
+        $initialDate = $invoices->first()->created_at;
+        $finalDate   = $invoices->last()->created_at;
+
+        ini_set("pcre.backtrack_limit", "5000000");
+        $html = \View::make('invoice.pdf_relation', compact('invoices', 'company', 'eps', 'initialDate', 'finalDate', 'createdAt'));
+        $mpdf = new \Mpdf\Mpdf([
+            'margin_left' => 20,
+            'margin_right' => 15,
+            'margin_top' => 48,
+            'margin_bottom' => 25,
+            'margin_header' => 10,
+            'margin_footer' => 10
+        ]);
+        $mpdf->SetProtection(array('print'));
+        $mpdf->SetTitle($company->name . " - Relación de Facturas " . $eps->alias);
+        $mpdf->SetAuthor($company->name);
+        $mpdf->SetDisplayMode('fullpage');
+        $mpdf->WriteHTML($html);
+
+        return $mpdf->Output("Relación de Facturas " . $eps->alias . '.pdf', 'I');
+    }
 }
