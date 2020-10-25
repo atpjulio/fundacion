@@ -607,7 +607,7 @@ class Invoice extends Model
     {
         $fileName  = $eps->alias . ' - Facturas';
         $createdAt = Carbon::parse($exportDate)->format('d/m/Y');
-
+        set_time_limit(0);
         return Excel::create($fileName, function ($excel) use ($eps, $invoices, $createdAt) {
             $excel->getDefaultStyle()->getFont()->setSize(10);
             $excel->sheet('Hoja1', function ($sheet) use ($eps, $invoices, $createdAt) {
