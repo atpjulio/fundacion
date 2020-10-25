@@ -2,8 +2,10 @@
 
 namespace App;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Maatwebsite\Excel\Facades\Excel;
 
 class Invoice extends Model
 {
@@ -542,17 +544,16 @@ class Invoice extends Model
         $exportDate = $request->get('export_date');
         $eps        = Eps::findOrFail($request->get('eps_id'));
         $company    = Company::findOrFail($request->get('company_id'));
+        $invoices   = $query->orderBy('number', 'asc')
+            ->get();
 
         if ($method == config('constants.exportMethods.relation')) {
-            $invoices = $query->orderBy('number', 'asc')
-                ->get();
-
             return $this->pdfRelation($company, $eps, $invoices, $exportDate);
-            // } elseif ($method == config('constants.exportMethods.volume')) {
+        } elseif ($method == config('constants.exportMethods.excel')) {
+            return $this->excel($eps, $invoices, $exportDate);
+        } elseif ($method == config('constants.exportMethods.worldOffice')) {
+            return $this->excel($eps, $invoices, $exportDate);
         }
-
-        $invoices = $query->orderBy('number', 'asc')
-            ->get();
 
         return $this->pdfVolume($company, $eps, $invoices, $exportDate);
     }
@@ -575,7 +576,7 @@ class Invoice extends Model
         $mpdf->SetDisplayMode('fullpage');
         $mpdf->WriteHTML($html);
 
-        return $mpdf->Output("Volumen de Facturas " . $eps->alias . '.pdf', 'I');
+        return $mpdf->Output($eps->alias . ' - Volumen de Facturas.pdf', 'I');
     }
 
     protected function pdfRelation($company, $eps, $invoices, $createdAt)
@@ -599,6 +600,76 @@ class Invoice extends Model
         $mpdf->SetDisplayMode('fullpage');
         $mpdf->WriteHTML($html);
 
-        return $mpdf->Output("Relación de Facturas " . $eps->alias . '.pdf', 'I');
+        return $mpdf->Output($eps->alias . ' - Relación de Facturas.pdf', 'I');
+    }
+
+    protected function excel($eps, $invoices, $exportDate)
+    {
+        $fileName  = $eps->alias . ' - Facturas';
+        $createdAt = Carbon::parse($exportDate)->format('d/m/Y');
+
+        return Excel::create($fileName, function ($excel) use ($eps, $invoices, $createdAt) {
+            $excel->getDefaultStyle()->getFont()->setSize(10);
+            $excel->sheet('Hoja1', function ($sheet) use ($eps, $invoices, $createdAt) {
+                $sheet->setHeight(1, 20);
+                $sheet->getStyle('A1:E1')->getAlignment()->setWrapText(true);
+
+                $sheet->setWidth('A', 40);
+                $sheet->cell('A1', function ($cell) {
+                    $cell->setValue('EPS');
+                    $cell->setFontColor('#0000FF');
+                    $cell->setAlignment('center');
+                });
+
+                $sheet->setWidth('B', 13);
+                $sheet->cell('B1', function ($cell) {
+                    $cell->setValue('NIT');
+                    $cell->setFontColor('#0000FF');
+                    $cell->setAlignment('center');
+                });
+
+                $sheet->setWidth('C', 13);
+                $sheet->cell('C1', function ($cell) {
+                    $cell->setValue('# Factura');
+                    $cell->setFontColor('#0000FF');
+                    $cell->setAlignment('center');
+                });
+
+                $sheet->setWidth('D', 13);
+                $sheet->cell('D1', function ($cell) {
+                    $cell->setValue('Monto');
+                    $cell->setFontColor('#0000FF');
+                    $cell->setAlignment('center');
+                });
+
+                $sheet->setWidth('E', 12);
+                $sheet->cell('E1', function ($cell) {
+                    $cell->setValue('Fecha');
+                    $cell->setFontColor('#0000FF');
+                    $cell->setAlignment('center');
+                });
+
+                $counter = 2;
+                foreach ($invoices as $invoice) {
+                    $sheet->cell('A' . $counter, function ($cell) use ($eps) {
+                        $cell->setValue($eps->name);
+                    });
+                    $sheet->cell('B' . $counter, function ($cell) use ($eps) {
+                        $cell->setValue($eps->nit);
+                    });
+                    $sheet->cell('C' . $counter, function ($cell) use ($invoice) {
+                        $cell->setValue($invoice->number . '');
+                    });
+                    $sheet->cell('D' . $counter, function ($cell) use ($invoice) {
+                        // $cell->setValue(number_format($invoice->calculateTotal(), 2, ',', '.'));
+                        $cell->setValue($invoice->calculateTotal() . '');
+                    });
+                    $sheet->cell('E' . $counter, function ($cell) use ($createdAt) {
+                        $cell->setValue($createdAt);
+                    });
+                    $counter++;
+                }
+            });
+        })->export('xls');
     }
 }
