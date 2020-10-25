@@ -432,7 +432,7 @@ class InvoiceController extends Controller
 
         return view('invoice.export', compact(
             'epss', 'companies', 'initialNumber', 'finalNumber', 'initialDate', 'finalDate', 
-            'selection', 'oldSelection', 'oldEpsId', 'oldCompanyId', 'invoices', 'except', 
+            'selection', 'oldSelection', 'oldEpsId', 'oldCompanyId', 'invoices', 'except'
         ));
     }
 }
