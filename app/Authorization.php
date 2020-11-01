@@ -303,7 +303,9 @@ class Authorization extends Model
 
     protected function findByCode($code)
     {
-        return $this->where('code', $code)->first();
+        return $this->with('services')
+            ->where('code', $code)
+            ->first();
     }
 
     protected function findDepartures()
