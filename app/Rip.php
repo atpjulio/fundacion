@@ -99,8 +99,7 @@ class Rip extends Model
     }
 
     protected function updateRIPS($request, $id)
-    {
-    }
+    { }
 
     protected function produceAT($invoices, $id)
     {
@@ -118,44 +117,29 @@ class Rip extends Model
                 foreach (json_decode($invoice->multiple_codes, true) as $key => $value) {
                     $currentAuthorization = Authorization::findByCode($value);
                     if ($currentAuthorization) {
-                        
+
                         foreach ($currentAuthorization->services as $service) {
                             $days = $service->days;
                             $dailyPrice = $service->price;
                             try {
                                 $total = $days * floatval($dailyPrice);
-                            } catch(\Exception $e) {
+                            } catch (\Exception $e) {
                                 dd($invoice, $key, $e);
                             }
-                            $line .= $invoice->number.",".substr($invoice->company->doc, 0, 9).","
-                                .$currentAuthorization->patient->dni_type.",".$currentAuthorization->patient->dni.","
-                                .$currentAuthorization->code.",1,".$service->service->code.","
-                                .substr(Utilities::normalizeString(mb_strtoupper($service->service->name)), 0, 59).","
-                                .$days.",".number_format($dailyPrice, 2, ".", "").","
-                                .number_format($total, 2, ".", "")."\r\n";
+                            $line .= $invoice->number . "," . str_replace('-', '0', $invoice->company->doc) . ","
+                                . $currentAuthorization->patient->dni_type . "," . $currentAuthorization->patient->dni . ","
+                                . $currentAuthorization->code . ",1," . $service->service->code . ","
+                                . substr(Utilities::normalizeString(mb_strtoupper($service->service->name)), 0, 59) . ","
+                                . $days . "," . number_format($dailyPrice, 2, ".", "") . ","
+                                . number_format($total, 2, ".", "") . "\r\n";
                             $counter++;
                         }
-
-                        // $days = json_decode($invoice->multiple_days, true)[$key];
-                        // $dailyPrice = $currentAuthorization->daily_price;
-                        // try {
-                        //     $total = floatval(json_decode($invoice->multiple_totals, true)[$key]);
-                        // } catch (\Exception $e) {
-                        //     dd($invoice, $key);
-                        // }
-                        // $line .= $invoice->number . "," . substr($invoice->company->doc, 0, 9) . ","
-                        //     . $currentAuthorization->patient->dni_type . "," . $currentAuthorization->patient->dni . ","
-                        //     . $currentAuthorization->code . "," . $serviceType . "," . $currentAuthorization->service->code . ","
-                        //     . Utilities::normalizeString(mb_strtoupper(substr($currentAuthorization->service->name, 0, 59))) . ","
-                        //     . $days . "," . number_format($dailyPrice, 0, ".", "") . ","
-                        //     . number_format($total, 0, ".", "") . "\r\n";
-                        // $counter++;
                     }
                 }
             } else {
                 $days = $invoice->days;
                 $dailyPrice = $invoice->authorization->daily_price;
-                $line .= $invoice->number . "," . substr($invoice->company->doc, 0, 9) . ","
+                $line .= $invoice->number . "," . str_replace('-', '0', $invoice->company->doc) . ","
                     . $invoice->authorization->patient->dni_type . "," . $invoice->authorization->patient->dni . ","
                     . $invoice->authorization->code . "," . $serviceType . "," . $invoice->authorization->service->code . ","
                     . Utilities::normalizeString(mb_strtoupper(substr($invoice->authorization->service->name, 0, 59))) . ","
@@ -164,6 +148,8 @@ class Rip extends Model
                 $counter++;
             }
         }
+
+        $line = substr($line, 0, -2);
 
         $fileName = "AT" . sprintf("%06d", $id) . ".TXT";
 
@@ -217,6 +203,9 @@ class Rip extends Model
                 $counter++;
             }
         }
+
+        $line = substr($line, 0, -2);
+
         $fileName = "US" . sprintf("%06d", $id) . ".TXT";
 
         Storage::put(config('constants.ripsFiles') . $fileName, $line);
@@ -249,7 +238,7 @@ class Rip extends Model
             $createdAt = \Carbon\Carbon::parse($invoice->created_at)->format("d/m/Y");
             $total = $invoice->multiple ? array_sum(json_decode($invoice->multiple_totals, true)) : $invoice->total;
 
-            $line .= substr($invoice->company->doc, 0, 9) . "," . Utilities::normalizeString(mb_strtoupper($invoice->company->name)) . ","
+            $line .= str_replace('-', '0', $invoice->company->doc) . "," . Utilities::normalizeString(mb_strtoupper($invoice->company->name)) . ","
                 . $invoice->company->doc_type . "," . substr($invoice->company->doc, 0, 9) . ","
                 . $invoice->number . "," . $createdAt . "," . $initialDate . "," . $finalDate . ","
                 . $invoice->eps->code . "," . Utilities::normalizeString(substr(mb_strtoupper($invoice->eps->name), 0, 30)) . ","
@@ -257,6 +246,8 @@ class Rip extends Model
                 . "0,0,0," . number_format($total, 0, ".", "") . "\r\n";
             $counter++;
         }
+
+        $line = substr($line, 0, -2);
 
         $fileName = "AF" . sprintf("%06d", $id) . ".TXT";
 
@@ -272,9 +263,11 @@ class Rip extends Model
         foreach ($counters as $type => $counter) {
             $createdAt = \Carbon\Carbon::parse($invoice->created_at)->format("d/m/Y");
 
-            $line .= substr($invoice->company->doc, 0, 9) . "," . $createdAt . ","
+            $line .= str_replace('-', '0', $invoice->company->doc) . "," . $createdAt . ","
                 . $type . sprintf("%06d", $id) . "," . $counter . "\r\n";
         }
+
+        $line = substr($line, 0, -2);
 
         $fileName = "CT" . sprintf("%06d", $id) . ".TXT";
 
@@ -409,7 +402,7 @@ class Rip extends Model
                                     $cell->setValue($invoice->eps->code);
                                 });
                                 $sheet->cell('D' . $counter, function ($cell) use ($currentAuthorization) {
-                                    $cell->setValue($currentAuthorization->patient->type);
+                                    $cell->setValue($currentAuthorization->patient->type . '');
                                 });
                                 $sheet->cell('E' . $counter, function ($cell) use ($arrayLastName) {
                                     $cell->setValue(mb_strtoupper($arrayLastName[0]));
@@ -451,7 +444,7 @@ class Rip extends Model
                         $arrayLastName = explode(" ", $invoice->authorization->patient->last_name);
 
                         $sheet->cell('A' . $counter, function ($cell) use ($invoice) {
-                            $cell->setValue($invoice->authorization->patient->dni_type);
+                            $cell->setValue($invoice->authorization->patient->dni_type . '');
                         });
                         $sheet->cell('B' . $counter, function ($cell) use ($invoice) {
                             $cell->setValue($invoice->authorization->patient->dni);
@@ -475,7 +468,7 @@ class Rip extends Model
                             $cell->setValue(mb_strtoupper(join(" ", array_slice($arrayFirstName, 1))));
                         });
                         $sheet->cell('I' . $counter, function ($cell) use ($invoice) {
-                            $cell->setValue($invoice->authorization->patient->age);
+                            $cell->setValue($invoice->authorization->patient->age . '');
                         });
                         $sheet->cell('J' . $counter, function ($cell) {
                             $cell->setValue("1");
@@ -636,7 +629,7 @@ class Rip extends Model
                         $cell->setValue(substr($invoice->company->doc, 0, 9));
                     });
                     $sheet->cell('E' . $counter, function ($cell) use ($invoice) {
-                        $cell->setValue($invoice->number);
+                        $cell->setValue($invoice->number . '');
                     });
                     $sheet->cell('F' . $counter, function ($cell) use ($createdAt) {
                         $cell->setValue($createdAt);
@@ -762,11 +755,11 @@ class Rip extends Model
                                     $dailyPrice = $service->price;
                                     try {
                                         $total = $days * floatval($dailyPrice);
-                                    } catch(\Exception $e) {
+                                    } catch (\Exception $e) {
                                         dd($invoice, $key, $e);
                                     }
                                     $sheet->cell('A' . $counter, function ($cell) use ($invoice) {
-                                        $cell->setValue($invoice->number);
+                                        $cell->setValue($invoice->number . '');
                                     });
                                     $sheet->cell('B' . $counter, function ($cell) use ($invoice) {
                                         $cell->setValue(substr($invoice->company->doc, 0, 9));
@@ -790,7 +783,7 @@ class Rip extends Model
                                         $cell->setValue(mb_strtoupper($service->service->name));
                                     });
                                     $sheet->cell('I' . $counter, function ($cell) use ($days) {
-                                        $cell->setValue("".$days);
+                                        $cell->setValue("" . $days);
                                     });
                                     $sheet->cell('J' . $counter, function ($cell) use ($dailyPrice) {
                                         $cell->setValue(number_format($dailyPrice, 2, ".", ""));
@@ -800,7 +793,7 @@ class Rip extends Model
                                     });
                                     $counter++;
                                     $counterAT++;
-                                }                                
+                                }
                                 // $sheet->cell('A' . $counter, function ($cell) use ($invoice) {
                                 //     $cell->setValue($invoice->number);
                                 // });
@@ -867,10 +860,10 @@ class Rip extends Model
                             $cell->setValue($invoice->days);
                         });
                         $sheet->cell('J' . $counter, function ($cell) use ($invoice) {
-                            $cell->setValue($invoice->eps->daily_price);
+                            $cell->setValue($invoice->eps->daily_price . '');
                         });
                         $sheet->cell('K' . $counter, function ($cell) use ($invoice) {
-                            $cell->setValue(floatval($invoice->total));
+                            $cell->setValue(floatval($invoice->total) . '');
                         });
                         $counter++;
                         $counterAT++;
@@ -943,13 +936,13 @@ class Rip extends Model
                     $cell->setValue('AT' . $fileId);
                 });
                 $sheet->cell('D3', function ($cell) use ($counterAF) {
-                    $cell->setValue($counterAF);
+                    $cell->setValue($counterAF . '');
                 });
                 $sheet->cell('D4', function ($cell) use ($counterUS) {
-                    $cell->setValue($counterUS);
+                    $cell->setValue($counterUS . '');
                 });
                 $sheet->cell('D5', function ($cell) use ($counterAT) {
-                    $cell->setValue($counterAT);
+                    $cell->setValue($counterAT . '');
                 });
             });
             $excel->sheet('CONSULTA', function ($sheet) {
