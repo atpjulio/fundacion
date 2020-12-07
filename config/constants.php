@@ -141,6 +141,7 @@ $myConstants = [
         "MS" => "MS - Menor Sin Identificación",
         "NU" => "NU - Número Unico de Identificación",
         "PE" => "PE - Permiso Especial",
+        "SC" => "SC - Salvo Conducto",
     ],
     'companiesDocumentTypes' => [
         "NI" => "NIT",
