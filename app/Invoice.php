@@ -675,7 +675,7 @@ class Invoice extends Model
 
     protected function excelWorldOffice($eps, $company, $invoices, $exportDate)
     {
-        $fileName  = $eps->alias . ' - FacturasWO';
+        $fileName  = 'FacturasWO - '. $eps->alias;
         $createdAt = Carbon::parse($exportDate)->format('d/m/Y');
         $expiresAt = Carbon::parse($exportDate)->addMonth()->format('d/m/Y');
         set_time_limit(0);
@@ -757,202 +757,90 @@ class Invoice extends Model
 
                 $sheet->setWidth('K', 12);
                 $sheet->cell('K1', function ($cell) {
-                    $cell->setValue('Encab: Prefijo Documento Externo');
+                    $cell->setValue('Encab: Verificado');
                     $cell->setFontColor('#0000FF');
                     $cell->setAlignment('left');
                 });
 
                 $sheet->setWidth('L', 12);
                 $sheet->cell('L1', function ($cell) {
-                    $cell->setValue('Encab: Número_Documento_Externo');
+                    $cell->setValue('Encab: Anulado');
                     $cell->setFontColor('#0000FF');
                     $cell->setAlignment('left');
                 });
 
                 $sheet->setWidth('M', 12);
                 $sheet->cell('M1', function ($cell) {
-                    $cell->setValue('Encab: Verificado');
+                    $cell->setValue('Nombre de paciente');
                     $cell->setFontColor('#0000FF');
                     $cell->setAlignment('left');
                 });
-
+                
                 $sheet->setWidth('N', 12);
                 $sheet->cell('N1', function ($cell) {
-                    $cell->setValue('Encab: Anulado');
+                    $cell->setValue('Tipo de documento');
                     $cell->setFontColor('#0000FF');
                     $cell->setAlignment('left');
                 });
-
-                $sheet->setWidth('O', 12);
+                
+                $sheet->setWidth('O', 30);
                 $sheet->cell('O1', function ($cell) {
-                    $cell->setValue('Tipo de documento');
+                    $cell->setValue('Numero de documento');
                     $cell->setFontColor('#0000FF');
                     $cell->setAlignment('left');
                 });
 
                 $sheet->setWidth('P', 12);
                 $sheet->cell('P1', function ($cell) {
-                    $cell->setValue('Numero de documento');
+                    $cell->setValue('Detalle: Producto');
                     $cell->setFontColor('#0000FF');
                     $cell->setAlignment('left');
                 });
 
-                $sheet->setWidth('Q', 30);
+                $sheet->setWidth('Q', 12);
                 $sheet->cell('Q1', function ($cell) {
-                    $cell->setValue('NOMBRE DE PACIENTE');
+                    $cell->setValue('Detalle: Bodega');
                     $cell->setFontColor('#0000FF');
                     $cell->setAlignment('left');
                 });
 
                 $sheet->setWidth('R', 12);
                 $sheet->cell('R1', function ($cell) {
-                    $cell->setValue('Encab: Personalizado 4');
+                    $cell->setValue('Detalle: UnidadDeMedida');
                     $cell->setFontColor('#0000FF');
                     $cell->setAlignment('left');
                 });
 
                 $sheet->setWidth('S', 12);
                 $sheet->cell('S1', function ($cell) {
-                    $cell->setValue('Encab: Personalizado 5');
+                    $cell->setValue('EDetalle: Cantidad');
                     $cell->setFontColor('#0000FF');
                     $cell->setAlignment('left');
                 });
 
                 $sheet->setWidth('T', 12);
                 $sheet->cell('T1', function ($cell) {
-                    $cell->setValue('Encab: Personalizado 6');
+                    $cell->setValue('Detalle: IVA');
                     $cell->setFontColor('#0000FF');
                     $cell->setAlignment('left');
                 });
 
                 $sheet->setWidth('U', 12);
                 $sheet->cell('U1', function ($cell) {
-                    $cell->setValue('Encab: Personalizado 7');
+                    $cell->setValue('Detalle: Valor Unitario');
                     $cell->setFontColor('#0000FF');
                     $cell->setAlignment('left');
                 });
 
                 $sheet->setWidth('V', 12);
                 $sheet->cell('V1', function ($cell) {
-                    $cell->setValue('Encab: Personalizado 8');
+                    $cell->setValue('Detalle: Descuento');
                     $cell->setFontColor('#0000FF');
                     $cell->setAlignment('left');
                 });
 
                 $sheet->setWidth('W', 12);
                 $sheet->cell('W1', function ($cell) {
-                    $cell->setValue('Encab: Personalizado 9');
-                    $cell->setFontColor('#0000FF');
-                    $cell->setAlignment('left');
-                });
-
-                $sheet->setWidth('X', 12);
-                $sheet->cell('X1', function ($cell) {
-                    $cell->setValue('Encab: Personalizado 10');
-                    $cell->setFontColor('#0000FF');
-                    $cell->setAlignment('left');
-                });
-
-                $sheet->setWidth('Y', 12);
-                $sheet->cell('Y1', function ($cell) {
-                    $cell->setValue('Encab: Personalizado 11');
-                    $cell->setFontColor('#0000FF');
-                    $cell->setAlignment('left');
-                });
-
-                $sheet->setWidth('Z', 12);
-                $sheet->cell('Z1', function ($cell) {
-                    $cell->setValue('Encab: Personalizado 12');
-                    $cell->setFontColor('#0000FF');
-                    $cell->setAlignment('left');
-                });
-
-                $sheet->setWidth('AA', 12);
-                $sheet->cell('AA1', function ($cell) {
-                    $cell->setValue('Encab: Personalizado 13');
-                    $cell->setFontColor('#0000FF');
-                    $cell->setAlignment('left');
-                });
-
-                $sheet->setWidth('AB', 12);
-                $sheet->cell('AB1', function ($cell) {
-                    $cell->setValue('Encab: Personalizado 14');
-                    $cell->setFontColor('#0000FF');
-                    $cell->setAlignment('left');
-                });
-
-                $sheet->setWidth('AC', 12);
-                $sheet->cell('AC1', function ($cell) {
-                    $cell->setValue('Encab: Personalizado 15');
-                    $cell->setFontColor('#0000FF');
-                    $cell->setAlignment('left');
-                });
-
-                $sheet->setWidth('AD', 12);
-                $sheet->cell('AD1', function ($cell) {
-                    $cell->setValue('Encab: Sucursal');
-                    $cell->setFontColor('#0000FF');
-                    $cell->setAlignment('left');
-                });
-
-                $sheet->setWidth('AE', 12);
-                $sheet->cell('AE1', function ($cell) {
-                    $cell->setValue('Encab: Clasificación');
-                    $cell->setFontColor('#0000FF');
-                    $cell->setAlignment('left');
-                });
-
-                $sheet->setWidth('AF', 12);
-                $sheet->cell('AF1', function ($cell) {
-                    $cell->setValue('Detalle: Producto');
-                    $cell->setFontColor('#0000FF');
-                    $cell->setAlignment('left');
-                });
-
-                $sheet->setWidth('AG', 12);
-                $sheet->cell('AG1', function ($cell) {
-                    $cell->setValue('Detalle: Bodega');
-                    $cell->setFontColor('#0000FF');
-                    $cell->setAlignment('left');
-                });
-
-                $sheet->setWidth('AH', 12);
-                $sheet->cell('AH1', function ($cell) {
-                    $cell->setValue('Detalle: UnidadDeMedida');
-                    $cell->setFontColor('#0000FF');
-                    $cell->setAlignment('left');
-                });
-
-                $sheet->setWidth('AI', 12);
-                $sheet->cell('AI1', function ($cell) {
-                    $cell->setValue('EDetalle: Cantidad');
-                    $cell->setFontColor('#0000FF');
-                    $cell->setAlignment('left');
-                });
-
-                $sheet->setWidth('AJ', 12);
-                $sheet->cell('AJ1', function ($cell) {
-                    $cell->setValue('Detalle: IVA');
-                    $cell->setFontColor('#0000FF');
-                    $cell->setAlignment('left');
-                });
-
-                $sheet->setWidth('AK', 12);
-                $sheet->cell('AK1', function ($cell) {
-                    $cell->setValue('Detalle: Valor Unitario');
-                    $cell->setFontColor('#0000FF');
-                    $cell->setAlignment('left');
-                });
-
-                $sheet->setWidth('AL', 12);
-                $sheet->cell('AL1', function ($cell) {
-                    $cell->setValue('Detalle: Descuento');
-                    $cell->setFontColor('#0000FF');
-                    $cell->setAlignment('left');
-                });
-
-                $sheet->setWidth('AM', 12);
-                $sheet->cell('AM1', function ($cell) {
                     $cell->setValue('Detalle: Vencimiento');
                     $cell->setFontColor('#0000FF');
                     $cell->setAlignment('left');
@@ -972,7 +860,7 @@ class Invoice extends Model
                         $patient = $currentAuthorization->patient;
                         foreach ($currentAuthorization->services as $service) {
                             $sheet->cell('A' . $counter, function ($cell) use ($company) {
-                                $cell->setValue(Utilities::normalizeString(mb_strtoupper($company->name)));
+                                $cell->setValue(str_replace(' ', '  ', Utilities::normalizeString(mb_strtoupper($company->name))));
                             });
                             $sheet->cell('B' . $counter, function ($cell) use ($eps) {
                                 $cell->setValue('FV');
@@ -989,8 +877,8 @@ class Invoice extends Model
                             $sheet->cell('F' . $counter, function ($cell) {
                                 $cell->setValue('32657607'); // Cédula de Ingrid
                             });
-                            $sheet->cell('G' . $counter, function ($cell) use ($company) {
-                                $cell->setValue(explode('-', $company->doc)[0]);
+                            $sheet->cell('G' . $counter, function ($cell) use ($eps) {
+                                $cell->setValue(explode('-', $eps->nit)[0]);
                             });
                             $sheet->cell('H' . $counter, function ($cell) {
                                 $cell->setValue('Factura de Venta');
@@ -1001,43 +889,43 @@ class Invoice extends Model
                             $sheet->cell('J' . $counter, function ($cell) use ($createdAt) {
                                 $cell->setValue($createdAt);
                             });
-                            $sheet->cell('M' . $counter, function ($cell) {
+                            $sheet->cell('K' . $counter, function ($cell) {
                                 $cell->setValue('-1');
                             });
-                            $sheet->cell('N' . $counter, function ($cell) {
+                            $sheet->cell('L' . $counter, function ($cell) {
                                 $cell->setValue('0');
                             });
-                            $sheet->cell('O' . $counter, function ($cell) use ($patient) {
-                                $cell->setValue($patient->dni_type);
-                            });
-                            $sheet->cell('P' . $counter, function ($cell) use ($patient) {
-                                $cell->setValue($patient->dni);
-                            });
-                            $sheet->cell('Q' . $counter, function ($cell) use ($patient) {
+                            $sheet->cell('M' . $counter, function ($cell) use ($patient) {
                                 $cell->setValue($patient->full_name);
                             });
-                            $sheet->cell('AF' . $counter, function ($cell) use ($service) {
+                            $sheet->cell('N' . $counter, function ($cell) use ($patient) {
+                                $cell->setValue($patient->dni_type);
+                            });
+                            $sheet->cell('O' . $counter, function ($cell) use ($patient) {
+                                $cell->setValue($patient->dni);
+                            });
+                            $sheet->cell('P' . $counter, function ($cell) use ($service) {
                                 $cell->setValue($service->service->code);
                             });
-                            $sheet->cell('AG' . $counter, function ($cell) {
+                            $sheet->cell('Q' . $counter, function ($cell) {
                                 $cell->setValue('Principal');
                             });
-                            $sheet->cell('AH' . $counter, function ($cell) {
+                            $sheet->cell('R' . $counter, function ($cell) {
                                 $cell->setValue('Und.');
                             });
-                            $sheet->cell('AI' . $counter, function ($cell) use ($service) {
+                            $sheet->cell('S' . $counter, function ($cell) use ($service) {
                                 $cell->setValue($service->days . '');
                             });
-                            $sheet->cell('AJ' . $counter, function ($cell) {
+                            $sheet->cell('T' . $counter, function ($cell) {
                                 $cell->setValue('0');
                             });
-                            $sheet->cell('AK' . $counter, function ($cell) use ($service) {
-                                $cell->setValue(($service->price * $service->days) . '');
+                            $sheet->cell('U' . $counter, function ($cell) use ($service) {
+                                $cell->setValue(($service->price) . '');
                             });
-                            $sheet->cell('AL' . $counter, function ($cell) {
+                            $sheet->cell('V' . $counter, function ($cell) {
                                 $cell->setValue('0');
                             });
-                            $sheet->cell('AM' . $counter, function ($cell) use ($expiresAt) {
+                            $sheet->cell('W' . $counter, function ($cell) use ($expiresAt) {
                                 $cell->setValue($expiresAt);
                             });
                             $counter++;
