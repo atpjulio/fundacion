@@ -126,7 +126,7 @@ class Rip extends Model
                             } catch (\Exception $e) {
                                 dd($invoice, $key, $e);
                             }
-                            $line .= $invoice->number . "," . str_replace('-', '0', $invoice->company->doc) . ","
+                            $line .= config('constants.companyInfo.invoicePreffix') . $invoice->number . "," . str_replace('-', '0', $invoice->company->doc) . ","
                                 . $currentAuthorization->patient->dni_type . "," . $currentAuthorization->patient->dni . ","
                                 . $currentAuthorization->code . ",1," . $service->service->code . ","
                                 . substr(Utilities::normalizeString(mb_strtoupper($service->service->name)), 0, 59) . ","
@@ -139,7 +139,7 @@ class Rip extends Model
             } else {
                 $days = $invoice->days;
                 $dailyPrice = $invoice->authorization->daily_price;
-                $line .= $invoice->number . "," . str_replace('-', '0', $invoice->company->doc) . ","
+                $line .= config('constants.companyInfo.invoicePreffix') . $invoice->number . "," . str_replace('-', '0', $invoice->company->doc) . ","
                     . $invoice->authorization->patient->dni_type . "," . $invoice->authorization->patient->dni . ","
                     . $invoice->authorization->code . "," . $serviceType . "," . $invoice->authorization->service->code . ","
                     . Utilities::normalizeString(mb_strtoupper(substr($invoice->authorization->service->name, 0, 59))) . ","
@@ -240,7 +240,7 @@ class Rip extends Model
 
             $line .= str_replace('-', '0', $invoice->company->doc) . "," . Utilities::normalizeString(mb_strtoupper($invoice->company->name)) . ","
                 . $invoice->company->doc_type . "," . substr($invoice->company->doc, 0, 9) . ","
-                . $invoice->number . "," . $createdAt . "," . $initialDate . "," . $finalDate . ","
+                . config('constants.companyInfo.invoicePreffix') . $invoice->number . "," . $createdAt . "," . $initialDate . "," . $finalDate . ","
                 . $invoice->eps->code . "," . Utilities::normalizeString(substr(mb_strtoupper($invoice->eps->name), 0, 30)) . ","
                 . $invoice->eps->contract . ",,,"
                 . "0,0,0," . number_format($total, 0, ".", "") . "\r\n";
@@ -629,7 +629,7 @@ class Rip extends Model
                         $cell->setValue(substr($invoice->company->doc, 0, 9));
                     });
                     $sheet->cell('E' . $counter, function ($cell) use ($invoice) {
-                        $cell->setValue($invoice->number . '');
+                        $cell->setValue(config('constants.companyInfo.invoicePreffix') . $invoice->number . '');
                     });
                     $sheet->cell('F' . $counter, function ($cell) use ($createdAt) {
                         $cell->setValue($createdAt);
@@ -759,7 +759,7 @@ class Rip extends Model
                                         dd($invoice, $key, $e);
                                     }
                                     $sheet->cell('A' . $counter, function ($cell) use ($invoice) {
-                                        $cell->setValue($invoice->number . '');
+                                        $cell->setValue(config('constants.companyInfo.invoicePreffix') . $invoice->number . '');
                                     });
                                     $sheet->cell('B' . $counter, function ($cell) use ($invoice) {
                                         $cell->setValue(substr($invoice->company->doc, 0, 9));
@@ -795,7 +795,7 @@ class Rip extends Model
                                     $counterAT++;
                                 }
                                 // $sheet->cell('A' . $counter, function ($cell) use ($invoice) {
-                                //     $cell->setValue($invoice->number);
+                                //     $cell->setValue(config('constants.companyInfo.invoicePreffix') . $invoice->number);
                                 // });
                                 // $sheet->cell('B' . $counter, function ($cell) use ($invoice) {
                                 //     $cell->setValue(substr($invoice->company->doc, 0, 9));
@@ -833,7 +833,7 @@ class Rip extends Model
                         }
                     } else {
                         $sheet->cell('A' . $counter, function ($cell) use ($invoice) {
-                            $cell->setValue($invoice->number);
+                            $cell->setValue(config('constants.companyInfo.invoicePreffix') . $invoice->number);
                         });
                         $sheet->cell('B' . $counter, function ($cell) use ($invoice) {
                             $cell->setValue(substr($invoice->company->doc, 0, 9));
