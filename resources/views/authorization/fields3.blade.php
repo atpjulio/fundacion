@@ -78,7 +78,7 @@
     </div>
 </div>
 <div class="form-group">
-    {!! Form::label('companions', 'Acompañante(s) incluído(s) en la autorización', ['class' => 'control-label']) !!}
+    <label for="companions" class="control-label">Acompañante(s) incluído(s) en la autorización</label>
     <div class="table-responsive @if($errors->first('companionDni.*')) has-error @endif ">
 
         <table class="table table-hover table-bordered" id="companionsTable">

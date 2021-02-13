@@ -15,4 +15,4 @@
     <button type="submit" class="btn btn-primary">Si</button>
     <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
 </div>
-{!! Form::close() !!}
+</form>

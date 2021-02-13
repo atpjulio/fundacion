@@ -52,7 +52,7 @@
             {{ Form::hidden('services_quantity', count($authorization->services)) }}
             {{ Form::hidden('authorization_id', $authorization->id) }}
             {{ Form::hidden('invoice_id', $authorization->invoice_id) }}
-            {!! Form::close() !!}
+            </form>
         </div>
     </div>
 </div>

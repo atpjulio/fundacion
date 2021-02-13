@@ -16,7 +16,7 @@
                 <button type="submit" class="btn btn-primary">Guardar</button>
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
             </div>
-            {!! Form::close() !!}
+            </form>
         </div><!-- /.modal-content -->
     </div><!-- /.modal-dialog -->
 </div><!-- /.modal -->

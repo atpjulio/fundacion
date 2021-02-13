@@ -36,7 +36,7 @@
                 </div>
             </div>
         </div>
-        {!! Form::close() !!}
+        </form>
     </section>
 @endsection
 

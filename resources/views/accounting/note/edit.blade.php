@@ -22,12 +22,12 @@
         <div class="row">
             @include('accounting.note.fields')
             <div class="col-12 text-center">
-                {!! Form::submit('Actualizar la nota', ['class' => 'btn btn-oval btn-warning']) !!}
+                <button type="submit" class="btn btn-oval btn-warning">Actualizar la nota</button>
             </div>
         </div>
     </section>
     {!! Form::hidden('invoice_id', null, ['id' => 'invoice_id']) !!}
-    {!! Form::close() !!}
+    </form>
 @endsection
 
 @push('scripts')

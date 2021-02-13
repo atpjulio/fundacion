@@ -22,11 +22,11 @@
         <div class="row">
             @include('accounting.egress.fields')
             <div class="col-12 text-center">
-                {!! Form::submit('Guardar el comprobante', ['class' => 'btn btn-oval btn-primary']) !!}
+                <button class="btn btn-oval btn-primary" type="submit">Guardar el comprobante</button>
             </div>
         </div>
     </section>
-    {!! Form::close() !!}
+    </form>
 @endsection
 
 @push('scripts')

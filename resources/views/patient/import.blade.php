@@ -33,9 +33,9 @@
                         </div>
                         <br><br>
                         <div class="text-center mb-4">
-                            {!! Form::submit('Subir', ['class' => 'btn btn-oval btn-primary']) !!}
+                            <button type="submit" class="btn btn-oval btn-primary">Subir</button>
                         </div>
-                        {!! Form::close() !!}
+                        </form>
                     </div>
                 </div>
             </div>
@@ -54,9 +54,9 @@
                             </div>
                             <br><br>
                             <div class="text-center">
-                                {!! Form::submit('Subir', ['class' => 'btn btn-oval btn-primary']) !!}
+                                <button type="submit" class="btn btn-oval btn-primary">Subir</button>
                             </div>
-                            {!! Form::close() !!}
+                            </form>
                         </div>
                     </div>
                 </div>
