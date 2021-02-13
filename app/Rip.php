@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\Storage;
 use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Facades\DB;
+use ZipArchive;
 
 class Rip extends Model
 {
@@ -79,11 +80,14 @@ class Rip extends Model
         $ripPackage = array_keys(array_reverse(config('constants.ripsExtensions')))[0]
             . sprintf("%06d", $lastRip ? $lastRip->id + 1 : 1)
             . $packageExtension;
-        foreach ($ripsExtensions as $prefix => $extension) {
-            $fileName = $prefix . sprintf("%06d", $lastRip ? $lastRip->id + 1 : 1) . $extension;
-            \Zipper::make(storage_path('app/public/rips/' . $ripPackage))
-                ->add(storage_path('app/public/rips/' . $fileName))
-                ->close();
+
+        $zip = new ZipArchive;
+        if ($zip->open(storage_path('app/public/rips/' . $ripPackage), ZipArchive::CREATE) === TRUE) {
+            foreach ($ripsExtensions as $prefix => $extension) {
+                $fileName = $prefix . sprintf("%06d", $lastRip ? $lastRip->id + 1 : 1) . $extension;
+                $zip->addFile(storage_path('app/public/rips/' . $fileName), $fileName);
+            }
+            $zip->close();
         }
         $rip = new Rip();
 
