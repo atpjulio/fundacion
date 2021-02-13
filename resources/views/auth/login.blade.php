@@ -3,7 +3,7 @@
 @section('content')
     <div class="auth-content">
         <form method="POST" action="{{ route('login') }}" aria-label="{{ __('Login') }}" id="login-form" >
-                @csrf
+            @csrf
             @include('partials.messages')
             <div class="form-group">
                 <label for="username">Email</label>
