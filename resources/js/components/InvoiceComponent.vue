@@ -236,7 +236,7 @@
                     .catch((error) => console.log(error));
             },
             now() {
-               return moment().format("YYYY-MM-DD"); 
+                return moment().format("YYYY-MM-DD"); 
             },
             addAuthorization(authorization) {
                 this.errorSelected = '';

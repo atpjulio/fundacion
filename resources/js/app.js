@@ -9,7 +9,8 @@ require('./bootstrap');
 
 import moment from 'moment';
 
-window.Vue = require('vue');
+import Vue from 'vue';
+// window.Vue = require('vue');
 window.moment = moment;
 
 // Filters
@@ -36,9 +37,9 @@ Vue.filter('days', function(dateFrom, dateTo) {
 
 
 // Components
-Vue.component('invoice-component', require('./components/InvoiceComponent.vue'));
-Vue.component('example-component', require('./components/ExampleComponent.vue'));
-Vue.component('puc-component', require('./components/PucComponent.vue'));
+Vue.component('invoice-component', require('./components/InvoiceComponent.vue').default);
+Vue.component('example-component', require('./components/ExampleComponent.vue').default);
+Vue.component('puc-component', require('./components/PucComponent.vue').default);
 
 const app = new Vue({
     el: '#app'
