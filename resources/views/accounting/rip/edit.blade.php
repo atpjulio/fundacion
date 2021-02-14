@@ -18,32 +18,33 @@
       </a>
     </div>
   </div>
-  {!! Form::open(['route' => ['rip.update', $rip->id], 'method' => 'PUT']) !!}
-  <section class="section">
-    <div class="row">
-      <div class="col-md-6">
-        <div class="card">
-          <div class="card-block">
-            @include('accounting.rip.fields')
-          </div>
-        </div>
-      </div>
-      <div class="col-md-6">
-        <div class="card">
-          <div class="card-block">
-            <div id="dynamic-invoice-amount">
-              @include('accounting.rip.fields2')
+  <form action="{{ route('rip.update', ['id' => $rip->id]) }}" method="PUT">
+    @csrf
+    <section class="section">
+      <div class="row">
+        <div class="col-md-6">
+          <div class="card">
+            <div class="card-block">
+              @include('accounting.rip.fields')
             </div>
           </div>
         </div>
-      </div>
-      <div class="col-6">
-        <div class="text-center">
-          <button type="submit" class="btn btn-oval btn-warning">Actualizar RIPS</button>
+        <div class="col-md-6">
+          <div class="card">
+            <div class="card-block">
+              <div id="dynamic-invoice-amount">
+                @include('accounting.rip.fields2')
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-6">
+          <div class="text-center">
+            <button type="submit" class="btn btn-oval btn-warning">Actualizar RIPS</button>
+          </div>
         </div>
       </div>
-    </div>
-  </section>
+    </section>
   </form>
 @endsection
 

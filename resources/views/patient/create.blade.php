@@ -14,30 +14,31 @@
     </div>
   </div>
 
-  {!! Form::open(['route' => 'patient.store', 'method' => 'POST']) !!}
-  <section class="section">
-    <div class="row">
-      <div class="col-md-6">
-        <div class="card">
-          <div class="card-block">
-            @include('patient.fields')
+  <form action="{{ route('patient.store') }}" method="POST">
+    @csrf
+    <section class="section">
+      <div class="row">
+        <div class="col-md-6">
+          <div class="card">
+            <div class="card-block">
+              @include('patient.fields')
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="card">
+            <div class="card-block">
+              @include('patient.fields2')
+            </div>
+          </div>
+        </div>
+        <div class="col-md-12">
+          <div class="text-center">
+            <button type="submit" class="btn btn-oval btn-primary">Guardar</button>
           </div>
         </div>
       </div>
-      <div class="col-md-6">
-        <div class="card">
-          <div class="card-block">
-            @include('patient.fields2')
-          </div>
-        </div>
-      </div>
-      <div class="col-md-12">
-        <div class="text-center">
-          <button type="submit" class="btn btn-oval btn-primary">Guardar</button>
-        </div>
-      </div>
-    </div>
-  </section>
+    </section>
   </form>
 @endsection
 

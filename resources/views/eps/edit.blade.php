@@ -14,41 +14,42 @@
     </div>
   </div>
 
-  {!! Form::open(['route' => ['eps.update', $eps->id], 'method' => 'PATCH']) !!}
-  <section class="section">
-    <div class="row">
-      <div class="col-md-6">
-        <div class="card">
-          <div class="card-block">
-            <div class="card-title-block">
-              <h3 class="title"> Información Básica </h3>
+  <form action="{{ route('eps.update', ['id' => $eps->id]) }}" method="PATCH">
+    @csrf
+    <section class="section">
+      <div class="row">
+        <div class="col-md-6">
+          <div class="card">
+            <div class="card-block">
+              <div class="card-title-block">
+                <h3 class="title"> Información Básica </h3>
+              </div>
+              @include('eps.fields')
             </div>
-            @include('eps.fields')
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="card">
+            <div class="card-block">
+              <div class="card-title-block">
+                <h3 class="title"> Dirección </h3>
+              </div>
+              @include('partials.addresses')
+              @include('partials.phones')
+            </div>
+          </div>
+        </div>
+        <div class="col-md-12">
+          @include('partials._eps_prices')
+        </div>
+        <input type="hidden" name="id" value="{{ $eps->id }}">
+        <div class="col-md-12">
+          <div class="text-center">
+            <button type="submit" class="btn btn-oval btn-warning">Actualizar</button>
           </div>
         </div>
       </div>
-      <div class="col-md-6">
-        <div class="card">
-          <div class="card-block">
-            <div class="card-title-block">
-              <h3 class="title"> Dirección </h3>
-            </div>
-            @include('partials.addresses')
-            @include('partials.phones')
-          </div>
-        </div>
-      </div>
-      <div class="col-md-12">
-        @include('partials._eps_prices')
-      </div>
-      <input type="hidden" name="id" value="{{ $eps->id }}">
-      <div class="col-md-12">
-        <div class="text-center">
-          <button type="submit" class="btn btn-oval btn-warning">Actualizar</button>
-        </div>
-      </div>
-    </div>
-  </section>
+    </section>
   </form>
 @endsection
 

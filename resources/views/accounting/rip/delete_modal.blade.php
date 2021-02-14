@@ -4,18 +4,19 @@
     <span aria-hidden="true">&times;</span>
   </button>
 </div>
-{!! Form::open(['route' => ['rip.destroy', $rip->id], 'method' => 'DELETE']) !!}
-<div class="modal-body">
-  <p>Confirma que deseas borrar el RIPS: </p>
-  <div class="text-center">
-    {!! substr($rip->url, 12, 10) !!}
+<form action="{{ route('rip.destroy', ['id' => $rip->id]) }}" method="DELETE">
+  @csrf
+  <div class="modal-body">
+    <p>Confirma que deseas borrar el RIPS: </p>
+    <div class="text-center">
+      {!! substr($rip->url, 12, 10) !!}
+    </div>
   </div>
-</div>
 
-<input type="hidden" name="id" value="{{ $rip->id }}">
+  <input type="hidden" name="id" value="{{ $rip->id }}">
 
-<div class="modal-footer">
-  <button type="submit" class="btn btn-primary">Si</button>
-  <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
-</div>
+  <div class="modal-footer">
+    <button type="submit" class="btn btn-primary">Si</button>
+    <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
+  </div>
 </form>

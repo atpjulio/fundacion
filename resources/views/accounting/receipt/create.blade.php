@@ -17,17 +17,18 @@
       </a>
     </div>
   </div>
-  {!! Form::open(['route' => 'receipt.store', 'method' => 'POST']) !!}
-  <section class="section">
-    <div class="row">
-      @include('accounting.receipt.fields')
-      <div class="col-12">
-        <div class="text-center">
-          <button type="submit" class="btn btn-oval btn-primary">Guarda el recibo</button>
+  <form action="{{ route('receipt.store') }}" method="POST">
+    @csrf
+    <section class="section">
+      <div class="row">
+        @include('accounting.receipt.fields')
+        <div class="col-12">
+          <div class="text-center">
+            <button type="submit" class="btn btn-oval btn-primary">Guarda el recibo</button>
+          </div>
         </div>
       </div>
-    </div>
-  </section>
+    </section>
   </form>
 @endsection
 

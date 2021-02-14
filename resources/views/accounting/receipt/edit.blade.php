@@ -17,17 +17,18 @@
       </a>
     </div>
   </div>
-  {!! Form::open(['route' => ['receipt.update', $receipt->id], 'method' => 'PUT']) !!}
-  <section class="section">
-    <div class="row">
-      @include('accounting.receipt.fields')
-      <div class="col-12">
-        <div class="text-center">
-          <button type="submit" class="btn btn-oval btn-warning">Actualizar el recibo</button>
+  <form action="{{ route('receipt.update', ['id' => $receipt->id]) }}" method="PUT">
+    @csrf
+    <section class="section">
+      <div class="row">
+        @include('accounting.receipt.fields')
+        <div class="col-12">
+          <div class="text-center">
+            <button type="submit" class="btn btn-oval btn-warning">Actualizar el recibo</button>
+          </div>
         </div>
       </div>
-    </div>
-  </section>
+    </section>
   </form>
 @endsection
 

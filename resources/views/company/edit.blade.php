@@ -13,30 +13,31 @@
       </a>
     </div>
   </div>
-  {!! Form::open(['route' => ['company.update', $company->id], 'method' => 'PUT', 'files' => true]) !!}
-  <section class="section">
-    <div class="row">
-      <div class="col-md-6">
-        <div class="card">
-          <div class="card-block">
-            @include('company.fields')
+  <form action="{{ route('company.update', ['id' => $company->id]) }}" method="PUT" files="true">
+    @csrf
+    <section class="section">
+      <div class="row">
+        <div class="col-md-6">
+          <div class="card">
+            <div class="card-block">
+              @include('company.fields')
+            </div>
           </div>
         </div>
-      </div>
-      <div class="col-md-6">
-        <div class="card">
-          <div class="card-block">
-            @include('partials.addresses')
-            @include('partials.phones')
+        <div class="col-md-6">
+          <div class="card">
+            <div class="card-block">
+              @include('partials.addresses')
+              @include('partials.phones')
+            </div>
           </div>
         </div>
+        <div class="col-md-12 text-center">
+          <button type="submit" class="btn btn-oval btn-warning">Actualizar</button>
+        </div>
       </div>
-      <div class="col-md-12 text-center">
-        <button type="submit" class="btn btn-oval btn-warning">Actualizar</button>
-      </div>
-    </div>
-  </section>
-  <input type="hidden" name="id" value="{{ $company->id }}">
+    </section>
+    <input type="hidden" name="id" value="{{ $company->id }}">
   </form>
 @endsection
 

@@ -17,76 +17,77 @@
       </a>
     </div>
   </div>
-  {!! Form::open(['route' => 'receipt.store', 'method' => 'POST']) !!}
-  <section class="section">
-    <div class="row">
-      <div class="col-12">
-        <div class="card">
-          <div class="card-block">
-            <div class="card-title-block">
-              <h3 class="title"> Selecciona la factura para este recibo de pago </h3>
-            </div>
-            <div class="col-12">
-              <div class="table-responsive">
-                <table class="table table-striped table-bordered table-condensed table-hover" id="myTable">
-                  <thead>
-                    <th># Factura</th>
-                    <th>Autorización</th>
-                    <th>Monto</th>
-                    <th>Pagado</th>
-                    <th>Restante</th>
-                    <th>Opciones</th>
-                  </thead>
-                  <tbody>
-                    @foreach ($invoices as $invoice)
-                      <tr>
-                        <td>{!! sprintf('%05d', $invoice->number) !!}</td>
-                        <td>{!! $invoice->authorization_code !!}</td>
-                        <td>$ {!! number_format($invoice->total, 2, ',', '.') !!}</td>
-                        <td>$ {!! number_format($invoice->payment, 2, ',', '.') !!}</td>
-                        <td>$ {!! number_format($invoice->total - $invoice->payment, 2, ',', '.') !!}</td>
-                        <td>
-                          {!! Form::button('Seleccionar', ['class' => 'btn btn-oval btn-success']) !!}
-                          <input type="hidden" name="current_invoice_id" value="{{ $invoice->id }}">
-                        </td>
-                      </tr>
-                    @endforeach
-                  </tbody>
-                </table>
+  <form action="{{ route('receipt.store') }}" method="POST">
+    @csrf
+    <section class="section">
+      <div class="row">
+        <div class="col-12">
+          <div class="card">
+            <div class="card-block">
+              <div class="card-title-block">
+                <h3 class="title"> Selecciona la factura para este recibo de pago </h3>
+              </div>
+              <div class="col-12">
+                <div class="table-responsive">
+                  <table class="table table-striped table-bordered table-condensed table-hover" id="myTable">
+                    <thead>
+                      <th># Factura</th>
+                      <th>Autorización</th>
+                      <th>Monto</th>
+                      <th>Pagado</th>
+                      <th>Restante</th>
+                      <th>Opciones</th>
+                    </thead>
+                    <tbody>
+                      @foreach ($invoices as $invoice)
+                        <tr>
+                          <td>{!! sprintf('%05d', $invoice->number) !!}</td>
+                          <td>{!! $invoice->authorization_code !!}</td>
+                          <td>$ {!! number_format($invoice->total, 2, ',', '.') !!}</td>
+                          <td>$ {!! number_format($invoice->payment, 2, ',', '.') !!}</td>
+                          <td>$ {!! number_format($invoice->total - $invoice->payment, 2, ',', '.') !!}</td>
+                          <td>
+                            <button type="button" class="btn btn-oval btn-success">Seleccionar</button>
+                            <input type="hidden" name="current_invoice_id" value="{{ $invoice->id }}">
+                          </td>
+                        </tr>
+                      @endforeach
+                    </tbody>
+                  </table>
+                </div>
               </div>
             </div>
           </div>
         </div>
-      </div>
-      <div class="col-md-6" id="beginning">
-        <div class="card">
-          <div class="card-block">
-            @include('accounting.receipt.fields')
+        <div class="col-md-6" id="beginning">
+          <div class="card">
+            <div class="card-block">
+              @include('accounting.receipt.fields')
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="card">
+            <div class="card-block">
+              @include('accounting.receipt.fields2')
+            </div>
+          </div>
+        </div>
+        <div class="col-md-12">
+          <div class="card">
+            <div class="card-block">
+              @include('accounting.receipt.fields3')
+            </div>
+          </div>
+        </div>
+        <div class="col-12">
+          <div class="text-center">
+            <button type="submit" class="btn btn-oval btn-primary">Guarda el recibo</button>
           </div>
         </div>
       </div>
-      <div class="col-md-6">
-        <div class="card">
-          <div class="card-block">
-            @include('accounting.receipt.fields2')
-          </div>
-        </div>
-      </div>
-      <div class="col-md-12">
-        <div class="card">
-          <div class="card-block">
-            @include('accounting.receipt.fields3')
-          </div>
-        </div>
-      </div>
-      <div class="col-12">
-        <div class="text-center">
-          <button type="submit" class="btn btn-oval btn-primary">Guarda el recibo</button>
-        </div>
-      </div>
-    </div>
-  </section>
-  <input type="hidden" name="invoice_ide" value="" id="invoice_id">
+    </section>
+    <input type="hidden" name="invoice_ide" value="" id="invoice_id">
   </form>
 @endsection
 

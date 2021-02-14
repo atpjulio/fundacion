@@ -44,7 +44,9 @@
         </div>
       </div>
     </div>
-    {!! Form::open(['route' => ['authorization.update', $authorization->id], 'method' => 'PUT', 'id' => 'myForm']) !!}
+    <form action="{{ route('authorization.update', ['id' => $authorization->id]) }}" method="PUT" id="myForm">
+      @csrf
+  
     <input type="hidden" name="id" value="{{ $authorization->id }}">
     <div class="row">
       <div class="col-md-12">

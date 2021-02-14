@@ -25,7 +25,9 @@
       </a>
     </div>
   </div>
-  {!! Form::open(['route' => 'invoice.store', 'method' => 'POST']) !!}
+  <form action="{{ route('invoice.store') }}" method="POST">
+    @csrf
+
   <section class="section">
     <invoice-component :companies="'{{ json_encode($companies) }}'"
       :number={{ $lastNumber > 0 ? $lastNumber + 1 : 1 }}

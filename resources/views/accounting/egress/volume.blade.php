@@ -13,17 +13,18 @@
       </a>
     </div>
   </div>
-  {!! Form::open(['route' => 'egress.volume.pdf', 'method' => 'GET', 'target' => '_blank']) !!}
-  <section class="section">
-    <div class="row">
-      @include('accounting.egress.volume_fields')
-      <div class="col-6">
-        <div class="text-center">
-          <button type="submit" class="btn btn-oval btn-primary">Gener Comprobantes del Mes</button>
+  <form action="{{ route('egress.volume.pdf') }}" method="GET" target="_blank">
+    @csrf
+    <section class="section">
+      <div class="row">
+        @include('accounting.egress.volume_fields')
+        <div class="col-6">
+          <div class="text-center">
+            <button type="submit" class="btn btn-oval btn-primary">Gener Comprobantes del Mes</button>
+          </div>
         </div>
       </div>
-    </div>
-  </section>
+    </section>
   </form>
 @endsection
 

@@ -14,36 +14,37 @@
     </div>
   </div>
 
-  {!! Form::open(['route' => 'receipt.import.process', 'method' => 'POST', 'files' => true]) !!}
-  <section class="section">
-    <div class="row justify-content-center">
-      <div class="col-8">
-        <div class="card">
-          <div class="card-block">
-            <div class="card-title-block">
-              <h3 class="title"> Importar Recibos de Facturas de EPS</h3>
-            </div>
-            <p>
-              Paso 1: Seleccionar el archivo TXT
+  <form action="{{ route('receipt.import.process') }}" method="POST" files="true">
+    @csrf
+    <section class="section">
+      <div class="row justify-content-center">
+        <div class="col-8">
+          <div class="card">
+            <div class="card-block">
+              <div class="card-title-block">
+                <h3 class="title"> Importar Recibos de Facturas de EPS</h3>
+              </div>
+              <p>
+                Paso 1: Seleccionar el archivo TXT
+                <br>
+                Paso 2: Subir archivo
+              </p>
+              <div class="custom-file">
+                <input type="file" class="custom-file-input" id="customFileLang" lang="es" name="txt_file">
+                <label class="custom-file-label form-control-file" for="customFileLang">Seleccionar archivo</label>
+              </div>
               <br>
-              Paso 2: Subir archivo
-            </p>
-            <div class="custom-file">
-              <input type="file" class="custom-file-input" id="customFileLang" lang="es" name="txt_file">
-              <label class="custom-file-label form-control-file" for="customFileLang">Seleccionar archivo</label>
+              <br>
             </div>
-            <br>
-            <br>
+          </div>
+        </div>
+        <div class="col-md-12">
+          <div class="text-center">
+            <button type="submit" class="btn btn-oval btn-primary">Subir</button>
           </div>
         </div>
       </div>
-      <div class="col-md-12">
-        <div class="text-center">
-          <button type="submit" class="btn btn-oval btn-primary">Subir</button>
-        </div>
-      </div>
-    </div>
-  </section>
+    </section>
   </form>
 @endsection
 

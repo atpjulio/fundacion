@@ -17,30 +17,31 @@
       </a>
     </div>
   </div>
-  {!! Form::open(['route' => 'rip.store', 'method' => 'POST']) !!}
-  <section class="section">
-    <div class="row">
-      <div class="col-md-6">
-        <div class="card">
-          <div class="card-block">
-            @include('accounting.rip.fields')
+  <form action="{{ route('rip.store') }}" method="POST">
+    @csrf
+    <section class="section">
+      <div class="row">
+        <div class="col-md-6">
+          <div class="card">
+            <div class="card-block">
+              @include('accounting.rip.fields')
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="card">
+            <div class="card-block">
+              @include('accounting.rip.fields2')
+            </div>
+          </div>
+        </div>
+        <div class="col-6">
+          <div class="text-center">
+            <button type="submit" class="btn btn-oval btn-primary">Generar RIPS</button>
           </div>
         </div>
       </div>
-      <div class="col-md-6">
-        <div class="card">
-          <div class="card-block">
-            @include('accounting.rip.fields2')
-          </div>
-        </div>
-      </div>
-      <div class="col-6">
-        <div class="text-center">
-          <button type="submit" class="btn btn-oval btn-primary">Generar RIPS</button>
-        </div>
-      </div>
-    </div>
-  </section>
+    </section>
   </form>
 @endsection
 
