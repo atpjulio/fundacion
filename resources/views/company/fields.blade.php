@@ -28,15 +28,13 @@
   <div class="col-md-6">
     <div class="form-group @if ($errors->has('billing_start')) has-error @endif">
       <label for="billing_start" class="control-label">Desde</label>
-      {!! Form::number('billing_start', old('billing_start', isset($company) ? $company->billing_start : ''), ['class'
-      => 'form-control underlined', 'placeholder' => 'Desde', 'min' => 0]) !!}
+      <input type="number" name="billing_start" class="form-control underlined" min="0" placeholder="Desde" value="{{ old('billing_start', isset($company) ? $company->billing_start : '') }}">
     </div>
   </div>
   <div class="col-md-6">
     <div class="form-group @if ($errors->has('billing_end')) has-error @endif">
       <label for="billing_end" class="control-label">Hasta</label>
-      {!! Form::number('billing_end', old('billing_end', isset($company) ? $company->billing_end : ''), ['class' =>
-      'form-control underlined', 'placeholder' => 'Hasta', 'min' => 0]) !!}
+      <input type="number" name="billing_end" class="form-control underlined" min="0" placeholder="Hasta" value="{{ old('billing_end', isset($company) ? $company->billing_end : '') }}">
     </div>
   </div>
 </div>

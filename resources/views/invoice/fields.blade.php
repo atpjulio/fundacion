@@ -49,23 +49,22 @@
           @if (isset($invoice))
             <div class="form-group @if ($errors->has('number')) has-error @endif">
               <label for="number" class="control-label">Número de factura</label>
-              {!! Form::number('number', $invoice->number, ['class' => 'form-control underlined', 'placeholder' =>
-              'Número de factura', 'min' => 1, $lastNumber > 0 ? '' : '']) !!}
+              <input type="number" name="number" class="form-control underlined" value="{{ $invoice->number }}"
+                placeholder="Número de factura" min="1">
             </div>
           @else
             <div class="form-group @if ($errors->has('number')) has-error @endif">
               <label for="number" class="control-label">Número de factura</label>
-              {!! Form::number('number', $lastNumber > 0 ? $lastNumber + 1 : 1, ['class' => 'form-control underlined',
-              'placeholder' => 'Número de factura', 'min' => 1, $lastNumber > 0 ? '' : '']) !!}
+              <input type="number" name="number" class="form-control underlined"
+                value="{{ $lastNumber > 0 ? $lastNumber + 1 : 1 }}" placeholder="Número de factura" min="1">
             </div>
           @endif
         </div>
         <div class="col-md-3">
           <div class="form-group  @if ($errors->has('created_at')) has-error @endif">
             <label for="created_at" class="control-label">Fecha de la factura</label>
-            {!! Form::date('created_at', old('created_at', isset($invoice) ? $invoice->created_at :
-            \Carbon\Carbon::now()), ['class' => 'form-control underlined', 'placeholder' => 'dd/mm/aaaa', isset($show) ?
-            'readonly' : '']) !!}
+            {!! Form::date('created_at', old('created_at', isset($invoice) ? $invoice->created_at : now()), ['class' =>
+            'form-control underlined', 'placeholder' => 'dd/mm/aaaa', isset($show) ? 'readonly' : '']) !!}
           </div>
         </div>
         <div class="col-md-6">
@@ -87,17 +86,17 @@
           <div class="col-md-3">
             <div class="form-group @if ($errors->has('total_days')) has-error @endif">
               <label for="total_days" class="control-label">Total de días</label>
-              {!! Form::number('total_days', old('total_days', (isset($invoice) and !$invoice->multiple) ?
-              $invoice->days : ''), ['class' => 'form-control underlined', 'placeholder' => 'Total de días', 'min' =>
-              '0', 'id' => 'total_days']) !!}
+              <input type="number" name="total_days" id="total_days" class="form-control underlined"
+                value="{{ old('total_days', (isset($invoice) and !$invoice->multiple) ? $invoice->days : '') }}"
+                placeholder="Total de días" min="0">
             </div>
           </div>
           <div class="col-md-3">
             <div class="form-group @if ($errors->has('total')) has-error @endif">
               <label for="total" class="control-label">Monto</label>
-              {!! Form::number('total', old('total', (isset($invoice) and !$invoice->multiple) ? $invoice->total : ''),
-              ['class' => 'form-control underlined', 'placeholder' => 'Valor total de la factura', 'min' => '0', 'id' =>
-              'total']) !!}
+              <input type="number" name="total" id="total" min="0" class="form-control underlined"
+                value="{{ old('total', (isset($invoice) and !$invoice->multiple) ? $invoice->total : '') }}"
+                placeholder="Valor total de la factura">
             </div>
           </div>
           <div class="col-md-6">

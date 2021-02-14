@@ -23,15 +23,15 @@
   <div class="col-6">
     <div class="form-group  @if ($errors->has('initial_number')) has-error @endif">
       <label for="initial_number" class="control-label">Factura inicial</label>
-      {!! Form::number('initial_number', old('initial_number', $initialNumber), ['class' => 'form-control underlined',
-      'id' => 'initial_number', isset($show) ? 'readonly' : '', 'min' => '1']) !!}
+      <input type="number" name="initial_number" id="initial_number" class="form-control underlined" min="1"
+        @isset($show) readonly @endisset value="{{ old('initial_number', $initialNumber) }}">
     </div>
   </div>
   <div class="col-6">
     <div class="form-group  @if ($errors->has('final_number')) has-error @endif">
       <label for="final_number" class="control-label">Factura final</label>
-      {!! Form::number('final_number', old('final_number', $finalNumber), ['class' => 'form-control underlined', 'id' =>
-      'final_number', isset($show) ? 'readonly' : '', 'min' => '1']) !!}
+      <input type="number" name="final_number" id="final_number" class="form-control underlined" min="1" @isset($show)
+        readonly @endisset value="{{ old('final_number', $finalNumber) }}">
     </div>
   </div>
 </div>

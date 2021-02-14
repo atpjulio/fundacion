@@ -12,7 +12,8 @@
 </div>
 <div class="form-group @if ($errors->has('price')) has-error @endif">
   <label for="price" class="control-label">Precio</label>
-  {!! Form::number('price', old('price', (isset($service) and $service->price > 0) ? $service->price :
-  ($eps->daily_price > 0 ? $eps->daily_price : $eps->price[0]->daily_price)), ['class' => 'form-control underlined',
-  'placeholder' => 'Precio del servicio (opcional)', 'min' => 1, 'id' => 'price-group']) !!}
+  <input type="number" name="price" id="price-group" class="form-control underlined"
+    placeholder="Precio del servicio (opcional)"
+    value="{{ old('price', (isset($service) and $service->price > 0) ? $service->price : ($eps->daily_price > 0 ? $eps->daily_price : $eps->price[0]->daily_price)) }}"
+    min="1">
 </div>
