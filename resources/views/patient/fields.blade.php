@@ -15,7 +15,7 @@
     {!! Form::text('dni', old('dni', isset($patient) ? $patient->dni : ''), ['class' => 'form-control underlined',
     'placeholder' => 'Número de documento', isset($show) ? 'readonly' : '', 'id' => 'dni']) !!}
     @if (isset($patient))
-    {!! Form::hidden('old_dni', $patient->dni, ['id' => 'old_dni']) !!}
+    <input type="hidden" name="old_dni" value="{{ $patient->dni }}" id="old_dni">
     @endif
     <span class="text-danger" role="alert" id="check-patient"><em></em></span>
 </div>

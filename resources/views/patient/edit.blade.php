@@ -31,7 +31,7 @@
           </div>
         </div>
       </div>
-      {!! Form::hidden('id', $patient->id) !!}
+      <input type="hidden" name="id" value="{{ $patient->id }}">
       <div class="col-md-12">
         <div class="text-center">
           <button type="submit" class="btn btn-oval btn-warning">Actualizar</button>

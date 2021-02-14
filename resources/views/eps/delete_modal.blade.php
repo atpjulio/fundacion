@@ -12,7 +12,7 @@
     </div>
 </div>
 
-{!! Form::hidden('id', $eps->id) !!}
+<input type="hidden" name="id" value="{{ $eps->id }}">
 
 <div class="modal-footer">
     <button type="submit" class="btn btn-primary">Si</button>

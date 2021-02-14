@@ -7,7 +7,7 @@
     <div class="form-group  @if($errors->has('eps_name')) has-error @endif">
         {!! Form::label('eps_name', 'Nombre de EPS', ['class' => 'control-label']) !!}
         {!! Form::text('eps_name', old('eps_name', isset($rip) ? $rip->name : ''), ['class' => 'form-control underlined', 'placeholder' => 'Nombre de EPS', 'readonly']) !!}
-        {!! Form::hidden('eps_id', $rip->id) !!}
+        <input type="hidden" name="eps_id" value="{{ $rip->eps_id }}">
     </div>
 @else
     <div class="form-group  @if($errors->has('eps_id')) has-error @endif">

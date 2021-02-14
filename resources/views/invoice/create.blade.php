@@ -41,7 +41,7 @@
       </div>
     </div>
   </section>
-  {!! Form::hidden('selected_price', 0, ['id' => 'selected_price']) !!}
+  <input type="hidden" name="selected_price" value="0" id="selected_price">
   </form>
 @endsection
 

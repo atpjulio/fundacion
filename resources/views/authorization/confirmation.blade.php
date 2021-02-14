@@ -51,7 +51,7 @@
               <h3 class="title"> Usuario al que pertenece esta autorización
               </h3>
             </div>
-            {!! Form::hidden('patient_id', $patient->id) !!}
+            <input type="hidden" name="patient_id" value="{{ $patient->id }}">
             @include('patient.fields')
           </div>
         </div>

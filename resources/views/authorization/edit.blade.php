@@ -45,7 +45,7 @@
       </div>
     </div>
     {!! Form::open(['route' => ['authorization.update', $authorization->id], 'method' => 'PUT', 'id' => 'myForm']) !!}
-    {!! Form::hidden('id', $authorization->id) !!}
+    <input type="hidden" name="id" value="{{ $authorization->id }}">
     <div class="row">
       <div class="col-md-12">
         <div class="card">
@@ -86,7 +86,7 @@
         </div>
       </div>
     </div>
-    {!! Form::hidden('patient_id', $authorization->patient->id, ['id' => 'patient_id']) !!}
+    <input type="hidden" name="patient_id" value="{{ $authorization->patient->id }}" id="patient_id">
     </form>
   </section>
 @endsection

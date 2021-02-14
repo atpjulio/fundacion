@@ -47,7 +47,7 @@
                         <td>$ {!! number_format($invoice->total - $invoice->payment, 2, ',', '.') !!}</td>
                         <td>
                           {!! Form::button('Seleccionar', ['class' => 'btn btn-oval btn-success']) !!}
-                          {!! Form::hidden('current_invoice_id', $invoice->id) !!}
+                          <input type="hidden" name="current_invoice_id" value="{{ $invoice->id }}">
                         </td>
                       </tr>
                     @endforeach
@@ -86,7 +86,7 @@
       </div>
     </div>
   </section>
-  {!! Form::hidden('invoice_id', null, ['id' => 'invoice_id']) !!}
+  <input type="hidden" name="invoice_ide" value="" id="invoice_id">
   </form>
 @endsection
 

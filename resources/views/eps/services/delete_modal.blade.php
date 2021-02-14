@@ -12,8 +12,8 @@
         </div>
     </div>
 
-    {!! Form::hidden('id', $service->id) !!}
-    {!! Form::hidden('eps_id', $service->eps_id) !!}
+    <input type="hidden" name="id" value="{{ $service->id }}">
+    <input type="hidden" name="eps_id" value="{{ $service->eps_id }}">
 
     <div class="modal-footer">
         <button type="submit" class="btn btn-primary">Si</button>

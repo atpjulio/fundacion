@@ -12,7 +12,7 @@
     </div>
 </div>
 
-{!! Form::hidden('id', $invoice->id) !!}
+<input type="hidden" name="id" value="{{ $invoice->id }}">
 
 <div class="modal-footer">
     <button type="submit" class="btn btn-primary">Si</button>

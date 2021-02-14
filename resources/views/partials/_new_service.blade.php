@@ -19,7 +19,7 @@
                     </div>
                 </div>
                 <div class="text-center">
-                    {!! Form::hidden('eps_id', $eps->id) !!}
+                    <input type="hidden" name="eps_id" value="{{ $eps->id }}">
                     <a  href="javascript:validateFormService('/eps-services/new', '#formService', '{{ $eps->id }}')"
                         class="btn btn-oval btn-primary">
                         Guardar

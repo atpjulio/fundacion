@@ -10,7 +10,7 @@
             {!! Form::open(['route' => 'eps.services.authorization.store', 'method' => 'POST']) !!}
             <div class="modal-body">
                 @include('eps.services.fields')
-                {!! Form::hidden('eps_id', null, ['id' => 'epsId']) !!}
+                <input type="hidden" name="epsId" value="" id="epsId">
             </div>
             <div class="modal-footer">
                 <button type="submit" class="btn btn-primary">Guardar</button>

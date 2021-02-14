@@ -26,7 +26,7 @@
             </div>
         </div>
     </section>
-    {!! Form::hidden('invoice_id', null, ['id' => 'invoice_id']) !!}
+    <input type="hidden" name="invoice_id" value="" id="invoice_id">
     </form>
 @endsection
 

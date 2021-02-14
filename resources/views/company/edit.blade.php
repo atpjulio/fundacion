@@ -36,7 +36,7 @@
       </div>
     </div>
   </section>
-  {!! Form::hidden('id', $company->id) !!}
+  <input type="hidden" name="id" value="{{ $company->id }}">
   </form>
 @endsection
 

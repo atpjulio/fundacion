@@ -12,7 +12,7 @@
     </div>
 </div>
 
-{!! Form::hidden('id', $note->id) !!}
+<input type="hidden" name="id" value="{{ $note->id }}">
 
 <div class="modal-footer">
     <button type="submit" class="btn btn-primary">Si</button>
