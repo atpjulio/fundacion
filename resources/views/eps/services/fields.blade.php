@@ -1,12 +1,14 @@
 <div class="form-group @if ($errors->has('code')) has-error @endif">
   <label for="code" class="control-label">Código</label>
-  {!! Form::text('code', old('code', isset($service) ? $service->code : ''), ['class' => 'form-control underlined',
-  'placeholder' => 'Código del servicio', 'id' => 'code-group', 'focus']) !!}
+  <input type="text" name="code" class="form-control underlined"
+    value="{{ old('code', isset($service) ? $service->code : '') }}" placeholder="Código del servicio" id="code-group"
+    focus>
 </div>
 <div class="form-group @if ($errors->has('name')) has-error @endif">
   <label for="name" class="control-label">Nombre</label>
-  {!! Form::text('name', old('name', isset($service) ? $service->name : ''), ['class' => 'form-control underlined',
-  'placeholder' => 'Nombre del servicio', 'maxlength' => 190, 'id' => 'name-group']) !!}
+  <input type="text" name="name" class="form-control underlined"
+    value="{{ old('name', isset($service) ? $service->name : '') }}" placeholder="Nombre del servicio" maxlength="190"
+    id="name-group">
 </div>
 <div class="form-group @if ($errors->has('price')) has-error @endif">
   <label for="price" class="control-label">Precio</label>

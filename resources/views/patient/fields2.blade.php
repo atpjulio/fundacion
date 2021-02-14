@@ -1,6 +1,6 @@
 <div class="form-group  @if($errors->has('phone')) has-error @endif">
   <label for="phone" class="control-label">Número de contacto</label>
-    {!! Form::text('phone', old('phone', (isset($patient) and $patient->phone) ? $patient->phone->phone : ''), ['class' => 'form-control underlined', 'placeholder' => 'Número de contacto (opcional)', 'maxlength' => 15]) !!}
+  <input type="text" name="phone" maxlength="15" class="form-control underlined" value="{{ old('phone', (isset($patient) and $patient->phone) ? $patient->phone->phone : '') }}" placeholder="Número de contacto (opcional)">
 </div>
 <div class="form-group @if($errors->has('gender')) has-error @endif">
   <label for="gender" class="control-label">Sexo</label>

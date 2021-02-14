@@ -5,23 +5,19 @@
 </div>
 <div class="form-group @if ($errors->has('doc')) has-error @endif">
   <label for="doc" class="control-label">Número de documento</label>
-  {!! Form::text('doc', old('doc', isset($company) ? $company->doc : ''), ['class' => 'form-control underlined',
-  'placeholder' => 'Número de documento de la compañía']) !!}
+  <input type="text" name="doc" class="form-control underlined" placeholder="Número de documento de la compañía" value="{{ old('doc', isset($company) ? $company->doc : '') }}">
 </div>
 <div class="form-group @if ($errors->has('name')) has-error @endif">
   <label for="name" class="control-label">Nombre completo</label>
-  {!! Form::text('name', old('name', isset($company) ? $company->name : ''), ['class' => 'form-control underlined',
-  'placeholder' => 'Nombre completo de la compañía']) !!}
+  <input type="text" name="name" class="form-control underlined" placeholder="Nombre completo de la compañía" value="{{ old('name', isset($company) ? $company->name : '') }}">
 </div>
 <div class="form-group @if ($errors->has('alias')) has-error @endif">
   <label for="alias" class="control-label">Nombre corto o alias</label>
-  {!! Form::text('alias', old('alias', isset($company) ? $company->alias : ''), ['class' => 'form-control underlined',
-  'placeholder' => 'Nombre corto de la compañía']) !!}
+  <input type="text" name="alias" class="form-control underlined" placeholder="Nombre corto de la compañía" value="{{ old('alias', isset($company) ? $company->alias : '') }}">
 </div>
 <div class="form-group @if ($errors->has('billing_resolution')) has-error @endif">
   <label for="billing_resolution" class="control-label">Resolución de factura</label>
-  {!! Form::text('billing_resolution', old('billing_resolution', isset($company) ? $company->billing_resolution : ''),
-  ['class' => 'form-control underlined', 'placeholder' => 'Resolución de factura']) !!}
+  <input type="text" name="billing_resolution" class="form-control underlined" placeholder="Resolución de factura" value="{{ old('billing_resolution', isset($company) ? $company->billing_resolution : '') }}">
 </div>
 <div class="form-group @if ($errors->has('billing_date')) has-error @endif">
   <label for="billing_date" class="control-label">Fecha de resolución de facturación</label>

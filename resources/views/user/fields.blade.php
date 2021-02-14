@@ -1,10 +1,6 @@
 <div class="form-group @if ($errors->has('full_name')) has-error @endif">
   <label for="full_name" class="control-label">Nombre completo</label>
-  {!! Form::text('full_name', old('full_name', isset($user) ? $user->full_name : ''), [
-  'class' => 'form-control
-  underlined',
-  'placeholder' => 'Nombre completo',
-  ]) !!}
+  <input type="text" name="full_name" class="form-control underlined" placeholder="Nombre completo" value="{{ old('full_name', isset($user) ? $user->full_name : '') }}">
 </div>
 <div class="form-group @if ($errors->has('email')) has-error @endif">
   <label for="email" class="control-label">Correo electrónico</label>

@@ -7,8 +7,8 @@
 @if (isset($show))
   <div class="form-group  @if ($errors->has('eps_name')) has-error @endif">
     <label for="eps_name" class="control-label">Nombre de EPS</label>
-    {!! Form::text('eps_name', old('eps_name', isset($rip) ? $rip->name : ''), ['class' => 'form-control underlined',
-    'placeholder' => 'Nombre de EPS', 'readonly']) !!}
+    <input type="text" name="eps_name" value="{{ old('eps_name', isset($rip) ? $rip->name : '') }}"
+      class="form-control underlined" placeholder="Nombre de EPS" readonly>
     <input type="hidden" name="eps_id" value="{{ $rip->eps_id }}">
   </div>
 @else

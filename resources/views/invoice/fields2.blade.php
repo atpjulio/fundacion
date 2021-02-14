@@ -1,7 +1,6 @@
 <div class="form-group @if ($errors->has('authorization_code')) has-error @endif">
   <label for="authorization_code" class="control-label">Autorización</label>
-  {!! Form::text('authorization_code', old('authorization_code', isset($invoice) ? $invoice->authorization_code : ''),
-  ['class' => 'form-control underlined', 'readonly', 'id' => 'authorization_code']) !!}
+  <input type="text" name="authorization_code" id="authorization_code" readonly class="form-control underlined" value="{{ old('authorization_code', isset($invoice) ? $invoice->authorization_code : '') }}">
 </div>
 <div class="form-group @if ($errors->has('total_days')) has-error @endif">
   <label for="total_days" class="control-label">Total de días</label>

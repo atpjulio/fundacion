@@ -115,9 +115,9 @@
                   </label>
                 </div>
               </div>
-              {!! Form::text('authorization_code', old('authorization_code', (isset($invoice) and !$invoice->multiple) ?
-              $invoice->authorization_code : ''), ['class' => 'form-control underlined', 'readonly', 'id' =>
-              'authorization_code']) !!}
+              <input type="text" name="authorization_code" id="authorization_code" class="form-control underlined"
+                readonly
+                value="{{ old('authorization_code', (isset($invoice) and !$invoice->multiple) ? $invoice->authorization_code : '') }}">
             </div>
           </div>
         </div>
