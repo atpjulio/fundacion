@@ -48,13 +48,13 @@
         <div class="col-md-3">
           @if (isset($invoice))
             <div class="form-group @if ($errors->has('number')) has-error @endif">
-              {!! Form::label('number', 'Número de factura', ['class' => 'control-label']) !!}
+              <label for="number" class="control-label">Número de factura</label>
               {!! Form::number('number', $invoice->number, ['class' => 'form-control underlined', 'placeholder' =>
               'Número de factura', 'min' => 1, $lastNumber > 0 ? '' : '']) !!}
             </div>
           @else
             <div class="form-group @if ($errors->has('number')) has-error @endif">
-              {!! Form::label('number', 'Número de factura', ['class' => 'control-label']) !!}
+              <label for="number" class="control-label">Número de factura</label>
               {!! Form::number('number', $lastNumber > 0 ? $lastNumber + 1 : 1, ['class' => 'form-control underlined',
               'placeholder' => 'Número de factura', 'min' => 1, $lastNumber > 0 ? '' : '']) !!}
             </div>
@@ -62,7 +62,7 @@
         </div>
         <div class="col-md-3">
           <div class="form-group  @if ($errors->has('created_at')) has-error @endif">
-            {!! Form::label('created_at', 'Fecha de la factura', ['class' => 'control-label']) !!}
+            <label for="created_at" class="control-label">Fecha de la factura</label>
             {!! Form::date('created_at', old('created_at', isset($invoice) ? $invoice->created_at :
             \Carbon\Carbon::now()), ['class' => 'form-control underlined', 'placeholder' => 'dd/mm/aaaa', isset($show) ?
             'readonly' : '']) !!}
@@ -70,7 +70,7 @@
         </div>
         <div class="col-md-6">
           <div class="form-group @if ($errors->has('company_id')) has-error @endif">
-            {!! Form::label('company_id', 'Compañía a la que pertenece la factura', ['class' => 'control-label']) !!}
+            <label for="company_id" class="control-label">Compañía a la que pertenece la factura</label>
             {!! Form::select('company_id', $companies, old('company_id', isset($invoice) ? $invoice->company_id : ''),
             ['class' => 'form-control']) !!}
           </div>
@@ -86,7 +86,7 @@
         <div class="row">
           <div class="col-md-3">
             <div class="form-group @if ($errors->has('total_days')) has-error @endif">
-              {!! Form::label('total_days', 'Total de días', ['class' => 'control-label']) !!}
+              <label for="total_days" class="control-label">Total de días</label>
               {!! Form::number('total_days', old('total_days', (isset($invoice) and !$invoice->multiple) ?
               $invoice->days : ''), ['class' => 'form-control underlined', 'placeholder' => 'Total de días', 'min' =>
               '0', 'id' => 'total_days']) !!}
@@ -94,7 +94,7 @@
           </div>
           <div class="col-md-3">
             <div class="form-group @if ($errors->has('total')) has-error @endif">
-              {!! Form::label('total', 'Monto', ['class' => 'control-label']) !!}
+              <label for="total" class="control-label">Monto</label>
               {!! Form::number('total', old('total', (isset($invoice) and !$invoice->multiple) ? $invoice->total : ''),
               ['class' => 'form-control underlined', 'placeholder' => 'Valor total de la factura', 'min' => '0', 'id' =>
               'total']) !!}
@@ -103,7 +103,7 @@
           <div class="col-md-6">
             <div class="form-group @if ($errors->has('authorization_code')) has-error @endif">
               <div class="float-left">
-                {!! Form::label('authorization_code', 'Autorización', ['class' => 'control-label']) !!}
+                <label for="authorization_code" class="control-label">Autorización</label>
               </div>
               <div class="float-right">
                 <div class="form-check">

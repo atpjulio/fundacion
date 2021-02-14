@@ -1,45 +1,36 @@
-<div class="form-group  @if($errors->has('company_id')) has-error @endif">
-    {!! Form::label('company_id', 'Seleccione la compañía', ['class' => 'control-label']) !!}
-    {!! Form::select('company_id', $companies, old('company_id', isset($rip) ? $rip->company_id : ''), ['class' => 'form-control']) !!}
+<div class="form-group  @if ($errors->has('company_id')) has-error @endif">
+  <label for="company_id" class="control-label">Seleccione la compañía</label>
+  {!! Form::select('company_id', $companies, old('company_id', isset($rip) ? $rip->company_id : ''), ['class' =>
+  'form-control']) !!}
 </div>
 
 @if (isset($show))
-    <div class="form-group  @if($errors->has('eps_name')) has-error @endif">
-        {!! Form::label('eps_name', 'Nombre de EPS', ['class' => 'control-label']) !!}
-        {!! Form::text('eps_name', old('eps_name', isset($rip) ? $rip->name : ''), ['class' => 'form-control underlined', 'placeholder' => 'Nombre de EPS', 'readonly']) !!}
-        <input type="hidden" name="eps_id" value="{{ $rip->eps_id }}">
-    </div>
+  <div class="form-group  @if ($errors->has('eps_name')) has-error @endif">
+    <label for="eps_name" class="control-label">Nombre de EPS</label>
+    {!! Form::text('eps_name', old('eps_name', isset($rip) ? $rip->name : ''), ['class' => 'form-control underlined',
+    'placeholder' => 'Nombre de EPS', 'readonly']) !!}
+    <input type="hidden" name="eps_id" value="{{ $rip->eps_id }}">
+  </div>
 @else
-    <div class="form-group  @if($errors->has('eps_id')) has-error @endif">
-        {!! Form::label('eps_id', 'Seleccione EPS', ['class' => 'control-label']) !!}
-        {!! Form::select('eps_id', $epss, old('eps_id', isset($rip) ? $rip->eps_id : ''), ['class' => 'form-control', 'id' => 'eps_id']) !!}
-    </div>
+  <div class="form-group  @if ($errors->has('eps_id')) has-error @endif">
+    <label for="eps_id" class="control-label">Seleccione EPS</label>
+    {!! Form::select('eps_id', $epss, old('eps_id', isset($rip) ? $rip->eps_id : ''), ['class' => 'form-control', 'id'
+    => 'eps_id']) !!}
+  </div>
 @endif
 <div class="row">
-    {{-- 
-    <div class="col-6">
-        <div class="form-group  @if($errors->has('initial_date')) has-error @endif">
-            {!! Form::label('initial_date', 'Fecha inicial', ['class' => 'control-label']) !!}
-            {!! Form::date('initial_date', old('initial_date', isset($rip) ? $rip->initial_date : \Carbon\Carbon::now()), ['class' => 'form-control underlined', 'id' => 'initial_date', 'placeholder' => 'dd/mm/aaaa', isset($show) ? 'readonly' : '']) !!}
-        </div>
+  <div class="col-6">
+    <div class="form-group  @if ($errors->has('initial_number')) has-error @endif">
+      <label for="initial_number" class="control-label">Factura inicial</label>
+      {!! Form::number('initial_number', old('initial_number', $initialNumber), ['class' => 'form-control underlined',
+      'id' => 'initial_number', isset($show) ? 'readonly' : '', 'min' => '1']) !!}
     </div>
-    <div class="col-6">
-        <div class="form-group  @if($errors->has('final_date')) has-error @endif">
-            {!! Form::label('final_date', 'Fecha final', ['class' => 'control-label']) !!}
-            {!! Form::date('final_date', old('final_date', isset($rip) ? $rip->final_date : \Carbon\Carbon::now()), ['class' => 'form-control underlined', 'id' => 'final_date', 'placeholder' => 'dd/mm/aaaa', isset($show) ? 'readonly' : '']) !!}
-        </div>
+  </div>
+  <div class="col-6">
+    <div class="form-group  @if ($errors->has('final_number')) has-error @endif">
+      <label for="final_number" class="control-label">Factura final</label>
+      {!! Form::number('final_number', old('final_number', $finalNumber), ['class' => 'form-control underlined', 'id' =>
+      'final_number', isset($show) ? 'readonly' : '', 'min' => '1']) !!}
     </div>
-    --}}
-    <div class="col-6">
-        <div class="form-group  @if($errors->has('initial_number')) has-error @endif">
-            {!! Form::label('initial_number', 'Factura inicial', ['class' => 'control-label']) !!}
-            {!! Form::number('initial_number', old('initial_number', $initialNumber), ['class' => 'form-control underlined', 'id' => 'initial_number', isset($show) ? 'readonly' : '', 'min' => '1']) !!}
-        </div>
-    </div>
-    <div class="col-6">
-        <div class="form-group  @if($errors->has('final_number')) has-error @endif">
-            {!! Form::label('final_number', 'Factura final', ['class' => 'control-label']) !!}
-            {!! Form::number('final_number', old('final_number', $finalNumber), ['class' => 'form-control underlined', 'id' => 'final_number', isset($show) ? 'readonly' : '', 'min' => '1']) !!}
-        </div>
-    </div>
+  </div>
 </div>

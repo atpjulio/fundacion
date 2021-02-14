@@ -26,7 +26,7 @@
               @csrf
 
               <div class="form-group  @if ($errors->has('eps_code')) has-error @endif">
-                {!! Form::label('eps_code', 'Seleccione EPS y luego cargue el archivo', ['class' => 'control-label']) !!}
+                <label for="eps_code" class="control-label">Seleccione EPS y luego cargue el archivo</label>
                 {!! Form::select('eps_code', $epss, old('eps_code'), ['class' => 'form-control']) !!}
               </div>
               <div class="custom-file">
