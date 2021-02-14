@@ -19,8 +19,9 @@
       </div>
       <div class="form-group @if ($errors->has('concept')) has-error @endif">
 				<label for="concept" class="control-label">Por concepto de</label>
-        {!! Form::textarea('concept', old('concept', isset($receipt) ? $receipt->concept : ''), ['class' =>
-        'form-control underlined', 'placeholder' => 'Concepto', 'rows' => 4]) !!}
+        <textarea name="concept" class="form-control underlined" placeholder="Concepto" rows="4">
+          {{ old('concept', isset($receipt) ? $receipt->concept : '') }}
+        </textarea>
       </div>
     </div>
   </div>

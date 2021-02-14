@@ -2,7 +2,7 @@
   <div class="card">
     <div class="card-block">
       <div class="form-group  @if ($errors->has('created_at')) has-error @endif">
-				<label class="control-label" for="created_at">Fecha de la nota</label>
+        <label class="control-label" for="created_at">Fecha de la nota</label>
         {!! Form::date('created_at', old('created_at', isset($note) ? $note->created_at : \Carbon\Carbon::now()),
         ['class' => 'form-control underlined', 'placeholder' => 'dd/mm/aaaa', isset($show) ? 'readonly' : '']) !!}
       </div>
@@ -14,9 +14,10 @@
   <div class="card">
     <div class="card-block">
       <div class="form-group @if ($errors->has('notes')) has-error @endif">
-				<label class="control-label" for="notes">Detalles (opcional)</label>
-        {!! Form::textarea('notes', old('notes', isset($note) ? $note->notes : ''), ['class' => 'form-control
-        underlined', 'placeholder' => 'Detalles', 'rows' => 2]) !!}
+        <label class="control-label" for="notes">Detalles (opcional)</label>
+        <textarea name="notes" class="form-control underlined" placeholder="Detalles" rows="2">
+          {{ old('notes', isset($note) ? $note->notes : '') }}
+        </textarea>
       </div>
     </div>
   </div>
