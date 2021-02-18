@@ -13,8 +13,9 @@
       </a>
     </div>
   </div>
-  <form action="{{ route('company.update', ['id' => $company->id]) }}" method="PUT" files="true">
+  <form method="POST" action="{{ route('company.update', ['id' => $company->id]) }}" enctype="multipart/form-data">
     @csrf
+    <input type="hidden" name="_method" value="PUT">
     <section class="section">
       <div class="row">
         <div class="col-md-6">

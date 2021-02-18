@@ -13,29 +13,25 @@
       </a>
     </div>
   </div>
-
-  {!! Form::open(['route' => ['user.profile.update', $user->id], 'method' => 'PUT', 'files' => true]) !!}
-  <section class="section">
-    <div class="row">
-      <div class="col-md-6">
-        <div class="card">
-          <div class="card-block">
-            @include('user.fields')
+  <form method="POST" action="{{ route('user.profile.update', ['id' => $user->id]) }}" enctype="multipart/form-data">
+    @csrf
+    <input type="hidden" name="_method" value="PUT">
+    <section class="section">
+      <div class="row">
+        <div class="col-md-6">
+          <div class="card">
+            <div class="card-block">
+              @include('user.fields')
+            </div>
           </div>
         </div>
+        <div class="col-md-6">
+        </div>
+        <div class="col-md-6 text-center">
+          <button type="submit" class="btn btn-oval btn-warning">Actualizar mi perfil</button>
+        </div>
       </div>
-      <div class="col-md-6">
-        {{-- <div class="card">
-                    <div class="card-block">
-                        @include('user.fields2')
-                    </div>
-                </div> --}}
-      </div>
-      <div class="col-md-6 text-center">
-        <button type="submit" class="btn btn-oval btn-warning">Actualizar mi perfil</button>
-      </div>
-    </div>
-  </section>
+    </section>
   </form>
 @endsection
 

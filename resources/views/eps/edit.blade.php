@@ -14,8 +14,9 @@
     </div>
   </div>
 
-  <form action="{{ route('eps.update', ['id' => $eps->id]) }}" method="PATCH">
+  <form method="POST" action="{{ route('eps.update', ['id' => $eps->id]) }}">
     @csrf
+    <input type="hidden" name="_method" value="PATCH">
     <section class="section">
       <div class="row">
         <div class="col-md-6">

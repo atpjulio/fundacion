@@ -7,8 +7,9 @@
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
-      <form action="{{ route('company.destroy', ['id' => $company->id]) }}" method="DELETE">
+      <form method="POST" action="{{ route('company.destroy', ['id' => $company->id]) }}">
         @csrf
+        <input type="hidden" name="_method" value="DELETE">
         <div class="modal-body">
           <p>Confirma que deseas borrar la compañía: </p>
           <div class="text-center">

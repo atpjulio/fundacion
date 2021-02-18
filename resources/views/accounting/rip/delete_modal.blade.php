@@ -4,8 +4,9 @@
     <span aria-hidden="true">&times;</span>
   </button>
 </div>
-<form action="{{ route('rip.destroy', ['id' => $rip->id]) }}" method="DELETE">
+<form method="POST" action="{{ route('rip.destroy', ['id' => $rip->id]) }}">
   @csrf
+  <input type="hidden" name="_method" value="DELETE">
   <div class="modal-body">
     <p>Confirma que deseas borrar el RIPS: </p>
     <div class="text-center">

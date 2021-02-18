@@ -26,23 +26,25 @@
       </a>
     </div>
   </div>
-  {!! Form::open(['route' => ['invoice.update', $invoice->id], 'method' => 'PUT']) !!}
-  <section class="section">
-    <invoice-component :companies="'{{ json_encode($companies) }}'" :number="{{ $invoice->number }}"
-      :codes="{{ json_encode($invoice->multiple_codes) }}" :days="{{ json_encode($invoice->multiple_days) }}"
-      :totals="{{ json_encode($invoice->multiple_totals) }}"></invoice-component>
-    <div class="row">
-      <div class="col-12">
-        <div class="text-center">
-          <button type="submit" class="btn btn-oval btn-warning">Actualizar la factura</button>
+  <form method="POST" action="{{ route('invoice.update', ['id' => $invoice->id]) }}">
+    @csrf
+    <input type="hidden" name="_method" value="PUT">
+    <section class="section">
+      <invoice-component :companies="'{{ json_encode($companies) }}'" :number="{{ $invoice->number }}"
+        :codes="{{ json_encode($invoice->multiple_codes) }}" :days="{{ json_encode($invoice->multiple_days) }}"
+        :totals="{{ json_encode($invoice->multiple_totals) }}"></invoice-component>
+      <div class="row">
+        <div class="col-12">
+          <div class="text-center">
+            <button type="submit" class="btn btn-oval btn-warning">Actualizar la factura</button>
+          </div>
         </div>
       </div>
-    </div>
-  </section>
-  <input type="hidden" name="selected_price"
-    value="{{ $invoice->multiple ? $invoice->eps->price[0]->daily_price : ($invoice->authorization->daily_price > 0 ? $invoice->authorization->daily_price : ($invoice->authorization->price ? 0 : $invoice->authorization->price->daily_price)) }}"
-    id="selected_price">
-  <input type="hidden" name="id" value="{{ $invoice->id }}">
+    </section>
+    <input type="hidden" name="selected_price"
+      value="{{ $invoice->multiple ? $invoice->eps->price[0]->daily_price : ($invoice->authorization->daily_price > 0 ? $invoice->authorization->daily_price : ($invoice->authorization->price ? 0 : $invoice->authorization->price->daily_price)) }}"
+      id="selected_price">
+    <input type="hidden" name="id" value="{{ $invoice->id }}">
   </form>
 @endsection
 

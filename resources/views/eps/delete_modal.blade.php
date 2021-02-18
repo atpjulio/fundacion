@@ -4,8 +4,9 @@
     <span aria-hidden="true">&times;</span>
   </button>
 </div>
-<form action="{{ route('eps.destroy', ['id' => $eps->id]) }}" method="DELETE">
+<form method="POST" action="{{ route('eps.destroy', ['id' => $eps->id]) }}">
   @csrf
+  <input type="hidden" name="_method" value="DELETE">
   <div class="modal-body">
     <p>Confirma que deseas borrar la EPS: </p>
     <div class="text-center">

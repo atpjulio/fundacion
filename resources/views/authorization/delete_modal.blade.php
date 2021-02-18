@@ -4,8 +4,9 @@
     <span aria-hidden="true">&times;</span>
   </button>
 </div>
-<form action="{{ route('authorization.destroy', ['id' => $authorization->id]) }}" method="DELETE">
+<form method="POST" action="{{ route('authorization.destroy', ['id' => $authorization->id]) }}">
   @csrf
+  <input type="hidden" name="_method" value="DELETE">
   <div class="modal-body">
     <p>Confirma que deseas borrar la autorización: </p>
     <div class="text-center">

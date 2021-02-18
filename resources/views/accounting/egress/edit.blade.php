@@ -17,8 +17,9 @@
       </a>
     </div>
   </div>
-  <form action="{{ route('egress.update', $egress->id) }}" method="PUT">
+  <form method="POST" action="{{ route('egress.update', ['id' => $egress->id]) }}">
     @csrf
+    <input type="hidden" name="_method" value="PUT">
     <section class="section">
       <div class="row">
         @include('accounting.egress.fields')

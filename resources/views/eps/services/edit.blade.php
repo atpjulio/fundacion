@@ -18,17 +18,19 @@
   <section class="section">
     <div class="row justify-content-center">
       <div class="col-md-6">
-        {!! Form::open(['route' => ['eps.services.update', $service->id], 'method' => 'PATCH']) !!}
-        <div class="card">
-          <div class="card-block">
-            @include('eps.services.fields')
+        <form method="POST" action="{{ route('eps.services.update', ['id' => $service->id]) }}">
+          @csrf
+          <input type="hidden" name="_method" value="PATCH">
+          <div class="card">
+            <div class="card-block">
+              @include('eps.services.fields')
+            </div>
           </div>
-        </div>
-        <div class="text-center">
-          <input type="hidden" name="id" value="{{ $service->id }}">
-          <input type="hidden" name="eps_id" value="{{ $eps->id }}">
-          <button type="submit" class="btn btn-oval btn-warning">Actualizar</button>
-        </div>
+          <div class="text-center">
+            <input type="hidden" name="id" value="{{ $service->id }}">
+            <input type="hidden" name="eps_id" value="{{ $eps->id }}">
+            <button type="submit" class="btn btn-oval btn-warning">Actualizar</button>
+          </div>
         </form>
       </div>
     </div>

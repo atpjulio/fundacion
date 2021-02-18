@@ -18,8 +18,9 @@
       </a>
     </div>
   </div>
-  <form action="{{ route('rip.update', ['id' => $rip->id]) }}" method="PUT">
+  <form method="POST" action="{{ route('rip.update', ['id' => $rip->id]) }}">
     @csrf
+    <input type="hidden" name="_method" value="PUT">
     <section class="section">
       <div class="row">
         <div class="col-md-6">

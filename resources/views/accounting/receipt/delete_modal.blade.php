@@ -4,8 +4,10 @@
     <span aria-hidden="true">&times;</span>
   </button>
 </div>
-<form action="{{ route('receipt.destroy', $receipt->id) }}" method="DELETE">
+<form method="POST" action="{{ route('receipt.destroy', ['id' => $receipt->id]) }}">
   @csrf
+  <input type="hidden" name="_method" value="DELETE">
+
   <div class="modal-body">
     <p>Confirma que deseas borrar el recibo: </p>
     <div class="text-center">

@@ -4,8 +4,9 @@
     <span aria-hidden="true">&times;</span>
   </button>
 </div>
-<form action="{{ route('accounting-note.destroy', $note->id) }}" method="DELETE">
+<form method="POST" action="{{ route('accounting-note.destroy', ['id' => $note->id]) }}">
   @csrf
+  <input type="hidden" name="_method" value="DELETE">
   <div class="modal-body">
     <p>Confirma que deseas borrar la nota: </p>
     <div class="text-center">

@@ -14,31 +14,33 @@
     </div>
   </div>
 
-  {!! Form::open(['route' => ['patient.update', $patient->id], 'method' => 'PATCH']) !!}
-  <section class="section">
-    <div class="row">
-      <div class="col-md-6">
-        <div class="card">
-          <div class="card-block">
-            @include('patient.fields')
+  <form method="POST" action="{{ route('patient.update', ['id' => $patient->id]) }}">
+    @csrf
+    <input type="hidden" name="_method" value="PATCH">
+    <section class="section">
+      <div class="row">
+        <div class="col-md-6">
+          <div class="card">
+            <div class="card-block">
+              @include('patient.fields')
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="card">
+            <div class="card-block">
+              @include('patient.fields2')
+            </div>
+          </div>
+        </div>
+        <input type="hidden" name="id" value="{{ $patient->id }}">
+        <div class="col-md-12">
+          <div class="text-center">
+            <button type="submit" class="btn btn-oval btn-warning">Actualizar</button>
           </div>
         </div>
       </div>
-      <div class="col-md-6">
-        <div class="card">
-          <div class="card-block">
-            @include('patient.fields2')
-          </div>
-        </div>
-      </div>
-      <input type="hidden" name="id" value="{{ $patient->id }}">
-      <div class="col-md-12">
-        <div class="text-center">
-          <button type="submit" class="btn btn-oval btn-warning">Actualizar</button>
-        </div>
-      </div>
-    </div>
-  </section>
+    </section>
   </form>
 @endsection
 

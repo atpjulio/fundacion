@@ -4,8 +4,9 @@
     <span aria-hidden="true">&times;</span>
   </button>
 </div>
-<form action="{{ route('egress.destroy', $egress->id) }}" method="DELETE">
+<form method="POST" action="{{ route('egress.destroy', ['id' => $egress->id]) }}">
   @csrf
+  <input type="hidden" name="_method" value="DELETE">
 
   <div class="modal-body">
     <p>Confirma que deseas borrar el comprobante de egreso: </p>

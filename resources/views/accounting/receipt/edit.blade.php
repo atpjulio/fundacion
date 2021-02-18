@@ -17,8 +17,9 @@
       </a>
     </div>
   </div>
-  <form action="{{ route('receipt.update', ['id' => $receipt->id]) }}" method="PUT">
+  <form method="POST" action="{{ route('receipt.update', ['id' => $receipt->id]) }}">
     @csrf
+    <input type="hidden" name="_method" value="PUT">
     <section class="section">
       <div class="row">
         @include('accounting.receipt.fields')

@@ -44,51 +44,51 @@
         </div>
       </div>
     </div>
-    <form action="{{ route('authorization.update', ['id' => $authorization->id]) }}" method="PUT" id="myForm">
+    <form method="POST" action="{{ route('authorization.update', ['id' => $authorization->id]) }}" id="myForm">
       @csrf
-  
-    <input type="hidden" name="id" value="{{ $authorization->id }}">
-    <div class="row">
-      <div class="col-md-12">
-        <div class="card">
-          <div class="card-block">
-            <div class="card-title-block">
-              <h3 class="title" id="authFields"> Paciente seleccionado </h3>
+      <input type="hidden" name="_method" value="PUT">
+      <input type="hidden" name="id" value="{{ $authorization->id }}">
+      <div class="row">
+        <div class="col-md-12">
+          <div class="card">
+            <div class="card-block">
+              <div class="card-title-block">
+                <h3 class="title" id="authFields"> Paciente seleccionado </h3>
+              </div>
+              <h2 id="selected_patient">{!! $authorization->patient->full_name !!}</h2>
             </div>
-            <h2 id="selected_patient">{!! $authorization->patient->full_name !!}</h2>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="card">
+            <div class="card-block">
+              <div class="card-title-block">
+                <h3 class="title" id="authFields"> Información de la Autorización </h3>
+              </div>
+              @include('authorization.fields')
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="card">
+            <div class="card-block">
+              <div class="card-title-block">
+                <h3 class="title"> Datos del paciente </h3>
+              </div>
+              @include('authorization.fields2')
+            </div>
+          </div>
+        </div>
+        <div class="col-md-12">
+          @include('authorization.additionals')
+        </div>
+        <div class="col-md-12">
+          <div class="text-center">
+            <button type="submit" class="btn btn-oval btn-warning">Actualizar</button>
           </div>
         </div>
       </div>
-      <div class="col-md-6">
-        <div class="card">
-          <div class="card-block">
-            <div class="card-title-block">
-              <h3 class="title" id="authFields"> Información de la Autorización </h3>
-            </div>
-            @include('authorization.fields')
-          </div>
-        </div>
-      </div>
-      <div class="col-md-6">
-        <div class="card">
-          <div class="card-block">
-            <div class="card-title-block">
-              <h3 class="title"> Datos del paciente </h3>
-            </div>
-            @include('authorization.fields2')
-          </div>
-        </div>
-      </div>
-      <div class="col-md-12">
-        @include('authorization.additionals')
-      </div>
-      <div class="col-md-12">
-        <div class="text-center">
-          <button type="submit" class="btn btn-oval btn-warning">Actualizar</button>
-        </div>
-      </div>
-    </div>
-    <input type="hidden" name="patient_id" value="{{ $authorization->patient->id }}" id="patient_id">
+      <input type="hidden" name="patient_id" value="{{ $authorization->patient->id }}" id="patient_id">
     </form>
   </section>
 @endsection

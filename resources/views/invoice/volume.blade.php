@@ -17,30 +17,30 @@
       </a>
     </div>
   </div>
-  {!! Form::open(['route' => 'invoice.volume.pdf', 'method' => 'GET', 'target' => '_blank']) !!}
-  <section class="section">
-    <div class="row">
-      <div class="col-md-6">
-        <div class="card">
-          <div class="card-block">
-            @include('invoice.relation_fields')
+  <form action="{{ route('invoice.volume.pdf') }}" method="GET" target="_blank">
+    <section class="section">
+      <div class="row">
+        <div class="col-md-6">
+          <div class="card">
+            <div class="card-block">
+              @include('invoice.relation_fields')
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="card">
+            <div class="card-block">
+              @include('invoice.relation_fields2')
+            </div>
+          </div>
+        </div>
+        <div class="col-6">
+          <div class="text-center">
+            <button type="submit" class="btn btn-oval btn-primary">Generar volumen de facturas</button>
           </div>
         </div>
       </div>
-      <div class="col-md-6">
-        <div class="card">
-          <div class="card-block">
-            @include('invoice.relation_fields2')
-          </div>
-        </div>
-      </div>
-      <div class="col-6">
-        <div class="text-center">
-          <button type="submit" class="btn btn-oval btn-primary">Generar volumen de facturas</button>
-        </div>
-      </div>
-    </div>
-  </section>
+    </section>
   </form>
 @endsection
 
