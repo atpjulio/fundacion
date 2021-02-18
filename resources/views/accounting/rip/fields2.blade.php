@@ -2,15 +2,15 @@
   <div class="col-md-6">
     <div class="form-group  @if ($errors->has('initial_date')) has-error @endif">
       <label for="initial_date" class="control-label">Fecha de remisión desde</label>
-      {!! Form::date('initial_date', old('initial_date', isset($rip) ? $rip->initial_date : now()), ['class' =>
-      'form-control underlined', 'placeholder' => 'dd/mm/aaaa', isset($show) ? 'readonly' : '']) !!}
+      <input type="date" name="initial_date" placeholder="dd/mm/aaaa" class="form-control underlined"
+        value="{{ old('initial_date', isset($rip) ? $rip->initial_date : now()) }}" @isset($show) readonly @endisset>
     </div>
   </div>
   <div class="col-md-6">
     <div class="form-group  @if ($errors->has('final_date')) has-error @endif">
       <label for="final_date" class="control-label">Fecha de remisión hasta</label>
-      {!! Form::date('final_date', old('final_date', isset($rip) ? $rip->final_date : now()->addMonth()), ['class' =>
-      'form-control underlined', 'placeholder' => 'dd/mm/aaaa', isset($show) ? 'readonly' : '']) !!}
+      <input type="date" name="final_date" placeholder="dd/mm/aaaa" class="form-control underlined"
+        value="{{ old('final_date', isset($rip) ? $rip->final_date : now()) }}" @isset($show) readonly @endisset>
     </div>
   </div>
 </div>

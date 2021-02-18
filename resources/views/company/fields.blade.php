@@ -21,8 +21,7 @@
 </div>
 <div class="form-group @if ($errors->has('billing_date')) has-error @endif">
   <label for="billing_date" class="control-label">Fecha de resolución de facturación</label>
-  {!! Form::date('billing_date', old('billing_date', isset($company) ? $company->billing_date : ''), ['class' =>
-  'form-control underlined', 'placeholder' => 'dd/mm/aaaa']) !!}
+  <input type="date" name="billing_date" placeholder="dd/mm/aaaa" class="form-control underlined" value="{{ old('billing_date', isset($company) ? $company->billing_date : now()) }}" @isset($show) readonly @endisset>
 </div>
 <div class="row">
   <div class="col-md-6">

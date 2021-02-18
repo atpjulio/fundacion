@@ -63,8 +63,7 @@
         <div class="col-md-3">
           <div class="form-group  @if ($errors->has('created_at')) has-error @endif">
             <label for="created_at" class="control-label">Fecha de la factura</label>
-            {!! Form::date('created_at', old('created_at', isset($invoice) ? $invoice->created_at : now()), ['class' =>
-            'form-control underlined', 'placeholder' => 'dd/mm/aaaa', isset($show) ? 'readonly' : '']) !!}
+            <input type="date" name="created_at" placeholder="dd/mm/aaaa" class="form-control underlined" value="{{ old('created_at', isset($invoice) ? $invoice->created_at : now()) }}" @isset($show) readonly @endisset>
           </div>
         </div>
         <div class="col-md-6">

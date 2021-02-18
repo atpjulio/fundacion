@@ -10,8 +10,7 @@
     <div class="col-md-3">
       <div class="form-group  @if ($errors->has('export_date')) has-error @endif">
         <label for="export_date" class="control-label">Fecha de exportación'</label>
-        {!! Form::date('export_date', old('export_date', now()), ['class' => 'form-control underlined', 'id' =>
-        'export-date']) !!}
+        <input type="date" name="export_date" placeholder="dd/mm/aaaa" class="form-control underlined" value="{{ old('export_date', now() ) }}" id="export-date">
       </div>
     </div>
     <div class="col-md-6 pt-2">

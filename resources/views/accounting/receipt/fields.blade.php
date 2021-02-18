@@ -3,8 +3,7 @@
     <div class="card-block">
       <div class="form-group  @if ($errors->has('created_at')) has-error @endif">
 				<label for="created_at" class="control-label">Fecha del recibo de pago</label>
-        {!! Form::date('created_at', old('created_at', isset($receipt) ? $receipt->created_at : \Carbon\Carbon::now()),
-        ['class' => 'form-control underlined', 'placeholder' => 'dd/mm/aaaa']) !!}
+        <input type="date" name="created_at" placeholder="dd/mm/aaaa" class="form-control underlined" value="{{ old('created_at', isset($receipt) ? $receipt->created_at : now()) }}" @isset($show) readonly @endisset>
       </div>
       <div class="form-group @if ($errors->has('entity_id')) has-error @endif">
 				<label for="entity_id" class="control-label">Hemos recibido de</label>

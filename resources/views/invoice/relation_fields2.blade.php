@@ -1,7 +1,6 @@
 <div class="form-group  @if ($errors->has('created_at')) has-error @endif">
   <label for="created_at" class="control-label">Fecha de generación</label>
-  {!! Form::date('created_at', old('created_at', isset($rip) ? $rip->created_at : \Carbon\Carbon::now()), ['class' =>
-  'form-control underlined', 'placeholder' => 'dd/mm/aaaa', isset($show) ? 'readonly' : '']) !!}
+  <input type="date" name="created_at" placeholder="dd/mm/aaaa" class="form-control underlined" value="{{ old('created_at', isset($rip) ? $rip->created_at : now()) }}" @isset($show) readonly @endisset>
 </div>
 
 <div id="dynamic-invoice-amount">

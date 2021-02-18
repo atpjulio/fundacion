@@ -30,15 +30,13 @@
       <div class="col-6">
         <div class="form-group  @if ($errors->has('initial_date')) has-error @endif">
           <label for="initial_date" class="control-label">Fecha inicial</label>
-          {!! Form::date('initial_date', old('initial_date', $initialDate), ['class' => 'form-control underlined', 'id'
-          => 'initial_date']) !!}
+          <input type="date" name="initial_date" placeholder="dd/mm/aaaa" class="form-control underlined" value="{{ old('initial_date', $initialDate ) }}" id="initial_date">
         </div>
       </div>
       <div class="col-6">
         <div class="form-group  @if ($errors->has('final_date')) has-error @endif">
           <label for="final_date" class="control-label">Fecha final</label>
-          {!! Form::date('final_date', old('final_date', $finalDate), ['class' => 'form-control underlined', 'id' =>
-          'final_date']) !!}
+          <input type="date" name="final_date" placeholder="dd/mm/aaaa" class="form-control underlined" value="{{ old('final_date', $finalDate ) }}" id="final_date">
         </div>
       </div>
     </div>
