@@ -1,7 +1,11 @@
 <div class="form-group  @if ($errors->has('company_id')) has-error @endif">
   <label for="company_id" class="control-label">Seleccione la compañía</label>
-  {!! Form::select('company_id', $companies, old('company_id', isset($rip) ? $rip->company_id : ''), ['class' =>
-  'form-control']) !!}
+  <select name="company_id" class="form-control">
+    @foreach ($companies as $id => $name)
+      <option value="{{ $id }}" @if (old('company_id', isset($rip) ? $rip->company_id : '') == $id) selected @endif>
+        {{ $name }}</option>
+    @endforeach
+  </select>
 </div>
 
 @if (isset($show))
@@ -14,8 +18,12 @@
 @else
   <div class="form-group  @if ($errors->has('eps_id')) has-error @endif">
     <label for="eps_id" class="control-label">Seleccione EPS</label>
-    {!! Form::select('eps_id', $epss, old('eps_id', isset($rip) ? $rip->eps_id : ''), ['class' => 'form-control', 'id'
-    => 'eps_id']) !!}
+    <select name="eps_id" id="eps_id" class="form-control">
+      @foreach ($epss as $id => $name)
+        <option value="{{ $id }}" @if (old('eps_id', isset($rip) ? $rip->eps_id : '') == $id) selected @endif>
+          {{ $name }}</option>
+      @endforeach
+    </select>
   </div>
 @endif
 

@@ -3,14 +3,21 @@
     <div class="col-md-3">
       <div class="form-group  @if ($errors->has('export_method')) has-error @endif">
         <label for="export_method" class="control-label">Opciones de exportación</label>
-        {!! Form::select('export_method', config('constants.exportMethods.options'), null, ['class' => 'form-control',
-        'id' => 'export-method']) !!}
+        <select name="export_method" id="export-method" class="form-control" @isset($show) disabled @endisset>
+          @foreach (config('constants.exportMethods.options') as $value => $option)
+            <option value="{{ $value }}">
+              {{ $option }}
+            </option>
+          @endforeach
+        </select>
+
       </div>
     </div>
     <div class="col-md-3">
       <div class="form-group  @if ($errors->has('export_date')) has-error @endif">
         <label for="export_date" class="control-label">Fecha de exportación'</label>
-        <input type="date" name="export_date" placeholder="dd/mm/aaaa" class="form-control underlined" value="{{ old('export_date', now() ) }}" id="export-date">
+        <input type="date" name="export_date" placeholder="dd/mm/aaaa" class="form-control underlined"
+          value="{{ old('export_date', now()) }}" id="export-date">
       </div>
     </div>
     <div class="col-md-6 pt-2">
@@ -47,7 +54,7 @@
                     '<a href="' .
                     route('authorization.code', $invoice->authorization_code) .
                     '"
-                                target="_blank">' .
+                                            target="_blank">' .
                     $invoice->authorization_code .
                     '</a>';
             } else {

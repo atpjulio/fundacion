@@ -3,13 +3,21 @@
     <div class="card-block">
       <div class="form-group @if ($errors->has('month')) has-error @endif">
         <label for="month" class="control-label">Seleccione mes</label>
-        {!! Form::select('month', config('constants.months'), old('month', intval(date('m'))), ['class' =>
-        'form-control', 'id' => 'month']) !!}
+        <select name="month" id="month" class="form-control">
+          @foreach (config('constants.months') as $value => $option)
+            <option value="{{ $value }}" @if (old('month', intval(date('m'))) == $value) selected @endif>
+              {{ $option }}
+              </option>
+          @endforeach
+        </select>
       </div>
       <div class="form-group @if ($errors->has('year')) has-error @endif">
         <label for="year" class="control-label">Seleccione año</label>
-        {!! Form::selectYear('year', 2015, intval(date('Y')) + 5, old('year', intval(date('Y'))), ['class' =>
-        'form-control', 'id' => 'year']) !!}
+        <select name="year" id="year" class="form-control">
+          @for ($i = intval(date('Y')); $i <= intval(date('Y')) + 5; $i++)
+            <option value="{{ $i }}">{{ $i }}</option>
+          @endfor
+        </select>
       </div>
       <br>
     </div>

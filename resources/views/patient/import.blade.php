@@ -27,7 +27,12 @@
 
               <div class="form-group  @if ($errors->has('eps_code')) has-error @endif">
                 <label for="eps_code" class="control-label">Seleccione EPS y luego cargue el archivo</label>
-                {!! Form::select('eps_code', $epss, old('eps_code'), ['class' => 'form-control']) !!}
+                <select name="eps_code" class="form-control">
+                  @foreach ($epss as $code => $name)
+                    <option value="{{ $code }}" @if (old('eps_code') == $code) selected @endif>
+                      {{ $name }}</option>
+                  @endforeach
+                </select>
               </div>
               <div class="custom-file">
                 <input type="file" class="custom-file-input" id="customFileLang" lang="es" name="txt_file">

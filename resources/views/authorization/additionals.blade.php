@@ -5,12 +5,15 @@
     </div>
     <div class="form-group  @if ($errors->has('companion')) has-error @endif">
       <label for="companion" class="control-label">¿Viene con acompañante(s)?</label>
-      {!! Form::select('companion', config('constants.noYes'), old('companion', isset($authorization) ?
-      $authorization->companion : ''), ['class' => 'form-control', isset($show) ? 'disabled' : '', 'id' => 'companion'])
-      !!}
+      <select name="companion" id="companion" class="form-control" @isset($show) disabled @endisset>
+        @foreach (config('constants.noYes') as $value => $option)
+          <option value="{{ $value }}" @if (old('companion', isset($authorization) ? $authorization->companion : '') == $value) selected @endif>
+            {{ $option }}</option>
+        @endforeach
+      </select>
     </div>
     <div id="companionsDiv" @if (old('companion') or isset($authorization) and $authorization->companion) style="display: block;"
-        @else
+      @else
             style="display: none;" @endif>
       @include('authorization.companion')
     </div>
@@ -30,7 +33,7 @@
       </div>
     </div>
     <div class="form-group" id="multipleServicesDiv" @if (old('multiple_services') || (isset($authorization) and $authorization->services)) style="display: block;"
-        @else
+      @else
             style="display: none;" @endif>
       <div class="table-responsive">
         <table class="table table-striped table-bordered table-condensed table-hover" id="multipleServicesTable">

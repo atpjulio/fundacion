@@ -4,11 +4,21 @@
 </div>
 <div class="form-group @if($errors->has('gender')) has-error @endif">
   <label for="gender" class="control-label">Sexo</label>
-    {!! Form::select('gender', config('constants.gender'), old('gender', isset($patient) ? $patient->gender : ''), ['class' => 'form-control underlined', isset($show) ? 'readonly' : '']) !!}
+  <select name="gender" class="form-control underlined" @isset($show) readonly @endisset>
+    @foreach (config('constants.gender') as $value => $option)
+      <option value="{{ $value }}" @if (old('gender', isset($patient) ? $patient->gender : '') == $value) selected @endif>
+        {{ $option }}</option>
+    @endforeach
+  </select>
 </div>
 <div class="form-group @if($errors->has('type')) has-error @endif">
   <label for="type" class="control-label">Tipo de usuario</label>
-    {!! Form::select('type', config('constants.patientTypeString'), old('type', isset($patient) ? $patient->type : 2), ['class' => 'form-control underlined', isset($show) ? 'readonly' : '']) !!}
+  <select name="type" class="form-control underlined" @isset($show) readonly @endisset>
+    @foreach (config('constants.patientTypeString') as $value => $option)
+      <option value="{{ $value }}" @if (old('type', isset($patient) ? $patient->type : '') == $value) selected @endif>
+        {{ $option }}</option>
+    @endforeach
+  </select>
 </div>
 <div class="form-group  @if($errors->has('state')) has-error @endif">
   <label for="state" class="control-label">Departamento</label>
@@ -37,5 +47,10 @@
 </div>
 <div class="form-group  @if($errors->has('zone')) has-error @endif">
   <label for="zone" class="control-label">Zona de residencia habitual</label>
-    {!! Form::select('zone', config('constants.residenceZone'), old('zone', isset($patient) ? $patient->zone : ''), ['class' => 'form-control']) !!}
+  <select name="zone" class="form-control underlined">
+    @foreach (config('constants.residenceZone') as $value => $option)
+      <option value="{{ $value }}" @if (old('zone', isset($patient) ? $patient->zone : '') == $value) selected @endif>
+        {{ $option }}</option>
+    @endforeach
+  </select>
 </div>

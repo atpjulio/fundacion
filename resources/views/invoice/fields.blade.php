@@ -69,8 +69,12 @@
         <div class="col-md-6">
           <div class="form-group @if ($errors->has('company_id')) has-error @endif">
             <label for="company_id" class="control-label">Compañía a la que pertenece la factura</label>
-            {!! Form::select('company_id', $companies, old('company_id', isset($invoice) ? $invoice->company_id : ''),
-            ['class' => 'form-control']) !!}
+            <select name="company_id" class="form-control">
+              @foreach ($companies as $id => $name)
+                <option value="{{ $id }}" @if (old('company_id', isset($invoice) ? $invoice->company_id : '') == $id) selected @endif>
+                  {{ $name }}</option>
+              @endforeach
+            </select>
           </div>
         </div>
       </div>

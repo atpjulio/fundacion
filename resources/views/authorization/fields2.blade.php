@@ -1,7 +1,12 @@
 <div class="form-group  @if ($errors->has('location')) has-error @endif">
   <label for="location" class="control-label">Ubicación del paciente</label>
-  {!! Form::select('location', config('constants.patient.location'), old('location', isset($authorization) ?
-  $authorization->location : ''), ['class' => 'form-control', isset($show) ? 'disabled' : '']) !!}
+  <select name="location" class="form-control" @isset($show) disabled @endisset>
+    @foreach (config('constants.patient.location') as $value => $option)
+      <option value="{{ $value }}" @if (old('location', isset($authorization) ? $authorization->location) == $value) selected @endif>
+        {{ $option }}
+        </option>
+    @endforeach
+  </select>    
 </div>
 <div class="row">
   <div class="col-md-6">
