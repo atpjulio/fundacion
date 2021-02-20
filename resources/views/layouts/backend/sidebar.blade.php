@@ -226,6 +226,28 @@
                     </ul>
                 </li>
                 @endrole
+                @role('admin')
+                <li class="@if(Request::is('merchants*')) open active @endif">
+                    <a href="">
+                        <i class="far fa-building"></i> Empresas
+                        <i class="fa arrow"></i>
+                    </a>
+                    <ul class="sidebar-nav">
+                        <li class="@if(Request::is('merchants/create')) active @endif" >
+                            <a href="{{ route('merchant.create') }}">
+                                <i class="fa fa-plus"></i>&nbsp;
+                                Nueva Empresa
+                            </a>
+                        </li>                        
+                        <li class="@if(Request::is('merchants')) active @endif" >
+                            <a href="{{ route('merchant.index') }}">
+                                <i class="fas fa-list"></i>&nbsp;
+                                Listado de Empresas
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+                @endrole
                 {{--
                 <li class="active open" >
                     <a href="">

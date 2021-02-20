@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Company;
 use App\Http\Requests\StoreCompanyRequest;
 use App\Http\Requests\UpdateCompanyRequest;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
 
 class CompanyController extends Controller

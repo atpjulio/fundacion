@@ -11,6 +11,8 @@
 |
 */
 
+use App\Http\Controllers\MerchantController;
+
 Route::view('/', 'auth.login');
 
 Route::middleware(['auth', 'admin'])->group(function () {
@@ -62,6 +64,9 @@ Route::middleware(['auth', 'admin'])->group(function () {
     Route::post('receipt-import-process', 'ReceiptController@importProcess')->name('receipt.import.process');
     Route::get('receipt/delete/{id}', 'ReceiptController@delete')->name('receipt.delete');
 
+    // Merchant
+    Route::get('/merchants', [MerchantController::class, 'getMerchants'])->name('merchant.index');
+    Route::get('/merchants/create', [MerchantController::class, 'createMerchant'])->name('merchant.create');
 });
 
 Route::middleware(['auth', 'both'])->group(function () {

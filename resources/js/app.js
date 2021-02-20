@@ -1,46 +1,27 @@
-
 /**
  * First we will load all of this project's JavaScript dependencies which
- * includes Vue and other libraries. It is a great starting point when
- * building robust, powerful web applications using Vue and Laravel.
+ * includes React and other helpers. It's a great starting point while
+ * building robust, powerful web applications using React + Laravel.
  */
 
 require('./bootstrap');
+require('react-icons');
+require('react-bootstrap');
 
-import moment from 'moment';
+/**
+ * Next, we will create a fresh React component instance and attach it to
+ * the page. Then, you may begin adding components to this application
+ * or customize the JavaScript scaffolding to fit your unique needs.
+ */
 
-import Vue from 'vue';
-// window.Vue = require('vue');
-window.moment = moment;
+require('./components/Example');
 
-// Filters
-Vue.filter('moment', function (value) {
-    if (!value)  {
-        return '';
-    }
-    
-    value = value.toString();
+// Merchants
 
-    return moment(value).format("DD/MM/YYYY");
-});
+require('./components/Merchants/Table');
 
-Vue.filter('days', function(dateFrom, dateTo) {
-    if (!dateFrom || !dateTo) {
-        return '';
-    }
+// Shared
 
-    dateFrom = dateFrom.toString();
-    dateTo = dateTo.toString();
-
-    return moment(dateTo).diff(moment(dateFrom), 'days');
-});
-
-
-// Components
-Vue.component('invoice-component', require('./components/InvoiceComponent.vue').default);
-Vue.component('example-component', require('./components/ExampleComponent.vue').default);
-Vue.component('puc-component', require('./components/PucComponent.vue').default);
-
-const app = new Vue({
-    el: '#app'
-});
+require('./components/Shared/EmptyResults');
+require('./components/Shared/Paginate');
+require('./components/Shared/Search');

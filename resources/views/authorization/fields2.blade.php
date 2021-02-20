@@ -2,7 +2,7 @@
   <label for="location" class="control-label">Ubicación del paciente</label>
   <select name="location" class="form-control" @isset($show) disabled @endisset>
     @foreach (config('constants.patient.location') as $value => $option)
-      <option value="{{ $value }}" @if (old('location', isset($authorization) ? $authorization->location) == $value) selected @endif>
+      <option value="{{ $value }}" @if (old('location', isset($authorization) ? $authorization->location : '') == $value) selected @endif>
         {{ $option }}
         </option>
     @endforeach
