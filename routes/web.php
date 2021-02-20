@@ -67,6 +67,8 @@ Route::middleware(['auth', 'admin'])->group(function () {
     // Merchant
     Route::get('/merchants', [MerchantController::class, 'getMerchants'])->name('merchant.index');
     Route::get('/merchants/create', [MerchantController::class, 'createMerchant'])->name('merchant.create');
+    // Merchant ajax
+    Route::get('/ajax/merchants', [MerchantController::class, 'getAjaxMerchants']);
 });
 
 Route::middleware(['auth', 'both'])->group(function () {

@@ -2,11 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Facades\AjaxResponse;
 use Illuminate\Http\Request;
 
 class MerchantController extends Controller
 { 
-  public function getMerchants(Request $request)
+  public function getMerchants()
   {
     return view('merchant.index');
   }
@@ -16,4 +17,12 @@ class MerchantController extends Controller
     return view('merchant.create');
   }
 
+  /**
+   * Ajax
+   */
+
+  public function getAjaxMerchants(Request $request)
+  {
+    return AjaxResponse::okPaginated();
+  }
 }

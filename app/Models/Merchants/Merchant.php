@@ -93,7 +93,7 @@ class Merchant extends Model
   public function scopeSearch($query, $request)
   {
     $query->when($request->get('search'), function ($query, $search) {
-      $query->where('name', 'like', "%$search%");
+      $query->where('name', 'like', "$search%");
     });
   }
 
@@ -205,7 +205,7 @@ class Merchant extends Model
 
   protected function getImagePath($fileName)
   {
-    return 'merchants/' . $this->id . '/images/' . $fileName;
+    return 'merchants/images/' . $this->id . '_' . $fileName;
   }
 
   public function storeOrUpdateImage(Request $request)

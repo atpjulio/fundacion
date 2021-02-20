@@ -1,14 +1,16 @@
 .custom-file-input:lang(es) ~ .custom-file-label:after {
-  content: "Examinar" !important; }
+  content: "Examinar" !important;
+}
 
 td.has-error input {
-    border-color: red;
+  border-color: red;
 }
 
-/*
-select .has-error {
-  // border: 1px solid red !important;
+.search-input {
+  max-height: 34px !important;
 }
- */
 
-/*# sourceMappingURL=styles.css.map */
+.search-options {
+  height: 34px !important;
+}
+

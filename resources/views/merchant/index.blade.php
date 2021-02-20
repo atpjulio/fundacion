@@ -27,9 +27,9 @@
                 <h3 class="title"> Empresas registradas en el sistema </h3>
               </div>
             </div>
-            <div class="card-body">
-              <div id="merchant-table">
-                Esto debe ser reemplazado por el componente React
+            <div id="merchant-table">
+              <div class="spinner-border" role="status">
+                <span class="sr-only">Cargando...</span>
               </div>
             </div>
           </div>

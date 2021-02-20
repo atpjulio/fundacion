@@ -5,17 +5,17 @@ export default (props) => {
   const { links, onPageChange = () => {} } = props;
   let paginationLinks = null;
 
-  if (links !== undefined) {
+  if (links) {
     paginationLinks = (
       <div className="d-flex flex-row-reverse">
         <ReactPaginate
-          pageCount={Math.ceil(links.total / links.perPage)}
+          pageCount={links ? Math.ceil(links.total / links.perPage) : 1}
           pageRangeDisplayed={3}
           marginPagesDisplayed={2}
           previousLabel="Anterior"
           nextLabel="Siguiente"
           onPageChange={({ selected }) => onPageChange(selected + 1)}
-          forcePage={links.page - 1}
+          forcePage={links.page ? (links.page - 1) : 0}
           // Bootstrap pagination classes
           containerClassName="pagination pagination-sm"
           pageClassName="page-item"

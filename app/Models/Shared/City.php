@@ -8,6 +8,7 @@ use stdClass;
 
 class City extends Model
 {
+  protected $table = 'new_cities';
   protected $fillable = [
     'state_id',
     'code',

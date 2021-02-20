@@ -62,24 +62,24 @@ class Utilities
     Log::channel('apiErrorlog')->error($message);
   }
 
-  static function webRequestLog()
+  static function ajaxRequestLog()
   {
     try {
       $method = explode('@', class_basename(Route::currentRouteAction()))[1];
-      self::webInfoLog($method . ' - request: ' . json_encode(Request::all()));
+      self::ajaxInfoLog($method . ' - request: ' . json_encode(Request::all()));
     } catch (Exception $e) {
-      self::webErrorLog($e->getMessage());
+      self::ajaxErrorLog($e->getMessage());
     }
   }
 
-  static function webInfoLog($message = '')
+  static function ajaxInfoLog($message = '')
   {
-    Log::channel('webInfolog')->info($message);
+    Log::channel('ajaxInfolog')->info($message);
   }
 
-  static function webErrorLog($message = '')
+  static function ajaxErrorLog($message = '')
   {
-    Log::channel('webErrorlog')->error($message);
+    Log::channel('ajaxErrorlog')->error($message);
   }
 
   static function normalizeString($string)

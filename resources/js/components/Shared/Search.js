@@ -1,15 +1,15 @@
-import React from 'react'
-import { Button, Col, FormControl, InputGroup, Row } from 'react-bootstrap'
-import { GiBroom } from 'react-icons/gi'
+import React from 'react';
+import { Button, Col, FormControl, InputGroup, Row } from 'react-bootstrap';
+import { GiBroom } from 'react-icons/gi';
 import {
   FaAngleLeft,
   FaPlus,
   FaSortAmountDownAlt,
-  FaSortAmountUp
-} from 'react-icons/fa'
-import SelectSearch from 'react-select-search'
+  FaSortAmountUp,
+} from 'react-icons/fa';
+import SelectSearch from 'react-select-search';
 
-export default props => {
+export default (props) => {
   const {
     searchText,
     search,
@@ -21,17 +21,17 @@ export default props => {
     options = [],
     searchPlaceholder = 'Seleccione',
     buttonUrl = '',
-    buttonReturnUrl = ''
-  } = props
+    buttonReturnUrl = '',
+  } = props;
 
-  const handleSearchChange = evt => setSearch(evt.target.value)
+  const handleSearchChange = (evt) => setSearch(evt.target.value);
 
-  const handleCleanSearch = () => setSearch('')
+  const handleCleanSearch = () => setSearch('');
 
   const handleSortDirection = () => {
-    if (sortDirection === 'asc') setSortDirection('desc')
-    else setSortDirection('asc')
-  }
+    if (sortDirection === 'asc') setSortDirection('desc');
+    else setSortDirection('asc');
+  };
 
   return (
     <Row>
@@ -39,12 +39,9 @@ export default props => {
         <InputGroup className="mb-3">
           {buttonReturnUrl.length > 0 ? (
             <InputGroup.Append>
-              <InertiaLink
-                className="btn btn-secondary btn-sm"
-                href={buttonReturnUrl}
-              >
+              <a className="btn btn-secondary" href={buttonReturnUrl}>
                 <FaAngleLeft />
-              </InertiaLink>
+              </a>
             </InputGroup.Append>
           ) : null}
           <FormControl
@@ -52,27 +49,35 @@ export default props => {
             placeholder={searchText}
             aria-label={searchText}
             onChange={handleSearchChange}
+            className="search-input py-0"
             value={search}
           />
           <InputGroup.Append>
-            <Button size="sm" variant="secondary" onClick={handleCleanSearch} style={{ zIndex: 0 }}>
+            <Button
+              variant="secondary"
+              onClick={handleCleanSearch}
+              style={{ zIndex: 0 }}
+              className="search-options"
+            >
               <GiBroom />
             </Button>
           </InputGroup.Append>
-          {sortDirection && <InputGroup.Append>
-            <Button size="sm" variant="dark" onClick={handleSortDirection}>
-              {sortDirection === 'asc' ? (
-                <FaSortAmountDownAlt />
-              ) : (
-                <FaSortAmountUp />
-              )}
-            </Button>
-          </InputGroup.Append>}
+          {sortDirection && (
+            <InputGroup.Append>
+              <Button variant="dark" onClick={handleSortDirection}>
+                {sortDirection === 'asc' ? (
+                  <FaSortAmountDownAlt />
+                ) : (
+                  <FaSortAmountUp />
+                )}
+              </Button>
+            </InputGroup.Append>
+          )}
           {buttonUrl.length > 0 ? (
             <InputGroup.Append>
-              <InertiaLink className="btn btn-primary btn-sm" href={buttonUrl}>
+              <a className="btn btn-primary" href={buttonUrl}>
                 <FaPlus />
-              </InertiaLink>
+              </a>
             </InputGroup.Append>
           ) : null}
         </InputGroup>
@@ -89,5 +94,5 @@ export default props => {
         </Col>
       ) : null}
     </Row>
-  )
-}
+  );
+};

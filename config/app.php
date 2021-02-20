@@ -160,6 +160,10 @@ return [
     App\Providers\EventServiceProvider::class,
     App\Providers\RouteServiceProvider::class,
     Spatie\Permission\PermissionServiceProvider::class,
+    /**
+     * Custom providers
+     */
+    App\Providers\AjaxResponseProvider::class,
   ],
 
   /*
@@ -208,6 +212,7 @@ return [
     'Validator'    => Illuminate\Support\Facades\Validator::class,
     'View'         => Illuminate\Support\Facades\View::class,
     'Excel'        => Maatwebsite\Excel\Facades\Excel::class,
+    'AjaxResponse' => App\Facades\AjaxResponseFacade::class,
   ],
 
 ];
