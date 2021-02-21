@@ -7,7 +7,7 @@
   <div class="title-block">
     <div class="float-left">
       <h3 class="title"> Listado de Empresas</h3>
-      <p class="title-description"> Listado </p>
+      <p class="title-description"> Listado de empresas registradas en el sistema </p>
     </div>
     <div class="float-right animated fadeInRight">
       <a href="{{ route('merchant.create') }}" class="btn btn-pill-left btn-primary btn-lg">

@@ -17,9 +17,9 @@ const Table = () => {
   const loadRecords = useGet({
     url: ajaxUrl,
     params: {
-      filters: { search: search },
+      search: search,
       limit: 30,
-      sortDirection: 'asc',
+      sortDirection: sortDirection,
     },
   });
 
@@ -32,11 +32,8 @@ const Table = () => {
 
   const handlePageChange = (selected) => setPage(selected);
 
-  console.log('records', records);
-
   const tableHeaders = (
     <>
-      <th>#</th>
       <th>Nombre</th>
       <th>Documento</th>
       <th>Acciones</th>
@@ -60,14 +57,13 @@ const Table = () => {
       >
         {records.length < 1 ? (
           <tr>
-            <td colSpan="4">
+            <td colSpan="3">
               <EmptyResults />
             </td>
           </tr>
         ) : (
           records.map((merchant) => (
             <tr key={merchant.id}>
-              <td>{merchant.id}</td>
               <td>{merchant.name}</td>
               <td>
                 {companyDocumentTypes[merchant.dni_type]}: {merchant.dni}
