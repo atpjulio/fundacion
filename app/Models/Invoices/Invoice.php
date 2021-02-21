@@ -13,6 +13,7 @@ class Invoice extends Model
   use ModelResults;
 
   protected $appends  = ['amount'];
+  protected $table    = 'new_invoices';
   protected $fillable = [
     'merchant_id',
     'eps_id',

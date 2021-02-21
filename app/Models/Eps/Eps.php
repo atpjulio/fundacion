@@ -17,6 +17,7 @@ class Eps extends Model
 {
   use HasAddress, ModelResults, ScopeSort;
 
+  protected $table    = 'new_eps';
   protected $fillable = [
     'merchant_id',
     'code',

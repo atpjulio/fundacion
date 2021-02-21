@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Authorization;
 use App\Eps;
-use App\City;
+use App\City as OldCity;
 use App\Entity;
 use App\EpsService;
 use App\Invoice;
@@ -12,242 +12,253 @@ use App\Patient;
 use Illuminate\Http\Request;
 use App\Egress;
 use App\AccountingNote;
+use App\Models\Shared\City;
 use App\Receipt;
 
 class AjaxController extends Controller
 {
-    public function getDayRange($yearMonth)
-    {
-        $year = explode("-", $yearMonth)[0];
-        $month = sprintf("%02d", explode("-", $yearMonth)[1]);
+  public function getDayRange($yearMonth)
+  {
+    $year = explode("-", $yearMonth)[0];
+    $month = sprintf("%02d", explode("-", $yearMonth)[1]);
 
-        $finalDay = \Carbon\Carbon::parse($year."-".$month."-01")->endOfMonth()->format("d");
+    $finalDay = \Carbon\Carbon::parse($year . "-" . $month . "-01")->endOfMonth()->format("d");
 
-        return view('partials._birth_day', compact('finalDay'));
+    return view('partials._birth_day', compact('finalDay'));
+  }
+
+  public function getServices($id)
+  {
+    $services = EpsService::getServices($id);
+    if (count($services) < 1) {
+      $services = [
+        "0" => 'Sin servicios registrados'
+      ];
+    }
+    return view('partials._services', compact('services'));
+  }
+
+  public function getService($id)
+  {
+    $service = EpsService::find($id);
+    $price = 0;
+
+    if (!$service) {
+      return $price;
+    }
+    $price = $service->price;
+
+    return $price;
+  }
+
+  public function getMultipleServices($id)
+  {
+    $services = EpsService::getServices($id);
+    if (count($services) < 1) {
+      $services = [
+        "0" => 'Sin servicios registrados'
+      ];
+    }
+    return view('partials._services_multiple', compact('services'));
+  }
+
+  public function getCompanionServices($id)
+  {
+    $companionServices = EpsService::getServices($id)->pluck('name', 'id');
+    if (count($companionServices) < 1) { }
+    return view('partials._companion_services', compact('companionServices'));
+  }
+
+  public function getCities($stateCode)
+  {
+    $cities = OldCity::getCitiesByStateId($stateCode);
+
+    return view('partials._cities', compact('cities'));
+  }
+
+  public function getEntity($id)
+  {
+    $entity = Entity::find($id);
+
+    return view('partials._entity_fields', compact('entity'));
+  }
+
+  public function getEpsPatients($id)
+  {
+    $patients = Patient::getPatientsForEps($id);
+    return view('partials._eps_patients', compact('patients'));
+  }
+
+  public function getEpsPatientsFiltered($search)
+  {
+    $patients = Patient::searchRecords($search);
+    return view('partials._eps_patients', compact('patients'));
+  }
+
+  public function getPatients($search)
+  {
+    $patients = Patient::searchRecords($search);
+    return view('partials._patients', compact('patients'));
+  }
+
+  public function getInvoicesAmount($data)
+  {
+    $epsId = explode("_", $data)[0];
+    $initialDate = explode("_", $data)[1];
+    $finalDate = explode("_", $data)[2];
+
+    $invoicesAmount = count(Invoice::getInvoicesByEpsId($epsId, $initialDate, $finalDate));
+    return view('partials._invoice_amount', compact('invoicesAmount'));
+  }
+
+  public function getInvoicesAmountNumber($data)
+  {
+    $epsId = explode("_", $data)[0];
+    $initialNumber = explode("_", $data)[1];
+    $finalNumber = explode("_", $data)[2];
+
+    $invoicesAmount = count(Invoice::getInvoicesByEpsIdNumber($epsId, $initialNumber, $finalNumber));
+    return view('partials._invoice_amount', compact('invoicesAmount'));
+  }
+
+  public function getFullAuthorizations($fullSearch)
+  {
+    $search = explode('@', $fullSearch)[0];
+    $authorizations = Authorization::full($search);
+    if (isset(explode('@', $fullSearch)[1])) {
+      $authorizations->setPath('/' . explode('@', $fullSearch)[1]);
     }
 
-    public function getServices($id)
-    {
-        $services = EpsService::getServices($id);
-        if (count($services) < 1) {
-            $services = [
-                "0" => 'Sin servicios registrados'
-            ];
-        }
-        return view('partials._services', compact('services'));
+    return view('partials._authorizations', compact('authorizations', 'search'));
+  }
+
+  public function getGlobalAuthorizations($search)
+  {
+    $authorizations = Authorization::global($search);
+    return view('partials._authorizations_global', compact('authorizations'));
+  }
+
+  public function getClosedAuthorizations($search)
+  {
+    $authorizations = Authorization::close($search);
+    return view('partials._close_authorizations', compact('authorizations'));
+  }
+
+  public function checkPatient($dni)
+  {
+    $patient = Patient::checkIfExists($dni);
+
+    $result = [
+      'exists' => false
+    ];
+
+    if ($patient) {
+      $result['exists'] = true;
     }
+    return $result;
+  }
 
-    public function getService($id)
-    {
-        $service = EpsService::find($id);
-        $price = 0;
+  public function checkAuthorization($code)
+  {
+    $authorization = Authorization::checkIfExists($code);
 
-        if (!$service) {
-            return $price;
-        }
-        $price = $service->price;
+    $result = [
+      'exists' => false
+    ];
 
-        return $price;
+    if ($authorization) {
+      $result['exists'] = true;
     }
+    return $result;
+  }
 
-    public function getMultipleServices($id)
-    {
-        $services = EpsService::getServices($id);
-        if (count($services) < 1) {
-            $services = [
-                "0" => 'Sin servicios registrados'
-            ];
-        }
-        return view('partials._services_multiple', compact('services'));
-    }
+  public function getAuthorization($code)
+  {
+    return Authorization::getByCode($code);
+  }
 
-    public function getCompanionServices($id)
-    {
-        $companionServices = EpsService::getServices($id)->pluck('name', 'id');
-        if (count($companionServices) < 1) {
-        }
-        return view('partials._companion_services', compact('companionServices'));
-    }
+  public function getDailyPrices($initialEpsId)
+  {
+    return view('partials._daily_prices', compact('initialEpsId'));
+  }
 
-    public function getCities($stateCode)
-    {
-        $cities = City::getCitiesByStateId($stateCode);
+  public function newService($epsId)
+  {
+    $eps = Eps::find($epsId);
+    return view('partials._new_service', compact('eps'));
+  }
 
-        return view('partials._cities', compact('cities'));
-    }
+  public function getInvoices($search)
+  {
+    $invoices = Invoice::searchRecords($search);
+    return view('partials._invoices', compact('invoices'));
+  }
 
-    public function getEntity($id)
-    {
-        $entity = Entity::find($id);
+  public function getAuthorizationServices($authorizationCode)
+  {
+    $authorization = Authorization::findByCode($authorizationCode);
+    return view('partials._authorization_services', compact('authorization'));
+  }
 
-        return view('partials._entity_fields', compact('entity'));
-    }
+  public function getInvoiceAuthorizations($invoiceId)
+  {
+    $invoice = Invoice::findOrFail($invoiceId);
+    return view('partials._invoice_multiple_table', compact('invoice'));
+  }
 
-    public function getEpsPatients($id)
-    {
-        $patients = Patient::getPatientsForEps($id);
-        return view('partials._eps_patients', compact('patients'));
-    }
+  public function updateNewInvoice(Request $request)
+  {
+    $invoice = new Invoice();
 
-    public function getEpsPatientsFiltered($search)
-    {
-        $patients = Patient::searchRecords($search);
-        return view('partials._eps_patients', compact('patients'));
-    }
+    $invoice->multiple = 1;
+    $invoice->multiple_codes = $request->get('multiple_codes');
+    $invoice->multiple_days = $request->get('multiple_days');
+    $invoice->multiple_totals = $request->get('multiple_totals');
 
-    public function getPatients($search)
-    {
-        $patients = Patient::searchRecords($search);
-        return view('partials._patients', compact('patients'));
-    }
+    return view('partials._invoice_multiple_table', compact('invoice'));
+  }
 
-    public function getInvoicesAmount($data)
-    {
-        $epsId = explode("_", $data)[0];
-        $initialDate = explode("_", $data)[1];
-        $finalDate = explode("_", $data)[2];
+  public function getEgressesFiltered($search)
+  {
+    $egresses = Egress::searchRecords($search);
+    return view('partials._egresses', compact('egresses'));
+  }
 
-        $invoicesAmount = count(Invoice::getInvoicesByEpsId($epsId, $initialDate, $finalDate));
-        return view('partials._invoice_amount', compact('invoicesAmount'));
-    }
+  public function getAccountingNotesFiltered($search)
+  {
+    $notes = AccountingNote::searchRecords($search);
+    return view('partials._notes', compact('notes'));
+  }
 
-    public function getInvoicesAmountNumber($data)
-    {
-        $epsId = explode("_", $data)[0];
-        $initialNumber = explode("_", $data)[1];
-        $finalNumber = explode("_", $data)[2];
+  public function getReceiptsFiltered($search)
+  {
+    $receipts = Receipt::searchRecords($search);
+    return view('partials._receipts', compact('receipts'));
+  }
 
-        $invoicesAmount = count(Invoice::getInvoicesByEpsIdNumber($epsId, $initialNumber, $finalNumber));
-        return view('partials._invoice_amount', compact('invoicesAmount'));
-    }
+  public function getEgressesAmount($data)
+  {
+    $egressesAmount = count(Egress::getEgressesByDate($data));
+    return view('partials._egress_amount', compact('egressesAmount'));
+  }
 
-    public function getFullAuthorizations($fullSearch)
-    {
-        $search = explode('@', $fullSearch)[0];
-        $authorizations = Authorization::full($search);
-        if (isset(explode('@', $fullSearch)[1])) {
-            $authorizations->setPath('/'.explode('@', $fullSearch)[1]);
-        }
+  public function searchOpenAuthorizations(Request $request)
+  {
+    $search = $request->get('search');
+    $authorizations = Authorization::openForInvoices($search, true);
 
-        return view('partials._authorizations', compact('authorizations', 'search'));
-    }
+    return $authorizations;
+  }
 
-    public function getGlobalAuthorizations($search)
-    {
-        $authorizations = Authorization::global($search);
-        return view('partials._authorizations_global', compact('authorizations'));
-    }
+  /**
+   * New era
+   */
 
-    public function getClosedAuthorizations($search)
-    {
-        $authorizations = Authorization::close($search);
-        return view('partials._close_authorizations', compact('authorizations'));
-    }
+  public function getCitiesForSelect(Request $request, $stateId)
+  {
+    $cities     = City::getForSelect($stateId);
+    $oldCityId  = $request->get('oldCityId');
 
-    public function checkPatient($dni)
-    {
-        $patient = Patient::checkIfExists($dni);
-
-        $result = [
-            'exists' => false
-        ];
-
-        if ($patient) {
-            $result['exists'] = true;
-        }
-        return $result;
-    }
-
-    public function checkAuthorization($code)
-    {
-        $authorization = Authorization::checkIfExists($code);
-
-        $result = [
-            'exists' => false
-        ];
-
-        if ($authorization) {
-            $result['exists'] = true;
-        }
-        return $result;
-    }
-
-    public function getAuthorization($code)
-    {
-        return Authorization::getByCode($code);
-    }
-
-    public function getDailyPrices($initialEpsId)
-    {
-        return view('partials._daily_prices', compact('initialEpsId'));
-    }
-
-    public function newService($epsId)
-    {
-        $eps = Eps::find($epsId);
-        return view('partials._new_service', compact('eps'));
-    }
-
-    public function getInvoices($search)
-    {
-        $invoices = Invoice::searchRecords($search);
-        return view('partials._invoices', compact('invoices'));
-    }
-
-    public function getAuthorizationServices($authorizationCode)
-    {
-        $authorization = Authorization::findByCode($authorizationCode);
-        return view('partials._authorization_services', compact('authorization'));
-    }
-    
-    public function getInvoiceAuthorizations($invoiceId)
-    {
-        $invoice = Invoice::findOrFail($invoiceId);
-        return view('partials._invoice_multiple_table', compact('invoice'));
-    }
-
-    public function updateNewInvoice(Request $request)
-    {
-        $invoice = new Invoice();
-
-        $invoice->multiple = 1;
-        $invoice->multiple_codes = $request->get('multiple_codes');
-        $invoice->multiple_days = $request->get('multiple_days');
-        $invoice->multiple_totals = $request->get('multiple_totals');
-
-        return view('partials._invoice_multiple_table', compact('invoice'));
-    }
-    
-    public function getEgressesFiltered($search)
-    {
-        $egresses = Egress::searchRecords($search);
-        return view('partials._egresses', compact('egresses'));
-    }
-
-    public function getAccountingNotesFiltered($search)
-    {
-        $notes = AccountingNote::searchRecords($search);
-        return view('partials._notes', compact('notes'));
-    }
-
-    public function getReceiptsFiltered($search)
-    {
-        $receipts = Receipt::searchRecords($search);
-        return view('partials._receipts', compact('receipts'));
-    }
-
-    public function getEgressesAmount($data)
-    {
-        $egressesAmount = count(Egress::getEgressesByDate($data));
-        return view('partials._egress_amount', compact('egressesAmount'));
-    }
-
-    public function searchOpenAuthorizations(Request $request)
-    {
-        $search = $request->get('search');
-        $authorizations = Authorization::openForInvoices($search, true);
-        
-        return $authorizations;
-    }
-
+    return view('partials._address-cities', compact('cities', 'oldCityId'));
+  }
 }

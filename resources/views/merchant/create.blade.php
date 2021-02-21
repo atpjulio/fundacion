@@ -12,6 +12,7 @@
 
   </style> --}}
 @endpush
+
 @section('content')
   <div class="title-block">
     <div class="float-left">
@@ -25,6 +26,34 @@
       </a>
     </div>
   </div>
+
+  <form action="{{ route('merchant.store') }}" method="POST">
+    @csrf
+    <section class="section">
+      <div class="row">
+        <div class="col-md-6">
+          <div class="card">
+            <div class="card-block">
+              @include('merchant.fields')
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="card">
+            <div class="card-block">
+              @include('partials._address')
+              @include('partials._phone')
+            </div>
+          </div>
+        </div>
+        <div class="col-md-12">
+          <div class="text-center">
+            <button type="submit" class="btn btn-oval btn-primary">Guardar</button>
+          </div>
+        </div>
+      </div>
+    </section>
+  </form>
 @endsection
 
 @push('scripts')

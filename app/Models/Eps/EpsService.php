@@ -14,6 +14,7 @@ class EpsService extends Model
 {
   use Authorizable, ScopeActive, ModelResults;
 
+  protected $table    = 'new_eps_services';
   protected $fillable = [
     'eps_id',
     'code',

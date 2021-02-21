@@ -117,7 +117,7 @@ class Merchant extends Model
     return $this->paginateResult($request, $query);
   }
 
-  protected function storeRecord(Request $request)
+  protected function storeRecord($request)
   {
     $merchant = new Merchant($request->only($this->fillable));
 

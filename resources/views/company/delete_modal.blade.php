@@ -7,7 +7,7 @@
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
-      <form method="POST" action="{{ route('company.destroy', ['id' => $company->id]) }}">
+      <form method="POST" action="{{ route('company.destroy', ['company' => $company->id]) }}">
         @csrf
         <input type="hidden" name="_method" value="DELETE">
         <div class="modal-body">

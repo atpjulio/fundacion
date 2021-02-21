@@ -11,6 +11,7 @@
 |
 */
 
+use App\Http\Controllers\AjaxController;
 use App\Http\Controllers\MerchantController;
 
 Route::view('/', 'auth.login');
@@ -67,6 +68,8 @@ Route::middleware(['auth', 'admin'])->group(function () {
     // Merchant
     Route::get('/merchants', [MerchantController::class, 'getMerchants'])->name('merchant.index');
     Route::get('/merchants/create', [MerchantController::class, 'createMerchant'])->name('merchant.create');
+    Route::post('/merchants', [MerchantController::class, 'storeMerchant'])->name('merchant.store');
+    Route::get('/merchants/{merchantId}/edit', [MerchantController::class, 'editMerchant'])->name('merchant.edit');
     // Merchant ajax
     Route::get('/ajax/merchants', [MerchantController::class, 'getAjaxMerchants']);
 });
@@ -131,6 +134,8 @@ Route::middleware(['auth', 'both'])->group(function () {
     Route::get('/check-authorization/{code}', 'AjaxController@checkAuthorization');
     Route::get('/get-authorization/{code}', 'AjaxController@getAuthorization');
     Route::post('/open-authorizations', 'AjaxController@searchOpenAuthorizations');
+    // New era
+    Route::get('/ajax/states/{stateId}/cities', [AjaxController::class, 'getCitiesForSelect']);
 });
 
 Auth::routes();

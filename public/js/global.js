@@ -55,6 +55,13 @@ function fillCities(id)
     });
 }
 
+function getCitiesForSelect(stateId, oldCityId)
+{
+    $.get('/ajax/states/' + stateId + '/cities?oldCityId=' + oldCityId, function (data, status) {
+        $('#dynamic-cities').html(data);
+    });
+}
+
 function fillPatients(id)
 {
     $.get("/get-eps-patients/" + id, function (data, status) {

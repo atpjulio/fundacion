@@ -13,9 +13,9 @@ class Patient extends Participant
 {
   use ModelResults, ScopeSort;
 
-  protected $table = 'patients';
-  protected $with  = 'data';
-  private $sortField = 'id';
+  protected $table     = 'new_patients';
+  protected $with      = 'data';
+  private   $sortField = 'id';
 
   /**
    * Attributes

@@ -87,8 +87,12 @@ class State extends Model
       $query->where('country_iso2', $countryIso2);
     }
 
-    return $query->orderBy($this->sortField)
-      ->get()
-      ->prepend($defaultOption);
+    $result = $query->orderBy($this->sortField)
+      ->get();
+
+    if (!empty($defaultText)) {
+      return $result->prepend($defaultOption);
+    }
+    return $result;
   }
 }

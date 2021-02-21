@@ -1,10 +1,10 @@
 <div class="form-group  @if($errors->has('address')) has-error @endif">
   <label for="address" class="control-label">Dirección</label>
-  <input type="text" name="address" maxlength="50" placeholder="Dirección" value="{{ old('address', isset($address) ? $address->address : '') }}">
+  <input type="text" class="form-control underlined" name="address" maxlength="50" placeholder="Dirección" value="{{ old('address', isset($address) ? $address->address : '') }}">
 </div>
 <div class="form-group  @if($errors->has('address2')) has-error @endif">
   <label for="address2" class="control-label">Dirección (continuación - opcional)</label>
-  <input type="text" name="address2" maxlength="50" placeholder="Continuación de la dirección" value="{{ old('address2', isset($address2) ? $address->address2 : '') }}">
+  <input type="text" class="form-control underlined" name="address2" maxlength="50" placeholder="Continuación de la dirección" value="{{ old('address2', isset($address2) ? $address->address2 : '') }}">
 </div>
 <div class="form-group  @if($errors->has('state')) has-error @endif">
   <label for="state" class="control-label">Departamento</label>

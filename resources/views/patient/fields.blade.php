@@ -17,7 +17,6 @@
         {{ $option }}</option>
     @endforeach
   </select>
-
 </div>
 <div class="form-group @if ($errors->has('dni')) has-error @endif">
   <label for="dni" class="control-label">Número de documento</label>

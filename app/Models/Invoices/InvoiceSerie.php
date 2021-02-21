@@ -48,7 +48,7 @@ class InvoiceSerie extends Model
 		$serie = new InvoiceSerie($request->all());
 
 		$serie->name        = $request->get('name') ?? 'Primera serie de facturas';
-		$serie->status      = $request->get('status') ?? config('constants.status.active');
+		$serie->status      = $request->get('status') ?? config('enum.status.active');
 		$serie->merchant_id = $merchantId;
 
 		$serie->save();
@@ -72,7 +72,7 @@ class InvoiceSerie extends Model
 		$this->query()
 			->where('id', '<>', $this->id)
 			->where('merchant_id', $this->merchant_id)
-			->update(['status' => config('constants.status.inactive')]);
+			->update(['status' => config('enum.status.inactive')]);
 	}
 
 	public function increaseNumber()
