@@ -17,12 +17,8 @@ require('react-select-search');
 
 require('./components/Example');
 
+// Invoice series
+require('./components/Invoices/Series/Table');
+
 // Merchants
-
 require('./components/Merchants/Table');
-
-// Shared
-
-require('./components/Shared/EmptyResults');
-require('./components/Shared/Paginate');
-require('./components/Shared/Search');

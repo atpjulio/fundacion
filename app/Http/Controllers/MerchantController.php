@@ -44,6 +44,26 @@ class MerchantController extends Controller
     return view('merchant.edit', compact('merchant'));
   }
 
+  /**
+   * Invoice series
+   */
+
+  public function getInvoiceSeries($merchantId)
+  {
+    $merchant = Merchant::find($merchantId);
+    if (!$merchant) {
+      Session::flash('message_danger', 'Información de empresa no encontrada');
+      return redirect()->route('merchant.index');
+    }
+
+    return view('invoice.series.index', compact('merchant'));
+  }
+
+  public function createInvoiceSerie(Merchant $merchant)
+  {
+    dd('Vamos bien');
+    return view('invoice.series.index');
+  }
 
   /**
    * Ajax
@@ -54,5 +74,12 @@ class MerchantController extends Controller
     $merchants = Merchant::getLatestRecords($request);
 
     return AjaxResponse::okPaginated($merchants, $request->get('links'));
+  }
+
+  public function deleteAjaxMerchant($merchantId)
+  {
+    Merchant::deleteRecord($merchantId);
+
+    return AjaxResponse::okPaginated();
   }
 }

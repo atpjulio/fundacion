@@ -70,8 +70,11 @@ Route::middleware(['auth', 'admin'])->group(function () {
     Route::get('/merchants/create', [MerchantController::class, 'createMerchant'])->name('merchant.create');
     Route::post('/merchants', [MerchantController::class, 'storeMerchant'])->name('merchant.store');
     Route::get('/merchants/{merchantId}/edit', [MerchantController::class, 'editMerchant'])->name('merchant.edit');
+    Route::get('/merchants/{merchantId}/invoices/series', [MerchantController::class, 'getInvoiceSeries'])->name('merchant.invoice.serie.index');
+    Route::get('/merchants/{merchantId}/invoices/series/create', [MerchantController::class, 'createInvoiceSerie'])->name('merchant.invoice.serie.create');
     // Merchant ajax
     Route::get('/ajax/merchants', [MerchantController::class, 'getAjaxMerchants']);
+    Route::delete('/ajax/merchants/{merchantId}', [MerchantController::class, 'deleteAjaxMerchant']);
 });
 
 Route::middleware(['auth', 'both'])->group(function () {

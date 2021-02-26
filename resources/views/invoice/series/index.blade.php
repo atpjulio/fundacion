@@ -7,10 +7,10 @@
   <div class="title-block">
     <div class="float-left">
       <h3 class="title"> Listado de Series de Facturas</h3>
-      <p class="title-description"> Listado </p>
+      <p class="title-description"> {{ $merchant->name }} </p>
     </div>
     <div class="float-right animated fadeInRight">
-      <a href="{{ route('invoice.serie.create') }}" class="btn btn-pill-left btn-primary btn-lg">
+      <a href="{{ route('merchant.invoice.serie.create', ['merchantId' => $merchant->id]) }}" class="btn btn-pill-left btn-primary btn-lg">
         <i class="fa fa-plus"></i>
         Nueva Serie
       </a>
@@ -25,6 +25,11 @@
             <div class="card-title-block">
               <div class="float-left">
                 <h3 class="title"> Series de factura registradas en el sistema </h3>
+              </div>
+            </div>
+            <div id="invoice-serie-table">
+              <div class="loader" role="status">
+                <span class="sr-only">Cargando...</span>
               </div>
             </div>
           </div>

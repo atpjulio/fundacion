@@ -28,7 +28,7 @@
               </div>
             </div>
             <div id="merchant-table">
-              <div class="spinner-border" role="status">
+              <div class="loader" role="status">
                 <span class="sr-only">Cargando...</span>
               </div>
             </div>
