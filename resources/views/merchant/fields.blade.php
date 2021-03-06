@@ -31,6 +31,19 @@
     value="{{ old('alias', isset($merchant) ? $merchant->alias : '') }}" placeholder="Nombre corto o alias">
 </div>
 
+@isset($merchant)    
+<div class="form-group @if ($errors->has('image')) has-error @endif">
+  <label for="image" class="control-label">Imagen (opcional)</label>
+  <div class="text-center">
+    <img src="{{ asset($merchant->imageUrl ?? '/img/no-image.png') }}" class="img-thumbnail w-50 mb-4" id="customFileImage">
+  </div>
+  <div class="custom-file">
+    <input type="file" class="custom-file-input" id="customFileLang" lang="es" name="file">
+    <label class="custom-file-label form-control-file" for="customFileLang">Seleccionar archivo</label>
+  </div>
+</div>
+@endisset
+
 @if (!isset($merchant))
   <div class="row">
     <div class="col-md-6">
@@ -77,3 +90,7 @@
     </div>
   </div>
 @endif
+
+@push('scripts')
+  <script src="{{ asset('js/shared/fileInput.js') }}"></script>
+@endpush

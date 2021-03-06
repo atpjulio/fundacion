@@ -27,7 +27,7 @@
     </div>
   </div>
 
-  <form action="{{ route('merchant.update', ['merchant' => $merchant]) }}" method="POST">
+  <form action="{{ route('merchant.update', ['merchant' => $merchant]) }}" method="POST" enctype="multipart/form-data">
     <input type="hidden" name="_method" value="PUT">
     @csrf
     <section class="section">

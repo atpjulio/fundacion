@@ -145,7 +145,6 @@ class Merchant extends Model
   {
     $merchant->update($request->only($this->fillable));
     $merchant->storeOrUpdateAddress($request);
-    // $merchant->updateSerie($request);
     $merchant->storeOrUpdateImage($request);
 
     return $merchant;

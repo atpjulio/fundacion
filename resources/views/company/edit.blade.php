@@ -13,7 +13,7 @@
       </a>
     </div>
   </div>
-  <form method="POST" action="{{ route('company.update', ['id' => $company->id]) }}" enctype="multipart/form-data">
+  <form method="POST" action="{{ route('company.update', ['company' => $company]) }}" enctype="multipart/form-data">
     @csrf
     <input type="hidden" name="_method" value="PUT">
     <section class="section">
