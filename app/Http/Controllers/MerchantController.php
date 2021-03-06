@@ -67,27 +67,6 @@ class MerchantController extends Controller
   }
 
   /**
-   * Invoice series
-   */
-
-  public function getInvoiceSeries($merchantId)
-  {
-    $merchant = Merchant::find($merchantId);
-    if (!$merchant) {
-      Session::flash('message_danger', 'Información de empresa no encontrada');
-      return redirect()->route('merchant.index');
-    }
-
-    return view('invoice.series.index', compact('merchant'));
-  }
-
-  public function createInvoiceSerie(Merchant $merchant)
-  {
-    dd('Vamos bien');
-    return view('invoice.series.index');
-  }
-
-  /**
    * Ajax
    */
 

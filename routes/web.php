@@ -12,6 +12,7 @@
 */
 
 use App\Http\Controllers\AjaxController;
+use App\Http\Controllers\InvoiceSerieController;
 use App\Http\Controllers\MerchantController;
 
 Route::view('/', 'auth.login');
@@ -71,11 +72,13 @@ Route::middleware(['auth', 'admin'])->group(function () {
     Route::post('/merchants', [MerchantController::class, 'storeMerchant'])->name('merchant.store');
     Route::get('/merchants/{merchant}/edit', [MerchantController::class, 'editMerchant'])->name('merchant.edit');
     Route::put('/merchants/{merchant}', [MerchantController::class, 'updateMerchant'])->name('merchant.update');
-    Route::get('/merchants/{merchantId}/invoices/series', [MerchantController::class, 'getInvoiceSeries'])->name('merchant.invoice.serie.index');
-    Route::get('/merchants/{merchantId}/invoices/series/create', [MerchantController::class, 'createInvoiceSerie'])->name('merchant.invoice.serie.create');
+    Route::get('/merchants/{merchantId}/invoices/series', [InvoiceSerieController::class, 'getInvoiceSeries'])->name('merchant.invoice.serie.index');
+    Route::get('/merchants/{merchantId}/invoices/series/create', [InvoiceSerieController::class, 'createInvoiceSerie'])->name('merchant.invoice.serie.create');
     // Merchant ajax
     Route::get('/ajax/merchants', [MerchantController::class, 'getAjaxMerchants']);
     Route::delete('/ajax/merchants/{merchantId}', [MerchantController::class, 'deleteAjaxMerchant']);
+    Route::get('/ajax/merchants/{merchantId}/invoices/series', [InvoiceSerieController::class, 'getAjaxInvoiceSeries']);
+    Route::delete('/ajax/merchants/{merchantId}/invoices/series/{serieId}', [InvoiceSerieController::class, 'deleteAjaxInvoiceSerie']);
 });
 
 Route::middleware(['auth', 'both'])->group(function () {

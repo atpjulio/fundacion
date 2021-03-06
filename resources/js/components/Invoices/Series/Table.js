@@ -3,16 +3,18 @@ import ReactDOM from 'react-dom';
 import useGet from '../../Hooks/useGet';
 import EmptyResults from '../../Shared/EmptyResults';
 import TablePaginate from '../../Shared/TablePaginate';
-import { companyDocumentTypes } from '../../Config/constants';
 import Search from '../../Shared/Search';
 import Actions from './TableAction';
 import DeleteModal from '../../Shared/DeleteModal';
 import swal from 'sweetalert';
 import axios from 'axios';
+import Status from '../../Shared/Status';
 
 const Table = () => {
-  const ajaxUrl = '/ajax/merchants';
-  const baseUrl = '/merchants';
+  const merchantId = window?.location?.pathname.split('/')[2];
+
+  const ajaxUrl = `/ajax/merchants/${merchantId}/invoices/series`;
+  const baseUrl = `/merchants/${merchantId}/invoices/series`;
   const [records, setRecords] = useState([]);
   const [links, setLinks] = useState(undefined);
   const [search, setSearch] = useState('');
@@ -66,7 +68,9 @@ const Table = () => {
   const tableHeaders = (
     <>
       <th>Nombre</th>
-      <th>Documento</th>
+      <th>Resolución</th>
+      <th>Numeración</th>
+      <th>Estado</th>
       <th>Acciones</th>
     </>
   );
@@ -95,20 +99,22 @@ const Table = () => {
       >
         {records.length < 1 ? (
           <tr>
-            <td colSpan="3">
+            <td colSpan="4">
               <EmptyResults />
             </td>
           </tr>
         ) : (
-          records.map((merchant) => (
-            <tr key={merchant.id}>
-              <td>{merchant.name}</td>
+          records.map((serie) => (
+            <tr key={serie.id}>
+              <td>{serie.name}</td>
+              <td>{serie.resolution ?? '-'}</td>
               <td>
-                {companyDocumentTypes[merchant.dni_type]}: {merchant.dni}
+              {serie.prefix + ' ' + serie.number}
               </td>
+              <td><Status status={serie.status} /></td>
               <td>
                 <Actions
-                  record={merchant}
+                  record={serie}
                   handleShowDeleteModal={handleShowDeleteModal}
                   handleEdit={handleEdit}
                 />

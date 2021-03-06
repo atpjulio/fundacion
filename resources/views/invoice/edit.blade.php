@@ -9,7 +9,6 @@
         margin: 1.75rem auto;
       }
     }
-
   </style>
 @endpush
 

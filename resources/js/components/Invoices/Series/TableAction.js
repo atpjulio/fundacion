@@ -20,17 +20,6 @@ export default props => {
       </OverlayTrigger>
       <OverlayTrigger
         placement="top"
-        overlay={<Tooltip id={'button-series-' + record.id}>Series de factura</Tooltip>}
-      >
-        <span
-          className="text-success delete-button ml-2"
-          onClick={() => window.location.href = `/merchants/${record.id}/invoices/series`}
-        >
-          <FaWpforms />
-        </span>
-      </OverlayTrigger>{' '}
-      <OverlayTrigger
-        placement="top"
         overlay={<Tooltip id={'button-delete-' + record.id}>Borrar</Tooltip>}
       >
         <span

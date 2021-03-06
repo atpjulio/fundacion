@@ -3,12 +3,15 @@
 namespace App\Models\Invoices;
 
 use App\Models\Merchants\Merchant;
-use App\Traits\ScopeActive;
+use App\Traits\ModelResults;
+use App\Traits\ScopeSearch;
+use App\Traits\ScopeSort;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Http\Request;
 
 class InvoiceSerie extends Model
 {
-	use ScopeActive;
+	use ScopeSearch, ScopeSort, ModelResults;
 
 	protected $fillable = [
 		'merchant_id',
@@ -21,6 +24,7 @@ class InvoiceSerie extends Model
 		'number_to',
 		'status',
 	];
+	private $sortField = 'name';
 
 	/**
 	 * Attributes
@@ -42,6 +46,15 @@ class InvoiceSerie extends Model
 	/**
 	 * Methods
 	 */
+
+	protected function getLatestRecords(Request $request, $merchantId)
+  {
+    $query = $this->where('merchant_id', $merchantId)
+      ->search(['name'], $request->get('search'))
+      ->sort($request);
+
+    return $this->paginateResult($request, $query);
+  }
 
 	protected function storeRecord($request, $merchantId)
 	{
@@ -66,6 +79,12 @@ class InvoiceSerie extends Model
 
 		return $serie;
 	}
+
+	protected function deleteRecord($id)
+  {
+    $this->where('id', $id)
+      ->delete();
+  }
 
 	public function setOtherStatusToInactive()
 	{
