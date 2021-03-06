@@ -2,6 +2,8 @@
 
 namespace App\Providers;
 
+use App\Models\Invoices\InvoiceSerie;
+use App\Observers\InvoiceSerieObserver;
 use App\Services\CustomValidationRules;
 use Illuminate\Routing\UrlGenerator;
 use Illuminate\Support\Facades\Schema;
@@ -25,6 +27,8 @@ class AppServiceProvider extends ServiceProvider
     Validator::resolver(function ($translator, $data, $rules, $messages) {
       return new CustomValidationRules($translator, $data, $rules, $messages);
     });
+
+    InvoiceSerie::observe(InvoiceSerieObserver::class);
   }
 
   /**

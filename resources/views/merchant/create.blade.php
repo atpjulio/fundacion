@@ -1,18 +1,5 @@
 @extends('layouts.backend.template')
 
-@push('styles')
-  {{-- <link rel="stylesheet" href="{{ asset('css/dataTables.bootstrap.min.css') }}">
-  <style>
-    @media only screen and (min-width: 576px) {
-      .modal-dialog {
-        max-width: 70% !important;
-        margin: 1.75rem auto;
-      }
-    }
-
-  </style> --}}
-@endpush
-
 @section('content')
   <div class="title-block">
     <div class="float-left">
@@ -55,6 +42,3 @@
     </section>
   </form>
 @endsection
-
-@push('scripts')
-@endpush

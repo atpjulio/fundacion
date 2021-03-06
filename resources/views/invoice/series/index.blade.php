@@ -10,7 +10,7 @@
       <p class="title-description"> {{ $merchant->name }} </p>
     </div>
     <div class="float-right animated fadeInRight">
-      <a href="{{ route('merchant.invoice.serie.create', ['merchantId' => $merchant->id]) }}" class="btn btn-pill-left btn-primary btn-lg">
+      <a href="{{ route('invoice.serie.create', ['merchantId' => $merchant->id]) }}" class="btn btn-pill-left btn-primary btn-lg">
         <i class="fa fa-plus"></i>
         Nueva Serie
       </a>
