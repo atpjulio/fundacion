@@ -72,7 +72,8 @@ class InvoiceSerie extends Model
 	protected function updateRecord($request, $merchantId, $serieId)
 	{
 		$serie = $this->where('merchant_id', $merchantId)
-			->firstOrFail($serieId);
+			->where('id', $serieId)
+			->firstOrFail();
 
 		$serie->fill($request->all());
 		$serie->save();

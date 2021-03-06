@@ -141,8 +141,10 @@ class Merchant extends Model
     return $merchant;
   }
 
-  protected function updateRecord($request, $merchant)
+  protected function updateRecord($request, $merchantId)
   {
+    $merchant = $this->findOrFail($merchantId);
+
     $merchant->update($request->only($this->fillable));
     $merchant->storeOrUpdateAddress($request);
     $merchant->storeOrUpdateImage($request);

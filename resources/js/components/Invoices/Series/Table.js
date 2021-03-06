@@ -61,8 +61,8 @@ const Table = () => {
     swal('¡Bien hecho!', 'Serie borrada exitosamente', 'success')
   }
 
-  const handleEdit = merchant => {
-    console.log('A editar la serie', merchant)
+  const handleEdit = serie => {
+    return window.location.href = `/merchants/${merchantId}/invoices/series/${serie.id}/edit`;
   }
 
   const tableHeaders = (

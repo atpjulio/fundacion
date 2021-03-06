@@ -59,6 +59,10 @@ const Table = () => {
     swal('¡Bien hecho!', 'Empresa borrada exitosamente', 'success')
   }
 
+  const handleEdit = merchant => {
+    return window.location.href = `/merchants/${merchant.id}/edit`;
+  }
+
   const tableHeaders = (
     <>
       <th>Nombre</th>
@@ -106,6 +110,7 @@ const Table = () => {
                 <Actions
                   record={merchant}
                   handleShowDeleteModal={handleShowDeleteModal}
+                  handleEdit={handleEdit}
                 />
               </td>
             </tr>

@@ -13,7 +13,7 @@ export default props => {
       >
         <span
           className="text-info delete-button"
-          onClick={() => window.location.href = `/merchants/${record.id}/edit`}
+          onClick={() => handleEdit(record)}
         >
           <FaPencilAlt />
         </span>

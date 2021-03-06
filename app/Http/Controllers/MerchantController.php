@@ -40,8 +40,13 @@ class MerchantController extends Controller
     return redirect()->route('merchant.index');
   }
 
-  public function editMerchant(Merchant $merchant)
+  public function editMerchant($merchantId)
   {
+    $merchant = Merchant::find($merchantId);
+    if (!$merchant) {
+      Session::flash('message_danger', 'Información de empresa no encontrada');
+      return redirect()->route('merchant.index');
+    }
     $merchant->load('address');
 
     $address = $merchant->address;
@@ -58,9 +63,9 @@ class MerchantController extends Controller
     return view('merchant.edit', compact('merchant', 'states', 'cities'));
   }
 
-  public function updateMerchant(UpdateMerchantRequest $request, Merchant $merchant)
+  public function updateMerchant(UpdateMerchantRequest $request, $merchantId)
   {
-    Merchant::updateRecord($request, $merchant);
+    Merchant::updateRecord($request, $merchantId);
 
     Session::flash('message', 'Empresa actualizada exitosamente');
     return redirect()->route('merchant.index');

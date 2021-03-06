@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Facades\AjaxResponse;
 use App\Http\Requests\StoreInvoiceSerieRequest;
+use App\Http\Requests\UpdateInvoiceSerieRequest;
 use App\Models\Invoices\InvoiceSerie;
 use App\Models\Merchants\Merchant;
 use Illuminate\Http\Request;
@@ -37,6 +38,29 @@ class InvoiceSerieController extends Controller
     InvoiceSerie::storeRecord($request, $merchantId);
 
     Session::flash('message', 'Serie de factura guardada exitosamente');
+    return redirect()->route('invoice.serie.index', ['merchantId' => $merchantId]);
+  }
+
+  public function editInvoiceSerie($merchantId, $serieId)
+  {
+    $merchant = Merchant::find($merchantId);
+    if (!$merchant) {
+      Session::flash('message_danger', 'Información de empresa no encontrada');
+      return redirect()->route('merchant.index');
+    }
+    $serie = InvoiceSerie::find($serieId);
+    if (!$serie) {
+      Session::flash('message_danger', 'Información de serie no encontrada');
+      return redirect()->route('invoice.serie.index', ['merchantId' => $merchantId]);
+    }
+    return view('invoice.series.edit', compact('merchant', 'serie'));
+  }
+
+  public function updateInvoiceSerie(UpdateInvoiceSerieRequest $request, $merchantId, $serieId)
+  {
+    InvoiceSerie::updateRecord($request, $merchantId, $serieId);
+
+    Session::flash('message', 'Serie de factura actualizada exitosamente');
     return redirect()->route('invoice.serie.index', ['merchantId' => $merchantId]);
   }
 
