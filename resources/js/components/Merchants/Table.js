@@ -59,10 +59,6 @@ const Table = () => {
     swal('¡Bien hecho!', 'Empresa borrada exitosamente', 'success')
   }
 
-  const handleEdit = merchant => {
-    console.log('A editar el merchant', merchant)
-  }
-
   const tableHeaders = (
     <>
       <th>Nombre</th>
@@ -110,7 +106,6 @@ const Table = () => {
                 <Actions
                   record={merchant}
                   handleShowDeleteModal={handleShowDeleteModal}
-                  handleEdit={handleEdit}
                 />
               </td>
             </tr>

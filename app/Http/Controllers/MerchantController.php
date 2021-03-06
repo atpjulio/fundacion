@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Facades\AjaxResponse;
 use App\Http\Requests\StoreMerchantRequest;
+use App\Http\Requests\UpdateMerchantRequest;
 use App\Models\Merchants\Merchant;
 use App\Models\Shared\State;
 use Illuminate\Http\Request;
@@ -41,7 +42,28 @@ class MerchantController extends Controller
 
   public function editMerchant(Merchant $merchant)
   {
-    return view('merchant.edit', compact('merchant'));
+    $merchant->load('address');
+
+    $address = $merchant->address;
+
+    $states = State::getForSelect(config('constants.default.country'));
+    
+    $defaultOption = new stdClass();
+
+    $defaultOption->value = 0;
+    $defaultOption->name  = 'Seleccione';
+
+    $cities = collect([$defaultOption]);
+
+    return view('merchant.edit', compact('merchant', 'states', 'cities'));
+  }
+
+  public function updateMerchant(UpdateMerchantRequest $request, Merchant $merchant)
+  {
+    Merchant::updateRecord($request, $merchant);
+
+    Session::flash('message', 'Empresa actualizada exitosamente');
+    return redirect()->route('merchant.index');
   }
 
   /**
