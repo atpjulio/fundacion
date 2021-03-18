@@ -3,6 +3,8 @@
 namespace App\Providers;
 
 use App\Models\Invoices\InvoiceSerie;
+use App\Models\Patients\Companion;
+use App\Observers\CompanionObserver;
 use App\Observers\InvoiceSerieObserver;
 use App\Services\CustomValidationRules;
 use Illuminate\Routing\UrlGenerator;
@@ -29,6 +31,7 @@ class AppServiceProvider extends ServiceProvider
     });
 
     InvoiceSerie::observe(InvoiceSerieObserver::class);
+    Companion::observe(CompanionObserver::class);
   }
 
   /**

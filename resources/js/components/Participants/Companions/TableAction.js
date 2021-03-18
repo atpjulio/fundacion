@@ -18,7 +18,7 @@ export default props => {
           <FaPencilAlt />
         </span>
       </OverlayTrigger>
-      <OverlayTrigger
+      {/* <OverlayTrigger
         placement="top"
         overlay={<Tooltip id={'button-series-' + record.id}>Series de factura</Tooltip>}
       >
@@ -28,7 +28,7 @@ export default props => {
         >
           <FaWpforms />
         </span>
-      </OverlayTrigger>{' '}
+      </OverlayTrigger>{' '} */}
       <OverlayTrigger
         placement="top"
         overlay={<Tooltip id={'button-delete-' + record.id}>Borrar</Tooltip>}

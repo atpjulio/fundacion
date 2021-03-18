@@ -19,8 +19,8 @@ class CreateMerchantsTable extends Migration
       $table->string('dni', 15);
       $table->string('name')->index();
       $table->string('alias', 100)->nullable();
-      $table->string('phone1')->nullable();
-      $table->string('phone2')->nullable();
+      $table->string('phone1', 20)->nullable();
+      $table->string('phone2', 20)->nullable();
       $table->string('image')->nullable();
       $table->timestamps();
     });

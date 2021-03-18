@@ -7,7 +7,7 @@
       <p class="title-description"> Listado de acompañantes registrados en el sistema </p>
     </div>
     <div class="float-right animated fadeInRight">
-      <a href="{{ route('merchant.create') }}" class="btn btn-pill-left btn-primary btn-lg">
+      <a href="{{ route('companion.create') }}" class="btn btn-pill-left btn-primary btn-lg">
         <i class="fa fa-plus"></i>
         Nuevo Acompañante
       </a>

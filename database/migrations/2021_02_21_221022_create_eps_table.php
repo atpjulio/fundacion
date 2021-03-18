@@ -23,8 +23,8 @@ class CreateEpsTable extends Migration
       $table->string('alias')->nullable();
       $table->string('contract_number')->nullable();
       $table->string('policy')->nullable();
-      $table->string('phone1')->nullable();
-      $table->string('phone2')->nullable();
+      $table->string('phone1', 20)->nullable();
+      $table->string('phone2', 20)->nullable();
       $table->timestamps();
 
       $table->foreign('merchant_id')->references('id')->on('merchants')

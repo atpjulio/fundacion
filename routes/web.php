@@ -75,7 +75,6 @@ Route::middleware(['auth', 'admin'])->group(function () {
     Route::get('/new/eps/{epsId}/edit', [NewEpsController::class, 'editEps'])->name('new.eps.edit');
     Route::put('/new/eps/{epsId}', [NewEpsController::class, 'updateEps'])->name('new.eps.update');
     // Eps ajax
-    Route::get('/ajax/eps', [NewEpsController::class, 'getAjaxEpss']);
     Route::delete('/ajax/eps/{epsId}', [NewEpsController::class, 'deleteAjaxEps']);
 
     // Merchant
@@ -163,9 +162,17 @@ Route::middleware(['auth', 'both'])->group(function () {
 
     // Companions
     Route::get('/companions', [ParticipantController::class, 'getCompanions'])->name('companion.index');
+    Route::get('/companions/create', [ParticipantController::class, 'createCompanion'])->name('companion.create');
+    Route::post('/companions', [ParticipantController::class, 'storeCompanion'])->name('companion.store');
+    Route::get('/companions/{companionId}/edit', [ParticipantController::class, 'editCompanion'])->name('companion.edit');
+    Route::put('/companions/{companionId}', [ParticipantController::class, 'updateCompanion'])->name('companion.update');
     // Companion ajax
     Route::get('/ajax/companions', [ParticipantController::class, 'getAjaxCompanions']);
     Route::delete('/ajax/companions/{companionId}', [ParticipantController::class, 'deleteAjaxCompanion']);
+
+    // Eps ajax
+    Route::get('/ajax/eps', [NewEpsController::class, 'getAjaxEpss']);
+
 });
 
 Auth::routes();
