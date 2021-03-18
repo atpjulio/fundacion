@@ -181,7 +181,7 @@ class Merchant extends Model
     $defaultOption = new stdClass();
 
     $defaultOption->value = 0;
-    $defaultOption->name = $defaultText;
+    $defaultOption->name  = $defaultText;
 
     $query = $this->select('id as value', 'name');
 

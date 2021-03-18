@@ -183,5 +183,9 @@ return [
         'resolution_date'    => 'fecha de resolución',
         'number_from'        => 'número desde',
         'number_to'          => 'número hasta',
+        'merchant_id'        => 'empresa',
+        'line1'              => 'dirección',
+        'city_id'            => 'municipio',
+        'state_id'           => 'departamento',
     ],
 ];

@@ -7,7 +7,7 @@
 require('./bootstrap');
 require('react-icons');
 require('react-bootstrap');
-require('react-select-search');
+require('react-select');
 
 /**
  * Next, we will create a fresh React component instance and attach it to
@@ -16,6 +16,12 @@ require('react-select-search');
  */
 
 require('./components/Example');
+
+// Companions
+require('./components/Participants/Companions/Table');
+
+// Eps
+require('./components/Eps/Table');
 
 // Invoice series
 require('./components/Invoices/Series/Table');

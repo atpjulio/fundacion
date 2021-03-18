@@ -14,6 +14,8 @@
 use App\Http\Controllers\AjaxController;
 use App\Http\Controllers\InvoiceSerieController;
 use App\Http\Controllers\MerchantController;
+use App\Http\Controllers\NewEpsController;
+use App\Http\Controllers\ParticipantController;
 
 Route::view('/', 'auth.login');
 
@@ -65,6 +67,16 @@ Route::middleware(['auth', 'admin'])->group(function () {
     Route::view('receipt-import', 'accounting.receipt.import')->name('receipt.import');
     Route::post('receipt-import-process', 'ReceiptController@importProcess')->name('receipt.import.process');
     Route::get('receipt/delete/{id}', 'ReceiptController@delete')->name('receipt.delete');
+
+    // Eps
+    Route::get('/new/eps', [NewEpsController::class, 'getEpss'])->name('new.eps.index');
+    Route::get('/new/eps/create', [NewEpsController::class, 'createEps'])->name('new.eps.create');
+    Route::post('/new/eps', [NewEpsController::class, 'storeEps'])->name('new.eps.store');
+    Route::get('/new/eps/{epsId}/edit', [NewEpsController::class, 'editEps'])->name('new.eps.edit');
+    Route::put('/new/eps/{epsId}', [NewEpsController::class, 'updateEps'])->name('new.eps.update');
+    // Eps ajax
+    Route::get('/ajax/eps', [NewEpsController::class, 'getAjaxEpss']);
+    Route::delete('/ajax/eps/{epsId}', [NewEpsController::class, 'deleteAjaxEps']);
 
     // Merchant
     Route::get('/merchants', [MerchantController::class, 'getMerchants'])->name('merchant.index');
@@ -144,8 +156,16 @@ Route::middleware(['auth', 'both'])->group(function () {
     Route::get('/check-authorization/{code}', 'AjaxController@checkAuthorization');
     Route::get('/get-authorization/{code}', 'AjaxController@getAuthorization');
     Route::post('/open-authorizations', 'AjaxController@searchOpenAuthorizations');
-    // New era
+
+    // **** New era ******
+    // Ajax
     Route::get('/ajax/states/{stateId}/cities', [AjaxController::class, 'getCitiesForSelect']);
+
+    // Companions
+    Route::get('/companions', [ParticipantController::class, 'getCompanions'])->name('companion.index');
+    // Companion ajax
+    Route::get('/ajax/companions', [ParticipantController::class, 'getAjaxCompanions']);
+    Route::delete('/ajax/companions/{companionId}', [ParticipantController::class, 'deleteAjaxCompanion']);
 });
 
 Auth::routes();

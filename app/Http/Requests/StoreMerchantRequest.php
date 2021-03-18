@@ -29,12 +29,12 @@ class StoreMerchantRequest extends FormRequest
     return [
       'dni_type'        => [Rule::in(array_keys(config('constants.companiesDocumentTypes')))],
       'dni'             => ['required', 'max:15'],
-      'name'            => ['required', 'max:255'],
+      'name'            => ['required', 'max:191'],
       'resolution_date' => ['nullable', 'date_format:Y-m-d'],
       'number_from'     => ['required'],
       'number_to'       => ['required', 'gt:number_from'],
       'number'          => ['required', 'gte:number_from', 'lte:number_to'],
-      'line1'           => ['required', 'max:255'],
+      'line1'           => ['required', 'max:191'],
       'city_id'         => [Rule::exists((new City())->getTable(), 'id')],
       'state_id'        => [Rule::exists((new State())->getTable(), 'id')],
     ];

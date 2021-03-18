@@ -7,7 +7,7 @@ import {
   FaSortAmountDownAlt,
   FaSortAmountUp,
 } from 'react-icons/fa';
-import SelectSearch from 'react-select-search';
+import AsyncSelect from 'react-select/async';
 
 export default (props) => {
   const {
@@ -16,12 +16,13 @@ export default (props) => {
     setSearch,
     sortDirection,
     setSortDirection,
-    option,
-    setOption,
-    options = [],
-    searchPlaceholder = 'Seleccione',
+    loadOptions,
+    optionsPlaceholder = 'Seleccione',
+    handleSelectSearch = () => {},
+    setOption = () => {},
     buttonUrl = '',
     buttonReturnUrl = '',
+    withOptions,
   } = props;
 
   const handleSearchChange = (evt) => setSearch(evt.target.value);
@@ -33,10 +34,14 @@ export default (props) => {
     else setSortDirection('asc');
   };
 
+  const handleChange = (event) => {
+    setOption(event.value);
+  };
+
   return (
     <Row>
-      <Col md={options?.length > 1 ? 9 : 12}>
-        <InputGroup className="mb-3">
+      <Col md={withOptions ? 9 : 12}>
+        <InputGroup className="mb-3 pt-1">
           {buttonReturnUrl.length > 0 ? (
             <InputGroup.Append>
               <a className="btn btn-secondary" href={buttonReturnUrl}>
@@ -82,14 +87,16 @@ export default (props) => {
           ) : null}
         </InputGroup>
       </Col>
-      {options?.length > 1 ? (
+      {withOptions ? (
         <Col>
-          <SelectSearch
-            search
-            options={options}
-            value={option}
-            placeholder={searchPlaceholder}
-            onChange={setOption}
+          <AsyncSelect
+            loadOptions={loadOptions}
+            defaultOptions
+            cacheOptions
+            placeholder={optionsPlaceholder}
+            onInputChange={handleSelectSearch}
+            onChange={handleChange}
+            className=""
           />
         </Col>
       ) : null}

@@ -1,8 +1,5 @@
 @extends('layouts.backend.template')
 
-@push('styles')
-@endpush
-
 @section('content')
   <div class="title-block">
     <div class="float-left">
@@ -39,5 +36,3 @@
   </section>
 @endsection
 
-@push('scripts')
-@endpush

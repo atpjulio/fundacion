@@ -103,7 +103,7 @@ class Eps extends Model
     return $this->paginateResult($request, $query);
   }
 
-  protected function storeRecord(Request $request)
+  protected function storeRecord($request)
   {
     $eps = new Eps($request->all());
 
@@ -122,7 +122,7 @@ class Eps extends Model
       ->firstOrFail();
   }
 
-  protected function updateRecord(Request $request, $id)
+  protected function updateRecord($request, $id)
   {
     $eps = $this->find($id);
 

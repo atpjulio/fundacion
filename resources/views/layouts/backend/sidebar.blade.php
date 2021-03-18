@@ -1,10 +1,9 @@
 <aside class="sidebar">
     <div class="sidebar-container">
-
         <div class="sidebar-header">
             <div class="brand">
                 <div class="logo">
-                    <img src="{{ asset('img/logo.png') }}" height="60" style="margin-top: -36px;">
+                    <img src="{{ asset('/img/logo.png') }}" height="60" style="margin-top: -36px;">
                 </div>
                 {!! config('constants.companyInfo.name') !!}
             </div>
@@ -12,7 +11,6 @@
 
         <nav class="menu">
             <ul class="sidebar-menu metismenu" id="sidebar-menu">
-
                 <li class="@if(Request::is('home*')) active @endif">
                     <a href="{{ route('home') }}">
                         <i class="fa fa-home"></i> Inicio
@@ -59,7 +57,7 @@
                 </li>
                 @endrole
                 @role('admin|user')
-                <li class="@if(Request::is('patient*')) open active @endif">
+                <li class="@if(Request::is('patient*') or Request::is('companion*')) open active @endif">
                     <a href="">
                         <i class="fa fa-wheelchair"></i> Usuarios
                         <i class="fa arrow"></i>
@@ -81,6 +79,18 @@
                             <a href="{{ route('patient.index') }}">
                                 <i class="fas fa-list"></i>&nbsp;
                                 Listado de Usuarios
+                            </a>
+                        </li>
+                        <li class="@if(Request::is('companions*')) active @endif" >
+                            <a href="{{ route('companion.index') }}">
+                                <i class="fas fa-list"></i>&nbsp;
+                                Acompañantes
+                            </a>
+                        </li>
+                        <li class="@if(Request::is('patient')) active @endif" >
+                            <a href="{{ route('patient.index') }}">
+                                <i class="fas fa-list"></i>&nbsp;
+                                Pacientes
                             </a>
                         </li>
                     </ul>
@@ -133,7 +143,7 @@
                 </li>
                 @endrole
                 @role('admin')
-                <li class="@if(Request::is('eps*')) open active @endif">
+                <li class="@if(Request::is('eps*') or Request::is('new/eps*')) open active @endif">
                     <a href="">
                         <i class="fa fa-hospital-o"></i> EPS
                         <i class="fa arrow"></i>
@@ -149,6 +159,12 @@
                             <a href="{{ route('eps.index') }}">
                                 <i class="fas fa-list"></i>&nbsp;
                                 Listado de EPS
+                            </a>
+                        </li>
+                        <li class="@if(Request::is('new/eps*')) active @endif" >
+                            <a href="{{ route('new.eps.index') }}">
+                                <i class="fas fa-list"></i>&nbsp;
+                                Listado de EPS (New)
                             </a>
                         </li>
                     </ul>

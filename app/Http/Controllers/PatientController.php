@@ -9,7 +9,6 @@ use App\Http\Requests\UploadExcelRequest;
 use App\Http\Requests\UploadTxtRequest;
 use App\Patient;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Storage;
 use Maatwebsite\Excel\Facades\Excel;
