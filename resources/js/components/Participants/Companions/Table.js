@@ -100,7 +100,7 @@ const Table = () => {
         Borrar al acompañante: <strong>{recordForDelete.first_name + ' ' + recordForDelete.last_name}</strong>
       </DeleteModal>
       <Search
-        searchText="Búsqueda por nombre..."
+        searchText="Búsqueda por número de documento..."
         search={search}
         setSearch={setSearch}
         sortDirection={sortDirection}

@@ -1,7 +1,3 @@
-@php
-use Illuminate\Support\Str;
-@endphp
-
 <div class="form-group  @if ($errors->has('line1')) has-error @endif">
   <label for="line1" class="control-label">Dirección</label>
   <input type="text" class="form-control underlined" name="line1" maxlength="50" placeholder="Dirección"
@@ -16,7 +12,7 @@ use Illuminate\Support\Str;
 
 <div class="form-group  @if ($errors->has('state_id')) has-error @endif">
   <label for="state_id" class="control-label">Departamento</label>
-  <select name="state_id" id="state_id" class="form-control"
+  <select name="state_id" id="state_id" class="form-control underlined"
     data-state-id="{{ old('state_id', isset($address) ? $address->state_id : '') }}"
     data-city-id="{{ old('city_id', isset($address) ? $address->city_id : '') }}">
     @foreach ($states as $state)

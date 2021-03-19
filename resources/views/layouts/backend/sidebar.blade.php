@@ -87,8 +87,8 @@
                                 Acompañantes
                             </a>
                         </li>
-                        <li class="@if(Request::is('patient')) active @endif" >
-                            <a href="{{ route('patient.index') }}">
+                        <li class="@if(Request::is('patients')) active @endif" >
+                            <a href="{{ route('new.patient.index') }}">
                                 <i class="fas fa-list"></i>&nbsp;
                                 Pacientes
                             </a>

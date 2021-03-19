@@ -46,7 +46,7 @@ class Companion extends Participant
   public function scopeSearch($query, $request)
   {
     $query->when($request->get('search'), function ($query, $search) {
-      $query->where('dni', 'like', "%$search%");
+      $query->where('dni', 'like', "$search%");
     });
   }
 

@@ -4,11 +4,16 @@ namespace App\Http\Controllers;
 
 use App\Facades\AjaxResponse;
 use App\Http\Requests\StoreCompanionRequest;
+use App\Http\Requests\StoreNewPatientRequest;
 use App\Http\Requests\UpdateCompanionRequest;
+use App\Http\Requests\UpdateNewPatientRequest;
 use App\Models\Eps\Eps;
 use App\Models\Patients\Companion;
+use App\Models\Patients\Patient;
+use App\Models\Shared\State;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
+use stdClass;
 
 class ParticipantController extends Controller
 {
@@ -71,6 +76,85 @@ class ParticipantController extends Controller
   public function deleteAjaxCompanion($companionId)
   {
     Companion::deleteRecord($companionId);
+
+    return AjaxResponse::okPaginated();
+  }
+
+  /**
+   * Patients
+   */
+
+  public function getPatients()
+  {
+    return view('participant.patient.index');
+  }
+
+  public function createPatient()
+  {
+    $epss   = Eps::getForSelect(null, '', false);
+    $states = State::getForSelect(config('constants.default.country'));
+    
+    $defaultOption = new stdClass();
+
+    $defaultOption->value = 0;
+    $defaultOption->name  = 'Seleccione';
+
+    $cities = collect([$defaultOption]);
+
+    return view('participant.patient.create', compact('epss', 'states', 'cities'));
+  }
+
+  public function storePatient(StoreNewPatientRequest $request)
+  {
+    Patient::storeRecord($request);
+
+    Session::flash('message', 'Paciente guardado exitosamente');
+    return redirect()->route('new.patient.index');
+  }
+
+  public function editPatient($patientId)
+  {
+    $patient = Patient::find($patientId);
+    if (!$patient) {
+      Session::flash('message_danger', 'Información de paciente no encontrada');
+      return redirect()->route('new.patient.index');
+    }
+
+    $epss   = Eps::getForSelect(null, '', false);
+    $states = State::getForSelect(config('constants.default.country'));
+    
+    $defaultOption = new stdClass();
+
+    $defaultOption->value = 0;
+    $defaultOption->name  = 'Seleccione';
+
+    $cities = collect([$defaultOption]);
+
+    return view('participant.patient.edit', compact('patient', 'epss', 'states', 'cities'));
+  }
+
+  public function updatePatient(UpdateNewPatientRequest $request, $patientId)
+  {
+    Patient::updateRecord($request, $patientId);
+
+    Session::flash('message', 'Paciente actualizado exitosamente');
+    return redirect()->route('new.patient.index');
+  }
+
+  /**
+   * Patients Ajax
+   */
+
+  public function getAjaxPatients(Request $request)
+  {
+    $patients = Patient::getLatestRecords($request);
+
+    return AjaxResponse::okPaginated($patients, $request->get('links'));
+  }
+
+  public function deleteAjaxPatient($patientId)
+  {
+    Patient::deleteRecord($patientId);
 
     return AjaxResponse::okPaginated();
   }

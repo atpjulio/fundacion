@@ -173,6 +173,15 @@ Route::middleware(['auth', 'both'])->group(function () {
     // Eps ajax
     Route::get('/ajax/eps', [NewEpsController::class, 'getAjaxEpss']);
 
+    // Patients
+    Route::get('/patients', [ParticipantController::class, 'getPatients'])->name('new.patient.index');
+    Route::get('/patients/create', [ParticipantController::class, 'createPatient'])->name('new.patient.create');
+    Route::post('/patients', [ParticipantController::class, 'storePatient'])->name('new.patient.store');
+    Route::get('/patients/{patientId}/edit', [ParticipantController::class, 'editPatient'])->name('new.patient.edit');
+    Route::put('/patients/{patientId}', [ParticipantController::class, 'updatePatient'])->name('new.patient.update');
+    // Patient ajax
+    Route::get('/ajax/patients', [ParticipantController::class, 'getAjaxPatients']);
+    Route::delete('/ajax/patients/{patientId}', [ParticipantController::class, 'deleteAjaxPatient']);
 });
 
 Auth::routes();

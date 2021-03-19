@@ -1,6 +1,6 @@
 <div class="form-group  @if ($errors->has('eps_id')) has-error @endif">
   <label for="eps_id" class="control-label">EPS *</label>
-  <select name="eps_id" id="eps_id" class="form-control">
+  <select name="eps_id" id="eps_id" class="form-control underlined">
     @foreach ($epss as $eps)
       <option value="{{ $eps->value }}" @if (old('eps_id', isset($eps) ? $eps->eps_id : '') == $eps->value) ) selected @endif>
         {!! $eps->name !!}
@@ -11,7 +11,7 @@
 
 <div class="form-group @if ($errors->has('dni_type')) has-error @endif">
   <label for="dni_type" class="control-label">Tipo de documento *</label>
-  <select name="dni_type" class="form-control">
+  <select name="dni_type" class="form-control underlined">
     @foreach (config('constants.documentTypes') as $value => $option)
       <option value="{{ $value }}" @if (old('dni_type', isset($companion) ? $companion->dni_type : '') == $value) selected @endif>
         {{ $option }}</option>

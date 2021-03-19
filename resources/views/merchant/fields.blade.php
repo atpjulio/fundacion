@@ -2,7 +2,7 @@
   <div class="col-md-6">
     <div class="form-group  @if ($errors->has('dni_type')) has-error @endif">
       <label for="dni_type" class="control-label">Tipo de documento *</label>
-      <select name="dni_type" class="form-control">
+      <select name="dni_type" class="form-control underlined">
         @foreach (config('constants.companiesDocumentTypes') as $value => $option)
           <option value="{{ $value }}" @if (old('dni_type', isset($merchant) ? $merchant->dni_type : '') == $value) selected @endif>
             {{ $option }}</option>

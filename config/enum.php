@@ -24,8 +24,8 @@ $myConstants = [
         'displaced_uninsured'    => 'DISPLACED_UNINSURED',
       ],
       'text' => [
-        'SUBSIDIZED'             => 'Contributivo',
-        'CONTRIBUTORY'           => 'Subsidiado',
+        'SUBSIDIZED'             => 'Subsidiado',
+        'CONTRIBUTORY'           => 'Contributivo',
         'LINKED'                 => 'Vinculado',
         'PARTICULAR'             => 'Particular',
         'OTHER'                  => 'Otro',

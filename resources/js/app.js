@@ -28,3 +28,6 @@ require('./components/Invoices/Series/Table');
 
 // Merchants
 require('./components/Merchants/Table');
+
+// Patients
+require('./components/Participants/Patients/Table');

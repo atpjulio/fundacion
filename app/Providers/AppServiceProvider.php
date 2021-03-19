@@ -4,8 +4,10 @@ namespace App\Providers;
 
 use App\Models\Invoices\InvoiceSerie;
 use App\Models\Patients\Companion;
+use App\Models\Patients\Patient;
 use App\Observers\CompanionObserver;
 use App\Observers\InvoiceSerieObserver;
+use App\Observers\PatientObserver;
 use App\Services\CustomValidationRules;
 use Illuminate\Routing\UrlGenerator;
 use Illuminate\Support\Facades\Schema;
@@ -30,8 +32,9 @@ class AppServiceProvider extends ServiceProvider
       return new CustomValidationRules($translator, $data, $rules, $messages);
     });
 
-    InvoiceSerie::observe(InvoiceSerieObserver::class);
     Companion::observe(CompanionObserver::class);
+    InvoiceSerie::observe(InvoiceSerieObserver::class);
+    Patient::observe(PatientObserver::class);
   }
 
   /**
