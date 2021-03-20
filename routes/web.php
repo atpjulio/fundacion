@@ -12,6 +12,7 @@
 */
 
 use App\Http\Controllers\AjaxController;
+use App\Http\Controllers\EpsServiceController;
 use App\Http\Controllers\InvoiceSerieController;
 use App\Http\Controllers\MerchantController;
 use App\Http\Controllers\NewEpsController;
@@ -172,6 +173,15 @@ Route::middleware(['auth', 'both'])->group(function () {
 
     // Eps ajax
     Route::get('/ajax/eps', [NewEpsController::class, 'getAjaxEpss']);
+    // // Eps services
+    Route::get('/eps/{epsId}/services', [EpsServiceController::class, 'getEpsServices'])->name('new.eps.service.index');
+    Route::get('/eps/{epsId}/services/create', [EpsServiceController::class, 'createEpsService'])->name('new.eps.service.create');
+    Route::post('/eps/{epsId}/services', [EpsServiceController::class, 'storeEpsService'])->name('new.eps.service.store');
+    Route::get('/eps/{epsId}/services/{serviceId}/edit', [EpsServiceController::class, 'editEpsService'])->name('new.eps.service.edit');
+    Route::put('/eps/{epsId}/services/{serviceId}', [EpsServiceController::class, 'updateEpsService'])->name('new.eps.service.update');
+    // Eps services ajax
+    Route::get('/ajax/eps/{epsId}/services', [EpsServiceController::class, 'getAjaxEpsServices']);
+    Route::delete('/ajax/eps/{epsId}/services/{serviceId}', [EpsServiceController::class, 'deleteAjaxEpsService']);
 
     // Patients
     Route::get('/patients', [ParticipantController::class, 'getPatients'])->name('new.patient.index');

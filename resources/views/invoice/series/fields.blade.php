@@ -1,20 +1,20 @@
 <div class="row">
   <div class="col-md-6">
-    <div class="form-group @if ($errors->has('name')) has-error @endif">
-      <label for="name" class="control-label">Nombre de la serie *</label>
-      <input type="text" name="name" class="form-control underlined" value="{{ old('name', isset($serie) ? $serie->name : '') }}"
-        placeholder="Resolución de factura">
-    </div>
-  </div>
-  <div class="col-md-6">
     <div class="form-group @if ($errors->has('status')) has-error @endif">
       <label for="status" class="control-label">Estado de la serie *</label>
-      <select name="status" class="form-control">
+      <select name="status" class="form-control underlined">
         @foreach (config('enum.status') as $status)
           <option value="{{ $status }}" @if (old('status', isset($serie) ? $serie->status : '') == $status) selected @endif>
             {{ __('status.'.$status) }}</option>
         @endforeach
       </select>
+    </div>
+  </div>
+  <div class="col-md-6">
+    <div class="form-group @if ($errors->has('name')) has-error @endif">
+      <label for="name" class="control-label">Nombre de la serie *</label>
+      <input type="text" name="name" class="form-control underlined" value="{{ old('name', isset($serie) ? $serie->name : '') }}"
+        placeholder="Resolución de factura">
     </div>
   </div>
   <div class="col-md-6">

@@ -199,6 +199,7 @@ $myConstants = [
   'default' => [
     'country' => 'CO',
   ],
+  'limit' => 50,
 ];
 
 return $myConstants;

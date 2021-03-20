@@ -82,7 +82,7 @@ class EpsService extends Model
     $service = new EpsService($request->all());
 
     $service->eps_id = $epsId;
-    $service->status = $request->get('status') ?? config('constants.status.active');
+    $service->status = $request->get('status') ?? config('enum.status.active');
 
     $service->save();
 
@@ -113,10 +113,10 @@ class EpsService extends Model
   {
     $service = $this->findOrFail($id);
 
-    if ($service->status == config('constants.status.active')) {
-      $service->status = config('constants.status.inactive');
+    if ($service->status == config('enum.status.active')) {
+      $service->status = config('enum.status.inactive');
     } else {
-      $service->status = config('constants.status.active');
+      $service->status = config('enum.status.active');
     }
     $service->save();
 

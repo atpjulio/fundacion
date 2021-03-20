@@ -22,6 +22,8 @@ require('./components/Participants/Companions/Table');
 
 // Eps
 require('./components/Eps/Table');
+// Eps services
+require('./components/Eps/Services/Table');
 
 // Invoice series
 require('./components/Invoices/Series/Table');

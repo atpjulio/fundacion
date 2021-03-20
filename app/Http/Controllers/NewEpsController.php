@@ -14,6 +14,10 @@ use stdClass;
 
 class NewEpsController extends Controller
 {
+  /**
+   * Eps
+   */
+
   public function getEpss()
   {
     return view('new-eps.index');
@@ -75,7 +79,7 @@ class NewEpsController extends Controller
   }
 
   /**
-   * Ajax
+   * Eps ajax
    */
 
   public function getAjaxEpss(Request $request)
