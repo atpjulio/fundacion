@@ -15,6 +15,7 @@ use App\Http\Controllers\AjaxController;
 use App\Http\Controllers\EpsServiceController;
 use App\Http\Controllers\InvoiceSerieController;
 use App\Http\Controllers\MerchantController;
+use App\Http\Controllers\NewAuthorizationController;
 use App\Http\Controllers\NewEpsController;
 use App\Http\Controllers\ParticipantController;
 
@@ -105,7 +106,7 @@ Route::middleware(['auth', 'both'])->group(function () {
     Route::patch('eps-services/{id}/update', 'EpsController@servicesUpdate')->name('eps.services.update');
 
     Route::resource('authorization', 'AuthorizationController');
-    Route::get('authorizations/{code}/edit', 'AuthorizationController@editByCode')->name('authorization.code');
+    Route::get('authorizationss/{code}/edit', 'AuthorizationController@editByCode')->name('authorization.code');
     Route::post('authorization/confirm', 'AuthorizationController@confirm')->name('authorization.confirm');
     Route::get('authorization-incomplete', 'AuthorizationController@incomplete')->name('authorization.incomplete');
     Route::get('authorization-open', 'AuthorizationController@open')->name('authorization.open');
@@ -160,6 +161,16 @@ Route::middleware(['auth', 'both'])->group(function () {
     // **** New era ******
     // Ajax
     Route::get('/ajax/states/{stateId}/cities', [AjaxController::class, 'getCitiesForSelect']);
+
+    // Authorizations
+    Route::get('/authorizations', [NewAuthorizationController::class, 'getAuthorizations'])->name('new.authorization.index');
+    Route::get('/authorizations/create', [NewAuthorizationController::class, 'createAuthorization'])->name('new.authorization.create');
+    Route::post('/authorizations', [NewAuthorizationController::class, 'storeAuthorization'])->name('new.authorization.store');
+    Route::get('/authorizations/{authorizationId}/edit', [NewAuthorizationController::class, 'editAuthorization'])->name('new.authorization.edit');
+    Route::put('/authorizations/{authorizationId}', [NewAuthorizationController::class, 'updateAuthorization'])->name('new.authorization.update');
+    // Companion ajax
+    Route::get('/ajax/authorizations', [NewAuthorizationController::class, 'getAjaxAuthorizations']);
+    Route::delete('/ajax/authorizations/{authorizationId}', [NewAuthorizationController::class, 'deleteAjaxAuthorization']);
 
     // Companions
     Route::get('/companions', [ParticipantController::class, 'getCompanions'])->name('companion.index');

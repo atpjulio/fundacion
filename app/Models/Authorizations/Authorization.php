@@ -16,6 +16,7 @@ class Authorization extends Model
 {
   use ModelResults, ScopeSort;
 
+  protected $table    = 'new_authorizations';
   protected $fillable = [
     'merchant_id',
     'eps_id',
@@ -25,7 +26,7 @@ class Authorization extends Model
     'location',
     'diagnosis',
   ];
-  private $sortField = 'code';
+  private $sortField = 'created_at';
 
   /**
    * Attributes
@@ -80,7 +81,7 @@ class Authorization extends Model
   public function scopeSearch($query, $request)
   {
     $query->when($request->get('search'), function ($query, $search) {
-      $query->where('name', 'like', "%$search%");
+      $query->where('code', 'like', "%$search%");
     });
   }
 
@@ -90,7 +91,9 @@ class Authorization extends Model
 
   protected function getLatestRecords(Request $request)
   {
-    $query = $this->with(['eps:id,name', 'patient:id,first_name,last_name', 'services.authorizable:id,amount,code'])
+    $query = $this->with([
+      'patient:id,first_name,last_name', 'services.authorizable:id,amount,code', 'companions.authorizable:id,first_name,last_name'
+    ])
       ->option($request)
       ->search($request)
       ->sort($request);

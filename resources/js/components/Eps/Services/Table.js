@@ -85,7 +85,7 @@ const Table = () => {
         Borrar el servicio: <strong>{recordForDelete.name}</strong>
       </DeleteModal>
       <Search
-        searchText="Búsqueda por nombre..."
+        searchText="Búsqueda por código..."
         search={search}
         setSearch={setSearch}
         sortDirection={sortDirection}

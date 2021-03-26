@@ -6,8 +6,6 @@ trait ScopeSort
 {
   public function scopeSort($query, $request)
   {
-    $query->when($request->get('sortDirection'), function ($query, $sortDirection) {
-      $query->orderBy($this->sortField, $sortDirection);
-    });
+    $query->orderBy($this->sortField, strtolower($request->get('sortDirection')) == 'asc' ? 'asc' : 'desc');
   }
 }

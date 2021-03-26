@@ -52,7 +52,7 @@ class EpsService extends Model
   public function scopeSearch($query, $request)
   {
     $query->when($request->get('search'), function ($query, $search) {
-      $query->where('name', 'like', "%$search%");
+      $query->where('code', 'like', "%$search%");
     });
   }
 

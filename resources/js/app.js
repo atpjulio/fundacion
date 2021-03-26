@@ -17,6 +17,10 @@ require('react-select');
 
 require('./components/Example');
 
+// Authorization
+require('./components/Authorizations/Table');
+require('./components/Authorizations/CreateEditForm');
+
 // Companions
 require('./components/Participants/Companions/Table');
 

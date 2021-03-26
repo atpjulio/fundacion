@@ -53,6 +53,18 @@
                                 Incompletas
                             </a>
                         </li>
+                        <li class="@if(Request::is('authorizations/create')) active @endif" >
+                            <a href="{{ route('new.authorization.create') }}">
+                                <i class="fa fa-plus"></i>&nbsp;
+                                Nueva Autorización (New)
+                            </a>
+                        </li>
+                        <li class="@if(Request::is('authorizations')) active @endif" >
+                            <a href="{{ route('new.authorization.index') }}">
+                                <i class="fas fa-list"></i>&nbsp;
+                                Listado de Autorizaciones
+                            </a>
+                        </li>
                     </ul>
                 </li>
                 @endrole

@@ -3,7 +3,7 @@ import { Table } from 'react-bootstrap'
 import Paginate from './Paginate'
 
 export default props => {
-  const { headers, links, children, onPageChange = () => {} } = props
+  const { headers, links, children, onPageChange = () => {}, showPagination = true } = props
 
   return (
     <>
@@ -13,7 +13,7 @@ export default props => {
         </thead>
         <tbody>{children}</tbody>
       </Table>
-      <Paginate links={links} onPageChange={onPageChange} />
+      {showPagination ? <Paginate links={links} onPageChange={onPageChange} /> : null}
     </>
   )
 }
