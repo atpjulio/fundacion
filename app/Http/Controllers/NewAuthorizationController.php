@@ -16,9 +16,21 @@ class NewAuthorizationController extends Controller
    * Authorization
    */
 
-  public function getAuthorizations()
+  public function getAuthorizations(Request $request)
   {
-    return view('new-authorization.index');
+    $stored = $request->get('stored');
+    $storedMessage = '';
+    if ($stored) {
+      $storedMessage = 'Autorización guardada exitosamente';
+    }
+
+    $updated = $request->get('updated');
+    $updatedMessage = '';
+    if ($updated) {
+      $updatedMessage = 'Autorización guardada exitosamente';
+    }
+
+    return view('new-authorization.index', compact('stored', 'storedMessage', 'updated', 'updatedMessage'));
   }
 
   public function createAuthorization()
@@ -51,12 +63,26 @@ class NewAuthorizationController extends Controller
    * Authorization ajax
    */
 
+  public function storeAjaxAuthorizations(Request $request)
+  {
+    $authorization = Authorization::storeRecord($request);
+
+    return AjaxResponse::ok($authorization);
+  }
+
   public function getAjaxAuthorizations(Request $request)
   {
     $authorizations = Authorization::getLatestRecords($request);
     $epss = Eps::getForSelect('authorizations');
 
     return AjaxResponse::okPaginated($authorizations, $request->get('links'), compact('epss'));
+  }
+
+  public function getAjaxAuthorization(Request $request, $authorizationId)
+  {
+    $authorization = Authorization::getRecord($request, $authorizationId);
+
+    return AjaxResponse::ok($authorization);
   }
 
   public function deleteAjaxAuthorization($epsId)

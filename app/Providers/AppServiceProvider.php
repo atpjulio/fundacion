@@ -2,9 +2,11 @@
 
 namespace App\Providers;
 
+use App\Models\Authorizations\Authorization;
 use App\Models\Invoices\InvoiceSerie;
 use App\Models\Patients\Companion;
 use App\Models\Patients\Patient;
+use App\Observers\AuthorizationObserver;
 use App\Observers\CompanionObserver;
 use App\Observers\InvoiceSerieObserver;
 use App\Observers\PatientObserver;
@@ -35,6 +37,7 @@ class AppServiceProvider extends ServiceProvider
     Companion::observe(CompanionObserver::class);
     InvoiceSerie::observe(InvoiceSerieObserver::class);
     Patient::observe(PatientObserver::class);
+    Authorization::observe(AuthorizationObserver::class);
   }
 
   /**

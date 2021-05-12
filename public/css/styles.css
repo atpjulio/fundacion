@@ -1,3 +1,7 @@
+.delete-button {
+  cursor: pointer;
+}
+
 .custom-file-input:lang(es) ~ .custom-file-label:after {
   content: "Examinar" !important;
 }

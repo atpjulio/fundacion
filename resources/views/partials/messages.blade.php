@@ -3,6 +3,11 @@
         {!! \Session::get("message") !!}
     </div>
 @endif
+@isset($stored)
+    <div class="alert alert-success" style="background-color: #ffffff !important; color: #00a65a !important;">
+        {!! $storedMessage !!}
+    </div>
+@endisset
 @if (\Session::has("message_danger"))
     <div class="alert alert-danger" style="background-color: #ffffff !important; color: #dd4b39 !important;">
         {!! \Session::get("message_danger") !!}
@@ -13,6 +18,11 @@
         {!! \Session::get("message_warning") !!}
     </div>
 @endif
+@isset($updated)
+    <div class="alert alert-warning" style="background-color: #ffffff !important; color: #f39c12 !important;">
+        {!! $updatedMessage !!}
+    </div>
+@endisset
 @if (\Session::has("message_info"))
     <div class="alert alert-info" style="background-color: #ffffff !important; color: #004085 !important;">
         {!! \Session::get("message_info") !!}

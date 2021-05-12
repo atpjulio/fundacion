@@ -168,8 +168,10 @@ Route::middleware(['auth', 'both'])->group(function () {
     Route::post('/authorizations', [NewAuthorizationController::class, 'storeAuthorization'])->name('new.authorization.store');
     Route::get('/authorizations/{authorizationId}/edit', [NewAuthorizationController::class, 'editAuthorization'])->name('new.authorization.edit');
     Route::put('/authorizations/{authorizationId}', [NewAuthorizationController::class, 'updateAuthorization'])->name('new.authorization.update');
-    // Companion ajax
+    // Authorization ajax
+    Route::post('/ajax/authorizations', [NewAuthorizationController::class, 'storeAjaxAuthorizations']);
     Route::get('/ajax/authorizations', [NewAuthorizationController::class, 'getAjaxAuthorizations']);
+    Route::get('/ajax/authorizations/{authorizationId}', [NewAuthorizationController::class, 'getAjaxAuthorization']);
     Route::delete('/ajax/authorizations/{authorizationId}', [NewAuthorizationController::class, 'deleteAjaxAuthorization']);
 
     // Companions

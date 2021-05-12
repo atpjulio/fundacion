@@ -89,6 +89,31 @@ class Authorization extends Model
    * Methods
    */
 
+  protected function storeRecord(Request $request): Authorization
+  {
+    $authorization = new Authorization($request->all());
+
+    $authorization->save();
+
+    foreach ($request->get('services') as $service) {
+      $authorization->items()->create([
+        'quantity'          => $service['quantity'],
+        'authorizable_type' => EpsService::class,
+        'authorizable_id'   => $service['id'],
+      ]);
+    }
+
+    foreach ($request->get('companion_ids') as $companionId) {
+      $authorization->items()->create([
+        'quantity'          => 1,
+        'authorizable_type' => Companion::class,
+        'authorizable_id'   => $companionId,
+      ]);
+    }
+
+    return $authorization;
+  }
+
   protected function getLatestRecords(Request $request)
   {
     $query = $this->with([
@@ -99,6 +124,18 @@ class Authorization extends Model
       ->sort($request);
 
     return $this->paginateResult($request, $query);
+  }
+
+  protected function getRecord(Request $request, $authorizationId)
+  {
+    $authorization = $this->with([
+      'patient:id,dni,dni_type,first_name,last_name',
+      'companions.authorizable:id,first_name,last_name',
+      'eps:id,name'
+    ])
+      ->find($authorizationId);
+
+    return $authorization;
   }
 
   protected function deleteRecord($id)

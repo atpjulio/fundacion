@@ -4,6 +4,7 @@ import { FaCheckCircle, FaRegCircle } from 'react-icons/fa';
 import { documentTypes } from '../Config/constants';
 import useGet from '../Hooks/useGet';
 import EmptyResults from '../Shared/EmptyResults';
+import { buildPatientInfo } from '../Shared/helpers';
 import Search from '../Shared/Search';
 import TablePaginate from '../Shared/TablePaginate';
 
@@ -27,15 +28,7 @@ export default (props) => {
   });
 
   const handleSelected = (patient) => {
-    const patientInfo =
-      patient.first_name +
-      ' ' +
-      patient.last_name +
-      ' - ' +
-      documentTypes[patient.dni_type] +
-      ': ' +
-      patient.dni;
-    setValues({ ...values, patient_id: patient.id, patientInfo: patientInfo });
+    setValues({ ...values, patient_id: patient.id, patientInfo: buildPatientInfo(patient) });
     // setSelected(patient.id)
     // setPatientInfo(patient.first_name + ' ' + patient.last_name + ' - ' + patient.dni_type + ': ' + patient.dni)
   };
@@ -66,6 +59,7 @@ export default (props) => {
         sortDirection={sortDirection}
         setSortDirection={setSortDirection}
         buttonUrl={baseUrl + '/create'}
+        isExternal
       />
       <TablePaginate
         headers={tableHeaders}
@@ -115,10 +109,4 @@ export default (props) => {
       </TablePaginate>
     </div>
   );
-
-  // return (
-  //   <div  className="pt-4">
-  //     Tab de pacientes
-  //   </div>
-  // );
 };

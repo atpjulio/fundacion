@@ -23,6 +23,7 @@ export default (props) => {
     buttonUrl = '',
     buttonReturnUrl = '',
     withOptions,
+    isExternal = false,
   } = props;
 
   const handleSearchChange = (evt) => setSearch(evt.target.value);
@@ -80,7 +81,7 @@ export default (props) => {
           )}
           {buttonUrl.length > 0 ? (
             <InputGroup.Append>
-              <a className="btn btn-primary" href={buttonUrl}>
+              <a className="btn btn-primary" href={buttonUrl} target={isExternal ? '_blank' : ''}>
                 <FaPlus />
               </a>
             </InputGroup.Append>
