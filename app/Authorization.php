@@ -121,7 +121,7 @@ class Authorization extends Model
     public function getCodecAttribute()
     {
         if (strpos($this->code, config('constants.unathorized.prefix')) === FALSE) {
-            return $this->code;
+            return str_replace('*', '', $this->code);
         }
         return '';
     }

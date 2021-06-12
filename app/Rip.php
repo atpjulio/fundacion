@@ -128,7 +128,7 @@ class Rip extends Model
                             }
                             $line .= config('constants.companyInfo.invoicePreffix') . $invoice->number . "," . str_replace('-', '0', $invoice->company->doc) . ","
                                 . $currentAuthorization->patient->dni_type . "," . $currentAuthorization->patient->dni . ","
-                                . $currentAuthorization->code . ",1," . $service->service->code . ","
+                                . $currentAuthorization->codec . ",1," . $service->service->code . ","
                                 . substr(Utilities::normalizeString(mb_strtoupper($service->service->name)), 0, 59) . ","
                                 . $days . "," . number_format($dailyPrice, 2, ".", "") . ","
                                 . number_format($total, 2, ".", "") . "\r\n";
@@ -141,7 +141,7 @@ class Rip extends Model
                 $dailyPrice = $invoice->authorization->daily_price;
                 $line .= config('constants.companyInfo.invoicePreffix') . $invoice->number . "," . str_replace('-', '0', $invoice->company->doc) . ","
                     . $invoice->authorization->patient->dni_type . "," . $invoice->authorization->patient->dni . ","
-                    . $invoice->authorization->code . "," . $serviceType . "," . $invoice->authorization->service->code . ","
+                    . $invoice->authorization->codec . "," . $serviceType . "," . $invoice->authorization->service->code . ","
                     . Utilities::normalizeString(mb_strtoupper(substr($invoice->authorization->service->name, 0, 59))) . ","
                     . $days . "," . number_format($dailyPrice, 0, ".", "") . ","
                     . number_format($invoice->total, 0, ".", "") . "\r\n";
@@ -771,7 +771,7 @@ class Rip extends Model
                                         $cell->setValue($currentAuthorization->patient->dni);
                                     });
                                     $sheet->cell('E' . $counter, function ($cell) use ($currentAuthorization) {
-                                        $cell->setValue($currentAuthorization->code);
+                                        $cell->setValue($currentAuthorization->codec);
                                     });
                                     $sheet->cell('F' . $counter, function ($cell) use ($invoice) {
                                         $cell->setValue("1");
@@ -845,7 +845,7 @@ class Rip extends Model
                             $cell->setValue($invoice->authorization->patient->dni);
                         });
                         $sheet->cell('E' . $counter, function ($cell) use ($invoice) {
-                            $cell->setValue($invoice->authorization->code);
+                            $cell->setValue($invoice->authorization->codec);
                         });
                         $sheet->cell('F' . $counter, function ($cell) use ($invoice) {
                             $cell->setValue("1");
